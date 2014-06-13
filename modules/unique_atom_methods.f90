@@ -2862,34 +2862,34 @@ contains
         ! indexed by moving atom index. See how often this fires:
         ASSERT(i_ua==i_ma)
 
-        if (i_ma > 0) then
-           moving_unique_atom_index(i_ma) = i_ua
-           gi => unique_atom_grad_info(i_ma)
+        if (i_ma <= 0) cycle
 
-           n_indep = sap % N_independent_fcts
-           n_equals = ua % N_equal_atoms
+        moving_unique_atom_index(i_ma) = i_ua
+        gi => unique_atom_grad_info(i_ma)
 
-           allocate (gi % m(n_indep, 3, n_equals), STAT=alloc_stat)
-           ASSERT(alloc_stat==0)
+        n_indep = sap % N_independent_fcts
+        n_equals = ua % N_equal_atoms
 
-           gi % m(:, :, :) = 0.0
+        allocate (gi % m(n_indep, 3, n_equals), STAT=alloc_stat)
+        ASSERT(alloc_stat==0)
 
-           do i_if = 1, n_indep ! loop over all sym. adapted gradients of ua
-              sa => sap % symadapt(i_if, 1) ! first partner
-              do i_cd = 1, sa % N_fcts ! loop over all contributing derivatives
-                 i_ea = sa % I_equal_atom(i_cd)
+        gi % m(:, :, :) = 0.0
 
-                 select case (sa % m(i_cd))
-                 case (2); gi % m(i_if, 1, i_ea) = sa % c(i_cd)
-                 case (3); gi % m(i_if, 2, i_ea) = sa % c(i_cd)
-                 case (1); gi % m(i_if, 3, i_ea) = sa % c(i_cd)
-                 case default
-                    call error_handler("unique_atom_grad_information: sth. wrong")
-                 end select
+        do i_if = 1, n_indep ! loop over all sym. adapted gradients of ua
+           sa => sap % symadapt(i_if, 1) ! first partner
+           do i_cd = 1, sa % N_fcts ! loop over all contributing derivatives
+              i_ea = sa % I_equal_atom(i_cd)
 
-              enddo
+              select case (sa % m(i_cd))
+              case (2); gi % m(i_if, 1, i_ea) = sa % c(i_cd)
+              case (3); gi % m(i_if, 2, i_ea) = sa % c(i_cd)
+              case (1); gi % m(i_if, 3, i_ea) = sa % c(i_cd)
+              case default
+                 call error_handler("unique_atom_grad_information: sth. wrong")
+              end select
+
            enddo
-        endif
+        enddo
      enddo
    end subroutine unique_atom_grad_information
    !*************************************************************

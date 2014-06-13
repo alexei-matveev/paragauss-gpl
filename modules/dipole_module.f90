@@ -511,7 +511,7 @@ Contains
         !
         use comm, only: comm_rank, comm_bcast
         use solv_electrostat_module, only: surface_charge_moments
-        use eigen_data_module, only: eigvec_real, eigvec_imag, eigvec, eigval
+        use eigen_data_module, only: eigvec_real, eigvec_imag, eigvec
         Implicit None
         !** End of interface *****************************************
 
@@ -773,7 +773,7 @@ Contains
         !
         use constants, only: angstrom
         use operations_module, only: operations_solvation_effect
-        use eigen_data_module, only: eigval, eigvec, eigvec_real, eigvec_imag
+        use eigen_data_module, only: eigval
         Implicit None
         Integer (i4_kind), Intent (In) :: iounit
         Logical, Intent (In) :: detailed

@@ -610,6 +610,7 @@ contains
                  form='formatted')
          endif
 
+         ! This is used for error reporting only:
          gx_count = 0
 #ifdef WITH_EPE
          n_epe_r = 0
@@ -633,6 +634,9 @@ contains
                ! equivalent atoms:
                if (ieq_dummy == 0) cycle
 
+               ! Note  how the xyz  coordinates of  all but  the first
+               ! atom  in the  group of  symmetry equivalent  ones are
+               ! ignored:
                if (counter_equal == 1) then
                   unique_atoms(i_ua) % position_first_ea(1) = x_coord
                   unique_atoms(i_ua) % position_first_ea(2) = y_coord

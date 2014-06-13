@@ -1473,19 +1473,35 @@ contains
             do irr = 1, n_irrep
                associate (p => orbs_ob(irr) % o, q => orbs_grads(irr) % o)
 
-               ham(1:dims(irr), 1:dims(irr)) = 0.0
-
-               do m=1,partners(irr)
-                  do j=1,dims(irr)
+                 !
+                 ! NOTE: we need to  clear accumulator before sum over
+                 ! partner  index m.  This can  be easily  achieved by
+                 ! plain simple
+                 !
+                 !   ham(1:dims(irr), 1:dims(irr)) = 0.0
+                 !
+                 ! Profiler tools indicate  that such an "inessential"
+                 ! clearing   operation   consumes  unnecessary   many
+                 ! cycles. So instead, we introduce a branch depending
+                 ! on  the partner  index m  ==  1 so  that the  first
+                 ! iteration is slightly different:
+                 !
+               do m = 1, partners(irr)
+                  do j = 1, dims(irr)
                      orbs_help(:vla, j) = A_SCAL(:vla, s) * p(:vla, j, m) + &
                           B_VECT(:vla, X, s) * q(:vla, X, j, m) + &
                           B_VECT(:vla, Y, s) * q(:vla, Y, j, m) + &
                           B_VECT(:vla, Z, s) * q(:vla, Z, j, m)
                   enddo
 #ifdef FPP_NODGEMM
-                do i=1,dims(irr)
-                   do j=1,dims(irr)
-                      ham(i,j) = ham(i,j) + SUM( p(:vla,i,m) * orbs_help(:vla,j))
+                do i = 1, dims(irr)
+                   do j = 1, dims(irr)
+                      acc = dot_product (p(:vla, i, m), orbs_help(:vla, j))
+                      if (m == 1) then
+                         ham(i, j) = acc
+                      else
+                         ham(i, j) = ham(i, j) + acc
+                      endif
                    enddo
                 enddo
 
@@ -1504,10 +1520,28 @@ contains
                    enddo
                 endif
 #else
-                   call dgemm('t', 'n', dims(irr), dims(irr), vla, &
-                         & ONE, orbs_help(:,:), size(orbs_help,1),&
-                         &      p(:,:,m),      size(p,1),&
-                         & ONE, ham(:,:),      size(ham,1))
+                block
+                   real (r8_kind) :: beta
+
+                   !
+                   ! At least  the linux man page says  that with beta
+                   ! == 0  the initial value of  accumulator ham(:, :)
+                   ! does not matter:
+                   !
+                   !  "When BETA is supplied as zero then C need not
+                   !   be set on input."
+                   !
+                   if (m == 1) then
+                      beta = 0.0
+                   else
+                      beta = 1.0
+                   endif
+
+                   call dgemm ('t', 'n', dims(irr), dims(irr), vla, &
+                        ONE, orbs_help(:, :), size (orbs_help, 1), &
+                        p(:, :, m), size (p, 1), &
+                        beta, ham(:, :), size (ham, 1))
+                end block
 
                 if (is_on(xc_mgga)) then
                    !----------------------------------------------------------------------------------+

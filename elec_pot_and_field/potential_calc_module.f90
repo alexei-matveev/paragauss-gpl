@@ -498,17 +498,21 @@ contains
 
 !********************************************************************
   subroutine grid2space_2d()
-    !------------ Modules used --------------------------------------
-    use group_module, only : ylm_trafos,sub_group,group_coset, &
-         symm_transformation_int,group_num_el,group_coset_decomp
-    !------------ Declaration of formal parameters ------------------
+    !
+    ! Runs on all workers.
+    !
+    use comm, only: comm_rank
+    use group_module, only: ylm_trafos, sub_group, group_coset, &
+         symm_transformation_int, group_num_el, group_coset_decomp
+    implicit none
     !== End of interface ============================================
-    !------------ Declaration of local variables --------------------
-    !------------ Executable code -----------------------------------
 
-    call symm_sorted_grid()
+    ! FIXME: why not everywhere?
+    if (comm_rank () == 0) then
+       call symm_sorted_grid ()
+    endif
 
-    if (comm_parallel()) call send_space_point()
+    call send_recv_space_point()
 
   contains
     subroutine symm_sorted_grid

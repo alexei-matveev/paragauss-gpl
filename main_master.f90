@@ -582,8 +582,8 @@ subroutine main_master()
         if (esp_map) then
            do while (toggle_legacy_mode())
               call calc_plane_grid()
-              call grid2space_2d()
            enddo
+           call grid2space_2d()
            if (V_electronic) then
               call say ("call potential_calculate (Vel)")
               do while (toggle_legacy_mode())

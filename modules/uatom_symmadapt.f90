@@ -182,16 +182,6 @@ module uatom_symmadapt
      module procedure bcast_partner_type !
   end interface
 
-  interface sa_cpack ! public
-     module procedure pack_uatom
-     module procedure pack_partner_type
-  end interface
-
-  interface sa_cunpack ! public
-     module procedure unpack_uatom
-     module procedure unpack_partner_type
-  end interface
-
   interface sa_calc_sa_int ! public
      module procedure calc_sa_int_uatom
   end interface
@@ -204,10 +194,6 @@ module uatom_symmadapt
   public :: sa_free
   public :: sa_calc_sa_int
   public :: sa_show
-  public :: ua_pack_everything
-  public :: ua_unpack_everything
-  public :: sa_cpack
-  public :: sa_cunpack
   public :: sa_cbcast
   public :: uatom_prune
 
@@ -346,12 +332,6 @@ contains
     endif
   end function uatom_prune
 
-  subroutine ua_pack_everything()
-  end subroutine ua_pack_everything
-
-  subroutine ua_unpack_everything()
-  end subroutine ua_unpack_everything
-
   subroutine sa_show(ua,what)
     ! been once subroutine unique_atom_calc_symadapt_int()
     implicit none
@@ -436,33 +416,6 @@ contains
     enddo i_pa_
   end subroutine calc_sa_int_partner_type
 
-  subroutine pack_uatom(ua)
-    use xpack
-    implicit none
-    type(uatom),intent(in) :: ua
-    ! *** end of interface ***
-
-    integer(IK) :: i,j !!$,k
-
-    call pck(ua%spor)
-    call pck(ua%n_irr)
-    call pck(ua%lmax)
-
-    if(ua%spor)then
-       do i=1,ua%n_irr
-          do j=0,ua%lmax
-             call pack_partner_type(ua%symadapt_spor_partner(i,j))
-          enddo
-       enddo
-    else
-       do i=1,ua%n_irr
-          do j=0,ua%lmax
-             call pack_partner_type(ua%symadapt_partner(i,j))
-          enddo
-       enddo
-    endif
-  end subroutine pack_uatom
-
   subroutine bcast_uatom(ua)
     use comm,                only: comm_bcast                                  &
                                  , comm_rank
@@ -499,36 +452,6 @@ contains
       enddo
     endif
   end subroutine bcast_uatom
-
-  subroutine unpack_uatom(ua)
-    use xpack
-    implicit none
-    type(uatom),intent(inout) :: ua
-    ! *** end of interface ***
-
-    logical     :: spor
-    integer(IK) :: n_irr,lmax,i,j !!$,k
-
-    call upck(spor)
-    call upck(n_irr)
-    call upck(lmax)
-
-    call alloc_uatom(n_irr, lmax, ua, spor=spor)
-
-    if(ua%spor)then
-       do i=1,ua%n_irr
-          do j=0,ua%lmax
-             call unpack_partner_type(ua%symadapt_spor_partner(i, j))
-          enddo
-       enddo
-    else
-       do i=1,ua%n_irr
-          do j=0,ua%lmax
-             call unpack_partner_type(ua%symadapt_partner(i, j))
-          enddo
-       enddo
-    endif
-  end subroutine unpack_uatom
 
   subroutine alloc_uatom(n_irr, lmax, ua, spor)
     implicit none
@@ -597,45 +520,6 @@ contains
     call dealloc_uatom(ua)
   end subroutine free_uatom
 
-  subroutine pack_partner_type(pa)
-    use xpack
-    implicit none
-    type(partner_type),intent(in) :: pa
-    ! *** end of interface ***
-
-    integer(IK) :: i,j,k,l
-
-    call pck(pa%spor)
-    call pck(pa%n_ea)
-    call pck(pa%n_independent_fcts)
-    call pck(pa%n_partn)
-    if(.not.pa%spor)then
-       !
-       ! pack only symadapt (I_equal_atom) structure:
-       ! the rest will be computed after unpacking.
-       !
-       do i=1,pa%n_independent_fcts
-          do j=1,pa%n_partn
-             call pack_symadapt_type(pa%symadapt(i, j))
-          enddo
-       enddo
-    else
-       !
-       ! There is no corresponding "I_equal_atom" struct -
-       ! - packing sa_spor_int
-       !
-       do i=1,pa%n_ea
-          do j=1,2
-             do k=1,pa%n_independent_fcts
-                do l=1,pa%n_partn
-                   call pack_sa_int_type(pa%sa_spor_int(i,j,k,l))
-                enddo
-             enddo
-          enddo
-       enddo
-    endif
-  end subroutine pack_partner_type
-
   subroutine bcast_partner_type(pa)
     use comm,                only: comm_bcast                                  &
                                  , comm_rank
@@ -693,54 +577,6 @@ contains
       enddo
     endif
   end subroutine bcast_partner_type
-
-  subroutine unpack_partner_type(pa)
-    use xpack
-    implicit none
-    type(partner_type),intent(inout) :: pa
-    ! *** end of interface ***
-
-    integer(IK) :: i,j,k,l
-    integer(IK) :: n_ea,n_indep,n_partn
-    logical     :: spor
-
-    call upck(spor)
-    call upck(n_ea)
-    call upck(n_indep)
-    call upck(n_partn)
-
-    call alloc_partner_type(n_ea, n_indep, n_partn, pa, spor=spor)
-
-    if(.not.pa%spor)then
-       !
-       ! unpack only symadapt ("I_equal_atom") structure:
-       ! the rest will be computed after unpacking.
-       !
-       do i=1,pa%n_independent_fcts
-          do j=1,pa%n_partn
-             call unpack_symadapt_type(pa%symadapt(i, j))
-          enddo
-       enddo
-       !
-       ! Compute sa_int struct which was not sent:
-       !
-       call calc_sa_int_partner_type(pa)
-    else
-       !
-       ! There is no corresponding "I_equal_atom" struct -
-       ! - packing sa_spor_int
-       !
-       do i=1,pa%n_ea
-          do j=1,2
-             do k=1,pa%n_independent_fcts
-                do l=1,pa%n_partn
-                   call unpack_sa_int_type(pa%sa_spor_int(i, j, k, l))
-                enddo
-             enddo
-          enddo
-       enddo
-    endif
-  end subroutine unpack_partner_type
 
   subroutine alloc_partner_type(n_ea, n_indep, n_partn, uap, spor)
     implicit none
@@ -830,24 +666,6 @@ contains
     call dealloc_partner_type(uap)
   end subroutine free_partner_type
 
-  subroutine pack_sa_int_type(sai)
-    use xpack
-    implicit none
-    type(sa_int_type),intent(in) :: sai
-    ! *** end of interface ***
-
-    call pck(sai%cmplx)
-    call pck(sai%n_fcts)
-    call pck(sai%m)
-
-    if(sai%cmplx)then
-       call pck(sai%re)
-       call pck(sai%im)
-    else
-       call pck(sai%c)
-    endif
-  end subroutine pack_sa_int_type
-
   subroutine bcast_sa_int_type(sai)
     use comm,                only: comm_bcast                                  &
                                  , comm_rank
@@ -877,30 +695,6 @@ contains
       call comm_bcast(sai%c)
     endif
   end subroutine bcast_sa_int_type
-
-  subroutine unpack_sa_int_type(sai)
-    use xpack
-    implicit none
-    type(sa_int_type),intent(inout) :: sai
-    ! *** end of interface ***
-
-    integer(IK) :: n_fcts
-    logical     :: cmplx_
-
-    call upck(cmplx_)
-    call upck(n_fcts)
-
-    call alloc_sa_int_type(n_fcts, sai, cmplx=cmplx_)
-
-    call upck(sai%m)
-
-    if(sai%cmplx)then
-       call upck(sai%re)
-       call upck(sai%im)
-    else
-       call upck(sai%c)
-    endif
-  end subroutine unpack_sa_int_type
 
   subroutine alloc_sa_int_type(n_fcts, sai, cmplx)
     implicit none
@@ -944,18 +738,6 @@ contains
     sai%cmplx  = .false.
   end subroutine dealloc_sa_int_type
 
-  subroutine pack_symadapt_type(sat)
-    use xpack
-    implicit none
-    type(symadapt_type),intent(in) :: sat
-    ! *** end of interface ***
-
-    call pck(sat%n_fcts)
-    call pck(sat%I_equal_atom)
-    call pck(sat%m)
-    call pck(sat%c)
-  end subroutine pack_symadapt_type
-
   subroutine bcast_symadapt_type(sat)
     use comm,                only: comm_bcast                                  &
                                  , comm_rank
@@ -977,23 +759,6 @@ contains
     call comm_bcast( sat%c            )
 
   end subroutine bcast_symadapt_type
-
-  subroutine unpack_symadapt_type(sat)
-    use xpack
-    implicit none
-    type(symadapt_type),intent(inout) :: sat
-    ! *** end of interface ***
-
-    integer(IK) :: n_fcts
-
-    call upck(n_fcts)
-
-    call alloc_symadapt_type(n_fcts, sat)
-
-    call upck(sat%I_equal_atom)
-    call upck(sat%m)
-    call upck(sat%c)
-  end subroutine unpack_symadapt_type
 
   subroutine alloc_symadapt_type(n_fcts, sat)
     implicit none

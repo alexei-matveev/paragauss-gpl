@@ -904,40 +904,33 @@ contains
 
   !*************************************************************
   subroutine free_field_arrays()
-    use operations_module, only : operations_integral
-    use elec_static_field_module, only : deallocate_field
-    use elec_static_field_module, only : bounds_free_field,destroy_field_file
-    use elec_static_field_module, only : surf_points_gradinfo_dealloc,dealloc_surf_points
-    use options_module, only : options_integrals_on_file
-    use integralstore_module, only : integralstore_deallocate_pcm
-    use msgtag_module, only : msgtag_intstore_dealloc, msgtag_del_field
-    use comm_module, only : comm_init_send,comm_send,comm_parallel,comm_all_other_hosts
-    use commpack_module
-    !------------ Declaration of formal parameters ---------------
+    !
+    ! This looks  like a clean-up  function. It should be  executed by
+    ! all  workers. It  is called  from main_scf()  that will  be soon
+    ! running on all workers. Check this next time it is used.
+    !
+    use operations_module, only: operations_integral
+    use elec_static_field_module, only: deallocate_field
+    use elec_static_field_module, only: bounds_free_field,destroy_field_file
+    use elec_static_field_module, only: surf_points_gradinfo_dealloc,dealloc_surf_points
+    use options_module, only: options_integrals_on_file
+    use integralstore_module, only: integralstore_deallocate_pcm
+    implicit none
     !** End of interface *****************************************
-    !----------- declaration of local variables -------------
-    !--- executable code-------------------------------------
 
-    if ( .not. options_integrals_on_file() .and. operations_integral) then
+    ABORT("check!")
+    if (.not. options_integrals_on_file() .and. operations_integral) then
        call integralstore_deallocate_pcm()
-       if ( comm_parallel() ) then
-          call comm_init_send(comm_all_other_hosts,msgtag_intstore_dealloc)
-          call comm_send()
-       endif
-    end if
+    endif
 
     call surf_points_gradinfo_dealloc()
-    if(comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_del_field)
-       call comm_send()
-    endif
-    if(operations_integral) then
+
+    if (operations_integral) then
        call bounds_free_field()
        call destroy_field_file()
     end if
     call dealloc_surf_points()
     call deallocate_field()
-
   end subroutine free_field_arrays
   !*************************************************************
   !--------------- End of module ----------------------------------

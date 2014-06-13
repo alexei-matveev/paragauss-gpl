@@ -744,17 +744,19 @@ contains
 
 !********************************************************************
   subroutine calc_shell_grid()
-    !------------ Modules used --------------------------------------
+    !
+    ! Runs on all workers.
+    !
+    use comm, only: comm_rank
     use atoms_data_module
-    use group_module, only : ylm_trafos,sub_group,group_coset, &
-         symm_transformation_int,group_num_el,group_coset_decomp
+    use group_module, only: ylm_trafos, sub_group, group_coset, &
+         symm_transformation_int, group_num_el, group_coset_decomp
     use unique_atom_module, only: N_unique_atoms,unique_atoms
-!!$    use pointcharge_module, only: pointcharge_N, pointcharge_array !@@@@@@@@@@@@@@
-    use symmetry_data_module, only : symmetry_data_point_group
-    use symm_module, only : symm_adapt_centers
-    !------------ Declaration of formal parameters ------------------
+    use symmetry_data_module, only: symmetry_data_point_group
+    use symm_module, only: symm_adapt_centers
+    implicit none
     !== End of interface ============================================
-    !------------ Declaration of local variables --------------------
+
     integer (i4_kind) :: N_spheres, n_rotations
     integer(kind=i4_kind),allocatable :: n_points_on_shell(:)
     real(kind=r8_kind) :: radius
@@ -763,9 +765,11 @@ contains
     integer (i4_kind), allocatable :: tri_index(:,:)
     real(kind=r8_kind),allocatable :: xyz_centers(:,:)
     character(len=4) :: name_point_group
-    !------------ Executable code -----------------------------------
 
-    call calc_shells()
+    ! FIXME: why not let everyone do the same?
+    if (comm_rank () /= 0) goto 999 ! receive results
+
+    call calc_shells()          ! no comm
 
     name_point_group =symmetry_data_point_group()
 
@@ -871,11 +875,13 @@ contains
        poligon_type=3
     endif
 
-    call put_points_on_shells()
+    call put_points_on_shells() ! no comm
 
-    call symm_sorted_grid()
+    call symm_sorted_grid()     ! no comm
 
-    if (comm_parallel()) call send_space_point()
+999 continue
+    call send_recv_space_point() ! does comm
+
   contains
     !------------------------------------------------------------
     subroutine calc_shells()

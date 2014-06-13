@@ -602,8 +602,8 @@ subroutine main_master()
            endif
         elseif (pdc) then
            call say ("call potential_calculate (PDC)")
+           call calc_shell_grid()
            do while (toggle_legacy_mode())
-              call calc_shell_grid()
               if (use_dens_mat) then
                  call open_densmat()
               endif

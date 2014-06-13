@@ -139,7 +139,7 @@ module ham_calc_module
 !------------ Subroutines ---------------------------------------
 contains
 
-  subroutine ham_calc_main (iloop)
+  subroutine ham_calc_main (loop)
     !
     ! Entry point for building hamiltonian (Fock) matrix.  Executed in
     ! parallel  context by  all  workers. Called  from main_scf()  and
@@ -160,11 +160,10 @@ contains
     use bgy3d, only: bgy3d_term
 #endif
     implicit none
-    integer (i4_kind), value :: iloop ! meaningfull on master only
+    integer (i4_kind), value :: loop ! meaningfull on master only
     ! *** end of interface ***
 
     integer(i4_kind) :: rank
-    integer(i4_kind) :: loop    ! will be valid on all workers
 
 #ifdef WITH_BGY3D
     real(r8_kind) :: e_bgy      ! electrostatic energy
@@ -183,12 +182,8 @@ contains
       call comm_send()
     endif
 
-    ! Broadcast local copy to slaves, iloop is intent(in):
-    loop = iloop
+    ! Broadcast to slaves, loop has the VALUE attribute:
     call comm_bcast (loop)
-
-    ! Dont use iloop below!
-    iloop = -1
 
     ! RESET_HAM allocates and initializes the necessary parts
     ! of the hamiltonian:

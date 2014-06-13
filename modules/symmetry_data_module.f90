@@ -1149,7 +1149,7 @@ ASSERT(allocated(irrep_dimensions))
      type(sym) :: sym_dummy
      logical  :: proj_only
      integer             :: memstat
-     integer(IK),pointer :: pforw(:),pback(:)
+     integer (IK), allocatable :: pforw(:), pback(:)
      ! forward & back permutations
      !------------ Executable code ------------------------------
      proj_only = .true.
@@ -1292,11 +1292,6 @@ ASSERT(allocated(irrep_dimensions))
      ssym%name_proj => sym_dummy%name_proj
      ssym%jz => sym_dummy%jz
      ssym%n_proj_irrep = n_ir_new
-
-     !mdf>>>
-     deallocate(pforw,pback,STAT=memstat)
-     if(memstat/=0)call error("symmetry_data_elim_pirreps: dealloc failed")
-     !<<<mdf
    end subroutine symmetry_data_elim_pirreps
    !*************************************************************
 

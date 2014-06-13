@@ -558,7 +558,7 @@ contains
      ! FIXME:  Happens  to  also   set  the  foreign  module  variable
      ! unique_atom_iwork!
      !
-     use iounitadmin_module, only: openget_iounit, return_iounit, &
+     use iounitadmin_module, only: openget_iounit, returnclose_iounit, &
           write_to_output_units, write_to_trace_unit
      use operations_module, only: operations_transit, operations_gx_epeformat
 #ifdef WITH_MOLMECH
@@ -654,8 +654,7 @@ contains
          if (status .gt. 0) call error_handler &
               ("unique_atom_read: reading iwork from gxfile")
          unique_atom_iwork = int(-iwork, i4_kind)
-         close(io_u)
-         call return_iounit(io_u)
+         call returnclose_iounit (io_u)
       else !read_in_gxfile
          if(operations_gx_epeformat) call error_handler("unique_atom_read: GXFILE is absent")
          write(*,*)'**********************************************'
@@ -684,8 +683,7 @@ contains
 
 #ifdef WITH_EPE
       if (ex_gxepe) then
-         close(io_gxepe)
-         call return_iounit(io_gxepe)
+         call returnclose_iounit (io_gxepe)
 
          ! This only writes  to output. FIXME: not the  right place to
          ! do this.

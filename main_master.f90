@@ -727,8 +727,8 @@ subroutine main_master()
         if (operations_gradients .and. .not. epe_relaxation .or. &
            epe_relaxation .and. epe_side_energy_converged) then
            call say ("Starting main_gradient() ...")
-           if (epe_relaxation.and.epe_side_energy_converged) then
-             call write_to_trace_unit ('epe_relaxation.and.epe_side_energy_converged')
+           if (epe_relaxation .and. epe_side_energy_converged) then
+             call write_to_trace_unit ('epe_relaxation .and. epe_side_energy_converged')
            endif
 
            call main_gradient (loop) ! (2)
@@ -815,7 +815,7 @@ subroutine main_master()
         endif
 #ifdef NEW_EPE
         if (operations_qm_epe .and. geometry_converged) then
-           if (get_qm_references .and. .not.qm_ref_run) then
+           if (get_qm_references .and. .not. qm_ref_run) then
               tasks = tasks + 1
               qm_ref_run=.true.
               !one more cycle to calculate and save
@@ -861,16 +861,16 @@ contains
         use filename_module, only: data_dir
         logical, intent (out):: epe_side_energy_converged
         integer (i4_kind), intent (in) :: i_iter
-      if (epe_relaxation.and..not.epe_basic_action.eq.0) then
+      if (epe_relaxation .and. .not. epe_basic_action .eq. 0) then
         inquire (file=trim (data_dir)//"/epe_rel_unconverged", &
         exist=epe_rel_converged)
-        epe_rel_converged=.not.epe_rel_converged
+        epe_rel_converged = .not. epe_rel_converged
         print*,'epe_convergence_check: epe_relaxation, epe_rel_converged' &
               , epe_relaxation, epe_rel_converged
         epe_side_energy_converged=abs (epe_side_optimized_energy_prev - &
         epe_side_optimized_energy).lt.0.00002 !?  embed_convergence_limit
 
-        if (.not.epe_side_energy_converged) &
+        if (.not. epe_side_energy_converged) &
            epe_side_energy_converged=abs (epe_side_optimized_energy_prev - &
            epe_side_optimized_energy).lt.0.0004 .and. i_iter.gt.10
 
@@ -878,12 +878,12 @@ contains
                 epe_side_optimized_energy_prev - epe_side_optimized_energy &
                , epeside_energy_limit
         epe_side_optimized_energy_prev=epe_side_optimized_energy
-         if (.not.epe_rel_converged .or. .not.epe_side_energy_converged) then
+         if (.not. epe_rel_converged .or. .not. epe_side_energy_converged) then
          print*,'optimizer: epe relaxation is still not converged', &
          epe_rel_converged, epe_side_energy_converged, &
          epe_side_optimized_energy_prev - &
          epe_side_optimized_energy
-        call write_to_trace_unit ('.not.epe_side_energy_converged')
+        call write_to_trace_unit ('.not. epe_side_energy_converged')
          else
          call write_to_trace_unit ('epe_side_energy_converged')
          endif
@@ -944,8 +944,8 @@ contains
 #ifdef WITH_EPE
     if (operations_qm_epe) then
        stop_after_eperelaxation=.true.
-       if (epe_relaxation.and..not.epe_basic_action.eq.0) then
-          if (.not.epe_rel_converged .or. .not.epe_side_energy_converged) then
+       if (epe_relaxation .and. .not. epe_basic_action .eq. 0) then
+          if (.not. epe_rel_converged .or. .not. epe_side_energy_converged) then
              print*,'optimizer: epe relaxation is still not converged'
              call write_to_trace_unit ('optimizer epe relaxation is still not converged')
              return
@@ -987,7 +987,7 @@ contains
 #endif
 #ifdef WITH_EPE
     if (operations_qm_epe) then
-       if (epe_relaxation.and.stop_after_eperelaxation) then
+       if (epe_relaxation .and. stop_after_eperelaxation) then
           conv=.true.
        endif
     end if
@@ -996,7 +996,7 @@ contains
     ! set output flag:
     geo_conv = conv
 
-    if (.not.conv) then
+    if (.not. conv) then
        call write_to_output_units&
             ("optimizer: geometry  not yet converged in loop", inte =geo_loop)
        call write_to_trace_unit&

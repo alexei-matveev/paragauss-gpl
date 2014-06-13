@@ -119,22 +119,29 @@ subroutine main_master()
 !----------------------------------------------------------------
 
 # include "def.h"
-  ! DONT use step_module, only: number_nolines
-  use type_module          ! contains standard data types
-  use comm_module           ! comm related information and routines
-  use msgtag_module
-  use filename_module      ! set I/O-Filenames
-  use iounitadmin_module   ! to open output units
-  use operations_module    ! defines which operations are to be performed
-  use options_module
-  use time_module          ! timing routines
-  use timer_module         ! timing database
-  use output_module        ! defines amount of output
-  use potential_calc_module
+  use type_module, only: i4_kind, r8_kind
+  use operations_module ! defines which operations are to be performed
+  use comm_module, only: comm_init_send, comm_send, &
+       comm_all_other_hosts, comm_parallel
+  use msgtag_module, only: msgtag_intstore_dealloc
+  use filename_module, only: filesystem_is_parallel
+  use iounitadmin_module, only: output_unit, stdout_unit, &
+       write_to_output_units, write_to_trace_unit
+  use options_module, only: options_directaccess_integrals, &
+       options_integrals_on_file, update_hessian_iteration
+  use time_module, only: start_timer, stop_timer
+  use timer_module, only: timer_initialisation, timer_print_summary, &
+       timer_print_slavetiming
+  use output_module, only: output_timing_detailedsummary, &
+       output_timing_slaves, output_timing_summary
+  use potential_calc_module, only: charge_constr, esp_map, pdc, &
+       use_saved_densmatrix, V_electronic, calc_plane_grid, &
+       grid2space_2d, get_poten_and_shutdown_2d, calc_shell_grid, &
+       collect_poten_3d, calc_poten_derive_charges
   use integralpar_module, only: integralpar_set, integralpar_cpksdervs, &
        integralpar_int_part_name
-  use integralstore_module, only : integralstore_deallocate                    &
-                                 , integralstore_deallocate_pcm
+  use integralstore_module, only: integralstore_deallocate, &
+       integralstore_deallocate_pcm
   use initialization, only: initialize_with_input, finalize_geometry
   use xc_cntrl, only: xc_is_on=>is_on, xc_ANY
   use post_scf_module
@@ -165,8 +172,8 @@ subroutine main_master()
 #endif
 #endif
 #ifdef WITH_EFP
-  use efp_module, only: n_efp,read_gx_qm,def_efp_arrays,calc_X_points,calc_efield_points
-  use efp_module, only: print_id,qm_fixed
+  use efp_module, only: n_efp, read_gx_qm, def_efp_arrays, calc_X_points, calc_efield_points
+  use efp_module, only: print_id, qm_fixed
   use efp_efp_module, only: efp_efp_energy
   use efp_only_opt_module, only: geom_converged
 #endif
@@ -182,7 +189,7 @@ subroutine main_master()
   use qmmm_interface_module  !!!!!!!!!!!!!AS
   use qmmm1_interface_module !!!!!!!!!!!!AS
 #endif
-  use calc3c_switches,only: print_epe
+  use calc3c_switches, only: print_epe
 #ifdef WITH_OPTIMIZER
   use opt_data_module, only: filename_setup_opt
 #endif

@@ -77,7 +77,6 @@ use calc_id_module, only: calc_Pol_ham
 use post_scf_module, only: post_scf_main
 use eigen_data_module, only: eigen_data_solve1, alloc_eigen, free_eigen
 use fit_coeff_module, only: fit_coeff_receive
-use integralstore_module, only: integralstore_deallocate, integralstore_deallocate_pcm
 use properties_module, only: properties_main
 #ifdef WITH_RESPONSE
   use response_module, only: response_setup, &
@@ -109,7 +108,7 @@ use prescf_module, only: prescf_init, prescf_finalize
 use solv_electrostat_module, only: build_solv_ham
 use elec_static_field_module, only: receive_surf_point, &
      surf_points_gradinfo_dealloc,surf_points_grad_information,read_field_e,send_receive_field, &
-     bounds_receive_field, bounds_free_field,destroy_field_file,dealloc_surf_points
+     bounds_receive_field, bounds_free_field
 use interfaces, only: main_integral, IPARA, ISLAV
 use interfaces, only: chargefit
 use xpack, only: upck
@@ -239,11 +238,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    case(msgtag_xcmda_close)
       call say("xcmda_close")
       call xcmda_close()
-  case(msgtag_intstore_dealloc)
-     call say("integralstore_deallocate")
-     call integralstore_deallocate()
-     call integralstore_deallocate_pcm()
-
 #ifdef WITH_RESPONSE
      case(msgtag_response_setup)
         call say("response_setup")
@@ -350,10 +344,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    case( msgtag_free_bnds_fld )
       call say("free_bounds_field")
       call bounds_free_field()
-   case(msgtag_del_field)
-      call say("remove field file")
-      call destroy_field_file()
-      call dealloc_surf_points()
    case(msgtag_ind_dipmom)
       call say("send_receive_id")
       call send_receive_id()

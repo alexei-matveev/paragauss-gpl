@@ -125,7 +125,7 @@ INTEGER_T :: msgtag_xcfit_close=           63
 !NTEGER_T :: msgtag_eigvec_occ_dealloc_e=  68
 !NTEGER_T :: msgtag_ua_close=              69
 !NTEGER_T :: msgtag_op_dealloc=            70
-INTEGER_T :: msgtag_intstore_dealloc=      71
+!NTEGER_T :: msgtag_intstore_dealloc=      71
 INTEGER_T :: msgtag_rel_Ttrans =           72
 INTEGER_T :: msgtag_rel_Ttrans_back =      73
 INTEGER_T :: msgtag_rel_momspace =         74
@@ -197,7 +197,7 @@ INTEGER_T :: msgtag_bounds_field=         141
 INTEGER_T :: msgtag_free_bnds_ptn=        142
 INTEGER_T :: msgtag_free_bnds_fld=        143
 !NTEGER_T :: msgtag_del_poten=            144
-INTEGER_T :: msgtag_del_field=            145
+!NTEGER_T :: msgtag_del_field=            145
 INTEGER_T :: msgtag_epe_data_sent=        146
 INTEGER_T :: msgtag_epe_do_gradients=     147
 INTEGER_T :: msgtag_epe_grad_done=        148
@@ -368,7 +368,7 @@ contains
 !   CMP(msgtag_eigvec_occ_dealloc)
 !   CMP(msgtag_ua_close)
 !   CMP(msgtag_op_dealloc)
-    CMP(msgtag_intstore_dealloc)
+!   CMP(msgtag_intstore_dealloc)
     CMP(msgtag_rel_Ttrans)
     CMP(msgtag_rel_Ttrans_back)
     CMP(msgtag_rel_momspace)
@@ -462,7 +462,7 @@ contains
     CMP(msgtag_free_bnds_ptn)
     CMP(msgtag_free_bnds_fld)
 !   CMP(msgtag_del_poten)
-    CMP(msgtag_del_field)
+!   CMP(msgtag_del_field)
     CMP(msgtag_epe_data_sent)
     CMP(msgtag_epe_do_gradients)
     CMP(msgtag_epe_grad_done)

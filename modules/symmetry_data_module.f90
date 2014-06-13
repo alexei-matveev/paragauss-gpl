@@ -128,19 +128,23 @@ private         ! by default, everything is private
 !== Interrupt end of public interface of module =================
 
 !------------ Declaration of types ------------------------------
+
+! If you ever introduce pointer components again (why should you?) you
+! will  need  to  adjust  the  reset() procedure  to  deallocate  them
+! explicitly:
 type, public :: sym
    ! vector irreps
-   integer (IK) :: n_irrep = -1              ! number of IRREPS
-   integer (IK), pointer :: dim(:) => NULL() ! dim of IRREP i
-   integer (IK), pointer :: partner(:) => NULL() ! number of partners
-   logical, pointer :: pseudo(:) => NULL() ! .true. if we have pseudo 2D irrep
-   character (len=12), pointer :: name(:) => NULL() ! name of IRREP
+   integer (IK) :: n_irrep = -1            ! number of IRREPS
+   integer (IK), allocatable :: dim(:)     ! dim of IRREP i
+   integer (IK), allocatable :: partner(:) ! number of partners
+   logical, allocatable :: pseudo(:) ! .true. if we have pseudo 2D irrep
+   character (len=12), allocatable :: name(:) ! name of IRREP
    ! projective irreps
    integer (IK) :: n_proj_irrep = -1   ! number of projective IRREPS
-   integer (IK), pointer :: dim_proj(:) => NULL() ! dim of proj. IRREP i
-   integer (IK), pointer :: partner_proj(:) => NULL() ! number of partners
-   character (len=12), pointer :: name_proj(:) => NULL() ! name of IRREP
-   real (RK), pointer :: jz(:) => NULL() ! for axial groups: jz
+   integer (IK), allocatable :: dim_proj(:) ! dim of proj. IRREP i
+   integer (IK), allocatable :: partner_proj(:) ! number of partners
+   character (len=12), allocatable :: name_proj(:) ! name of IRREP
+   real (RK), allocatable :: jz(:) ! for axial groups: jz
    ! general information about pointgroup
    character (len=4) :: point_group = "????"
 
@@ -431,20 +435,20 @@ contains
             ("FREE_SYM: deallocation pseudo failed")
     else
        ! free either irreps
-       if(associated(ssym_dummy%dim)) then
-          deallocate(ssym_dummy%dim,STAT=dealloc_stat)
+       if (allocated (ssym_dummy % dim)) then
+          deallocate (ssym_dummy % dim, STAT=dealloc_stat)
           if(dealloc_stat.ne.0) call error_handler &
                ("FREE_SYM: deallocation failed (1)")
        end if
 
-       if(associated(ssym_dummy%partner)) then
-          deallocate(ssym_dummy%partner,STAT=dealloc_stat)
+       if (allocated (ssym_dummy % partner)) then
+          deallocate (ssym_dummy % partner, STAT=dealloc_stat)
           if(dealloc_stat.ne.0) call error_handler &
                ("FREE_SYM: deallocation failed (2)")
        end if
 
-       if(associated(ssym_dummy%name)) then
-          deallocate(ssym_dummy%name,STAT=dealloc_stat)
+       if (allocated (ssym_dummy % name)) then
+          deallocate (ssym_dummy % name, STAT=dealloc_stat)
           if(dealloc_stat.ne.0) call error_handler &
                ("FREE_SYM: deallocation failed (3)")
        end if
@@ -469,8 +473,8 @@ contains
        endif
 
 
-       if(associated(ssym_dummy%pseudo)) then
-          deallocate(ssym_dummy%pseudo,STAT=dealloc_stat)
+       if (allocated (ssym_dummy % pseudo)) then
+          deallocate (ssym_dummy % pseudo, STAT=dealloc_stat)
           if(dealloc_stat.ne.0) call error_handler &
                ("FREE_SYM: deallocation pseudo failed")
        end if
@@ -681,7 +685,8 @@ contains
      ! purpose: deallocates arrays in ssym
      !** End of interface ***************************************
 
-     call free_sym(ssym)
+     call free_sym(ssym)        ! FIXME: redundant
+     call reset (ssym)
 
      if ( allocated(symmetry_data_dipoles_exist) ) &
           deallocate(symmetry_data_dipoles_exist)
@@ -700,6 +705,18 @@ contains
      projective = .false.
      n_spin_set = .false.
      number_of_irreps = 0
+
+   contains
+
+     subroutine reset (ssym)
+       !
+       ! Resets all fields  to initial values, see type  decl and make
+       ! sure there are no pointer components.
+       !
+       type (sym), intent (out) :: ssym
+       ! *** end of interface ***
+
+     end subroutine reset
    end subroutine symmetry_data_close
 
    !*************************************************************
@@ -1124,10 +1141,18 @@ ASSERT(allocated(irrep_dimensions))
 
      call free_sym(ssym,vec_only=vec_only)
 
-     ssym%dim => sym_dummy%dim
-     ssym%partner => sym_dummy%partner
-     ssym%name => sym_dummy%name
-     ssym%pseudo => sym_dummy%pseudo
+     allocate (ssym % dim(size (sym_dummy % dim))) ! optional in F03
+     ssym % dim = sym_dummy % dim
+
+     allocate (ssym % partner(size (sym_dummy % partner))) ! optional in F03
+     ssym % partner = sym_dummy % partner
+
+     allocate (ssym % name(size (sym_dummy % name))) ! optional in F03
+     ssym % name = sym_dummy % name
+
+     allocate (ssym % pseudo(size (sym_dummy % pseudo))) ! optional in F03
+     ssym % pseudo = sym_dummy % pseudo
+
      if ( ts .gt. 0 ) ssym%totalsymmetric_irrep = ts
      ssym%n_irrep = n_ir_new
 
@@ -1287,10 +1312,18 @@ ASSERT(allocated(irrep_dimensions))
 
      call free_sym(ssym,proj_only=proj_only)
 
-     ssym%dim_proj => sym_dummy%dim_proj
-     ssym%partner_proj => sym_dummy%partner_proj
-     ssym%name_proj => sym_dummy%name_proj
-     ssym%jz => sym_dummy%jz
+     allocate (ssym % dim_proj(size (sym_dummy % dim_proj))) ! optional in F03
+     ssym % dim_proj = sym_dummy % dim_proj
+
+     allocate (ssym % partner_proj(size (sym_dummy % partner_proj))) ! optional in F03
+     ssym % partner_proj = sym_dummy % partner_proj
+
+     allocate (ssym % name_proj(size (sym_dummy % name_proj))) ! optional in F03
+     ssym % name_proj = sym_dummy % name_proj
+
+     allocate (ssym % jz(size (sym_dummy % jz))) ! optional in F03
+     ssym % jz = sym_dummy % jz
+
      ssym%n_proj_irrep = n_ir_new
    end subroutine symmetry_data_elim_pirreps
    !*************************************************************

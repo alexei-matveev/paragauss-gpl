@@ -28,18 +28,8 @@
 module xc_cntrl
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
-  !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
+  ! Copyright (c) Thomas Soini
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

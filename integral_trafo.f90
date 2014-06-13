@@ -36,13 +36,7 @@ subroutine integral_trafo(mode)
   !     main_integral()
   !     (on slaves via main_slave() deamon)
   !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

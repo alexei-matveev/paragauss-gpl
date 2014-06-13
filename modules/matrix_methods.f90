@@ -47,16 +47,7 @@ module matrix_methods
   !
   !  Return value, when indicated, follows the double underscore.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

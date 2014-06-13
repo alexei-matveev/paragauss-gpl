@@ -81,16 +81,7 @@ module xc_ham_trafo
   ! This module operates on blocks assuming (1) and then
   ! by calling permute_matrix() brings it to (4)
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

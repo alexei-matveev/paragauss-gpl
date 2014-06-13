@@ -28,18 +28,8 @@
 module matrix_eigenval
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
-  !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
+  ! Copyright (c) Raghunathan Ramakrishnan
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

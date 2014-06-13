@@ -41,16 +41,7 @@ module matrix_matmult
   !           Which one, MATMUL or MATMULT, to use may thus depend
   !           on situation.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

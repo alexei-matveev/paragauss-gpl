@@ -28,19 +28,11 @@
 module xc_func
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
-  !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
-  !
+  ! Copyright (c) Alexei Matveev
+  ! Copyright (c) Alexey Shor
+  ! Copyright (c) Sergey Bosko
+  ! Copyright (c) Thomas Soini
+
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================
   !----------------------------------------------------------------

@@ -48,16 +48,7 @@ module relgrads_store
   !     - three digit processor index prefix (PPP)
   !     - file extension suffix              (.swp)
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

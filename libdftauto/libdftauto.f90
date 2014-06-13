@@ -28,18 +28,7 @@
 module libdftauto
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
-  !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

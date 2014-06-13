@@ -46,15 +46,8 @@ module matrix_parallel
   !
   !  Return value, when indicated, follows the double underscore.
   !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2011-2012 Martin Roderus
+  ! Copyright (c) 2011-2012 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

@@ -28,18 +28,8 @@
 module exchange
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
-  !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
+  ! Copyright (c) 2010-2012 Thomas Soini
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

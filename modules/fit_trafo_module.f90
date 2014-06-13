@@ -28,18 +28,8 @@
 module fit_trafo_module
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
-  !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
+  ! Copyright (c) Sonjoy Majumder
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

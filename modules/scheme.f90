@@ -31,16 +31,7 @@ module scheme
   !  Purpose:  Contains  bits  that  interoperate  with  the  embedded
   !  Scheme/Guile interpreter.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

@@ -23,7 +23,10 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module hcth
-
+  !
+  ! Copyright (c) Ajanta Deka
+  ! Copyright (c) Alexei Matveev
+  !
 # include "def.h"
   use type_module, RK=>r8_kind, IK=>i4_kind
   implicit none

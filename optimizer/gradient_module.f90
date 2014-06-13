@@ -447,54 +447,56 @@ contains
     !          grad_intern = B**-1 * grad_cartes
     !          B**-1 = bmat_inv
     use coordinates_module, only: bmat_inv, tmat, reduc_mat
-    use math_module, only: zero,round,invert_matrix
+    use math_module, only: zero, round, invert_matrix
     USE_DEBUG
     implicit none
     !** End of interface ****************************************
 
-    integer(kind=i4_kind)   :: k,i,start,ende,alloc_stat
-    real(kind=r8_kind),pointer  :: grad(:)
+    integer (i4_kind) :: k, i, start, ende, alloc_stat
+    real (r8_kind), pointer :: grad(:)
 
-    allocate(grad_intern(n_internal),grad_prim(n_primitive), STAT=alloc_stat)
+    allocate (grad_intern(n_internal), grad_prim(n_primitive), STAT=alloc_stat)
     ASSERT(alloc_stat.eq.0)
-    grad_intern=zero
-    grad_prim =zero
-    if (zmat_coordinates.and.zmat_format) then
+    grad_intern = zero
+    grad_prim = zero
+    if (zmat_coordinates .and. zmat_format) then
        grad => grad_prim
     else
        grad => grad_intern
     endif
 
-    do i=1,ubound(grad,1)
-          do k=1,n_atoms+n_dummy
-             start=(k-1)*3+1
-             ende=k*3
-             grad(i) = grad(i) + &
-                  bmat_inv(start,i)*grad_cartes(k,1) + &
-                  bmat_inv(start+1,i)*grad_cartes(k,2) + &
-                  bmat_inv(start+2,i)*grad_cartes(k,3)
-          enddo
-          if (abs(grad(i))<=1.0e-10_r8_kind ) grad(i)=zero
+    do i = 1, size (grad)
+       do k = 1, n_atoms + n_dummy
+          start = (k - 1) * 3 + 1
+          ende = k * 3
+          grad(i) = grad(i) + &
+               bmat_inv(start,     i) * grad_cartes(k, 1) + &
+               bmat_inv(start + 1, i) * grad_cartes(k, 2) + &
+               bmat_inv(start + 2, i) * grad_cartes(k, 3)
+       enddo
+       ! FIXME: hm, what is this?
+       if (abs(grad(i)) <= 1.0e-10_r8_kind) grad(i) = zero
     enddo
-    if (zmat_coordinates.and.zmat_format) then
-       grad_intern = matmul(reduc_mat,grad_prim)
+    if (zmat_coordinates .and. zmat_format) then
+       grad_intern = matmul (reduc_mat, grad_prim)
     endif
-    grad_intern = matmul(tmat,grad_intern)
+    grad_intern = matmul (tmat, grad_intern)
+
     if (print_debug) then
-       write(OPT_STDOUT,*)" full internal gradient is:"
-       do i=1,ubound(grad,1)
-          write(OPT_STDOUT,'(I4,3x,f9.5)')i,grad(i)
+       write (OPT_STDOUT, *) " full internal gradient is:"
+       do i = 1, size (grad)
+          write (OPT_STDOUT, '(I4,3x,f9.5)') i, grad(i)
        enddo
-       write(OPT_STDOUT,*)" Symmetry reduced gradient is "
-       do i=1,n_internal
-          write(OPT_STDOUT,'(i4,3x,f9.5)')i,grad_intern(i)
+       write (OPT_STDOUT, *) " Symmetry reduced gradient is "
+       do i = 1, n_internal
+          write (OPT_STDOUT, '(i4,3x,f9.5)') i, grad_intern(i)
        enddo
     endif
 
-    grad_max_comp = maxval(abs(grad_intern))
-    grad_mean_square = sqrt(sum(grad_intern**2)/n_internal)
+    grad_max_comp = maxval (abs (grad_intern))
+    grad_mean_square = sqrt (sum (grad_intern**2) / n_internal)
 
-    DCALL show("Internal gradient",grad_intern(:))
+    DCALL show("Internal gradient", grad_intern(:))
   end subroutine grad_cart_to_internal
 
   function sphere_grads(kk,grad_max_sphere,grad_mean_sphere) result(grad_sphere)

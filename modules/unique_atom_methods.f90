@@ -628,23 +628,26 @@ contains
                   read(io_u, *, ERR=100, END=101) z_dummy, x_coord, y_coord, z_coord, ieq_dummy
                endif
 
-               if (ieq_dummy .ne. 0) then
-                  if (counter_equal == 1) then
-                     unique_atoms(i_ua) % position_first_ea(1) = x_coord
-                     unique_atoms(i_ua) % position_first_ea(2) = y_coord
-                     unique_atoms(i_ua) % position_first_ea(3) = z_coord
-                  endif
-#ifdef WITH_EPE
-                  if (ex_gxepe) then
-                     gxepe_impu(i_ua) = impu
-                     if (impu .ne. 0) then
-                        gxepe_array(i_ua) % position(:, counter_equal) = r_gxepe
-                        n_epe_r = n_epe_r + 1
-                     endif
-                  endif
-#endif
-                  counter_equal = counter_equal + 1
+               ! Ignore dummy  atoms which  are identified not  by the
+               ! value of Z, but rather  by zero index of the group of
+               ! equivalent atoms:
+               if (ieq_dummy == 0) cycle
+
+               if (counter_equal == 1) then
+                  unique_atoms(i_ua) % position_first_ea(1) = x_coord
+                  unique_atoms(i_ua) % position_first_ea(2) = y_coord
+                  unique_atoms(i_ua) % position_first_ea(3) = z_coord
                endif
+#ifdef WITH_EPE
+               if (ex_gxepe) then
+                  gxepe_impu(i_ua) = impu
+                  if (impu .ne. 0) then
+                     gxepe_array(i_ua) % position(:, counter_equal) = r_gxepe
+                     n_epe_r = n_epe_r + 1
+                  endif
+               endif
+#endif
+               counter_equal = counter_equal + 1
             enddo
          enddo ! i_ua=1,N_unique_atoms
 

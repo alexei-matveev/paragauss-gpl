@@ -347,76 +347,9 @@ contains
   end function uatom_prune
 
   subroutine ua_pack_everything()
-#ifdef FPP_DEBUG
-    use error_module, only: MyID
-#endif
-    use xpack, only: pck
-    implicit none
-    ! *** end of interface ***
-
-    integer(IK) :: i
-
-    call pck(op_SpinOrbit)
-    call pck(size(uaSymm))
-
-    call pck(op_SmallComponents)
-
-    DPRINT MyID,"uasa/ua_pack_everything: packing uaSymm:"
-    do i=1,size(uaSymm)
-       call pack_uatom(uaSymm(i))
-    enddo
-
-    if(op_SpinOrbit)then
-       DPRINT MyID,"uasa/ua_pack_everything: packing Large:"
-       do i=1,size(uas_Large)
-          call pack_uatom(uas_Large(i))
-       enddo
-       if(op_SmallComponents)then
-          DPRINT MyID,"uasa/ua_pack_everything: packing Small:"
-          do i=1,size(uas_Small)
-             call pack_uatom(uas_Small(i))
-          enddo
-       endif
-       DPRINT MyID,"uasa/ua_pack_everything: packing done"
-    endif
   end subroutine ua_pack_everything
 
   subroutine ua_unpack_everything()
-#ifdef FPP_DEBUG
-    use error_module, only: MyID
-#endif
-    use xpack, only: upck
-    implicit none
-    ! *** end of interface ***
-
-    integer(IK) :: n_ua,i
-    logical     :: spor
-
-    call upck(spor)
-    call upck(n_ua)
-
-    call uatom_symmadapt_init(spor=spor, n_ua=n_ua)
-
-    call upck(op_SmallComponents)
-
-    DPRINT MyID,"uasa/ua_unpack_everything: unpacking uaSymm:"
-    do i=1,size(uaSymm)
-       call unpack_uatom(uaSymm(i))
-    enddo
-
-    if(op_SpinOrbit)then
-       DPRINT MyID,"uasa/ua_unpack_everything: unpacking Large:"
-       do i=1,size(uas_Large)
-          call unpack_uatom(uas_Large(i))
-       enddo
-       if(op_SmallComponents)then
-          DPRINT MyID,"uasa/ua_unpack_everything: unpacking Small:"
-          do i=1,size(uas_Small)
-             call unpack_uatom(uas_Small(i))
-          enddo
-       endif
-       DPRINT MyID,"uasa/ua_unpack_everything: unpacking done"
-    endif
   end subroutine ua_unpack_everything
 
   subroutine sa_show(ua,what)

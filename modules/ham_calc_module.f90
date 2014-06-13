@@ -374,7 +374,9 @@ contains
     ! energies
     real(r8_kind) :: e_kin
     real(r8_kind) :: e_nuc
+#ifdef WITH_DFTPU
     real(r8_kind) :: e_dft_plus_u ! correction to the total energy due to DFT+U
+#endif
     real(r8_kind) :: e_efield ! electric field contribution
     !------------------ Executable code ---------------------------
     !
@@ -833,7 +835,9 @@ contains
     real(r8_kind)                          :: e_2z_coul
     !
     real(r8_kind)                          :: e_exex
+#ifdef WITH_DFTPU
     real(r8_kind)                          :: e_dft_plus_u
+#endif
     real(r8_kind)                          :: e_fit_xc
     !
     ! temporary arrays for all nodes...

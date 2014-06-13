@@ -908,11 +908,13 @@ contains
     ! serially.  The input "geo_loop"  schould be the same everywhere.
     ! The output will be the same on all workers.
     !
-    use comm, only: comm_rank, comm_bcast
+    use comm, only: comm_rank, comm_bcast, comm_barrier
     implicit none
     integer (i4_kind), intent (in) :: geo_loop
     logical :: converged
     ! *** end of interface ***
+
+    call comm_barrier()         ! paranoya
 
     ! One of us does the work that includes some file-system mangling:
     if (comm_rank() == 0) then
@@ -921,6 +923,7 @@ contains
 
     ! Broadcast the result:
     call comm_bcast (converged)
+    call comm_barrier()         ! paranoya
   end function optimizer_step
 
   subroutine do_optimizer_step (geo_loop, geo_conv)

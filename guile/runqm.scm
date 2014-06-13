@@ -26,6 +26,9 @@
 ;; Please see the accompanying LICENSE file for further information.
 ;;
 ;;;
+;;; Copyright (c) 2011-2013 Alexei Matveev
+;;;
+;;;
 ;;; Make sure  the shebang line  and %load-path are set  correctly. In
 ;;; particular "bindir"  and "pkgdatadir" between  @-markers should be
 ;;; replaced by, say, a path to PG repository.

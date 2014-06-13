@@ -23,6 +23,9 @@
 ;; Please see the accompanying LICENSE file for further information.
 ;;
 ;;;
+;;; Copyright (c) 2011-2013 Alexei Matveev
+;;;
+;;;
 ;;; You may need to set GUILE_LOAD_PATH=.. for this to work:
 ;;;
 (use-modules (guile comm))

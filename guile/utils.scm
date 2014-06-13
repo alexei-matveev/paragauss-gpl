@@ -23,6 +23,9 @@
 ;; Please see the accompanying LICENSE file for further information.
 ;;
 ;;;
+;;; Copyright (c) 2011-2013 Alexei Matveev
+;;;
+;;;
 ;;; Utilities that do not require any Guile extension.
 ;;;
 (define-module (guile utils)

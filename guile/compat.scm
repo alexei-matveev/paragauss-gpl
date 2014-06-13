@@ -22,6 +22,9 @@
 ;;
 ;; Please see the accompanying LICENSE file for further information.
 ;;
+;;;
+;;; Copyright (c) 2011-2013 Alexei Matveev
+;;;
 (define-module (guile compat))
 
 (cond-expand

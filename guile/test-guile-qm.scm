@@ -1,5 +1,8 @@
 #!/usr/bin/env guile-qm
 !#
+;;;
+;;; Copyright (c) 2011-2013 Alexei Matveev
+;;;
 ;;
 ;; ParaGauss, a program package for high-performance computations
 ;; of molecular systems

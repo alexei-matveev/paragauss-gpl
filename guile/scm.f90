@@ -23,7 +23,9 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module scm
-
+!
+! Copyright (c) 2011-2013 Alexei Matveev
+!
 use iso_c_binding
 implicit none
 private

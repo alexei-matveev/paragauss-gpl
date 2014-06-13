@@ -22,7 +22,10 @@
   [1] http://www.gnu.org/licenses/gpl-2.0.html
 
   Please see the accompanying LICENSE file for further information.
+
+  Copyright (c) 2011-2013 Alexei Matveev
 */
+
 #include <stdlib.h>
 #include <libguile.h>
 #include <mpi.h>                /* used in libguile-comm.h */

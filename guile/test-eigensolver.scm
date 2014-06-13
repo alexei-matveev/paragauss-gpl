@@ -22,6 +22,9 @@
 ;;
 ;; Please see the accompanying LICENSE file for further information.
 ;;
+;;;
+;;; Copyright (c) 2011-2013 Alexei Matveev
+;;;
 (use-modules (srfi srfi-1))             ; list manipulation
 (use-modules (ice-9 pretty-print))
 

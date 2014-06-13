@@ -23,6 +23,9 @@
 ;; Please see the accompanying LICENSE file for further information.
 ;;
 ;;;
+;;; Copyright (c) 2011-2013 Alexei Matveev
+;;;
+;;;
 ;;; Do not confuse with (baslib guile paragauss) in
 ;;;
 ;;; ./baslib/guile/paragauss.scm

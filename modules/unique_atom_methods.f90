@@ -2856,6 +2856,12 @@ contains
         sap => ua % symadapt_partner(ts, 1) ! l = 1
         i_ma = ua % moving_atom
 
+        ! FIXME:  there  is no  reason  why  symmetry  info should  be
+        ! available only for  selected (moving) unique atoms. Somewhat
+        ! confusingly   the   structure  unique_atom_grad_info(:)   is
+        ! indexed by moving atom index. See how often this fires:
+        ASSERT(i_ua==i_ma)
+
         if (i_ma > 0) then
            moving_unique_atom_index(i_ma) = i_ua
            gi => unique_atom_grad_info(i_ma)

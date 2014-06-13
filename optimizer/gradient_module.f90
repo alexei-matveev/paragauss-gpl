@@ -452,7 +452,7 @@ contains
     implicit none
     !** End of interface ****************************************
 
-    integer (i4_kind) :: k, i, start, ende, alloc_stat
+    integer (i4_kind) :: k, i, start, alloc_stat
     real (r8_kind), pointer :: grad(:)
 
     allocate (grad_intern(n_internal), grad_prim(n_primitive), STAT=alloc_stat)
@@ -468,9 +468,8 @@ contains
     do i = 1, size (grad)
        do k = 1, n_atoms + n_dummy
           start = (k - 1) * 3 + 1
-          ende = k * 3
           grad(i) = grad(i) + &
-               bmat_inv(start,     i) * grad_cartes(k, 1) + &
+               bmat_inv(start + 0, i) * grad_cartes(k, 1) + &
                bmat_inv(start + 1, i) * grad_cartes(k, 2) + &
                bmat_inv(start + 2, i) * grad_cartes(k, 3)
        enddo

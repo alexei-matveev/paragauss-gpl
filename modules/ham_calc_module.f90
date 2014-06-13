@@ -160,7 +160,7 @@ contains
     use bgy3d, only: bgy3d_term
 #endif
     implicit none
-    integer(i4_kind), intent(in) :: iloop ! meaningfull on master only
+    integer (i4_kind), value :: iloop ! meaningfull on master only
     ! *** end of interface ***
 
     integer(i4_kind) :: rank
@@ -185,7 +185,10 @@ contains
 
     ! Broadcast local copy to slaves, iloop is intent(in):
     loop = iloop
-    call comm_bcast (loop)      ! dont use iloop below!
+    call comm_bcast (loop)
+
+    ! Dont use iloop below!
+    iloop = -1
 
     ! RESET_HAM allocates and initializes the necessary parts
     ! of the hamiltonian:
@@ -203,14 +206,14 @@ contains
       !
       ! STANDARD SCF
       !
-      call build_2e_hamiltonian( loop, bounds_ch, bounds_xc                    &
+      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc                    &
                                , h_matrix       = ham_tot                      &
                                , d_matrix       = densmat                      )
     else
       !
       ! SPIN ORBIT
       !
-      call build_2e_hamiltonian( loop, bounds_ch, bounds_xc                    &
+      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc                    &
                                , h_matrix_real = ham_tot_real                  &
                                , h_matrix_imag = ham_tot_imag                  &
                                , d_matrix_real = densmat_real                  &
@@ -746,7 +749,7 @@ contains
   !*****************************************************************************
 
   !*****************************************************************************
-  subroutine build_2e_hamiltonian( loop, bounds_ch, bounds_xc                  &
+  subroutine build_2e_hamiltonian (loop, bounds_ch, bounds_xc                  &
                                  , d_matrix                                    &
                                  , d_matrix_real, d_matrix_imag                &
                                  , h_matrix                                    &
@@ -767,8 +770,7 @@ contains
     !    trace                   - expectation value
     !
     !------------ Modules ----------------------------------------
-    use comm,                 only: comm_reduce                                &
-                                  , comm_rank
+    use comm, only: comm_reduce, comm_rank, comm_bcast, comm_same
     use iounitadmin_module,   only: output_unit                                &
                                   , stdout_unit
     use spin_orbit_module,    only: whatis                                     &
@@ -797,7 +799,7 @@ contains
     !
     !------------ Declaration of formal parameters ---------------
     !
-    integer(i4_kind), intent(in)           :: loop
+    integer (i4_kind), intent(in)          :: loop
     integer(i4_kind), intent(in)           :: bounds_ch(:)
     integer(i4_kind), intent(in)           :: bounds_xc(:)
     !
@@ -816,7 +818,6 @@ contains
                                             , model_density
     !
     integer(i4_kind)                       :: pid
-    integer(i4_kind)                       :: iter
     !
     integer(i4_kind)                       :: i_gamma
     integer(i4_kind)                       :: i_spin
@@ -870,9 +871,11 @@ contains
     !
     ! base-1 process ID:
     pid = 1 + comm_rank()
-    iter = loop
-    call comm_bcast( iter ) ! TODO: put this even further outside
-    !
+
+    ! See   ham_calc_main(),  loop   has   the  same   value  on   all
+    ! workers. FIXME: rm when confident!
+    ASSERT(comm_same(loop))
+
     e_coul    = 0.0_r8_kind
     e_2z_coul = 0.0_r8_kind
     e_exex    = 0.0_r8_kind
@@ -1226,7 +1229,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
                           //"exact exchange / coulomb not yet implemented")
       endif
       !
-      call exact_2e_interaction( iter, d_matrix, h_matrix, e_coul, e_exex )
+      call exact_2e_interaction (loop, d_matrix, h_matrix, e_coul, e_exex)
       !
     endif ! J_exact .or. K_exact
     !

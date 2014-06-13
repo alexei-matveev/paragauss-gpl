@@ -100,7 +100,7 @@ use main_epe_module, only : main_epe,                      &
                             defect_contributions,          &
                             defect_contributions_fin
 #endif
-use potential_module, only: receive_space_point,bounds_receive_poten, bounds_free_poten, &
+use potential_module, only: bounds_receive_poten, bounds_free_poten, &
      read_poten_e_3, send_receive_poten
 use prescf_module, only: prescf_init, prescf_finalize
 use solv_electrostat_module, only: build_solv_ham
@@ -301,9 +301,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
      call epe_finish_slave()
 !AG ========================= end of EPE-distribution ======================
 #endif
-  case (msgtag_space_point)
-     call say("eceive_space_point")
-     call receive_space_point()
   case (msgtag_prescf_init)
      call say("prescf_init")
      call prescf_init()

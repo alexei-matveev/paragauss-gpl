@@ -92,7 +92,6 @@ module post_scf_module
   use orbitalstore_module
   use orbital_module
   use density_data_module
-  use comm_module
   use occupied_levels_module, only: sndrcv_eigvec_occ
   use fit_coeff_module, only: fit_coeff_sndrcv, coeff_charge, coeff_spin, &
                               fit_coeff_shutdown, &
@@ -109,8 +108,9 @@ module post_scf_module
   use xcmda_hamiltonian, only: mda_rho_shape_eps, mda_constrain_rhospin,comp_exact
   use datatype, only: arrmat2,arrmat4,arrmat5,arrmat6,arrmat3,arrmat7
   USE_MEMLOG
+  use comm, only: comm_rank, comm_size
 #ifdef FPP_TIMERS
-  use comm, only: comm_rank, comm_size, comm_reduce
+  use comm, only: comm_reduce
 #endif
 #ifdef FPP_DEBUG
   use error_module, only: MyID
@@ -376,7 +376,7 @@ contains
     ! === FROM THIS POINT MASTER AND SLAVES RUN IN A PARALLEL CONTEXT ===
     ! ===================================================================
 
-    if (comm_i_am_master()) call start_timer(timer_gridph)
+    if (comm_rank() == 0) call start_timer(timer_gridph)
     ! first send eigvecs and fitcoeffs to the slaves
     call sndrcv_eigvec_occ()
     if( integralpar_2dervs )then
@@ -395,8 +395,8 @@ contains
       rho_shape_eps=mda_rho_shape_eps()
       constrain_rhospin=mda_constrain_rhospin()
       n_ch = fit_coeff_n_ch()
-      if (comm_parallel()) then
-        if(output_post_scf_main) &
+      if (comm_size() > 1) then
+        if (output_post_scf_main) &
           call write_to_output_units &
           ("POST_SCF_MAIN: fit_coeff_sndrcv")
         ! send coeff_charge and coeff_spin to evaluate rho_fit on the grid
@@ -409,10 +409,8 @@ contains
     ! write to trace unit to show progress of calculation
     call dtrace("Calculate PostSCF Exchange Energy")
     ! now prepare integration grid
-    if (comm_i_am_master()) then
-       if(output_post_scf_main) &
-            call write_to_output_units("POST_SCF_MAIN: grid_main")
-    endif
+    if (output_post_scf_main) &
+         call write_to_output_units("POST_SCF_MAIN: grid_main")
 
     call grid_main(post_scf=.true.)
 
@@ -939,7 +937,7 @@ contains
     call comm_reduce(times)
 #endif
 
-    master: if(comm_i_am_master()) then
+    master: if (comm_rank() == 0) then
 
        ! build the final xc-gradient
        ! this step is necessary because we only consider gridpoints for
@@ -994,7 +992,7 @@ contains
     call dlb_print_statistics(0)
 #endif
 
-    if(output_post_scf_main .and. comm_i_am_master())  call write_to_output_units(" grid_close")
+    if (output_post_scf_main) call write_to_output_units ("grid_close")
     if(.not. operations_response.and..not.integralpar_cpksdervs) then
        ! release ALL grid information
        call grid_close(.false.)
@@ -1212,8 +1210,8 @@ contains
 
     endif mdadel ! /else
 
-    if ( comm_i_am_master() .and. (output_timing_post_scf &
-         .or. output_timing_detailedpostscf) ) then
+    if ((comm_rank() == 0) .and. (output_timing_post_scf &
+         .or. output_timing_detailedpostscf)) then
        if(output_post_scf_main) &
             call write_to_output_units("POST_SCF_MAIN: timer_print_postscf()")
        call timer_print_postscf()
@@ -1460,7 +1458,7 @@ contains
     ! now prepare integration grid
     call grid_main(post_scf=.true.)
 
-    master_only: if(comm_i_am_master()) then
+    master_only: if (comm_rank() == 0) then
 
        call start_timer(timer_gridph)
        ! first send eigvecs and fitcoeffs to the slaves
@@ -1668,7 +1666,7 @@ contains
      endif
 #endif
 
-    if(comm_i_am_master()) then
+    if (comm_rank() == 0) then
     ! no need to calc grad_xc with cpks_main
        ! build the final xc-gradient
        ! this step is necessary because we only consider gridpoints for
@@ -1722,8 +1720,8 @@ contains
 !       print*,'density_calc_close'
 !       MEMSET(0)
 
-    if ( comm_i_am_master() .and. (output_timing_post_scf &
-         .or. output_timing_detailedpostscf) ) then
+    if ((comm_rank() == 0) .and. (output_timing_post_scf &
+         .or. output_timing_detailedpostscf)) then
        call timer_print_postscf()
     endif
 
@@ -6118,7 +6116,7 @@ contains
 
     call ph_sndrcv(do_grads, send_grad_grid, send_mda_coeff)
 
-    if (comm_i_am_master()) then
+    if (comm_rank() == 0) then
       if(do_grads.or.comp_exact) then
        ! solve linear equation systems to get b_k,s
        ! ---------------------------------------------------------------------

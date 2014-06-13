@@ -199,7 +199,7 @@ subroutine main_master()
   real (r8_kind) :: eshort
   logical :: epe_side_energy_converged
 #endif
-  logical :: use_dens_mat ! FIXME: may be used uninitialized
+  logical :: use_dens_mat
 
 
   DPRINT 'main_master: entered'
@@ -499,12 +499,12 @@ subroutine main_master()
      !
      call occupation_symmetry_check()
 
+     use_dens_mat = .false.
      if (operations_potential .and. esp_map) then
         if (.not. V_electronic .or. use_saved_densmatrix) goto 1111
      elseif (operations_potential .and. pdc) then
-        use_dens_mat=.false.
         if (charge_constr .and. use_saved_densmatrix) then
-           use_dens_mat=.true.
+           use_dens_mat = .true.
            goto 1111
         endif
      endif

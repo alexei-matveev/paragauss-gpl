@@ -65,7 +65,8 @@ module  gradient_module
   !------------ Declaration of constants and variables ------------
   real(kind=r8_kind),allocatable,public,target    :: grad_cartes(:,:)
   real(kind=r8_kind),allocatable,public,target    :: dervs_cartes(:,:,:,:)
-  real(kind=r8_kind),allocatable,public,target    :: grad_intern(:),grad_prim(:)
+  real (r8_kind), allocatable, public, target :: grad_intern(:)
+  real (r8_kind), allocatable, target :: grad_prim(:)
   real(kind=r8_kind),allocatable,public           :: grad_sphere(:)
   real(kind=r8_kind),public                :: energy,energy_ph,&
        grad_mean_square,grad_max_comp

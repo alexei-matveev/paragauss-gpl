@@ -299,111 +299,13 @@ contains
     vsu2cg_eliminated => NULL()
   end subroutine clebsch_gordan_close
 
-  subroutine clebsch_gordan_bcast(spin_orbit)
-    use error_module, only: MyID ! debug
-    use comm_module
-    use msgtag_module
+  subroutine clebsch_gordan_bcast (spin_orbit)
     implicit none
-    logical,intent(in),optional :: spin_orbit
+    logical, intent(in), optional :: spin_orbit
     ! *** end of interface ***
 
-    integer(IK) :: tag
-
-    if(.not.comm_parallel())then
-       WARN("cg/clebsch_gordan_bcast: no need to call me; ignore")
-       return
-    endif
-
-    if(comm_i_am_master())then
-       call comm_init_send(comm_all_other_hosts, msgtag_packed_message)
-       call pack_everything()
-       DPRINT MyID,'cg/clebsch_gordan_bcast: sending tag=',msgtag_packed_message
-       call comm_send()
-    else
-       call comm_save_recv(comm_master_host,msgtag_packed_message)
-       tag = comm_msgtag()
-       DPRINT MyID,'cg/clebsch_gordan_bcast: receiving tag=',tag
-       call unpack_everything()
-    endif
   end subroutine clebsch_gordan_bcast
 
-  subroutine pack_everything()
-    use xpack, only: pck
-    implicit none
-    ! *** end of interface ***
-
-    integer(IK) :: ip,iv,np,nv
-    integer(IK) :: ia, ib, ic
-    logical     :: spor
-
-    ! tell slaves if spin-orbit is coming:
-    spor = allocated(vsu2cg)
-    call pck(spor)
-
-    if(spor)then
-      ! broadcast only vsu2cg:
-      ASSERT(allocated(vsu2cg))
-      np = size(vsu2cg,1)
-      nv = size(vsu2cg,2)
-      call pck(np)
-      call pck(nv)
-      do ip=1,np
-         do iv=1,nv
-            call cpack_sym_prod(vsu2cg(ip, iv))
-         enddo
-      enddo
-    endif
-
-    DPRINT  "packing cg"
-    ASSERT(allocated(cg))
-    nv = size(cg,1)
-    call pck(nv)
-    do ia=1,nv
-       do ib=1,nv
-          do ic=1,nv
-             call cpack_sym_prod(cg(ia, ib, ic))
-          enddo
-       enddo
-    enddo
-  end subroutine pack_everything
-
-  subroutine unpack_everything()
-    use xpack, only: upck
-    implicit none
-    ! *** end of interface ***
-
-    integer(IK) :: ip, iv, np, nv, memstat
-    integer(IK) :: ia,ib,ic
-    logical     :: spor
-
-    ! see if spin-orbit data is coming:
-    call upck(spor)
-
-    if(spor)then
-      ! receive only vsu2cg_reordered:
-      call upck(np)
-      call upck(nv)
-      allocate(vsu2cg(np, nv), STAT=memstat)
-      ASSERT(memstat==0)
-      do ip = 1, np
-         do iv = 1, nv
-            call cunpack_sym_prod(vsu2cg(ip, iv))
-         enddo
-      enddo
-    endif
-
-    DPRINT  "unpacking cg"
-    call upck(nv)
-    allocate(cg(nv, nv, nv), STAT=memstat)
-    ASSERT(memstat==0)
-    do ia = 1, nv
-       do ib = 1, nv
-          do ic = 1, nv
-             call cunpack_sym_prod(cg(ia, ib, ic))
-          enddo
-       enddo
-    enddo
-  end subroutine unpack_everything
 
   subroutine clebsch_gordan_eliminate(which_vec, which_proj)
     use error_module
@@ -708,48 +610,6 @@ contains
     pb%cmplx = .false.
   end subroutine dealloc_prod_bas
 
-  subroutine cpack_prod_bas(pb)
-    use xpack, only: pck
-    implicit none
-    type(prod_bas), intent(in) :: pb
-    ! *** end  of interface ***
-
-    call pck(pb%cmplx)
-    if(pb%cmplx)then
-       call pck(shape(pb%re))
-       call pck(pb%re)
-       call pck(pb%im)
-       ! pb%z will be recovered
-    else
-       call pck(shape(pb%c))
-       call pck(pb%c) 
-    endif
-  end subroutine cpack_prod_bas
-
-  subroutine cunpack_prod_bas(pb)
-    use xpack, only: upck
-    implicit none
-    type(prod_bas), intent(inout) :: pb
-    ! *** end  of interface ***
-
-    integer(IK) :: n(3)
-    logical     :: lcmplx
-
-    call upck(lcmplx)
-    call upck(n)
-
-    call alloc_prod_bas(n(1), n(2), n(3), pb, cmplx=lcmplx)
-
-    if(lcmplx)then
-       call upck(pb%re)
-       call upck(pb%im)
-       ! recover pb%z
-       pb%z = cmplx(pb%re, pb%im, RK)
-    else
-       call upck(pb%c) 
-    endif
-  end subroutine cunpack_prod_bas
-
   subroutine alloc_sym_prod(mult, sp)
     implicit none
     integer(IK),intent(in)       :: mult
@@ -774,37 +634,6 @@ contains
     ASSERT(memstat==0)
     sp%mult   = -1
   end subroutine dealloc_sym_prod
-
-  subroutine cpack_sym_prod(sp)
-    use xpack, only: pck
-    implicit none
-    type(sym_prod),intent(in) :: sp
-    ! *** end of interface ***
-
-    integer(IK) :: i
-
-    call pck(sp%mult)
-    do i=1,sp%mult
-       call cpack_prod_bas(sp%sub(i))
-    enddo
-  end subroutine cpack_sym_prod
-
-  subroutine cunpack_sym_prod(sp)
-    use xpack, only: upck
-    implicit none
-    type(sym_prod),intent(inout) :: sp
-    ! *** end of interface ***
-
-    integer(IK) :: mult,i
-
-    call upck(mult)
-
-    call alloc_sym_prod(mult, sp)
-
-    do i=1,mult
-       call cunpack_prod_bas(sp%sub(i))
-    enddo
-  end subroutine cunpack_sym_prod
 
   subroutine free_sym_prod(sp)
     implicit none

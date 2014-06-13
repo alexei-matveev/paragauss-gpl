@@ -130,25 +130,25 @@ private         ! by default, everything is private
 !------------ Declaration of types ------------------------------
 type, public :: sym
    ! vector irreps
-   integer(IK)          :: n_irrep    ! number of IRREPS
-   integer(IK),pointer  :: dim(:)     ! dim of IRREP i
-   integer(IK),pointer  :: partner(:) ! number of partners
-   logical, pointer               :: pseudo(:)  ! .true. if we have pseudo 2D irrep
-   character(len=12), pointer :: name(:)    ! name of IRREP
+   integer (IK) :: n_irrep = -1              ! number of IRREPS
+   integer (IK), pointer :: dim(:) => NULL() ! dim of IRREP i
+   integer (IK), pointer :: partner(:) => NULL() ! number of partners
+   logical, pointer :: pseudo(:) => NULL() ! .true. if we have pseudo 2D irrep
+   character (len=12), pointer :: name(:) => NULL() ! name of IRREP
    ! projective irreps
-   integer(IK)          :: n_proj_irrep    ! number of projective IRREPS
-   integer(IK),pointer  :: dim_proj(:)     ! dim of proj. IRREP i
-   integer(IK),pointer  :: partner_proj(:) ! number of partners
-   character(len=12), pointer :: name_proj(:)    ! name of IRREP
-   real(RK),pointer  :: jz(:)           ! for axial groups: jz
+   integer (IK) :: n_proj_irrep = -1   ! number of projective IRREPS
+   integer (IK), pointer :: dim_proj(:) => NULL() ! dim of proj. IRREP i
+   integer (IK), pointer :: partner_proj(:) => NULL() ! number of partners
+   character (len=12), pointer :: name_proj(:) => NULL() ! name of IRREP
+   real (RK), pointer :: jz(:) => NULL() ! for axial groups: jz
    ! general information about pointgroup
-   character(len=4) :: point_group
+   character (len=4) :: point_group = "????"
 
    ! FIXME: see the strange logic with n_spin_set
-   integer(IK)          :: n_spin = 1 ! spin-restricted or not (1 or 2 )
+   integer (IK) :: n_spin = -1  ! spin-restricted or not (1 or 2 )
 
-   integer(IK)          :: totalsymmetric_irrep  ! index
-   logical              :: data_allocated
+   integer (IK) :: totalsymmetric_irrep = -1 ! index
+   logical :: data_allocated = .false.
 end type sym
 
 
@@ -882,19 +882,25 @@ contains
      ! purpose: determines index of totalalsymmetric irrep
      !          when other data are read in
      !** End of interface ***************************************
+
      integer :: i
-     if ( ssym%totalsymmetric_irrep .ne. 0 ) return
+
+     ! This field is initialized  by -1, see type declaration.  FIXME:
+     ! why is this  check necessary? If one reports  an error instead,
+     ! then it fires in the case of geometry optimization.
+     if (ssym % totalsymmetric_irrep .ne. -1) return
+
      do i = 1,ssym%N_irrep
         if ( trim(adjustl(ssym%name(i))) .eq. "A1"  .or. &
              trim(adjustl(ssym%name(i))) .eq. "a1"  .or. &
              trim(adjustl(ssym%name(i))) .eq. "A1G" .or. &
              trim(adjustl(ssym%name(i))) .eq. "A1g" .or. &
              trim(adjustl(ssym%name(i))) .eq. "a1g"      ) then
-           ssym%totalsymmetric_irrep = i
+           ssym % totalsymmetric_irrep = i
            return
         endif
      enddo
-     ssym%totalsymmetric_irrep = 1
+     ssym % totalsymmetric_irrep = 1
    end subroutine find_totalsymmetric_irrep
    !*************************************************************
 

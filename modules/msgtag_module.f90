@@ -168,7 +168,7 @@ INTEGER_T :: msgtag_resp_3Clb_tmptape=    112
 INTEGER_T :: msgtag_resp_3Clb_tmptape_2=  113
 !NTEGER_T :: msgtag_orb_plot_send_start=  114
 !NTEGER_T :: msgtag_orbital_plot_send=    115
-INTEGER_T :: msgtag_properties_main =     116
+!NTEGER_T :: msgtag_properties_main =     116
 INTEGER_T :: msgtag_prescf_finalize =     117
 !NTEGER_T :: msgtag_eigen_data_send=      118
 INTEGER_T :: msgtag_free_eigen=           119
@@ -433,7 +433,7 @@ contains
     CMP(msgtag_tmp_3co_send)
     CMP(msgtag_nori_2c_send)
 
-    CMP(msgtag_properties_main)
+!   CMP(msgtag_properties_main)
 !   CMP(msgtag_eigen_data_send)
     CMP(msgtag_free_eigen)
     CMP(msgtag_alloc_eigen)

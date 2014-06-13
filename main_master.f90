@@ -636,9 +636,7 @@ subroutine main_master()
      ! fail. Slaves execute properties_main() too:
      if (operations_properties) then
         call say ("call properties_main()")
-        do while (toggle_legacy_mode())
-           call properties_main()
-        enddo
+        call properties_main()
         call say ("done properties_main()")
      end if
 

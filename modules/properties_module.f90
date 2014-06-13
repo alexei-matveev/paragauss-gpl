@@ -149,11 +149,10 @@ contains
   end subroutine properties_write
 
 
-  subroutine properties_main()
+  subroutine properties_main ()
     !
-    ! Purpose: main subroutine for  doing properties.  The first thing
-    ! this  procedure does is  to tell  slaves to  call it.  From that
-    ! point on it runs in a parallel context.
+    ! Purpose:  main  subroutine  for  doing properties.   Runs  in  a
+    ! parallel context.
     !
     use filename_module, only: recover_dir, outfile
     use population_module, only: population_mulliken
@@ -175,8 +174,6 @@ contains
     use orbital_plot_module, only: orbital_plot_main
     use options_module, only: options_save_as_fragment
     use operations_module, only: operations_scf
-    use comm_module, only: comm_all_other_hosts, comm_init_send, comm_send
-    use msgtag_module, only: msgtag_properties_main
     use comm, only: comm_rank, comm_bcast
     implicit none
     !** End of interface *****************************************
@@ -185,14 +182,6 @@ contains
     type(readwriteblocked_tapehandle)   :: th
     integer(i4_kind) :: loop
     external error_handler
-    !------------ Executable code --------------------------------
-
-    ! first tell slaves to enter this sub
-    if (comm_rank() == 0) then
-       ! tell slaves to start plotting
-       call comm_init_send(comm_all_other_hosts, msgtag_properties_main)
-       call comm_send()
-    end if
 
     if (.not. operations_scf) then
        ABORT('needs more work')

@@ -77,7 +77,6 @@ use calc_id_module, only: calc_Pol_ham
 use post_scf_module, only: post_scf_main
 use eigen_data_module, only: eigen_data_solve1, alloc_eigen, free_eigen
 use fit_coeff_module, only: fit_coeff_receive
-use properties_module, only: properties_main
 #ifdef WITH_RESPONSE
   use response_module, only: response_setup, &
        & response_calc_2index_int_v2
@@ -266,9 +265,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
         call noRI_2c()
 #endif
 
-  case(msgtag_properties_main)
-     call say("properties_main")
-     call properties_main()
   case(msgtag_alloc_eigen)
      call say("alloc_eigen")
      call alloc_eigen()

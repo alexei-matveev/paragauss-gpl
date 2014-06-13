@@ -28,18 +28,9 @@
 module shgi4_pr4
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Compute a four-fold harmonic derivative of a product.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2010 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

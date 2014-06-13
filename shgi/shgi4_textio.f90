@@ -28,18 +28,9 @@
 module shgi4_textio
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Prepares the input for two-electron SHGI code.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2010 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

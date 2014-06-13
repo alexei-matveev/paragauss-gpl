@@ -28,18 +28,9 @@
 module shgi4_eri
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Processing a batch of two-electron integrals. Unfinished, unused.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2010 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

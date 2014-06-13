@@ -27,14 +27,14 @@
 !===============================================================
 module  gradient_module
   !---------------------------------------------------------------
-  !  Purpose: contains gradient  in cartesian and internal 
+  !  Purpose: contains gradient  in cartesian and internal
   !           coordinates plus routines to transform, print
   !           out, allocate and deallocate etc. blablah
   !
   !  Module called by: ...
   !
   !  References: ...
-  ! 
+  !
   !  Author: FN
   !  Date: 2/98
   !----------------------------------------------------------------
@@ -61,7 +61,7 @@ module  gradient_module
 
 
   !------------ Declaration of types ------------------------------
-  
+
   !------------ Declaration of constants and variables ------------
   real(kind=r8_kind),allocatable,public,target    :: grad_cartes(:,:)
   real(kind=r8_kind),allocatable,public,target    :: dervs_cartes(:,:,:,:)
@@ -76,19 +76,19 @@ module  gradient_module
   public dealloc_grad_cart_to_internal
   public sphere_grads,eg_rpmix,rp_grads
   public cart_step_g
-  
+
   !================================================================
   ! End of public interface of module
   !================================================================
   integer(i4_kind)                  :: n_cart_grads
-  
+
   !----------------------------------------------------------------
   !------------ Subroutines ---------------------------------------
 contains
 
   subroutine cart_step_g(geo_loop,converged)
-    ! Calculate numerical gradients 
-    ! To activate: 
+    ! Calculate numerical gradients
+    ! To activate:
     ! PG input - operations_geo_opt = t
     !            max_geo_iterations - should be enough
     !                                 to calculate all
@@ -102,7 +102,7 @@ contains
     integer(i4_kind),intent(in)   :: geo_loop
     logical         ,intent(out)  :: converged
     ! *** end of interface ***
-    
+
     type ::cart_coor_map
        integer(i4_kind) :: n_atoms
        integer(i4_kind) :: atom_numbers(500)
@@ -391,7 +391,7 @@ contains
    if(atom(j)%dummy) cycle
    r2_r=sum((xyz_reactant(:,i)-xyz_reactant(:,j))**2)
    r2_p=sum((xyz_product(:,i)-xyz_product(:,j))**2)
-   r2mean= ( sum((xyz(:,i)-xyz(:,j))**2)-pmix*r2_r-(1-pmix)*r2_p)**2 
+   r2mean= ( sum((xyz(:,i)-xyz(:,j))**2)-pmix*r2_r-(1-pmix)*r2_p)**2
    dev=dev+r2mean/(r2_r+r2_p)**2
    dev_int=dev_int+r2mean/(r2_r+r2_p)**2
    enddo
@@ -417,8 +417,8 @@ contains
 
     r2_r=sum((xyz_reactant(:,i)-xyz_reactant(:,j))**2)
     r2_p=sum((xyz_product(:,i)-xyz_product(:,j))**2)
-    
-    
+
+
     grad_cartes(i,:)=grad_cartes(i,:)+4*(xyz(:,i)-xyz(:,j)) &
       *( sum( (xyz(:,i)-xyz(:,j))**2 )-pmix*r2_r-(1-pmix)*r2_p)/(r2_r+r2_p)**2
    enddo
@@ -428,8 +428,8 @@ contains
 
     r2_r=sum((xyz_reactant(:,i)-epe(j)%s)**2)
     r2_p=sum((xyz_product(:,i)-epe(j)%s)**2)
-    
-    
+
+
     grad_cartes(i,:)=grad_cartes(i,:)+4*(xyz(:,i)-epe(j)%s) &
       *( sum( (xyz(:,i)-epe(j)%s)**2 )-pmix*r2_r-(1-pmix)*r2_p)/(r2_r+r2_p)**2
    enddo
@@ -473,7 +473,7 @@ contains
              grad(i) = grad(i) + &
                   bmat_inv(start,i)*grad_cartes(k,1) + &
                   bmat_inv(start+1,i)*grad_cartes(k,2) + &
-                  bmat_inv(start+2,i)*grad_cartes(k,3) 
+                  bmat_inv(start+2,i)*grad_cartes(k,3)
 #if 0 /* mass_weighted */
           grad_cartessian_vec(start)=grad_cartes(k,1)
           grad_cartessian_vec(start+1)=grad_cartes(k,2)
@@ -483,7 +483,7 @@ contains
           if (abs(grad(i))<=1.0e-10_r8_kind ) grad(i)=zero
     enddo
 #if 0 /* mass_weighted */
-!    grad=matmul(transpose(bmat_inv),grad_cartessian_vec) 
+!    grad=matmul(transpose(bmat_inv),grad_cartessian_vec)
 !    grad_cartessian_length=dot_product(matmul(grad_prim,gmat_sqr),grad_prim)
 !   write(OPT_STDOUT,*) sqrt(grad_cartessian_length),' grad_cartessian_length'
     gmat_sqr=matmul(bmat_inv,transpose(bmat_inv))
@@ -535,7 +535,7 @@ contains
     integer(kind=i4_kind)   :: i,ii
 
     write(io_flepo,*)'sphere_dependent_var', kk, s(kk)%value-s_reactant(kk)%value
-    
+
     dEdR_sphere=zero
     ii=0
    do i=1,size(grad_intern)
@@ -573,7 +573,7 @@ contains
 
     write(io_flepo,*)'rp_dependent_var', kk, s(kk)%value-s_reactant(kk)%value, &
                                              s(kk)%value-s_product(kk)%value
-    
+
     dEdR_rp=zero
 
     ii=0
@@ -582,7 +582,7 @@ contains
 
     ssr=(s(i)%value-s_reactant(i)%value)*sqt
     ssp=(s(i)%value-s_product(i)%value)*sqmt
-    
+
     dkdi=-(ssr-ssp)/ssk
 
     if(i.eq.kk) cycle
@@ -599,8 +599,8 @@ contains
     R2=distance_to_reactant**2
     drdt=-(P2*(1.0_r8_kind-rp_var)+R2*rp_var)/ssk
     dEdR_rp=grad_intern(kk)*drdt
-    
-    
+
+
 
     write(io_flepo,*) 'grad_max_rp ',grad_max_rp,'         grad_mean_rp ', grad_mean_rp
     write(io_flepo,*) 'dEdR_rp' , dEdR_rp

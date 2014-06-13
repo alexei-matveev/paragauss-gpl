@@ -28,18 +28,12 @@
 module comm
   !---------------------------------------------------------------
   !
-  !  Purpose: Hide the ugliest pieces of MPI behind a slimer interface
+  ! Hides the ugliest pieces of MPI behind a slimer interface.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2010-2013 Alexei Matveev
+  ! Copyright (c) 2010-2011 Astrid Nikodem
+  ! Copyright (c) 2011 Thomas Soini
+  ! Copyright (c) 2012 Bo Li
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

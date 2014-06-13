@@ -570,17 +570,16 @@ subroutine main_gradient(loop)
      ! GET gradient_totalsym : < rho | d/dR V_nuc >
      call gradient_sndrcv_3c(grads)
 
-     if(operations_solvation_effect) then
-        if(integralpar_2dervs) then
+     if (operations_solvation_effect) then
+        if (integralpar_2dervs) then
 #if 1 /* def IMPL_CONTRIBS_TO_DERVS */
-           if(comm_i_am_master()) then
+           if (comm_i_am_master()) then
               call charge_solv_2nd_deriv()
            end if
 #endif
-           if(comm_parallel()) call send_receive_Q_grads()
+           if (comm_parallel()) call send_receive_Q_grads()
            call matrix_2nd_deriv()
-!          DONE by integralpar_set(): integralpar_pot_for_secderiv=.true.
-           call potential_calculate('SolvDervs')
+           call potential_calculate ('SolvDervs')
         end if
      endif
 
@@ -667,11 +666,10 @@ subroutine main_gradient(loop)
       DPRINT MyID//'impl_fit_dervs done'
 #endif
 
-      if(operations_solvation_effect) then
+      if (operations_solvation_effect) then
          call say ("grad_solv_calculate: cpks contribution")
          call grad_solv_calculate('SolvGrads2')
-!        DONE by integralpar_set(): integralpar_pot_for_secderiv=.true.
-         call potential_calculate('SolvDervs2')
+         call potential_calculate ('SolvDervs2')
          ! NOTE: potential_calculate also calls main_integral()
          !       that does solvation integrals
       endif

@@ -100,7 +100,7 @@ use main_epe_module, only : main_epe,                      &
                             defect_contributions,          &
                             defect_contributions_fin
 #endif
-use potential_module, only: bounds_receive_poten, bounds_free_poten, &
+use potential_module, only: bounds_free_poten, &
      read_poten_e_3, send_receive_poten
 use prescf_module, only: prescf_init, prescf_finalize
 use solv_electrostat_module, only: build_solv_ham
@@ -139,9 +139,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       ! no need for main_slave swiss-knife!
       call say("eigvec_vir_dealloc")
       call eigvec_vir_dealloc(ISLAV) ! MUSTDIE!
-   case( msgtag_bounds_poten )
-      call say("bounds_receive_poten")
-      call bounds_receive_poten
    case( msgtag_free_bnds_ptn )
       call say("free_bounds_poten")
       call bounds_free_poten()

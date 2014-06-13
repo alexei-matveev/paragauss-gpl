@@ -178,7 +178,7 @@ INTEGER_T :: msgtag_grid_send_n_points =  122
 INTEGER_T :: msgtag_grid_send_points=     123
 INTEGER_T :: msgtag_int_setup=            124
 INTEGER_T :: msgtag_space_point=          125
-INTEGER_T :: msgtag_bounds_poten=         126
+!NTEGER_T :: msgtag_bounds_poten=         126
 INTEGER_T :: msgtag_start_poten=          127
 INTEGER_T :: msgtag_finish_poten=         128
 INTEGER_T :: msgtag_prescf_init =         129
@@ -443,7 +443,7 @@ contains
     CMP(msgtag_grid_send_points)
     CMP(msgtag_int_setup)
     CMP(msgtag_space_point)
-    CMP(msgtag_bounds_poten)
+!   CMP(msgtag_bounds_poten)
     CMP(msgtag_start_poten)
     CMP(msgtag_finish_poten)
     CMP(msgtag_prescf_init)

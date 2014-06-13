@@ -25,12 +25,13 @@
 !===============================================================
 ! Public interface of module
 !===============================================================
-subroutine potential_calculate(task)
+subroutine potential_calculate (task)
 !
-!  This is the warp procedure to calculate
-!  matrix elements (integrals) of electronic part
-!  of electrostatic potential in some special
+!  This is the warp procedure to calculate matrix elements (integrals)
+!  of  electronic  part of  electrostatic  potential  in some  special
 !  points (e.g. surface points of a cavity)
+!
+!  Runs in a parallel context.
 !
 !  Author: AS
 !  Date: 11/99
@@ -54,44 +55,37 @@ subroutine potential_calculate(task)
   use output_module        ! defines amount of output
   use integralpar_module, only: integralpar_set
   use integralpar_module, only: integralpar_pot_for_secderiv
-  use potential_module, only: bounds_calc_poten, bounds_send_poten
+  use potential_module, only: bounds_calc_poten
   use comm_module, only: comm_parallel
-  use interfaces, only: main_integral, IMAST,IPARA
+  use interfaces, only: main_integral, IPARA
   implicit none
-  character(len=*), intent(in) :: task ! 'Potential', what else?
+  character (len=*), intent (in) :: task ! 'Solvation', 'Potential', what else?
   ! *** end of interface ***
 
-  if( output_int_progress ) call write_to_output_units &
+  if (output_int_progress) call write_to_output_units &
        ("potential_calculate: Starting the Integral Part")
-  if( output_int_progress ) call write_to_output_units &
+  if (output_int_progress) call write_to_output_units &
        ("potential_calculate: calling potential_calculate ")
-  call write_to_output_units("potential_calculate: calling potential_calculate ")
+  call write_to_output_units ("potential_calculate: calling potential_calculate ")
 
-  ! FIXME: I dont really get trough the logic, FIX THIS:
-  select case(task)
-  case ('Solvation','Potential')
-    ! is Solvation the same as 'Potential?', there are three calls in main_master!
-    call integralpar_set('Potential')
+  select case (task)
+  case ('Solvation', 'Potential')
+    ! Is 'Solvation'  the same as 'Potential?', there  are three calls
+    ! in main_master!
+    call integralpar_set ('Potential')
   case default
-    call integralpar_set(task) ! also sets integralpar_pot_for_secderiv
+    call integralpar_set (task) ! also sets integralpar_pot_for_secderiv
   end select
 
-  ! FIXME: does this sub run in master-only context?
-  !    AM: NO! it is called from main_master AND from parallel
-  !        context in main_gradient
-  if(integralpar_pot_for_secderiv) then
-     call main_integral(IPARA)
-  else
-     call main_integral(IMAST)
-  end if
+  call main_integral (IPARA)
 
-  if( output_int_progress ) call write_to_output_units &
+  if (output_int_progress) call write_to_output_units &
        ("potential_calculate: done with the Integral Part")
 
-  if(.not.integralpar_pot_for_secderiv) then
-     call bounds_calc_poten
-     if (comm_parallel()) call bounds_send_poten
+  ! FIXME: why conditionally?
+  if (.not. integralpar_pot_for_secderiv) then
+     call bounds_calc_poten ()
   end if
 
-  call write_to_output_units("potential_calculate: finising potential_calculate ")
+  call write_to_output_units ("potential_calculate: finising potential_calculate ")
 end subroutine potential_calculate

@@ -70,11 +70,11 @@ module potential_module
 
 !------------ public functions and subroutines ------------------
 
-  public :: send_recv_space_point ! ()
+  public :: send_recv_space_point  ! ()
 
   public start_read_poten_e,read_poten_e_3,get_poten_n,get_poten_pc, &
        dealloc_space_points, deallocate_pot, &
-       bounds_calc_poten,get_bounds_poten,bounds_send_poten,bounds_receive_poten, &
+       bounds_calc_poten, get_bounds_poten, &
        bounds_free_poten,send_receive_poten, fill_points, &
        destroy_poten_file , &
        poten_integral_open,poten_integral_close
@@ -757,14 +757,21 @@ contains
   !*********************************************************
 
   !*********************************************************
-  subroutine bounds_calc_poten
+  subroutine bounds_calc_poten ()
+    !
+    ! Fills global module var bounds.
+    !
+    use comm, only: comm_size, comm_same
+    implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     real(kind=r8_kind)      :: rhelp
     integer(kind=i4_kind)   :: i,alloc_stat, i_pr
-    !------------ Executable code --------------------------------
 
-    i_pr=comm_get_n_processors()
+    ! If the input is the same, the output will be the same:
+    ASSERT(comm_same(N_points))
+
+    i_pr = comm_size ()
 
     allocate (bounds%item_arr(i_pr),STAT=alloc_stat)
     if(alloc_stat.ne.0) call error_handler&
@@ -789,7 +796,6 @@ contains
        bounds%lower1 = 1
        bounds%upper1 = 0
     endif! end of if( comm_parallel )
-
   end subroutine bounds_calc_poten
   !******************************************************************
 
@@ -830,63 +836,6 @@ contains
 
   end subroutine get_bounds_poten
   !***************************************************************
-
-  !***************************************************************
-    subroutine bounds_send_poten
-    ! purpose: send the bounds information to the slaves
-    !          - this is needed to perform the open-, read-
-    !            and close operation correctly
-    !** End of interface *****************************************
-    integer(kind=i4_kind) :: info,i_pr
-
-    ! ---------------- executable code ---------------------------
-
-    call comm_init_send(comm_all_other_hosts,msgtag_bounds_poten)
-
-    call commpack(bounds%lower1,info)
-    if( info.ne.0) call error_handler &
-         ("potential: BOUNDS pack failed(1)")
-    call commpack(bounds%upper1,info)
-    if( info.ne.0) call error_handler &
-         ("potential: BOUNDS pack failed(2)")
-    i_pr=comm_get_n_processors()
-    call commpack(bounds%item_arr,i_pr,1,info)
-    if( info.ne.0) call error_handler &
-         ("potential: BOUNDS pack failed(3)")
-
-    call comm_send()
-
-  end subroutine bounds_send_poten
-
-  !***************************************************************
-
-  !***************************************************************
-  subroutine bounds_receive_poten
-    ! prupose: receive the information on the bounds
-    !          sending : see routine above
-    !** End of interface *****************************************
-    integer(kind=i4_kind) :: info,alloc_stat,i_pr
-    ! ----------- executable code -------------------------------
-
-    i_pr=comm_get_n_processors()
-
-    call communpack(bounds%lower1,info)
-    if (info.ne.0) call error_handler &
-         ("potential: bounds unpack failed(1)")
-    call communpack(bounds%upper1,info)
-    if (info.ne.0) call error_handler &
-         ("potential: bounds unpack failed(2)")
-    if(.not.associated(bounds%item_arr)) then
-       allocate(bounds%item_arr(i_pr),STAT=alloc_stat)
-       if (alloc_stat.ne.0) call error_handler &
-            ("potential : BOUNDS_RECEIVE allocation failed")
-    endif
-    call communpack(bounds%item_arr,i_pr,1,info)
-    if (info.ne.0) call error_handler &
-         ("potential: bounds unpack failed(3)")
-
-  end subroutine bounds_receive_poten
-  !**********************************************************
 
   !**********************************************************
   subroutine poten_integral_open(th_poten2)

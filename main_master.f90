@@ -543,9 +543,7 @@ subroutine main_master()
      if (operations_solvation_effect .and. operations_integral) then
         call say ("Calculate integrals of electrostatic potential ...")
         call send_recv_space_point()
-        do while (toggle_legacy_mode())
-           call potential_calculate ('Solvation')
-        enddo
+        call potential_calculate ('Solvation')
         call say ("Done with integrals of electrostatic potential.")
      endif
 
@@ -590,8 +588,8 @@ subroutine main_master()
                  if (use_saved_densmatrix) then
                     call open_densmat()
                  endif
-                 call potential_calculate ('Potential')
               enddo
+              call potential_calculate ('Potential')
            endif
            do while (toggle_legacy_mode())
               call get_poten_and_shutdown_2d()
@@ -607,7 +605,9 @@ subroutine main_master()
               if (use_dens_mat) then
                  call open_densmat()
               endif
-              call potential_calculate ('Potential')
+           enddo
+           call potential_calculate ('Potential')
+           do while (toggle_legacy_mode())
               call collect_poten_3d()
               call calc_poten_derive_charges()
            enddo

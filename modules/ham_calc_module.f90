@@ -310,7 +310,6 @@ contains
     use print_module   !interface for outroutines
     use init_module,              only: init
     use symmetry_data_module,     only: ssym
-    use unique_atom_module,       only: unique_atoms
     use output_module,            only: output_hamiltonian
     use xc_cntrl,                 only: xc_is_on=>is_on                        &
                                       , xc_ANY
@@ -782,9 +781,9 @@ contains
                                   , set_energy                                 &
                                   , write_energy                               &
                                   , direct_2c_energy_calc_and_add
-#ifdef WITH_ERI4C
-    use eri4c_options,        only: J_exact                                    &
-                                  , K_exact
+    use eri4c_options, only: J_exact
+#if WITH_ERI4C == 1
+    use eri4c_options, only: K_exact
 #endif
     use options_module,       only: options_spin_orbit
     use unique_atom_module,   only: unique_atoms

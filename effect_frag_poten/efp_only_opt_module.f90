@@ -523,7 +523,7 @@ contains
     !  Purpose:
     !------------ Modules used -----------------------------------
     use integralpar_module, only: integralpar_set
-    use interfaces, only: main_integral, IPARA
+    use interfaces, only: main_integral
     use comm_module, only:  comm_i_am_master, comm_parallel
     use pointcharge_module, only : calc_nuc_pc_energy, print_energy
     use point_dqo_module, only : calc_nuc_dqo_energy
@@ -536,7 +536,7 @@ contains
 
     call integralpar_set("QM_EFP_energy")
 
-    call main_integral(IPARA)
+    call main_integral ()
 
     if(comm_parallel()) then
        if(comm_i_am_master()) then
@@ -608,7 +608,7 @@ contains
     !  Purpose:
     !------------ Modules used -----------------------------------
     use integralpar_module, only: integralpar_set
-    use interfaces, only: main_integral, IPARA
+    use interfaces, only: main_integral
     use comm_module, only:  comm_i_am_master, comm_parallel
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
@@ -617,7 +617,7 @@ contains
 
     call integralpar_set("Field_at_EFP")
 
-    call main_integral(IPARA)
+    call main_integral ()
 
     if(comm_parallel()) then
        if(comm_i_am_master()) then
@@ -730,7 +730,7 @@ contains
     !  Purpose:
     !------------ Modules used -----------------------------------
     use integralpar_module, only: integralpar_set
-    use interfaces, only: main_integral, IPARA
+    use interfaces, only: main_integral
     use comm_module, only:  comm_i_am_master, comm_parallel
     use pointcharge_module, only: moving_pc, calc_PC_grads
     use point_dqo_module, only: moving_X_centers, calc_X_grads
@@ -743,7 +743,7 @@ contains
 
     call integralpar_set("EFP_gradients")
 
-    call main_integral(IPARA)
+    call main_integral ()
 
     if(comm_parallel()) then
        if(comm_i_am_master()) then

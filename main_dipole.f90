@@ -82,7 +82,7 @@ subroutine  main_dipole
   use response_module, only: response_do_dipole
 #endif
   use options_module, only: options_spin_orbit
-  use interfaces, only: main_integral, IPARA
+  use interfaces, only: main_integral
 
   implicit none
 
@@ -114,7 +114,7 @@ subroutine  main_dipole
      call integralpar_set ('DipoleOff')
 
      call say ("main_integral")
-     call main_integral (IPARA)
+     call main_integral ()
 
      call stop_timer (timer_dipole_integral)
 
@@ -157,7 +157,7 @@ subroutine  main_dipole
      call integralpar_set ('DipoleOff')
 
      call say ("main_gten: main_integral")
-     call main_integral (IPARA)
+     call main_integral ()
 
      call stop_timer (timer_dipole_integral)
 
@@ -220,7 +220,7 @@ subroutine  main_dipole
        call integralpar_set ('Dipole')
      endif
      call say ("main_integral")
-     call main_integral (IPARA)
+     call main_integral ()
 
      call stop_timer (timer_dipole_integral)
   endif

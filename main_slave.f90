@@ -107,9 +107,8 @@ use solv_electrostat_module, only: build_solv_ham
 use elec_static_field_module, only: receive_surf_point, &
      surf_points_gradinfo_dealloc,surf_points_grad_information,read_field_e,send_receive_field, &
      bounds_free_field
-use interfaces, only: main_integral, IPARA, ISLAV
+use interfaces, only: ISLAV
 use interfaces, only: chargefit
-use xpack, only: upck
 use calc3c_switches
 #ifdef WITH_MOLMECH
 use molmech_msgtag_module, only: msgtag_start_molmech
@@ -118,7 +117,6 @@ use qmmm_interface_module, only: slave_run
 
 implicit none
 integer (i4_kind) :: msgtag
-integer (i4_kind) :: context
 
 integer(i4_kind), parameter :: UNUSED_INT = -1
 real(r8_kind) :: UNUSED_REAL_1, UNUSED_REAL_2
@@ -138,7 +136,7 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       !  CALL IT PROM THE PARALLEL CONTEXT!
       ! no need for main_slave swiss-knife!
       call say("eigvec_vir_dealloc")
-      call eigvec_vir_dealloc(ISLAV) ! MUSTDIE!
+      call eigvec_vir_dealloc (ISLAV) ! MUSTDIE!
    case( msgtag_free_bnds_ptn )
       call say("free_bounds_poten")
       call bounds_free_poten()
@@ -207,13 +205,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    case (msgtag_gridph_close)
       call say("grid_close(post_scf=.true.)")
       call grid_close1(.true.)
-   case (msgtag_main_integral)
-      call say("main_integral()")
-      ! remote procedure call, unpack arguments:
-      call upck(context)
-      ! overwire parallel context, to be sure:
-      context = ISLAV + IAND(context,NOT(IPARA))
-      call main_integral(context)
    case(msgtag_fit_coeff_send)
       call say("fit_coeff_receive")
       call fit_coeff_receive()

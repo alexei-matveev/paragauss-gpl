@@ -174,7 +174,7 @@ subroutine main_master()
   use potential_module, only: send_recv_space_point
   use elec_static_field_module
   use symmetry, only: main_symm
-  use interfaces, only: main_integral, IPARA
+  use interfaces, only: main_integral
   use interfaces, only: potential_calculate
   use interfaces, only: main_molmech
 #ifdef WITH_MOLMECH
@@ -527,7 +527,7 @@ subroutine main_master()
         endif
         call say ("done")
 
-        call main_integral (IPARA)
+        call main_integral ()
         call say ("done with Integral Part")
      end if
 

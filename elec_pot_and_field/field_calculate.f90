@@ -56,7 +56,7 @@ subroutine field_calculate
   use integralpar_module, only: integralpar_set
   use elec_static_field_module, only: bounds_calc_field
   use comm_module, only: comm_parallel
-  use interfaces, only: main_integral, IPARA
+  use interfaces, only: main_integral
 
   implicit none
 
@@ -67,7 +67,7 @@ subroutine field_calculate
   call write_to_trace_unit ("field_calculate: calling field_calculate")
   call integralpar_set ('Field')
 
-  call main_integral (IPARA)
+  call main_integral ()
 
   if (output_int_progress) call write_to_output_units &
        ("field_calculate: done with the Integral Part")

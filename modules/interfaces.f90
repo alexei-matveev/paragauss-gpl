@@ -80,10 +80,8 @@ module interfaces
   end interface
 
   interface
-     subroutine main_integral(context)
-       use type_module, only: IK=>i4_kind
+     subroutine main_integral ()
        implicit none
-       integer, intent(in) :: context
      end subroutine main_integral
   end interface
 

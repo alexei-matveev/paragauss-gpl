@@ -57,7 +57,7 @@ subroutine potential_calculate (task)
   use integralpar_module, only: integralpar_pot_for_secderiv
   use potential_module, only: bounds_calc_poten
   use comm_module, only: comm_parallel
-  use interfaces, only: main_integral, IPARA
+  use interfaces, only: main_integral
   implicit none
   character (len=*), intent (in) :: task ! 'Solvation', 'Potential', what else?
   ! *** end of interface ***
@@ -77,7 +77,7 @@ subroutine potential_calculate (task)
     call integralpar_set (task) ! also sets integralpar_pot_for_secderiv
   end select
 
-  call main_integral (IPARA)
+  call main_integral ()
 
   if (output_int_progress) call write_to_output_units &
        ("potential_calculate: done with the Integral Part")

@@ -395,7 +395,7 @@ contains
     use timer_module, only: timer_efield, timer_dipole_integral
     use time_module
     use iounitadmin_module, only: output_unit, write_to_output_units
-    use interfaces, only: main_integral, IPARA
+    use interfaces, only: main_integral
     implicit none
     !** End of interface *****************************************
 
@@ -421,7 +421,7 @@ contains
        call start_timer(timer_dipole_integral)
        call integralpar_set('Dipole')
 
-       call main_integral (IPARA)
+       call main_integral ()
        call stop_timer(timer_dipole_integral)
        call print_timer(timer_dipole_integral,output_unit, &
          "Calculation of dipole integrals", &

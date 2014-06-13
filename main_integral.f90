@@ -25,7 +25,7 @@
 !===============================================================
 ! Public interface of module
 !===============================================================
-subroutine main_integral(context)
+subroutine main_integral ()
 !----------------------------------------------------------------
 !
 !  Purpose: This is the main routine of the integral part
@@ -74,14 +74,10 @@ USE_MEMLOG
 use xpack, only: pck
 use operations_module, only: operations_gradients
 ! possible values of argument CONTEXT are combinations of:
-use interfaces, only: IMAST, IPARA &
-                    , integral_trafo, RELENRG, RELGRAD
+use interfaces, only: integral_trafo, RELENRG, RELGRAD
 use shgi_utils, only: shgi_timing
 implicit none
-integer(kind=i4_kind), intent(in) :: context
-! bitmask of:
-! IMAST: in master context
-! IPARA: in parallel context
+! *** end of interface ***
 
 
 !----------------------------------------------------------------
@@ -97,22 +93,6 @@ start_time = clktime()
 
 ! only master does IO:
 io = comm_i_am_master()
-
-if ( IAND(context,IPARA) == IMAST ) then
-   ! master and slave will call me from different contexts (MUSTDIE),
-   ! slaves do that by means of main_slave (MUSTDIE)
-   ! therefore, master sends the a message to do so:
-   if ( comm_parallel() ) then
-      ASSERT(io) ! master?
-      DPRINT MyID, 'main_integral: entered, tell slaves to do so'
-      ! remote procedure call, send arguments and call:
-      call comm_init_send(comm_all_other_hosts,msgtag_main_integral)
-      call pck(context)
-      call comm_send()
-   endif
-endif
-
-call comm_barrier()
 
 if (integralpar_cpks_contribs) then
    call say("integralpar_cpks_contribs to be calculated")

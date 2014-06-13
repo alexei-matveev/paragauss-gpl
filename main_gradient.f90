@@ -272,8 +272,7 @@ subroutine main_gradient(loop)
                                , density_data_free
   use overlap_module, only: overlap
   use error_module, only: MyID
-  use interfaces, only: main_integral, IPARA &
-                      , integral_trafo, RELGRAD, RELSDER
+  use interfaces, only: main_integral, integral_trafo, RELGRAD, RELSDER
   use interfaces, only: potential_calculate
   use interfaces, only: grad_solv_calculate
   use occupation_module, only: dealloc_occ_num
@@ -454,7 +453,7 @@ subroutine main_gradient(loop)
      ! integralpar_cpks_contribs=.false. ! explicit functional dervs only
 
      FPP_TIMER_START(int1)
-     call main_integral(IPARA) !(1) First call: gradients, maybe second derivatives
+     call main_integral () ! (1) First call: gradients, maybe second derivatives
      FPP_TIMER_STOP(int1)
      DPRINT MyID,'main_gradient:  calc_3c=',FPP_TIMER_VALUE(t_calc_3center)
      DPRINT MyID,'main_gradient:  int1=',FPP_TIMER_VALUE(int1)
@@ -644,15 +643,13 @@ subroutine main_gradient(loop)
                             ! it should not be modified after initial
                             ! calculation
 
-      DPRINT MyID,'call main_integral with context=',IPARA,'integralpar_cpks_contribs'
-
       ! no need for RelGrads as they were saved before CPKS:
       call integralpar_set('Gradients2') ! sets integralpar_cpks_contribs=.true.
 
       call say ("main_integral(2)")
 
       FPP_TIMER_START(int2)
-      call main_integral(IPARA)
+      call main_integral ()
       FPP_TIMER_STOP(int2)
       DPRINT MyID,'main_gradient:  calc_3c=',FPP_TIMER_VALUE(t_calc_3center)
       DPRINT MyID,'main_gradient:  int2=',FPP_TIMER_VALUE(int2)

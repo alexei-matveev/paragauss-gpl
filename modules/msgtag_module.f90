@@ -239,10 +239,7 @@ INTEGER_T :: msgtag_resp_Fcoulstart=      180
 INTEGER_T :: msgtag_resp_Fcoulslave=      181
 INTEGER_T :: msgtag_resp_Fcoulmaster=     182
 !NTEGER_T :: msgtag_eigs_entry      =     183
-
-! call main_integral if get this:
-INTEGER_T :: msgtag_main_integral   =     184
-
+!NTEGER_T :: msgtag_main_integral   =     184
 !NTEGER_T :: msgtag_cpks_constructs   =   185
 !NTEGER_T :: msgtag_main_integral_2   =   186
 !NTEGER_T :: msgtag_dealloc_gradxc    =   187
@@ -498,7 +495,7 @@ contains
     CMP(msgtag_resp_Fcoulstart)
     CMP(msgtag_resp_Fcoulslave)
     CMP(msgtag_resp_Fcoulmaster)
-    CMP(msgtag_main_integral)
+!   CMP(msgtag_main_integral)
     CMP(msgtag_end)
     CMP(msgtag_error)
     CMP(msgtag_eigen_data_solve)

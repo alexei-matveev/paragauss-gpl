@@ -55,7 +55,7 @@ subroutine grad_solv_calculate(task)
   use solv_cavity_module, only: send_receive_geom_grad
   use comm_module
   use gradient_data_module
-  use interfaces, only: main_integral, IPARA
+  use interfaces, only: main_integral
   use integralpar_module, only: integralpar_cpks_contribs
 #ifdef WITH_EFP
   use unique_atom_module, only: N_unique_atoms
@@ -86,7 +86,7 @@ subroutine grad_solv_calculate(task)
   call write_to_trace_unit("grad_solv: calling grad_solv_calculate ")
   call integralpar_set(task)
 
-  call main_integral(IPARA)
+  call main_integral ()
 
   if( output_int_progress ) call write_to_output_units &
        ("grad_solv: done with the Integral Part")

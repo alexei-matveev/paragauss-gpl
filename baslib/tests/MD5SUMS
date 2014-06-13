@@ -1,0 +1,8 @@
+67e3f0f2575ebeb75b1df0ddec4f7b04 - ../bin/qm-find-basis --library=nwchem --ecp Au crenbl_ecp
+90708f05a55a01deacc8bcc7d74cfc17 - ../bin/qm-find-basis --library=nwchem --ecp Au crenbs_ecp
+9ed11100b12bc0267f7b084a7225f4ab - ../bin/qm-find-basis --library=nwchem --ecp Au hay-wadt_mb_n+1_ecp
+9ed11100b12bc0267f7b084a7225f4ab - ../bin/qm-find-basis --library=nwchem --ecp Au hay-wadt_vdz_n+1_ecp
+9ed11100b12bc0267f7b084a7225f4ab - ../bin/qm-find-basis --library=nwchem --ecp Au lanl2dz_ecp
+2666d83be170d61c8693abeaade84d52 - ../bin/qm-find-basis --library=nwchem --ecp Au sbkjc_vdz_ecp
+fe34a6e18b062b861933cc020cff3ae6 - ../bin/qm-find-basis --library=nwchem --ecp Au stuttgart_rsc_1997_ecp
+34c8a1f2bb0cd40f9af5424ca2c9fc82 - ../bin/qm-find-basis --library=nwchem --ecp Ag stuttgart_rsc_1997_ecp

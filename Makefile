@@ -23,12 +23,9 @@
 #
 # Please see the accompanying LICENSE file for further information.
 #
-### Makefile for new ttfs (lcgto)
-### TB 2/95
-
-# AM, 31.01.2004:
+# Makefile for new ttfs (lcgto), Thomas Belling 2/95
 #
-# 0) First, *CHANGE THE VERSION ID IN THIS FILE* !!!
+# AM, 31.01.2004:
 #
 # 1) Before build, find suitable settings in
 #
@@ -38,15 +35,7 @@
 #
 # 	machine.mk -> make/HOST.mk
 #
-# 2) The dependencies are build automatically, but they are not
-#    CHECKED for loops, you may issue
-#
-#	make chkdepend
-#
-#    to  do that  from time  to time  (on some  platforms  use 'gmake'
-#    instead.
-#
-# 3) Build the rest:
+# 2) Build the rest:
 #
 # 	make -r
 #
@@ -57,19 +46,27 @@
 #    where N is  the maximum job number (any  if omitted).  Hint: some
 #    compilers require licences to run every instance (regatta).
 #
+# The dependencies  are build automatically, but they  are not checked
+# for loops, you may issue
+#
+#   make chkdepend
+#
+# to do that from time to time.
+#
 
 # Set default  to ``build'' in  order not to overwrite  executables in
 # the  installation  directory.   Then  you'll need  to  issue  ``make
 # install'' manually
 default: build
 
-#### Version of Executables ####
+# Version as  printed in  the legal  header (and as  part of  the file
+# name, occasionally):
 MAJOR =  3
 MINOR = .2
-# maintenance number OR branch abbreviation (e.g. your initials):
+# Maintenance number OR branch abbreviation (e.g. your initials):
 EXTRA = .1
-# change/increment this:
-BUILD = cvs
+# Change or increment this:
+BUILD =
 
 VERS = V$(MAJOR)$(MINOR)$(EXTRA)$(BUILD)
 

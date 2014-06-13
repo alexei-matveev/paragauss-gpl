@@ -416,7 +416,7 @@ contains
 #ifdef WITH_EPE
    use ewaldpc_module, only: gxepe_array, EX_GXEPE, gxepe_impu, n_epe_r
 #endif
-   use unique_atom_module, GLOB_n_unique_atoms => n_unique_atoms
+   use unique_atom_module, only: GLOB_n_unique_atoms => n_unique_atoms
    !^^^^ make it visible with another name, see comment below
    use atom_data_module, only: nuc_radius
    implicit none

@@ -659,6 +659,11 @@ contains
 
 #ifdef WITH_EPE
       if (ex_gxepe) then
+         close(io_gxepe)
+         call return_iounit(io_gxepe)
+
+         ! This only writes  to output. FIXME: not the  right place to
+         ! do this.
          write(output_unit,*) &
               ' gxepe array to relate  QM and impurity cluster centers '
          do i_ua = 1, N_unique_atoms
@@ -666,8 +671,6 @@ contains
                write(output_unit,*) gxepe_array(i_ua) % position(:, counter_equal)
             enddo ! counter_equal=1,n_equal_atoms
          enddo ! i_ua=1,N_unique_atoms
-         close(io_gxepe)
-         call return_iounit(io_gxepe)
       endif ! ex_gxepe
 #endif
 

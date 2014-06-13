@@ -274,7 +274,7 @@ print OUTFILE
 # a combined object+module target rule:
 undef @modlist;
 
-defined @moddefs && do {
+if (@moddefs) {
     # @modlist stores module names with .mod on the end
     foreach $module (&Uniq(sort(@moddefs))) {
         ($name = $module) =~ s/$/.$mod_ext/;
@@ -328,18 +328,18 @@ open(OUTFILE,">" . $odepsfile) or
 # Print out extra dependencies for the object file beyond the default:
 undef @dependencies;
 
-defined @modules && do {
+if (@modules) {
     foreach $module (&Uniq(sort(@modules))) {
         ($name = $module) =~ s/.*/\$\($&.$mod_ext\)/;
         push(@dependencies, $name);
     }
 };
 
-defined @incs && do {
+if (@incs) {
     push(@dependencies, &Uniq(sort(@incs)));
 };
 
-defined @dependencies && do {
+if (@dependencies) {
     print OUTFILE "# Extra dependencies of the obj file:\n";
     print OUTFILE "\$($objbase): ";
     $j = length($objbase) + 5;

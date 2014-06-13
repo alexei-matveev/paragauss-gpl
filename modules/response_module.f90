@@ -352,7 +352,7 @@ module response_module
   type(orbital_type),pointer      :: orbs_ob(:)  ! for 2/3 index integrals
   type(orbital_gradient_type),pointer :: orbs_grads(:)
 ! type(orbital_type)              :: orbs_ch     ! chargefit function for all integrals
-  real(kind=r8_kind),pointer      :: orbs_ch_p(:,:) ! pointer on component of orbs_ch
+! real(kind=r8_kind),pointer      :: orbs_ch_p(:,:) ! pointer on component of orbs_ch
 
   ! gridpoints and weigths
   real(kind=r8_kind),pointer      :: grdpts(:,:),grdwts(:)
@@ -1490,7 +1490,8 @@ contains
     type(orbital_type),pointer             :: fcts_orbs_ch(:)
     type(orbital_gradient_type),pointer    :: grads_ch(:)
 
-    real(kind=r8_kind),pointer     :: grad_orbs_ch_p(:,:,:)
+    real (r8_kind), pointer :: orbs_ch_p(:,:) ! pointer on component of orbs_ch
+    real (r8_kind), pointer :: grad_orbs_ch_p(:,:,:)
 
     integer(i4_kind), parameter ::&
          A = 1, &
@@ -2293,7 +2294,8 @@ contains
     type(orbital_gradient_type),pointer    :: grads_ch(:)
     !!    type(orbital_sec_der_type),pointer     :: sec_ders_ch(:)
 
-    real(kind=r8_kind),pointer     :: grad_orbs_ch_p(:,:,:)
+    real (r8_kind), pointer :: orbs_ch_p(:,:) ! pointer on component of orbs_ch
+    real (r8_kind), pointer :: grad_orbs_ch_p(:,:,:)
 
     real(r8_kind), parameter :: FRTH = 0.25_r8_kind
 

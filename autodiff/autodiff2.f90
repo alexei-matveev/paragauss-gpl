@@ -61,6 +61,7 @@
 
 ! supply the name with -DAUTODIFF=modulename for other builds:
 #ifdef AUTODIFF
+#  undef autodiff
 #  define autodiff AUTODIFF
 #endif
 

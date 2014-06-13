@@ -382,6 +382,7 @@ contains
     call comm_bcast(output_dir)
     call comm_bcast(input_dir)
     call comm_bcast(input_name)
+    call comm_bcast(recover_dir)
     call comm_bcast(resp_dir)
   end subroutine bcast
 

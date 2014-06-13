@@ -359,7 +359,7 @@ contains
       if( procCount .le. 9 ) then
         getMinSize = procCount*blocksize
       else
-        getMinSize = sqrt( real(procCount) )*blocksize
+        getMinSize = int (sqrt (real (procCount)) * blocksize)
       end if
     else
       getMinSize = 20

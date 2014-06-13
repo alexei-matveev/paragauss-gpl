@@ -47,8 +47,8 @@ subroutine main_master()
 !      true, also the xc-contributions to the energy gradient will be
 !      calculated
 !
-!  (5) main_gradient() -> calculation of the energy gradients ( except
-!      xc-part )
+!  (5) main_gradient() -> calculation of the energy gradients (except
+!      xc-part)
 !
 !  Subroutine called by: main()
 !
@@ -190,15 +190,15 @@ subroutine main_master()
   USE_MEMLOG
 ! --------------------------------------------------
   implicit none
-  character(len=128)     :: version = FPP_PARAGAUSS_VERS
-  integer(kind=i4_kind)  :: tasks=0             ! Number of tasks LEFT to be done
-  integer(kind=i4_kind)  :: loop, max_geo_loop  ! loop -- Laufvariable fuer Runs
-  logical                :: geometry_converged = .false. ! determines if Simol is converged or not
-  real(kind=r8_kind) :: energy
+  character (len=128) :: version = FPP_PARAGAUSS_VERS
+  integer (i4_kind) :: tasks=0  ! Number of tasks LEFT to be done
+  integer (i4_kind) :: loop, max_geo_loop ! loop -- Laufvariable fuer Runs
+  logical :: geometry_converged = .false. ! determines if Simol is converged or not
+  real (r8_kind) :: energy
 #ifdef WITH_EPE
-  real(kind=r8_kind) :: energy2, epe_latt_energy, cluster_regI
-  real(kind=r8_kind) :: eshort
-  logical            :: epe_side_energy_converged
+  real (r8_kind) :: energy2, epe_latt_energy, cluster_regI
+  real (r8_kind) :: eshort
+  logical :: epe_side_energy_converged
 #endif
   logical :: use_dens_mat ! FIXME: may be used uninitialized
 
@@ -244,16 +244,15 @@ subroutine main_master()
   qm_mm_1_task=0  !!!!!!!!!!!AS
 #endif
 
-     call write_to_trace_unit(" ")
-     call write_to_trace_unit(" -------------------------------------------")
-     call write_to_trace_unit(" ")
-     call write_to_trace_unit(" executing program : mainscf_"//trim(version))
-     call write_to_trace_unit(" ")
-     call write_to_trace_unit(" ")
-     call write_to_trace_unit(" ")
-     call write_to_trace_unit(" -------------------------------------------")
-     call write_to_trace_unit(" ")
-     !WHAT FOR? endfile trace_unit ; backspace(trace_unit)
+  call write_to_trace_unit (" ")
+  call write_to_trace_unit (" -------------------------------------------")
+  call write_to_trace_unit (" ")
+  call write_to_trace_unit (" executing program : mainscf_"//trim (version))
+  call write_to_trace_unit (" ")
+  call write_to_trace_unit (" ")
+  call write_to_trace_unit (" ")
+  call write_to_trace_unit (" -------------------------------------------")
+  call write_to_trace_unit (" ")
 
   ![[=== MAIN LOOP OVER TASKS/GEOMETRIES ===================================
 2001 CONTINUE ! an "entry point" for the task-loop
@@ -263,28 +262,28 @@ subroutine main_master()
   loop         = 0
   geometry_converged = .false.
 
-  geometry_loop: do while ( tasks > 0 )
+  geometry_loop: do while (tasks > 0)
 
      loop = loop + 1
 
-     if( loop > max_geo_loop )then
+     if (loop > max_geo_loop) then
        ! at loop 1 is not true anyway,
        ! after read_input max_geo_loop gets the  proper value ...
-       call say("maximum number of geo interations exceeded")
+       call say ("maximum number of geo interations exceeded")
        tasks = tasks - 1
        cycle geometry_loop
      endif
 
      ! reset memory couters, if using MEMLOG
-     MEMSET(0)
+     MEMSET (0)
 
-     call start_timer(timer_initialisation)
+     call start_timer (timer_initialisation)
 
-     call write_to_output_units(" ------------------------------------" )
-     call write_to_output_units(" -                                  -" )
-     call write_to_output_units(" - main_master: Run No. ",inte=loop )
-     call write_to_output_units(" -                                  -" )
-     call write_to_output_units(" ------------------------------------" )
+     call write_to_output_units (" ------------------------------------")
+     call write_to_output_units (" -                                  -")
+     call write_to_output_units (" - main_master: Run No. ", inte=loop)
+     call write_to_output_units (" -                                  -")
+     call write_to_output_units (" ------------------------------------")
 
 
      ! TODO: move call read_input() and
@@ -303,22 +302,22 @@ subroutine main_master()
      end if
 
 #ifdef WITH_OPTIMIZER
-     call filename_setup_opt(optonly=.false.)
+     call filename_setup_opt (optonly=.false.)
 #endif
 
 #ifdef WITH_MOLMECH
-     if(operations_qm_mm_new .and. qm_mm_1) then    !!!!!!!!!!!AS
+     if (operations_qm_mm_new .and. qm_mm_1) then    !!!!!!!!!!!AS
         call def_qm_mm_1_tasks()                    !!!!!!!!!!!AS
      end if
 #endif
 
-     DPRINT 'main_master: options_directaccesa_integrals=',options_directaccess_integrals()
-     if(options_directaccess_integrals()) then
-        ASSERT(.not.filesystem_is_parallel)
+     DPRINT 'main_master: options_directaccesa_integrals=', options_directaccess_integrals()
+     if (options_directaccess_integrals()) then
+        ASSERT (.not.filesystem_is_parallel)
      endif
 
      ! ... and set the variable 'max_geo_loop' according to the input
-     if(operations_geo_opt .or. operations_optimizer_only)then
+     if (operations_geo_opt .or. operations_optimizer_only) then
          max_geo_loop = convergence_max_geo_iteration()
      endif
 
@@ -330,53 +329,53 @@ subroutine main_master()
 
      case (1:)
        ! geometry optimization with regular updates of the hessian
-       if( MOD(loop-1,update_hessian_iteration) == 0 )then
+       if (MOD (loop-1, update_hessian_iteration) == 0) then
          ! at loop 1, update_hessian_iteration+1, 2*update_hessian_iteration+1, ...
-         call integralpar_set('SecondDervs')
+         call integralpar_set ('SecondDervs')
          ! sets module vars:
          ! integralpar_2dervs    = .true.
          ! integralpar_cpksdervs = .true.
-         print *,'main_master: do second derivatives at loop',loop &
-                ,'(every',update_hessian_iteration,'iterations)'
+         print *,'main_master: do second derivatives at loop', loop &
+                ,'(every', update_hessian_iteration,'iterations)'
        else
-         call integralpar_set('NoSecondDervs')
+         call integralpar_set ('NoSecondDervs')
          ! integralpar_2dervs    = .false.
          ! integralpar_cpksdervs = .false.
        endif
 
      case (-1)
        ! frequencies after geometry optimization
-       if( loop == 1 )then
+       if (loop == 1) then
          ! add a task of computing second derivatives after geometry optimization:
          tasks = tasks + 1
        endif
-       if( geometry_converged .or. loop == max_geo_loop )then
+       if (geometry_converged .or. loop == max_geo_loop) then
          ! enable second derivatives only after geometry is converged:
          update_hessian_iteration = 1
-         call integralpar_set('SecondDervs')
+         call integralpar_set ('SecondDervs')
          ! sets module vars:
          ! integralpar_2dervs    = .true.
          ! integralpar_cpksdervs = .true.
          ! nothing below seems to depend on it:
          operations_geo_opt    = .false.
-         print *,'main_master: do second derivatives at loop',loop &
+         print *,'main_master: do second derivatives at loop', loop &
                 ,'(after geometry is converged)'
          ! mark the task completed (a bit early, of couse):
          tasks = tasks - 1
        endif
 
      case default
-       print*,'ERROR: no such update_hessian_iteration=',update_hessian_iteration
-       ABORT('no such case yet!')
+       print*,'ERROR: no such update_hessian_iteration=', update_hessian_iteration
+       ABORT ('no such case yet!')
      end select
      !]]================================================
 
 #ifdef WITH_EPE
      ! EPE lattice calculations
      if (operations_epe_lattice) then
-        call say("calling EPE-lattice optimization")
+        call say ("calling EPE-lattice optimization")
         call epe_lattice_optimization()
-        call stop_timer(timer_initialisation)
+        call stop_timer (timer_initialisation)
         ! DONT exit geometry_loop
         tasks = tasks - 1
         cycle geometry_loop
@@ -393,24 +392,24 @@ subroutine main_master()
       endif
 
 #ifdef WITH_MOLMECH
-     if(operations_mol_mech) then                                !!!!!!!!!!!AS
-        call say("calling molecular mechanics program") !!!!!!!!!!!AS
-        call main_molmech(mm_run,unique_atom_iwork,max_geo_loop) !!!!!!!!!!!AS
-        if(unique_atom_iwork > 0) then                           !!!!!!!!!!!AS
+     if (operations_mol_mech) then                                !!!!!!!!!!!AS
+        call say ("calling molecular mechanics program") !!!!!!!!!!!AS
+        call main_molmech (mm_run, unique_atom_iwork, max_geo_loop) !!!!!!!!!!!AS
+        if (unique_atom_iwork > 0) then                           !!!!!!!!!!!AS
            operations_geo_opt=.true.                             !!!!!!!!!!!AS
         end if                                                   !!!!!!!!!!!AS
      end if                                                      !!!!!!!!!!!AS
-     if(operations_qm_mm_new .and. (qm_mm .or. qm_mm_1)) then    !!!!!!!!!!!AS
-        call say("distributing data for QM+MM run")
+     if (operations_qm_mm_new .and. (qm_mm .or. qm_mm_1)) then    !!!!!!!!!!!AS
+        call say ("distributing data for QM+MM run")
         call read_gx_qmmm()
-        call main_molmech(qmmm_read_input)
+        call main_molmech (qmmm_read_input)
         call qmmm2pc()
      end if                                                      !!!!!!!!!!AS
 #endif
 
 #ifdef WITH_EFP
      if (efp) then
-        call say("EFP - reading QM atoms from GX")
+        call say ("EFP - reading QM atoms from GX")
         call read_gx_qm()
      end if
 #endif
@@ -425,22 +424,22 @@ subroutine main_master()
 #ifdef WITH_EFP
      !generation of arrays of external points for EFP calculation
      if (efp) then
-        call say("EFP - generation of arrays of external points")
+        call say ("EFP - generation of arrays of external points")
         call def_efp_arrays()
         call calc_X_points()
-        if(calc_Pol_centers()) call calc_efield_points()
+        if (calc_Pol_centers()) call calc_efield_points()
      end if
 #endif
 
      ! write input file if desired
-     if ( operations_write_input .or. operations_get_input_out) then
-        call say("write_input ")
+     if (operations_write_input .or. operations_get_input_out) then
+        call say ("write_input ")
         call write_input()
-        call say("write_input done")
+        call say ("write_input done")
      endif
 
      if (operations_get_input_out) then
-        call stop_timer(timer_initialisation)
+        call stop_timer (timer_initialisation)
         ! DONT exit geometry_loop
         tasks = tasks - 1
         cycle geometry_loop
@@ -453,7 +452,7 @@ subroutine main_master()
            call build_mol_surfaces()
         enddo
         if (stop_solv) then
-           call stop_timer(timer_initialisation)
+           call stop_timer (timer_initialisation)
            ! DONT exit geometry_loop
            tasks = tasks - 1
            cycle geometry_loop
@@ -462,15 +461,15 @@ subroutine main_master()
 
 #ifdef WITH_EFP
      !calculating interfragment interactions (EFP)
-     if(efp .and. n_efp > 0) then
-        call say("EFP - calculating interfragment interactions")
-        call efp_efp_energy(print_id)
+     if (efp .and. n_efp > 0) then
+        call say ("EFP - calculating interfragment interactions")
+        call efp_efp_energy (print_id)
      end if
 #endif
 
      ! write gx file
      if (operations_make_gx) then
-        call say("unique_atoms_make_gx")
+        call say ("unique_atoms_make_gx")
 #ifndef WITH_EPE
         ! FIXME: is it upto date?
         call unique_atom_make_gx (iloop= 1)
@@ -488,7 +487,7 @@ subroutine main_master()
      call say ("initialize_with_input")
      call initialize_with_input()
 
-     call stop_timer(timer_initialisation)
+     call stop_timer (timer_initialisation)
 
      !
      ! At this point all information should be in place that is needed
@@ -501,10 +500,10 @@ subroutine main_master()
      call occupation_symmetry_check()
 
      if (operations_potential .and. esp_map) then
-        if(.not. V_electronic .or. use_saved_densmatrix) goto 1111
+        if (.not. V_electronic .or. use_saved_densmatrix) goto 1111
      elseif (operations_potential .and. pdc) then
         use_dens_mat=.false.
-        if(charge_constr .and. use_saved_densmatrix) then
+        if (charge_constr .and. use_saved_densmatrix) then
            use_dens_mat=.true.
            goto 1111
         endif
@@ -525,7 +524,7 @@ subroutine main_master()
            call say ("call integralpar_set (Properties)")
            call integralpar_set ('Properties')
         else
-           ABORT("ever happens?")
+           ABORT ("ever happens?")
         endif
         call say ("done")
 
@@ -554,20 +553,20 @@ subroutine main_master()
      endif
 
 #ifdef WITH_EFP
-     if(calc_Pol_centers() .and. operations_integral) then
+     if (calc_Pol_centers() .and. operations_integral) then
         call field_calculate()
      end if
 #endif
 
      ! do scf part
      if (operations_scf) then
-        MEMSET(0)
+        MEMSET (0)
         call say ("Starting the main SCF routine ...")
         do while (toggle_legacy_mode())
            call main_scf()
         enddo
         call say ("Done with the main SCF routine.")
-        MEMSET(0)
+        MEMSET (0)
      endif
 
      ! Calculate and print dipole moments:
@@ -661,7 +660,7 @@ subroutine main_master()
      ! FIXME: please specify the goal of GOTO by words as well,
      !        not just by the number!
      ! GO TO: .... because ...
-     if( operations_potential .and. use_saved_densmatrix) goto 1112
+     if (operations_potential .and. use_saved_densmatrix) goto 1112
 
      ! do Post Scf calculation of Exchange Energy
      if (operations_post_scf) then
@@ -682,23 +681,24 @@ subroutine main_master()
 #ifdef WITH_MOLMECH
      !Calculations electrostatic field produced by QM cluster
      !at MM atoms
-     if( operations_qm_mm_new .and. qm_mm) then !!!!!!!!!!!!AS
+     if (operations_qm_mm_new .and. qm_mm) then !!!!!!!!!!!!AS
         call QMfield_at_mm_points()             !!!!!!!!!!!!AS
      end if                                     !!!!!!!!!!!!AS
+
 #endif
 
      ! do PostSCF calculation of matrix elements needed for
      ! response calculations with tdfrt response program
-     if ( operations_response ) then
+     if (operations_response) then
 #ifdef WITH_RESPONSE
         call say ("response_main")
         call response_main()
 #else
-        ABORT('recompile -DWITH_RESPONSE')
+        ABORT ('recompile -DWITH_RESPONSE')
 #endif
      endif
 
-     MEMSET(0)
+     MEMSET (0)
 #ifndef WITH_EPE
      if (operations_gradients) then
         call say ("call main_gradient()")
@@ -710,31 +710,31 @@ subroutine main_master()
 #else
      ! do EPE calculations, FIXME: why inlining so much staff into this high
      ! level sub?
-     if(operations_qm_epe .and. epe_relaxation) then
+     if (operations_qm_epe .and. epe_relaxation) then
         call say ("main_epe_block")
         call main_epe_block()
 
-      call get_energy(tot=energy)
+      call get_energy (tot=energy)
       energy2=energy
-         call get_epe_energies( &
-              lattice_energy=epe_latt_energy,epg_cluster_reg_I=cluster_regI,eshort_coupling_au=eshort)
+         call get_epe_energies (&
+              lattice_energy=epe_latt_energy, epg_cluster_reg_I=cluster_regI, eshort_coupling_au=eshort)
          energy=energy+epe_latt_energy
-         print*,'energy,energy2,eshort',energy,energy2,eshort
+         print*,'energy, energy2, eshort', energy, energy2, eshort
          print*,'epe_side_optimized_energy', energy+eshort
          epe_side_optimized_energy=energy+eshort
          print*,'cluster_regI', cluster_regI
-         print*,'epe_latt_energy',epe_latt_energy
+         print*,'epe_latt_energy', epe_latt_energy
 
-           call write_to_trace_unit('epe_convergence_check')
-           call epe_convergence_check(epe_side_energy_converged,loop)
+           call write_to_trace_unit ('epe_convergence_check')
+           call epe_convergence_check (epe_side_energy_converged, loop)
          endif
 
          ! calculate gradients
         if (operations_gradients .and. .not. epe_relaxation .or. &
            epe_relaxation .and. epe_side_energy_converged) then
            call say ("Starting main_gradient() ...")
-           if(epe_relaxation.and.epe_side_energy_converged) then
-             call write_to_trace_unit('epe_relaxation.and.epe_side_energy_converged')
+           if (epe_relaxation.and.epe_side_energy_converged) then
+             call write_to_trace_unit ('epe_relaxation.and.epe_side_energy_converged')
            endif
 
            do while (toggle_legacy_mode())
@@ -746,27 +746,27 @@ subroutine main_master()
            ! FIXME: clean up is the task of finalize_geometry()
            !        that is called anyway. Why doing it here?
            !
-           ABORT('please adapt')
+           ABORT ('please adapt')
         endif
 #endif
 
 #ifdef WITH_MOLMECH
-     if(operations_qm_mm_new ) then  !!!!!!!!!!!!!!AS
-        if(imomm) then
-           call say("calling molecular mechanics module to perform IMOMM job")
-           call main_molmech(imomm_mm_small)
-           call main_molmech(imomm_mm_large)
-           call say("QMMM job: summing up different gradients and writing gxfile")
+     if (operations_qm_mm_new) then  !!!!!!!!!!!!!!AS
+        if (imomm) then
+           call say ("calling molecular mechanics module to perform IMOMM job")
+           call main_molmech (imomm_mm_small)
+           call main_molmech (imomm_mm_large)
+           call say ("QMMM job: summing up different gradients and writing gxfile")
            call sum_up_grads_and_write_gx()
-        elseif(qm_mm .or. (qm_mm_1 .and. qm_mm_1_task ==0)) then
-           call say("calling molecular mechanics module to perform QM_MM (1) job")
-           call main_molmech(qm_mm_run)
+        elseif (qm_mm .or. (qm_mm_1 .and. qm_mm_1_task ==0)) then
+           call say ("calling molecular mechanics module to perform QM_MM (1) job")
+           call main_molmech (qm_mm_run)
            call write_gx_qmmm()
         end if
      endif                           !!!!!!!!!!!!!!AS
 #endif
 
-        MEMSET(0)
+        MEMSET (0)
 
      !
      ! Various shutdown and deallocation work.
@@ -777,13 +777,13 @@ subroutine main_master()
      !
      call finalize_geometry()
 
-1112 call write_to_output_units(" ------------------------------------" )
-     call write_to_output_units(" -                                  -" )
-     call write_to_output_units(" -                                  -" )
-     call write_to_output_units(" - main_master: End of Run No. ",inte=loop )
-     call write_to_output_units(" -                                  -" )
-     call write_to_output_units(" -                                  -" )
-     call write_to_output_units(" ------------------------------------" )
+1112 call write_to_output_units (" ------------------------------------")
+     call write_to_output_units (" -                                  -")
+     call write_to_output_units (" -                                  -")
+     call write_to_output_units (" - main_master: End of Run No. ", inte=loop)
+     call write_to_output_units (" -                                  -")
+     call write_to_output_units (" -                                  -")
+     call write_to_output_units (" ------------------------------------")
 
      !
      ! If max_geo_iteration was set to zero in the input,
@@ -792,7 +792,7 @@ subroutine main_master()
      ! May be usefull for work with alternative external optimizers:
      !
      if (operations_geo_opt .and. loop > max_geo_loop) then
-       WARN('loop leaped beyond max_geo_loop')
+       WARN ('loop leaped beyond max_geo_loop')
        tasks = tasks - 1
        exit geometry_loop
        ! there is not point to cycle geometry_loop so far as the first
@@ -822,8 +822,8 @@ subroutine main_master()
            ! resets them to true again!
         endif
 #ifdef NEW_EPE
-        if(operations_qm_epe .and. geometry_converged) then
-           if(get_qm_references .and. .not.qm_ref_run) then
+        if (operations_qm_epe .and. geometry_converged) then
+           if (get_qm_references .and. .not.qm_ref_run) then
               tasks = tasks + 1
               qm_ref_run=.true.
               !one more cycle to calculate and save
@@ -839,10 +839,10 @@ subroutine main_master()
   enddo geometry_loop
 
 #ifdef WITH_MOLMECH
-  if(operations_qm_mm_new .and. qm_mm_1) then
+  if (operations_qm_mm_new .and. qm_mm_1) then
      qm_mm_1_task=qm_mm_1_task+1
      ! FIXME: I need to repeat all once again because ...
-     if(qm_mm_1_task == 1) goto 2001 ! enter the task loop again
+     if (qm_mm_1_task == 1) goto 2001 ! enter the task loop again
      ! QUESTION: is this logic only to enter geometry_loop twice?
   end if
 #endif
@@ -852,9 +852,9 @@ subroutine main_master()
   if (output_timing_summary .or. output_timing_slaves .or. output_timing_detailedsummary) then
     call say ("printing timing")
     if (output_timing_summary .or. output_timing_detailedsummary) &
-         call timer_print_summary(integralpar_int_part_name)
+         call timer_print_summary (integralpar_int_part_name)
     if (output_timing_slaves) &
-         call timer_print_slavetiming(integralpar_int_part_name)
+         call timer_print_slavetiming (integralpar_int_part_name)
   endif
 
   call say ("done")
@@ -862,38 +862,38 @@ subroutine main_master()
 contains
 
 #ifdef WITH_EPE
-  subroutine epe_convergence_check(epe_side_energy_converged, i_iter)
+  subroutine epe_convergence_check (epe_side_energy_converged, i_iter)
         use epecom_module, only: epe_rel_converged, &
         epe_side_optimized_energy, epeside_energy_limit, &
         epe_side_optimized_energy_prev, epe_basic_action=>basic_action
         use filename_module, only: data_dir
-        logical, intent(out):: epe_side_energy_converged
-        integer(i4_kind), intent(in) :: i_iter
-      if(epe_relaxation.and..not.epe_basic_action.eq.0) then
-        inquire(file=trim(data_dir)//"/epe_rel_unconverged", &
+        logical, intent (out):: epe_side_energy_converged
+        integer (i4_kind), intent (in) :: i_iter
+      if (epe_relaxation.and..not.epe_basic_action.eq.0) then
+        inquire (file=trim (data_dir)//"/epe_rel_unconverged", &
         exist=epe_rel_converged)
         epe_rel_converged=.not.epe_rel_converged
         print*,'epe_convergence_check: epe_relaxation, epe_rel_converged' &
-              ,epe_relaxation, epe_rel_converged
-        epe_side_energy_converged=abs(epe_side_optimized_energy_prev - &
+              , epe_relaxation, epe_rel_converged
+        epe_side_energy_converged=abs (epe_side_optimized_energy_prev - &
         epe_side_optimized_energy).lt.0.00002 !?  embed_convergence_limit
 
-        if(.not.epe_side_energy_converged) &
-           epe_side_energy_converged=abs(epe_side_optimized_energy_prev - &
+        if (.not.epe_side_energy_converged) &
+           epe_side_energy_converged=abs (epe_side_optimized_energy_prev - &
            epe_side_optimized_energy).lt.0.0004 .and. i_iter.gt.10
 
         print*,'epe_side_energy_jump' , &
                 epe_side_optimized_energy_prev - epe_side_optimized_energy &
-               ,epeside_energy_limit
+               , epeside_energy_limit
         epe_side_optimized_energy_prev=epe_side_optimized_energy
-         if(.not.epe_rel_converged .or. .not.epe_side_energy_converged) then
+         if (.not.epe_rel_converged .or. .not.epe_side_energy_converged) then
          print*,'optimizer: epe relaxation is still not converged', &
-         epe_rel_converged,epe_side_energy_converged, &
+         epe_rel_converged, epe_side_energy_converged, &
          epe_side_optimized_energy_prev - &
          epe_side_optimized_energy
-        call write_to_trace_unit('.not.epe_side_energy_converged')
+        call write_to_trace_unit ('.not.epe_side_energy_converged')
          else
-         call write_to_trace_unit('epe_side_energy_converged')
+         call write_to_trace_unit ('epe_side_energy_converged')
          endif
         else
          epe_side_energy_converged=epe_basic_action.eq.0
@@ -930,7 +930,7 @@ contains
     ! work as intended if executed by more than one worker.
     !
 #ifdef WITH_EPE
-    use epecom_module, only: cross_boundary_3b,epe_rel_converged, &
+    use epecom_module, only: cross_boundary_3b, epe_rel_converged, &
          epe_basic_action => basic_action
 #endif
 #ifdef WITH_OPTIMIZER
@@ -942,59 +942,57 @@ contains
     logical, intent (out) :: geo_conv
     ! *** end of interface ***
 
-    logical :: conv,stop_after_eperelaxation,convert_internal
-    character(len=32) :: optimizer_task='GeoOpt'
+    logical :: conv, stop_after_eperelaxation, convert_internal
+    character (len=32) :: optimizer_task='GeoOpt'
 
     geo_conv = .false.
 #ifdef WITH_EPE
-    if(operations_qm_epe) then
+    if (operations_qm_epe) then
        stop_after_eperelaxation=.true.
-       if(epe_relaxation.and..not.epe_basic_action.eq.0) then
-          if(.not.epe_rel_converged .or. .not.epe_side_energy_converged) then
+       if (epe_relaxation.and..not.epe_basic_action.eq.0) then
+          if (.not.epe_rel_converged .or. .not.epe_side_energy_converged) then
              print*,'optimizer: epe relaxation is still not converged'
-             call write_to_trace_unit('optimizer epe relaxation is still not converged')
+             call write_to_trace_unit ('optimizer epe relaxation is still not converged')
              return
           endif
        endif
     end if
 #endif
 #ifdef WITH_OPTIMIZER
-    if(namelist_tasks_used)then
+    if (namelist_tasks_used) then
        optimizer_task=operations_task
     else
        optimizer_task='GeoOpt'
-       WARN('assuming GeoOpt in optimizer')
+       WARN ('assuming GeoOpt in optimizer')
     endif
-    print*,'optimizer: call main_opt(',optimizer_task,')'
+    print*,'optimizer: call main_opt(', optimizer_task,')'
     convert_internal=.false.
 #ifdef WITH_EPE
-    if(epe_relaxation) then
-    call main_opt( task=optimizer_task , converged=conv       &
+    if (epe_relaxation) then
+    call main_opt (task=optimizer_task , converged=conv       &
                  , stop_after_eperelaxation=stop_after_eperelaxation &
                  , convert_internal=convert_internal &
                  , cross_boundary_3b=cross_boundary_3b)
     else
 #endif
-    call main_opt( task=optimizer_task , converged=conv       &
+    call main_opt (task=optimizer_task , converged=conv       &
                  , stop_after_eperelaxation=stop_after_eperelaxation &
-                 , convert_internal=convert_internal &
-                 )
+                 , convert_internal=convert_internal)
 #ifdef WITH_EPE
     endif
 #endif
-    if(convert_internal) &
-    call main_opt( task=optimizer_task , converged=conv       &
+    if (convert_internal) &
+    call main_opt (task=optimizer_task , converged=conv       &
                  , stop_after_eperelaxation=stop_after_eperelaxation &
-                 , convert_internal=convert_internal &
-                 )
+                 , convert_internal=convert_internal)
     ! returns converged=true if converged
 #else
     DPRINT 'optimizer: DONT call main_opt()'
-    ABORT('recompile with -DWITH_OPTIMIZER')
+    ABORT ('recompile with -DWITH_OPTIMIZER')
 #endif
 #ifdef WITH_EPE
-    if(operations_qm_epe) then
-       if(epe_relaxation.and.stop_after_eperelaxation) then
+    if (operations_qm_epe) then
+       if (epe_relaxation.and.stop_after_eperelaxation) then
           conv=.true.
        endif
     end if
@@ -1005,9 +1003,9 @@ contains
 
     if (.not.conv) then
        call write_to_output_units&
-            ("optimizer: geometry  not yet converged in loop",inte =geo_loop)
+            ("optimizer: geometry  not yet converged in loop", inte =geo_loop)
        call write_to_trace_unit&
-            ("optimizer: geometry  not yet converged in loop",inte =geo_loop)
+            ("optimizer: geometry  not yet converged in loop", inte =geo_loop)
     endif
   end subroutine do_optimizer_step
 
@@ -1031,60 +1029,60 @@ contains
     !
     ! Legal header:
     !
-    call write_to_output_units('########################################################################')
-    call write_to_output_units(' ')
-    call write_to_output_units('ParaGauss '//trim(version))
-    call write_to_output_units(' ')
-    call write_to_output_units('features:')
+    call write_to_output_units ('########################################################################')
+    call write_to_output_units (' ')
+    call write_to_output_units ('ParaGauss '//trim (version))
+    call write_to_output_units (' ')
+    call write_to_output_units ('features:')
 #ifdef WITH_LIBDFTAUTO
-    call write_to_output_units('* [!] xc functionals from http://www.cse.clrc.ac.uk/qcg')
+    call write_to_output_units ('* [!] xc functionals from http://www.cse.clrc.ac.uk/qcg')
 #endif
 #ifdef NEW_INTEGRALS
-    call write_to_output_units('* [+] NEW INTEGRALS compiled in')
+    call write_to_output_units ('* [+] NEW INTEGRALS compiled in')
 #else
-    call write_to_output_units('* [-] NEW INTEGRALS disabled')
+    call write_to_output_units ('* [-] NEW INTEGRALS disabled')
 #endif
 #ifdef WITH_OPTIMIZER
-    call write_to_output_units('* [+] OPTIMIZER compiled in')
+    call write_to_output_units ('* [+] OPTIMIZER compiled in')
 #else
-    call write_to_output_units('* [-] OPTIMIZER disabled')
+    call write_to_output_units ('* [-] OPTIMIZER disabled')
 #endif
 #ifdef WITH_GTENSOR
-    call write_to_output_units('* [+] GTEN/HFCC support compiled in')
+    call write_to_output_units ('* [+] GTEN/HFCC support compiled in')
 #else
-    call write_to_output_units('* [-] GTEN/HFCC disabled')
+    call write_to_output_units ('* [-] GTEN/HFCC disabled')
 #endif
 #if WITH_RELFIT || WITH_SHGI
-    call write_to_output_units('* [+] RELFIT support compiled in')
+    call write_to_output_units ('* [+] RELFIT support compiled in')
 #else
-    call write_to_output_units('* [-] RELFIT disabled')
+    call write_to_output_units ('* [-] RELFIT disabled')
 #endif
 #ifdef WITH_EPE
-    call write_to_output_units('* [+] EPE support compiled in')
+    call write_to_output_units ('* [+] EPE support compiled in')
 #else
-    call write_to_output_units('* [-] EPE disabled')
+    call write_to_output_units ('* [-] EPE disabled')
 #endif
 #ifdef WITH_EFP
-    call write_to_output_units('* [+] EFP support compiled in')
+    call write_to_output_units ('* [+] EFP support compiled in')
 #else
-    call write_to_output_units('* [-] EFP disabled')
+    call write_to_output_units ('* [-] EFP disabled')
 #endif
 #ifdef WITH_MOLMECH
-    call write_to_output_units('* [+] MOLMECH support compiled in')
+    call write_to_output_units ('* [+] MOLMECH support compiled in')
 #else
-    call write_to_output_units('* [-] MOLMECH disabled')
+    call write_to_output_units ('* [-] MOLMECH disabled')
 #endif
 #ifdef WITH_RESPONSE
-    call write_to_output_units('* [+] RESPONSE support compiled in')
+    call write_to_output_units ('* [+] RESPONSE support compiled in')
 #else
-    call write_to_output_units('* [-] RESPONSE disabled')
+    call write_to_output_units ('* [-] RESPONSE disabled')
 #endif
 #ifdef WITH_ERI4C
-    call write_to_output_units('* [+] ERI4C support compiled in')
+    call write_to_output_units ('* [+] ERI4C support compiled in')
 #else
-    call write_to_output_units('* [-] ERI4C disabled')
+    call write_to_output_units ('* [-] ERI4C disabled')
 #endif
-    call write_to_output_units('########################################################################')
+    call write_to_output_units ('########################################################################')
   end subroutine legal
 
   subroutine say (phrase)
@@ -1096,8 +1094,8 @@ contains
     ! *** end of interface ***
 
     print *, comm_rank(), "XXX", "main_master: "//phrase
-    if( output_main_master ) then
-        call write_to_output_units("main_master: "//phrase)
+    if (output_main_master) then
+        call write_to_output_units ("main_master: "//phrase)
     endif
   end subroutine say
 

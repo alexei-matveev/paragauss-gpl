@@ -182,8 +182,6 @@ The exit status of a program can be obtained via the shell variable "$status" di
 
 Running a simple calculation with version <code>''version'' </code> of ttfs script. All [#Input_Files input] and [#Output_Files output] files are located in the separate directory <code>''name''</code> that is only used for this calculation. The file names have no postfix extension. Old output files will be overwritten.
 
-<br />
-
 <code> ttfs_[#ttfsopt_version ''version''] [#ttfsopt_name ''name''] [#ttfsopt_name_is_extension -name_is_extension] [#ttfsopt_dir -dir] ''dir'' [#ttfsopt_zip -zip] [#ttfsopt_save_old_output -save_old_output] [#ttfsopt_vers -vers] ''mainversion'' </code>
 
 Running a calculation with version <code>''version'' </code> of ttfs
@@ -198,8 +196,6 @@ run obtain the same ''number''. For instance, the previous output file
 "output.''name''.gz" would be moved to
 "output.''name''_''number''.gz". The version
 <code>''mainversion''</code> of the ParaGauss executable will be used.
-
-<br />
 
 <code> ttfs_[#ttfsopt_version ''version''] [#ttfsopt_name ''name''] [#ttfsopt_restartable -restartable] </code>
 
@@ -219,11 +215,7 @@ due to time limits of the queue system. The [#ttfs_exit_status exit
 status] of the ttfs script could be used for automatic resubmission of
 the job.
 
-<br /><br />
-
 ----
-
-<br /><br />
 
 = Input and Output Files =
 
@@ -310,11 +302,7 @@ These files will be located in the output directory in case input and output dir
 ; scfcontrol
 : This file only exist while the SCF part is executed. It is automatically generated and read in each SCF-cycle. It allows to change certain settings made in the input file at run time. It contains the namelists [[#CONVERGENCE_LIST|CONVERGENCE_LIST]], [[#MIXING|MIXING]], [[#RECOVER_OPTIONS|RECOVER_OPTIONS]] and [[#FERMI|FERMI]] described in the [#Input_Description Input Description] below. To abort a running calculation, edit the namelists [[#CONVERGENCE_LIST|CONVERGENCE_LIST]]<nowiki>: Set MAX_ITERATION below the present SCF-cycle number and set STOP_IF_NOT_CONVERGED. </nowiki>
 
-<br /><br />
-
 ----
-
-<br /><br />
 
 <div class="so">
 
@@ -350,11 +338,7 @@ To start an SO calculation one needs:
 == Usage of functionals ==
 </div>
 
-<br /><br />
-
 ----
-
-<br /><br />
 
 = Submitting Jobs =
 
@@ -404,8 +388,6 @@ It might be necessary for huge calculations to make the PVM buffer used by the P
 Remove these lines again as soon as your large calculations are
 complete since you request a vast amount of spoiled memory for each
 PVM job otherwise.
-
-<br />
 
 = Geometry Optimization =
 
@@ -476,11 +458,7 @@ the manual spread-sheet-calculations of thermodynamic corrections.
 
 = Input Description =
 
-<br /><br />
-
 ----
-
-<br /><br />
 
 ==Format==
 
@@ -503,8 +481,6 @@ The following special features are supported:
 :* 1.001
 :* 1
 :* 1.0E00-1
-
-<br /><br />
 
 The main building blocks are so called "'''namelists'''" that obey the following rules:
 
@@ -537,11 +513,7 @@ Here is an example:
      String_Var = "Hello"
   /NAMELIST_NAME
 
-<br /><br />
-
 ----
-
-<br /><br />
 
 ==Syntax==
 
@@ -601,17 +573,11 @@ It is possible to convert old lcgto inputs with the help of the [#ttfs_script tt
 
 In case of errors in the input file, an error message giving the filename and the line number of the last processed line and showing this line will be produced when the first error is detected and the program will stop. Consecuting errors are not detected.
 
-<br /><br />
-
 ----
-
-<br /><br />
 
 ==Explication of Namelists==
 
 The [#Namelist_Format format of namelists] is described above.
-
-<br /><br />
 
 ===CONVERGENCE_LIST===
 
@@ -655,8 +621,6 @@ optimization.
 ; STOP_IF_NOT_CONVERGED
 : Abort calculation if no SCF convergence was reached
 
-<br /><br />
-
 ===EFIELD===
 
 Allows to apply homogeneous external electrical field. The field applied must conserve the [[#SYMMETRY_GROUP|selected symmetry]].
@@ -676,8 +640,6 @@ Note that the calculation of gradients of the external electrical field are not 
 : Apply the field in opposite direction for second spin in the case of an open shell calculation. (Unphysical !)
 
 The namelist must directly be followed by a line containing the field vector of the electrical field ([au], free format).
-
-<br /><br />
 
 ===DIPOLE_TRANSITIONMOMENTS===
 
@@ -738,8 +700,6 @@ printed. [eV]
 ; X,Y,Z
 : Unity vector, pointing in the direction of the Efield vector of the emitted light.
 
-<br /><br />
-
 ===FERMI===
 
 This namelist controls level broadening in the SCF procedure. Default
@@ -774,8 +734,6 @@ is no level broadening.
 ; FERMI_ACCURACY
 ; FERMI_LEVEL_BROAD
 
-<br /><br />
-
 ===FRAGMENT===
 
 Describes one fragment used in the fragment orbital analysis described
@@ -796,8 +754,6 @@ Must directly follow this namelist and appear
 Must be followed by a line containing the indices (integer format) of
 the included atoms. The indices refer to the number of the unique
 atom.
-
-<br /><br />
 
 === FRAG_ORB_ANALYSIS ===
 
@@ -858,13 +814,9 @@ For every of the N_FRAGMENTS fragment a namelist [[#FRAGMENT|namelist FRAGMENT]]
 
 Fragment one co 1, 4 and 8 and fragment 3 atom 3.
 
-<br />
-
 As a result one gets for every orbital (between EIG_MIN and EIG_MAX)
 the Mulliken populations in terms of the fragment orbitals. A sample
 ouput for two fragments:
-
-<br />
 
  
    162  57 A1     1 2.0000    -12.093438
@@ -876,8 +828,6 @@ ouput for two fragments:
    58/ 0.0051/ 0.0606  59/ 0.0033/ 0.0511  60/ 0.0073/ 0.0782  61/ 0.0120/ 0.0923
    62/ 0.0014/ 0.0424
 
-<br />
-
 ; First line:
 : The number of the orbital, the number within the irrep, the irrep, the spin, the occupation and the eigenvalue (eV).
 ; Second line:
@@ -885,8 +835,6 @@ ouput for two fragments:
 ; Next line:
 : Composition of the orbital: number of the fragment orbital/Mulliken population/MO coefficient ... <br /> The MO coefficient may help to decide if a orbital interaction is bonding or antibonding.
 ; ...
-
-<br /><br />
 
 === GRID ===
 
@@ -915,8 +863,6 @@ it is highly recommended to do so.
 : If set to true, the local symmetry of a atom will be fully exploided to reduce the size of the integration grid. This may save a lot of CPU time. But be carefull: This option is not fully tested. Together with WEIGHT_GRADS=.true. no problems should occur, but if WEIGHT_GRADS is set to false, a rotation of the grid may take place and lead to a slight change of the total energy.
 ; WEIGHT_GRADS
 : If set to true, the derivatives of weights of the integration grid will be considered in the calculation of the energy gradients with respect to nuclear displacements. The agreement between total energy and gradients will be increased by this option. As a price the CPU time consumption is rising. Attention: This switch affects the orientation and the construction of the POST_HOC and the SCF grid (no rotational invariannce, no BECKE scaling). If you are calculating binding energies, in all inputs WEIGHT_GRADS should be set uniformly to true (or false), also if you are not calculating GRADIENTS or the POST_HOC part. Note that you may set this switch here or in [[#GRID_PH|namelist GRID_PH]] but it will always affect both grid parts.
-
-<br /><br />
 
 === GRIDATOM ===
 
@@ -959,8 +905,6 @@ it is highly recommended to do so.
 ; RIONIC
 : If true, iionic radii will be used for the generation of the grid. This can be used, if one wants to calculate very ionic systems. But be carefull: The NRAD parameter has to be increased to keep the total number of shells constant.
 
-<br /><br />
-
 === GRID_PH ===
 
 This optional namelists starts the specification of the grid used in
@@ -984,8 +928,6 @@ GRID_PH may also be omitted and grid specification be started with
   /GRID_PH
 
 See [[#GRID|namelist GRID]] for a description of these switches..
-
-<br /><br />
 
 === GRIDATOM_PH ===
 
@@ -1014,14 +956,6 @@ grid must be specified together in one block.
 The meaning of the keywords is the same as in the [[#GRIDATOM|namelist
 GRIDATOM]]
 
-<br /><br />
-
-
-
-
-
-
-
 === MACHINEPARAMETERS ===
 
 This namelists allows to control the vector length used when doing
@@ -1044,8 +978,6 @@ and memory requirements. The default setting is 2048 for the VPP and
 : Perform certain dimension checks in SCF part.
 ; MACHINEPARAMETERS_CHECKPRECI
 : Precision used to compare numbers when running in debug mode.
-
-<br /><br />
 
 === MAIN_OPTIONS ===
 
@@ -1102,8 +1034,6 @@ Various important options.
 ; MAX_GEO_ITERATION
 : Outdated. Equivalent to MAX_GEO_ITERATION in [[#CONVERGENCE_LIST|CONVERGENCE_LIST]].
 
-<br /><br />
-
 === MDA_OPTIONS ===
 
 This namelist contains options to control model density approach calculations. (not yet working)
@@ -1115,8 +1045,6 @@ This namelist contains options to control model density approach calculations. (
      RHO_SHAPE_EPS     = 1.000E-12 # (the default)
      ATOMIC_RADIUS     = 0.000E+00 # (the default)
   /MDA_OPTIONS (namelist may be dropped)
-
-<br /><br />
 
 === MIXING ===
 
@@ -1149,8 +1077,6 @@ dynamic mixing is used, i.e. the coefficients are calculated.
 ; GLOBAL_MIXING
 : use alternative new mixing algorithm.
 
-<br /><br />
-
 === OCCUPATION ===
 
 This namelist controls the reoccupation of orbitals during the SCF
@@ -1173,8 +1099,6 @@ procedure
 ; MIN_SPIN_DIFF
 ; DIAG_OFFSET_EV
 ; FIXED
-
-<br /><br />
 
 === OPERATIONS ===
 
@@ -1220,8 +1144,6 @@ Default is to perform Single Point Calculation and Calculate Gradients.
      OPERATIONS_QUADRUPEL_OB      = FALSE # (the default)
      OPERATIONS_QUADRUPEL_FF      = FALSE # (the default)
   /OPERATIONS (namelist may be dropped)
-
-<br /><br />
 
 === ORBITAL_LIST ===
 
@@ -1297,8 +1219,6 @@ Immedeately after the namelist three lines, with 3 real numbers in each line, ha
 
 Now N_INPUT_LINES namelists [[#ORBITAL_LIST|ORBITAL_LIST]] are required to follow directly.
 
-<br /><br />
-
 === OUTPUT ===
 
 This namelist controls the overall amount of output written to file.
@@ -1325,8 +1245,6 @@ switches that control the output of various entities (see below).
 ;; 10
 :: Highest level of debug output only suitable for very small calculations: H2 ...
 
-<br /><br />
-
 === OUTPUT ===
 
 This namelist controls the overall amount of output written to file.
@@ -1352,8 +1270,6 @@ switches that control the output of various entities (see below).
 :: Debug output still suitable for larger calculations
 ;; 10
 :: Highest level of debug output only suitable for very small calculations: H2 ...
-
-<br /><br />
 
 === OUTPUT_CONFIG ===
 
@@ -1362,8 +1278,6 @@ switches that control the output of various entities (see below).
      OUTPUT_PVMCONFIG  =  TRUE # (the default)
      OUTPUT_OPERATIONS =  TRUE # (the default)
   /OUTPUT_CONFIG (namelist may be dropped)
-
-<br /><br />
 
 === OUTPUT_DIPOLE ===
 
@@ -1389,8 +1303,6 @@ Dipole calculation must be switched on in namelist [[#TASKS|TASKS]] or
 ; OUTPUT_DIPOLE_SIMOL
 : output of total dipole moment in a.u. to file "dipmon.sav" used by simol for frequency calculations.
 
-<br /><br />
-
 === OUTPUT_INTEGRAL ===
 
  
@@ -1407,8 +1319,6 @@ Dipole calculation must be switched on in namelist [[#TASKS|TASKS]] or
      OUTPUT_INT_DEEPLOOPS        = FALSE # (the default)
      OUTPUT_INT_DATA             = FALSE # (the default)
   /OUTPUT_INTEGRAL (namelist may be dropped)
-
-<br /><br />
 
 === OUTPUT_IOUNITADMIN ===
 
@@ -1429,8 +1339,6 @@ This namelists determines which files should be used for output. File
 ; IOUNITADMIN_USE_BUGGY
 : output to file "buggy_log". This file is well suited for finding the exact location of a program crash since it is always opened and closed.
 
-<br /><br />
-
 === OUTPUT_POST_HOC ===
 
  
@@ -1438,8 +1346,6 @@ This namelists determines which files should be used for output. File
      OUTPUT_POST_HOC_MAIN = FALSE # (the default)
      OUTPUT_MAIN_GRADIENT = FALSE # (the default)
   /OUTPUT_POST_HOC (namelist may be dropped)
-
-<br /><br />
 
 === OUTPUT_SCF ===
 
@@ -1463,8 +1369,6 @@ This namelists determines which files should be used for output. File
      OUTPUT_N_COEFF_DEV    =     5 # (the default)
   /OUTPUT_SCF (namelist may be dropped)
 
-<br /><br />
-
 === OUTPUT_SYM ===
 
  
@@ -1472,8 +1376,6 @@ This namelists determines which files should be used for output. File
      OUTPUT_SYMMETRY        =  TRUE # (the default)
      OUTPUT_NONSYMEQUIVVECS = FALSE # (the default)
   /OUTPUT_SYM (namelist may be dropped)
-
-<br /><br />
 
 === OUTPUT_TIMING ===
 
@@ -1491,8 +1393,6 @@ This namelists determines which files should be used for output. File
      OUTPUT_TIMING_SLAVES            = FALSE # (the default)
      OUTPUT_TIMING_INTERRUPTS        = FALSE # (the default)
   /OUTPUT_TIMING (namelist may be dropped)
-
-<br /><br />
 
 === OUTPUT_TRACE ===
 
@@ -1515,8 +1415,6 @@ protocol of all PVM communications.
      OUTPUT_EFIELD_CALC     = FALSE # (the default)
   /OUTPUT_TRACE (namelist may be dropped)
 
-<br /><br />
-
 === OUTPUT_UNIQUE_ATOMS ===
 
  
@@ -1535,9 +1433,6 @@ protocol of all PVM communications.
 : Renormalization coefficients. Beware: this is a lot of debug output.
 ; OUTPUT_ORBITALPROJECTION
 : Debug only: Information about projection of orbital indices to SCF Metaindex.
-
-<br /><br />
-
 
 === POINTCHARGE ===
 
@@ -1568,8 +1463,6 @@ cartesian coordinate of one charge in atomic units (free format). The
 coordinates of the other [#Symmetry_equivalent_atoms symmetry
 equivalent charges] are calculated automatically.
 
-<br /><br />
-
 === POINTCHARGE_NUMBER ===
 
 This namelists gives the number of [#Unique_atoms unique point
@@ -1588,8 +1481,6 @@ number of point charges since there might be
 
 This namelist must be directly be followed by POINTCHARGE_N
 [[#POINTCHARGE|namelists POINTCHARGE]].
-
-<br /><br />
 
 === POPCOLUM ===
 
@@ -1611,8 +1502,6 @@ of the atom and the angular momentum (s=0,p=1,d=2,...). Example:
 
 means, that the d population of atom 1, the p population of atom 3 and
 the s population of atom 4 will be summed up.
-
-<br /><br />
 
 === POPULATION ===
 
@@ -1648,8 +1537,6 @@ This namelist controls the population analysis output.
 ; EIG_MAX
 : Maximal eigenvalue (see above).
 
-<br /><br />
-
 === PROPERTIES ===
 
 Main namelist for properties part. In order to do the properties,
@@ -1679,8 +1566,6 @@ following requirements have to be fulfilled:
 : If true, perform a fragment orbital analysis (see [[#FRAG_ORB_ANALYSIS|namelist FRAG_ORB_ANALYSIS]]).
 ; DIPOLE
 : If true, calculate dipole moments and dipole transition moments (see namelist [[#DIPOLE_TRANSITIONMOMENTS|DIPOLE_TRANSITIONMOMENTS]]). This only works if TASK = "Response" was selected in [[#TASKS|namelist TASKS]]). Otherwise you can switch on dipole calculation in this namelist.
-
-<br /><br />
 
 === RECOVER_OPTIONS ===
 
@@ -1753,8 +1638,6 @@ READ_SCFSTATE and RESET_SCFCYCLE is switched to true.
 ; RESET_SCFCYCLE
 : Reset SCF cycle counting when recovering.
 
-<br /><br />
-
 <div class="so">
 
 ===SPIN_ORBIT===
@@ -1796,8 +1679,6 @@ Outdated. This namelist may only be used if new symmetry part is not used (See [
 : number of irreducible representations.
 
 This namelist must be directly followed by N_IRREP [[#IRREP|namelists IRREP]].
-
-<br /><br />
 
 === SYMMETRY_GROUP ===
 
@@ -1853,8 +1734,6 @@ This namelist may only be used if new symmetry part is used (See
 ;; "I"
 ;; "IH"
 
-<br /><br />
-
 === TASKS ===
 
 Either this namelist or the outdated [[#OPERATIONS|namelist
@@ -1908,8 +1787,6 @@ It determines which tasks should be performed by ParaGaus.
 ; READ_GX
 : Read in atomic coordinates from [#gx_file gx file] without performing geometry optimization.
 
-<br /><br />
-
 === UNIQUE_ATOM ===
 
 This obligatory namelists describes of the type and position of one
@@ -1946,8 +1823,6 @@ instead.
 In case of a [#Geometry_Optimization geometry optimization] the
 coordinates given here are ignored and the coordinates are taken from
 the [#gx_file gx_file] instead.
-
-<br /><br />
 
 === UNIQUE_ATOM_BASIS ===
 
@@ -1993,8 +1868,6 @@ The namelist must directly followed by:
 
 In the example above, [#Continuation_Line continuation lines] were
 used. The [#Number_Format number format] is quite free.
-
-<br /><br />
 
 === UNIQUE_ATOM_BASISSET ===
 
@@ -2049,8 +1922,6 @@ The basis set for each unique atom is specified in one block consisting of one n
 
 Each of the namelists [[#UNIQUE_ATOM_BASIS|UNIQUE_ATOM_BASIS]] and [[#UNIQUE_ATOM_GLOB_CON|UNIQUE_ATOM_GLOB_CON]] is directly followed by lines containing coefficients as described with these namelists.
 
-<br /><br />
-
 === UNIQUE_ATOM_GLOB_CON ===
 
 This namelist is part of the charge or exchange fit function basis set
@@ -2090,8 +1961,6 @@ must contain the following in this order:
 * Index of exponents contributing. This refers to exponents in corresponding [[#UNIQUE_ATOM_BASIS|namelist UNIQUE_ATOM_BASIS]].
 * Coefficient to weight this primitive function with in the summation.
 
-<br /><br />
-
 === UNIQUE_ATOM_INDP_FCT ===
 
 This outdated namelist is part of the description of the symmetry
@@ -2124,8 +1993,6 @@ symmetry adaption description must be written together in one block.
      N_FCTS = 2
   /UNIQUE_ATOM_INDP_FCT
 
-<br />
-
 In case the integrals are not calculated (See [[#OPERATIONS|namelist
 OPERATIONS]]), a section describing the renormalization coefficients
 for the orbital and fit function basis directly follows:
@@ -2143,8 +2010,6 @@ contained is greater zero:
 
 * The first line contains [[#UNIQUE_ATOM_BASIS|N_EXPONENTS]] coefficients in case global contractions are used (i.e. [[#UNIQUE_ATOM_BASISSET|N_GLOB_CONS_??]] greater zero) and [[#UNIQUE_ATOM_BASIS|N_UNCONTRACTED_FCTS]] coefficients otherwise. These are renormalization coefficients for uncontracted basis functions.
 * The second line contains [[#UNIQUE_ATOM_BASIS|N_CONTRACTED_FCTS]] coefficients for the (locally) contracted basis functions.
-
-<br /><br />
 
 === UNIQUE_ATOM_NUMBER ===
 
@@ -2164,8 +2029,6 @@ equivalent atoms].
 
 This namelist must be directly be followed by N_UNIQUE_ATOMS
 [[#UNIQUE_ATOM|namelists UNIQUE_ATOM]].
-
-<br /><br />
 
 === UNIQUE_ATOM_SYMADAPT ===
 
@@ -2199,8 +2062,6 @@ order:
 * Index of equal atom
 * magnetical quantum number
 * coefficient
-
-<br /><br />
 
 === XC_CONTROL ===
 
@@ -2402,11 +2263,7 @@ selected.
 ;; <tt>XC="VWN,spatial,orb->sporb"</tt> and like
 :: use spatial orbitals to compute spinors as opposed to independent evaluation of both.  Note that all keys are '''case insensitive'''. This switch is mainly used together with [#Spin_Orbit spin-orbit].
 
-<br /><br /><br /><br />
-
 ----
-
-<br /><br />
 
 === Deprecated Namelists ===
 
@@ -2445,8 +2302,6 @@ This namelist controls parallel execution of program.
 ; PVM_SLAVE_INTERRUPT_NBR
 : A performance parameter to the integral part. The slave will really execute the interrupt function during calculation each PVM_SLAVE_INTERRUPT_NBR time it is called.
 
-<br /><br />
-
 ==== PHXC_CONTROL (Deprecated) ====
 
 <span style="color:#FF0000;"> Namelist FLAGGED FOR DELETION in a future version. dont use it any more!</span>
@@ -2484,7 +2339,6 @@ See [[#XC_CONTROL|namelist XC_CONTROL]] for a explanation of the keywords and fu
 : it makes sense to use this clause only to calculate all (available) post-hoc energies at once (a good old feature of <tt>lcgto</tt>). Note that there is a difference beetween, say, <tt>PBE/VWN</tt> and <tt>PBE/PWLDA</tt>. I guess <tt>"gga:all"</tt> is the default in case you do not provide no options at all. Tested mainly with [#Spin_Orbit SO].
 
 </div>
-<br />
 
 = Sample Input =
 
@@ -2561,11 +2415,7 @@ See [[#XC_CONTROL|namelist XC_CONTROL]] for a explanation of the keywords and fu
  ~/users/hp4/ttfs/bases/O_9.5.1_5.4.1
  
 
-<br /><br />
-
 ----
-
-<br /><br />
 
 = Describing the Geometry =
 
@@ -2663,11 +2513,7 @@ group:
 Optimization] the coordinates specified in the input file are ignored
 and the real coordinates are taken from the [#gx_file gx file].
 
-<br /><br />
-
 ----
-
-<br /><br />
 
 = Helper Programs =
 

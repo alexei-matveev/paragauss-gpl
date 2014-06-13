@@ -28,18 +28,7 @@
 module becke_step_func
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
-  !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2008-2013 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

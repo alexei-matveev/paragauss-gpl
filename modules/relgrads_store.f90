@@ -383,8 +383,8 @@ contains
 
     integer(IK) :: siz
 
-    ! on exit the inode should have the size scaled down by MINLEV:
-    siz = ino%size * MINLEV
+    ! On exit the inode should have the size scaled down by MINLEV:
+    siz = int (ino % size * MINLEV, kind = IK)
 
     !print *,MyID,'RGS oom_inode: ino%cur_hash=>'//ino%cur_hash//'<'
     if( ino%cur_hash /= 'NULL' )then

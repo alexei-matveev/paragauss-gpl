@@ -765,7 +765,7 @@ contains
     !    trace                   - expectation value
     !
     !------------ Modules ----------------------------------------
-    use comm, only: comm_reduce, comm_rank, comm_bcast, comm_same
+    use comm, only: comm_reduce, comm_rank, comm_bcast
     use iounitadmin_module,   only: output_unit                                &
                                   , stdout_unit
     use spin_orbit_module,    only: whatis                                     &
@@ -866,10 +866,6 @@ contains
     !
     ! base-1 process ID:
     pid = 1 + comm_rank()
-
-    ! See   ham_calc_main(),  loop   has   the  same   value  on   all
-    ! workers. FIXME: rm when confident!
-    ASSERT(comm_same(loop))
 
     e_coul    = 0.0_r8_kind
     e_2z_coul = 0.0_r8_kind

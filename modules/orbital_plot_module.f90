@@ -273,7 +273,7 @@ contains
        endif
        ASSERT(status==0)
 
-       WRITE(*,nml=orbital_plot)
+       ! write (*, nml=orbital_plot)
 
        alternative_options = calc_rho    .or. calc_rho_fit .or. &
                              calc_xc_pot .or. calc_xc_pot_mda

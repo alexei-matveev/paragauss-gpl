@@ -80,7 +80,6 @@ Module dipole_module
   Use type_module ! type specification parameters
   Use symmetry_data_module
   Use occupation_module
-  Use eigen_data_module
   Use options_module, Only: options_spin_orbit
   Use iounitadmin_module
   Implicit None
@@ -512,6 +511,7 @@ Contains
         !
         use comm, only: comm_rank, comm_bcast
         use solv_electrostat_module, only: surface_charge_moments
+        use eigen_data_module, only: eigvec_real, eigvec_imag, eigvec, eigval
         Implicit None
         !** End of interface *****************************************
 
@@ -773,6 +773,7 @@ Contains
         !
         use constants, only: angstrom
         use operations_module, only: operations_solvation_effect
+        use eigen_data_module, only: eigval, eigvec, eigvec_real, eigvec_imag
         Implicit None
         Integer (i4_kind), Intent (In) :: iounit
         Logical, Intent (In) :: detailed
@@ -989,7 +990,8 @@ Contains
       Subroutine dipole_transitionmoment_f (iounit)
     !  Purpose: calculates and prints all transition dipole moments
     !  in a formatted way to iounit. Includes spin-orbit option
-         Implicit None
+        use eigen_data_module, only: eigval, eigvec, eigvec_real, eigvec_imag
+        Implicit None
     !------------ Declaration of formal parameters ---------------
          Integer (Kind=i4_kind), Intent (In) :: iounit
     !** End of interface *****************************************
@@ -1553,6 +1555,7 @@ Contains
       Subroutine dipole_transitionmoment_uf (iounit)
     !  Purpose: calculates and prints all transition dipole moments
     !  in a unformatted way to iounit.
+        use eigen_data_module, only: eigval, eigvec
          Implicit None
     !------------ Declaration of formal parameters ---------------
          Integer (Kind=i4_kind), Intent (In) :: iounit
@@ -1692,6 +1695,7 @@ Contains
     !           between a core orbital specified in the input and an other
     !           orbital times the Energiedifferenz to the power 4
     !           I= (Ei-Ef)^4*|<i|z|f>|^2
+        use eigen_data_module, only: eigvec, eigval
          Implicit None
     !------------ Declaration of formal parameters ---------------
          Integer :: iounit
@@ -1821,6 +1825,7 @@ Contains
         !       Only difference: no MO eigenvalues are considered
         !
         USE comm_module
+        use eigen_data_module, only: eigvec
         Implicit None
         !------------ Declaration of formal parameters ---------------
         Integer (Kind=i4_kind), Intent (In) :: iounit
@@ -1966,6 +1971,7 @@ Contains
         !       Only difference: no MO eigenvalues are considered
         !
         USE comm_module
+        use eigen_data_module, only: eigvec
         Implicit None
         !------------ Declaration of formal parameters ---------------
         Integer (Kind=i4_kind), Intent (In) :: iounit

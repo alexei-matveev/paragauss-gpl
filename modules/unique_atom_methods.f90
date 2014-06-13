@@ -397,13 +397,13 @@ contains
    !*************************************************************
 
    !*************************************************************
-   subroutine unique_atom_read(loop) ! was unique_atom_unique_read()
-   !  Purpose: reads in names, fixed option, and Z of unique atoms
-   !           and coordinates of first centers ("equal atoms")
-   !           Also load N_moving_unique_atoms.
-   !           Also allocates and reads  gxepe_array and gxepe_impu
-   !           for epe treatment
-   !** End of interface *****************************************
+   subroutine  unique_atom_read (loop) ! was unique_atom_unique_read()
+     !
+     ! Reads  in  names, fixed  option,  and  Z  of unique  atoms  and
+     ! coordinates  of   first  centers  ("equal   atoms")  Also  load
+     ! N_moving_unique_atoms.   Also allocates  and  reads gxepe_array
+     ! and gxepe_impu for epe treatment
+     !
    use input_module
    use iounitadmin_module
    use filename_module
@@ -428,7 +428,8 @@ contains
 #endif
    implicit none
    integer(kind=i4_kind), intent(in):: loop
-   !------------ Declaration of local variables -----------------
+   !** End of interface *****************************************
+
    type(unique_atom_type), pointer :: ua
    integer             ::  i,k,status,unit,i_ua,io_u,counter_equal,gx_count
    character(len=5)         ::  gx_buff
@@ -439,9 +440,9 @@ contains
 #endif
    real(kind=r8_kind) :: x_coord,y_coord,z_coord,z_dummy, iwork
    !
-   ! compiler bug?:
-   ! somehow UNIQUE_ATOM_MODULE::N_UNIQUE_ATOMS is not changed by read(nml=...) below
-   ! trying a workaround (Linux/MPI,Absoft6.0)
+   ! FIXME: Does this still affect us?  Somehow
+   ! UNIQUE_ATOM_MODULE::N_UNIQUE_ATOMS is not changed by
+   ! read(nml=...) below trying a workaround (Linux/MPI,Absoft6.0)
    !
    integer(i4_kind)   :: n_unique_atoms ! local variable, hides the module variable
 
@@ -554,9 +555,9 @@ contains
         &Fixed atoms not yet completely implemented for relativistic forces")
 
    ! for geometry optimization read coordinates from gx file
-   if (operations_geo_opt.or.operations_qm_mm.or.operations_read_gx) then
+   if (operations_geo_opt .or. operations_qm_mm .or. operations_read_gx) then
 #ifdef WITH_MOLMECH
-      nqm_mm_new:if(.not.operations_qm_mm_new) then
+      nqm_mm_new: if (.not. operations_qm_mm_new) then
 #endif
 #ifdef WITH_EPE
       inquire(file= trim(inpfile('epe.r')), exist=ex_gxepe)
@@ -567,72 +568,71 @@ contains
       endif ! ex_gxepe
 #endif
 
-      if(operations_transit) then
-       write(cha_loop,'(i1)') loop
-       inquire(file= trim(inpfile('gx.'//cha_loop)), exist=ex_gx)
+      if (operations_transit) then
+         write(cha_loop,'(i1)') loop
+         inquire(file= trim(inpfile('gx.'//cha_loop)), exist=ex_gx)
       else
-       inquire(file= trim(inpfile('gxfile')), exist=ex_gx)
+         inquire(file= trim(inpfile('gxfile')), exist=ex_gx)
       endif
 
-      read_in_gxfile: if(ex_gx) then
+      read_in_gxfile: if (ex_gx) then
 
-      if(operations_transit) then
-       io_u = openget_iounit(file=trim(inpfile('gx.'//cha_loop)), status='old', &
-                             form='formatted')
-      else
-       io_u = openget_iounit(file=trim(inpfile('gxfile')), status='old', &
-                             form='formatted')
-      endif
+         if (operations_transit) then
+            io_u = openget_iounit(file=trim(inpfile('gx.'//cha_loop)), status='old', &
+                 form='formatted')
+         else
+            io_u = openget_iounit(file=trim(inpfile('gxfile')), status='old', &
+                 form='formatted')
+         endif
 
-      gx_count=0
+         gx_count = 0
 #ifdef WITH_EPE
-      n_epe_r=0
+         n_epe_r = 0
 #endif
-      do i_ua=1,N_unique_atoms
-         counter_equal=1
+         do i_ua = 1, N_unique_atoms
+            counter_equal = 1
 
-         do
-            if(counter_equal>unique_atoms(i_ua)%n_equal_atoms) exit
+            do
+               if (counter_equal > unique_atoms(i_ua) % n_equal_atoms) exit
 
-        gx_count=gx_count+1
-        if(operations_gx_epeformat) then
-            read(io_u,*,ERR=100,END=101)z_dummy,x_coord,y_coord,z_coord,ieq_dummy,indexes,impu
+               gx_count = gx_count + 1
+               if (operations_gx_epeformat) then
+                  read(io_u, *, ERR=100, END=101) z_dummy, x_coord, y_coord, z_coord, ieq_dummy, indexes, impu
 #ifdef WITH_EPE
-            if(ex_gxepe.and.impu.ne.0) read(io_gxepe,*) r_gxepe
+                  if (ex_gxepe .and. impu .ne. 0) read(io_gxepe, *) r_gxepe
 #endif
-        else
-           read(io_u,*,ERR=100,END=101)  z_dummy,x_coord,y_coord,z_coord,ieq_dummy
-        endif
-
-            if(ieq_dummy.ne.0) then
-               if(counter_equal==1) then
-                  unique_atoms(i_ua)%position_first_ea(1)=x_coord
-                  unique_atoms(i_ua)%position_first_ea(2)=y_coord
-                  unique_atoms(i_ua)%position_first_ea(3)=z_coord
+               else
+                  read(io_u, *, ERR=100, END=101) z_dummy, x_coord, y_coord, z_coord, ieq_dummy
                endif
+
+               if (ieq_dummy .ne. 0) then
+                  if (counter_equal == 1) then
+                     unique_atoms(i_ua) % position_first_ea(1) = x_coord
+                     unique_atoms(i_ua) % position_first_ea(2) = y_coord
+                     unique_atoms(i_ua) % position_first_ea(3) = z_coord
+                  endif
 #ifdef WITH_EPE
-               if(ex_gxepe) then
-                  gxepe_impu(i_ua)=impu
-                  if(impu.ne.0) then
-                     gxepe_array(i_ua)%position(:,counter_equal)=r_gxepe
-                     n_epe_r=n_epe_r+1
-                  end if
-               endif
+                  if (ex_gxepe) then
+                     gxepe_impu(i_ua) = impu
+                     if (impu .ne. 0) then
+                        gxepe_array(i_ua) % position(:, counter_equal) = r_gxepe
+                        n_epe_r = n_epe_r + 1
+                     endif
+                  endif
 #endif
-               counter_equal=counter_equal+1
-            endif
-         enddo
-      enddo ! i_ua=1,N_unique_atoms
-!!$      call read_gxtimps(io_u,io_gxepe) !coordinats of reg positions
+                  counter_equal = counter_equal + 1
+               endif
+            enddo
+         enddo ! i_ua=1,N_unique_atoms
 
 
-      gx_count=gx_count+1
-      read(io_u,*,iostat=status) iwork
-      if (status .gt. 0) call error_handler &
-           ("unique_atom_read: reading iwork from gxfile")
-      unique_atom_iwork=int(-iwork,i4_kind)
-      close(io_u)
-      call return_iounit(io_u)
+         gx_count = gx_count + 1
+         read(io_u, *, iostat=status) iwork
+         if (status .gt. 0) call error_handler &
+              ("unique_atom_read: reading iwork from gxfile")
+         unique_atom_iwork = int(-iwork, i4_kind)
+         close(io_u)
+         call return_iounit(io_u)
       else !read_in_gxfile
          if(operations_gx_epeformat) call error_handler("unique_atom_read: GXFILE is absent")
          write(*,*)'**********************************************'
@@ -660,37 +660,37 @@ contains
       end if read_in_gxfile
 
 #ifdef WITH_EPE
-      if(ex_gxepe) then
-        write(output_unit,*) &
-             ' gxepe array to relate  QM and impurity cluster centers '
-        do i_ua=1,N_unique_atoms
-         do counter_equal=1,unique_atoms(i_ua)%n_equal_atoms
-         write(output_unit,*) gxepe_array(i_ua)%position(:,counter_equal)
-         enddo ! counter_equal=1,n_equal_atoms
-        enddo ! i_ua=1,N_unique_atoms
-        close(io_gxepe)
-        call return_iounit(io_gxepe)
-        endif ! ex_gxepe
+      if (ex_gxepe) then
+         write(output_unit,*) &
+              ' gxepe array to relate  QM and impurity cluster centers '
+         do i_ua = 1, N_unique_atoms
+            do counter_equal = 1, unique_atoms(i_ua) % n_equal_atoms
+               write(output_unit,*) gxepe_array(i_ua) % position(:, counter_equal)
+            enddo ! counter_equal=1,n_equal_atoms
+         enddo ! i_ua=1,N_unique_atoms
+         close(io_gxepe)
+         call return_iounit(io_gxepe)
+      endif ! ex_gxepe
 #endif
 
 #ifdef WITH_MOLMECH
        else nqm_mm_new
-          if(imomm) then
+          if (imomm) then
              call read_qmmm_input(iwork)
-             unique_atom_iwork=int(-iwork,i4_kind)
-             i=0
-             do i_ua=1,N_unique_atoms
-                counter_equal=1
+             unique_atom_iwork = int(-iwork, i4_kind)
+             i = 0
+             do i_ua = 1, N_unique_atoms
+                counter_equal = 1
                 do
-                   if(counter_equal>unique_atoms(i_ua)%n_equal_atoms) exit
-                   i=i+1
-                   if(gx(i)%i_unique.ne.0) then
-                      if(counter_equal==1) then
-                         unique_atoms(i_ua)%position_first_ea(1)=gx_qm(i)%x
-                         unique_atoms(i_ua)%position_first_ea(2)=gx_qm(i)%y
-                         unique_atoms(i_ua)%position_first_ea(3)=gx_qm(i)%z
+                   if (counter_equal > unique_atoms(i_ua) % n_equal_atoms) exit
+                   i = i + 1
+                   if (gx(i) % i_unique .ne. 0) then
+                      if (counter_equal == 1) then
+                         unique_atoms(i_ua) % position_first_ea(1) = gx_qm(i) % x
+                         unique_atoms(i_ua) % position_first_ea(2) = gx_qm(i) % y
+                         unique_atoms(i_ua) % position_first_ea(3) = gx_qm(i) % z
                       endif
-                      counter_equal=counter_equal+1
+                      counter_equal = counter_equal + 1
                    endif
                 enddo
              enddo! i_ua=1,N_unique_atoms

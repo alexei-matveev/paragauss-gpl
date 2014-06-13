@@ -816,7 +816,6 @@ contains
 
     if (reset) then
        charge_and_spin_kept = .false.
-       print *,'w1 COE=',sum(coeff_charge_kept)
        call readwriteblocked_write(coeff_charge_kept,th)
        if (output_data_saved) then
           write(output_unit,'(  a     )')'coeff_charge'

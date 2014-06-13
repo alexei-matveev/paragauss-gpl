@@ -24,6 +24,7 @@
 !
 module qmmm1_interface_module
   !------------ Modules used --------------------------------------
+# include "def.h"
   use type_module
 #ifdef _COMPAC_FORTRAN
   use datatype
@@ -323,18 +324,20 @@ contains
 
   !*********************************************************
   subroutine QMfield_at_mm_points()
-    !------------ modules used ------------------- ---------------
+    !
+    ! Executed by all workers. Called from main_master().
+    !
     use pointcharge_module
     use elec_static_field_module
-    use density_data_module, only: density_data_free1
-    use options_module, only : options_integrals_on_file
-    use msgtag_module, only : msgtag_intstore_dealloc
-    use comm_module, only : comm_init_send,comm_send,comm_parallel,comm_all_other_hosts
-    use integralstore_module, only : integralstore_deallocate_pcm
-    !------------ Declaration of local variables -----------------
+    use density_data_module, only: density_data_free
+    use options_module, only: options_integrals_on_file
+    use integralstore_module, only: integralstore_deallocate_pcm
+    implicit none
+    ! *** end of interface ***
+
     real(r8_kind), allocatable :: P(:,:)
     integer :: status,n,i,j,k
-    !------------ Executable code --------------------------------
+
 
     n=N_gx_atoms-N_gx_qm_atoms
     allocate(P(3,n),stat=status)
@@ -361,26 +364,25 @@ contains
     call field_calculate()
     call start_read_field_e()
     call get_field_nuc()
-!!$    call surf_points_gradinfo_dealloc()
-!!$    call bounds_free_field()
-!!$    call dealloc_surf_points()
-    call density_data_free1()
-    if ( .not. options_integrals_on_file() ) then
+
+    ! This procedure runs in a parallel context. The following cleanup
+    ! is executed by all workers:
+    call density_data_free()
+    if (.not. options_integrals_on_file()) then
        call integralstore_deallocate_pcm()
-       if ( comm_parallel() ) then
-          call comm_init_send(comm_all_other_hosts,msgtag_intstore_dealloc)
-          call comm_send()
-       endif
     end if
   end subroutine QMfield_at_mm_points
   !*********************************************************
 
   !*********************************************************
   subroutine qm_grads_to_qmmm1()
-    !------------ modules used -----------------------------------
+    !
+    ! This sub  is called from a  parallel context but  on master only
+    ! (see main_gradient()). It cannot use communication as the slaves
+    ! are not doing anything "during  this time"! Check this next time
+    ! it is running.
+    !
     use unique_atom_module
-    use comm_module
-    use msgtag_module, only: msgtag_del_field
     use energy_calc_module, only : get_energy
     use gradient_data_module, only : gradient_cartesian
     use elec_static_field_module, only : deallocate_field,E_ele,E_nuc,N_surface_points
@@ -389,12 +391,14 @@ contains
     use solv_electrostat_module, only : F_solv_pc,dealloc_solv_pc
     use operations_module, only : operations_solvation_effect
     use qmmm_interface_module, only : qm_mm_1
-    !------------ Declaration of local variables -----------------
+    implicit none
+    ! *** end of interface ***
+
     real(r8_kind) :: energy,pc_charge
     integer :: i,j,k,l
     character(len=2) :: qmmm_type
-    !------------ Executable code --------------------------------
 
+    ABORT("check!")
     call get_energy(tot=energy)
     Energy_qm=energy
 
@@ -436,10 +440,6 @@ contains
 
        if(operations_solvation_effect) call dealloc_solv_pc
        call surf_points_gradinfo_dealloc()
-       if(comm_parallel()) then
-          call comm_init_send(comm_all_other_hosts,msgtag_del_field)
-          call comm_send()
-       endif
        call bounds_free_field()
        call destroy_field_file()
        call dealloc_surf_points()
@@ -463,7 +463,6 @@ contains
             gx_qmmm(i)%name,gx_qmmm_grad(i)%x,gx_qmmm_grad(i)%y,gx_qmmm_grad(i)%z,qmmm_type
     end do
     write(output_unit,*) "**************************************************"
-
   end subroutine qm_grads_to_qmmm1
   !*********************************************************
 

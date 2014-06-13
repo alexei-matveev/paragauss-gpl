@@ -54,17 +54,17 @@
   ;;
   ;; Import basis set library:
   ;;
-;;#:use-module ((baslib guile baslib)
-;;              #:select (find-basis))
-;;#:use-module ((baslib guile paragauss)
-;;              #:select (qm-write-input))
+  #:use-module ((baslib guile baslib)
+                #:select (find-basis))
+  #:use-module ((baslib guile paragauss)
+                #:select (qm-write-input))
   #:export (qm-main
             ;; qm-init
             ;; qm-run
             ;; qm-finalize
             qm-trace-hook
             qm-flush-trace
-            ;; qm-find-basis
+            qm-find-basis
             qm-vdw-dft-phi
             qm-vdw-dft-phi/asy
             pople-radius
@@ -389,18 +389,18 @@ Asymptotic form of qm-vdw-dft-phi for large d1 and d2."
 ;;; as  specified  by  atom   and  the  type.   The  specification  is
 ;;; intentionally left vague at the moment.
 ;;;
-;;(define (qm-find-basis atom type)
-;;  (let* ((atom (string->symbol (string-downcase (string-trim-both atom))))
-;;         (lib (list 'turbomole 'basen atom))
-;;         (basis (find-basis lib type)))
-;;    (if #f                              ; debug prints
-;;        (begin
-;;          (display (list "QM-FIND-BASIS:" atom type))
-;;          (newline)
-;;          (pretty-print basis)
-;;          (newline)
-;;          (force-output)))              ; flush stdout
-;;    basis))                             ; return basis
+(define (qm-find-basis atom type)
+  (let* ((atom (string->symbol (string-downcase (string-trim-both atom))))
+         (lib (list 'turbomole 'basen atom))
+         (basis (find-basis lib type)))
+    (if #f                              ; debug prints
+        (begin
+          (display (list "QM-FIND-BASIS:" atom type))
+          (newline)
+          (pretty-print basis)
+          (newline)
+          (force-output)))              ; flush stdout
+    basis))                             ; return basis
 
 ;;;
 ;;; One of  these, qm-trace-hook, if defined/imported,  is called from

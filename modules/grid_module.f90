@@ -110,8 +110,7 @@ module grid_module
 # include "def.h"
   use type_module
   use unique_atom_module
-  use comm_module
-  use msgtag_module
+  use comm_module, only: comm_i_am_master
   use datatype
   use iounitadmin_module
 #ifdef FPP_AIX_XLF
@@ -293,17 +292,19 @@ module grid_module
 
 contains
 
-  subroutine grid_main1(post_scf)
+  subroutine grid_main1 (post_scf)
+    use comm_module, only: comm_init_send, comm_all_other_hosts, comm_send
+    use msgtag_module, only: msgtag_gr_send
     implicit none
     logical, intent( in  ) :: post_scf
     ! *** end of interface ***
 
     if (comm_i_am_master()) then
-      call comm_init_send(comm_all_other_hosts, msgtag_gr_send)
+      call comm_init_send (comm_all_other_hosts, msgtag_gr_send)
       call comm_send()
     end if
 
-    call grid_main(post_scf)
+    call grid_main (post_scf)
   end subroutine grid_main1
 
   subroutine grid_main(post_scf)
@@ -3125,6 +3126,7 @@ contains
   !-------------------------------------------------------------------------
   subroutine grid_close1(keep_grid_par_ph)
     ! Purpose: wrapper around grid_close for using it in a master-only context
+    use comm_module, only: comm_init_send, comm_all_other_hosts, comm_send
     use msgtag_module, only: msgtag_gridph_close, msgtag_grid_close
     implicit none
     logical, intent(in) :: keep_grid_par_ph

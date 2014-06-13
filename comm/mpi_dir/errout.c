@@ -28,13 +28,16 @@
 #include "externdecs.h"
 
 void errout (char *message) {
-  int ierr, errorcode = 1;
-
   printf("host %d: %s", my_index_buf, message);
 
-  // MPI standard does not guarantee that only a subset of
-  // processes may be aborted, use MPI_COMM_WORLD instead
-  // of "comm_world" here to kill them all:
-  ierr = MPI_Abort(MPI_COMM_WORLD, errorcode);
-  ierr = MPI_Finalize();
+  /*
+    MPI standard  does not guarantee  that only a subset  of processes
+    may be aborted, use MPI_COMM_WORLD instead of "comm_world" here to
+    kill them all. No error checking, as we are doomed anyway.
+  */
+  const int errorcode = 1;
+
+  MPI_Abort (MPI_COMM_WORLD, errorcode);
+  /* NOTREACHED */
+  MPI_Finalize ();               /* FIXME: why is it here? */
 }

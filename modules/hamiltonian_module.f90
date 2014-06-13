@@ -93,7 +93,6 @@ module hamiltonian_module
   !----------------------------------------------------------------
   !------------ Modules used --------------------------------------
 # include "def.h"
-# define MEMLOG(X) ! noMEMLOG(X)
   use type_module ! type specification parameters
   use datatype, only: arrmat2, arrmat3 ! user defined types
   use init_module, only: init ! initialization stuff
@@ -102,7 +101,6 @@ module hamiltonian_module
        symmetry_data_dimension, symmetry_data_dimension_proj, &
        symmetry_data_n_spin
   use options_module, only: options_spin_orbit, lvshift_mixing
-  USE_MEMLOG
   implicit none
   private
   save
@@ -231,7 +229,6 @@ contains
       do i=1,n_irrep
          allocate(ham_tot(i)%m(dims(i), dims(i), n_spin), STAT=status)
          ASSERT(status.eq.0)
-         MEMLOG(size(ham_tot(i)%m))
       enddo
 
     case ( 'ham_tot_real' )
@@ -242,7 +239,6 @@ contains
       do i=1,n_irrep
          allocate(ham_tot_real(i)%m(dims(i), dims(i)), STAT=status)
          ASSERT(status.eq.0)
-         MEMLOG(size(ham_tot_real(i)%m))
       enddo
 
     case ( 'ham_tot_imag' )
@@ -253,7 +249,6 @@ contains
       do i=1,n_irrep
          allocate(ham_tot_imag(i)%m(dims(i), dims(i)), STAT=status)
          ASSERT(status.eq.0)
-         MEMLOG(size(ham_tot_imag(i)%m))
       enddo
 
     case ( 'ham_xc' )
@@ -264,7 +259,6 @@ contains
       do i=1,n_irrep
          allocate(ham_xc(i)%m(dims(i), dims(i), n_spin), STAT=status)
          ASSERT(status.eq.0)
-         MEMLOG(size(ham_xc(i)%m))
       enddo
 
     case ( 'ham_xc_real' )
@@ -275,7 +269,6 @@ contains
       do i=1,n_irrep
          allocate(ham_xc_real(i)%m(dims(i), dims(i)), STAT=status)
          ASSERT(status.eq.0)
-         MEMLOG(size(ham_xc_real(i)%m))
       enddo
 
     case ( 'ham_xc_imag' )
@@ -286,7 +279,6 @@ contains
       do i=1,n_irrep
          allocate(ham_xc_imag(i)%m(dims(i), dims(i)), STAT=status)
          ASSERT(status.eq.0)
-         MEMLOG(size(ham_xc_imag(i)%m))
       enddo
 
     case ( 'ham_lsft' )
@@ -297,7 +289,6 @@ contains
       do i=1,n_irrep
          allocate(ham_lsft(i)%m(dims(i), dims(i), n_spin), STAT=status)
          ASSERT(status.eq.0)
-         MEMLOG(size(ham_lsft(i)%m))
       enddo
 
     case default

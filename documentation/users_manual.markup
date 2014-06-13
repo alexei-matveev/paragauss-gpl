@@ -2297,7 +2297,7 @@ The set of '''symmetry transformations''' within one symmetry group are not comp
 |-
 | "D2D" "D3D" ... "D10D"
 | z-axis
-| xz-plane n-fold rotated around z-axis
+| yz-plane n-fold rotated around z-axis
 | x-axis n-fold rotated around z-axis
 |-
 | "S4" "S6" ... "S20"
@@ -2326,3 +2326,4 @@ The set of '''symmetry transformations''' within one symmetry group are not comp
 = Helper Programs =
 
 The [/home/ttfs/DOCUMENTATION/DOK/paraplot.dvi paraplot] program that plots orbitals or densities in a two dimensional way is described seperately.
+

@@ -1001,8 +1001,7 @@ contains
   end subroutine bsoa
 
   subroutine build_coul(V,VY)
-    use filename_module, only: &
-         recover_dir, filename_outextension
+    use filename_module, only: recover_dir
     use readwriteblocked_module, only: &
          readwriteblocked_startread, &
          readwriteblocked_read, &
@@ -1029,9 +1028,8 @@ contains
     allocate(ak(nfit%n_ch),stat=memstat)
     ASSERT(memstat==0)
 
-    call readwriteblocked_startread( &
-         trim(recover_dir) // "/" // trim(scf_file)&
-         // trim(filename_outextension) // ".dat", &
+    call readwriteblocked_startread (&
+         trim (recover_dir) // "/" // trim (scf_file) // ".dat", &
          th, variable_length=.true.)
 
     call readwriteblocked_read(ak,th)

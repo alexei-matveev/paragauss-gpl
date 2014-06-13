@@ -849,42 +849,44 @@ contains
 
 #ifdef WITH_EPE
   subroutine epe_convergence_check (epe_side_energy_converged, i_iter)
-        use epecom_module, only: epe_rel_converged, &
-        epe_side_optimized_energy, epeside_energy_limit, &
-        epe_side_optimized_energy_prev, epe_basic_action=>basic_action
-        use filename_module, only: data_dir
-        logical, intent (out):: epe_side_energy_converged
-        integer (i4_kind), intent (in) :: i_iter
-      if (epe_relaxation .and. .not. epe_basic_action .eq. 0) then
-        inquire (file=trim (data_dir)//"/epe_rel_unconverged", &
-        exist=epe_rel_converged)
-        epe_rel_converged = .not. epe_rel_converged
-        print*,'epe_convergence_check: epe_relaxation, epe_rel_converged' &
-              , epe_relaxation, epe_rel_converged
-        epe_side_energy_converged=abs (epe_side_optimized_energy_prev - &
-        epe_side_optimized_energy).lt.0.00002 !?  embed_convergence_limit
+    use epecom_module, only: epe_rel_converged, &
+         epe_side_optimized_energy, epeside_energy_limit, &
+         epe_side_optimized_energy_prev, epe_basic_action=>basic_action
+    use filename_module, only: data_dir
+    implicit none
+    logical, intent (out) :: epe_side_energy_converged
+    integer (i4_kind), intent (in) :: i_iter
+    ! *** end of interface ***
 
-        if (.not. epe_side_energy_converged) &
-           epe_side_energy_converged=abs (epe_side_optimized_energy_prev - &
-           epe_side_optimized_energy).lt.0.0004 .and. i_iter.gt.10
+    if (epe_relaxation .and. .not. epe_basic_action .eq. 0) then
+       inquire (file=trim (data_dir) // "/epe_rel_unconverged", &
+            exist=epe_rel_converged)
+       epe_rel_converged = .not. epe_rel_converged
+       print *, 'epe_convergence_check: epe_relaxation, epe_rel_converged', &
+            epe_relaxation, epe_rel_converged
+       epe_side_energy_converged = abs (epe_side_optimized_energy_prev - &
+            epe_side_optimized_energy) .lt. 0.00002 !?  embed_convergence_limit
 
-        print*,'epe_side_energy_jump' , &
-                epe_side_optimized_energy_prev - epe_side_optimized_energy &
-               , epeside_energy_limit
-        epe_side_optimized_energy_prev=epe_side_optimized_energy
-         if (.not. epe_rel_converged .or. .not. epe_side_energy_converged) then
-         print*,'optimizer: epe relaxation is still not converged', &
-         epe_rel_converged, epe_side_energy_converged, &
-         epe_side_optimized_energy_prev - &
-         epe_side_optimized_energy
-        call write_to_trace_unit ('.not. epe_side_energy_converged')
-         else
-         call write_to_trace_unit ('epe_side_energy_converged')
-         endif
-        else
-         epe_side_energy_converged=epe_basic_action.eq.0
-        endif
+       if (.not. epe_side_energy_converged) &
+            epe_side_energy_converged = abs (epe_side_optimized_energy_prev - &
+            epe_side_optimized_energy) .lt. 0.0004 .and. i_iter .gt. 10
 
+       print *, 'epe_side_energy_jump' , &
+            epe_side_optimized_energy_prev - epe_side_optimized_energy, &
+            epeside_energy_limit
+       epe_side_optimized_energy_prev = epe_side_optimized_energy
+       if (.not. epe_rel_converged .or. .not. epe_side_energy_converged) then
+          print *, 'optimizer: epe relaxation is still not converged', &
+               epe_rel_converged, epe_side_energy_converged, &
+               epe_side_optimized_energy_prev - &
+               epe_side_optimized_energy
+          call write_to_trace_unit ('.not. epe_side_energy_converged')
+       else
+          call write_to_trace_unit ('epe_side_energy_converged')
+       endif
+    else
+       epe_side_energy_converged = epe_basic_action .eq. 0
+    endif
   end subroutine epe_convergence_check
 #endif
 

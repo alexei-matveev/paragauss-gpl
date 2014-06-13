@@ -1018,7 +1018,7 @@ contains
     !
     call write_to_output_units ('########################################################################')
     call write_to_output_units (' ')
-    call write_to_output_units ('ParaGauss '//trim (version))
+    call write_to_output_units ('ParaGauss GPL ' // trim (version))
     call write_to_output_units (' ')
     call write_to_output_units ('features:')
 #ifdef WITH_LIBDFTAUTO

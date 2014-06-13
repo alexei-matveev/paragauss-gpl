@@ -305,20 +305,6 @@ contains
   end function toggle_legacy_mode
 
 
-  subroutine qm_run_once()
-    !
-    ! Example call sequence.
-    !
-    implicit none
-    ! *** end of interface ***
-
-    integer :: world
-
-    world = qm_init()
-    call qm_run(world)
-    call qm_finalize(world)
-  end subroutine qm_run_once
-
 #ifdef WITH_GUILE
   subroutine qm_init_scheme() bind(c)
     !

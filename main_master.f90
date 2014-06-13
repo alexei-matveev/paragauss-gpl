@@ -248,7 +248,7 @@ subroutine main_master()
   ! Print the  version info and  machine config, uses  output_unit, so
   ! call it after initialize_environment():
   !
-  call legal(version)
+  call legal (version)
 
 #ifdef WITH_EPE
   epe_side_optimized_energy_prev=0.0_r8_kind
@@ -1001,17 +1001,22 @@ contains
     endif
   end subroutine optimizer_wrap
 
-  subroutine legal(version)
+  subroutine legal (version)
     use comm_module, only: comm_print_conf
     implicit none
-    character(len=*), intent(in) :: version
+    character (len=*), intent (in) :: version
     ! *** end of interface ***
 
     !
     ! This prints machine config:
     !
-    call comm_print_conf(output_unit)
-    call comm_print_conf(stdout_unit)
+    if (output_unit > 0) then
+       call comm_print_conf (output_unit)
+    endif
+
+    if (stdout_unit > 0) then
+       call comm_print_conf (stdout_unit)
+    endif
 
     !
     ! Legal header:

@@ -69,13 +69,15 @@ module potential_module
   save
 
 !------------ public functions and subroutines ------------------
+
+  public :: send_recv_space_point ! ()
+
   public start_read_poten_e,read_poten_e_3,get_poten_n,get_poten_pc, &
        send_space_point, receive_space_point, dealloc_space_points, deallocate_pot, &
        bounds_calc_poten,get_bounds_poten,bounds_send_poten,bounds_receive_poten, &
        bounds_free_poten,send_receive_poten, fill_points, &
        destroy_poten_file , &
        poten_integral_open,poten_integral_close
-
 
   type, public :: spacepoint_type
      integer (i4_kind) :: N_equal_points
@@ -282,16 +284,30 @@ contains
   end subroutine fill_points
   !********************** ********************************
 
+  subroutine send_recv_space_point ()
+    use comm, only: comm_rank
+    use comm_module, only: comm_save_recv, comm_master_host
+    use msgtag_module, only: msgtag_space_point
+    implicit none
+    ! *** end of interface ***
+
+    if (comm_rank () == 0) then
+       call send_space_point ()
+    else
+       call comm_save_recv (comm_master_host, msgtag_space_point)
+       call receive_space_point ()
+    endif
+  end subroutine send_recv_space_point
 
   !******************************************************
-  subroutine send_space_point
+  subroutine send_space_point ()
     ! send representative surface points of the cavity
     !** End of interface *****************************************
 
-    integer(kind=i4_kind)           :: i, length, status
-    type(spacepoint_type), pointer :: ps
+    integer (i4_kind) :: i, length, status
+    type (spacepoint_type), pointer :: ps
 
-    call comm_init_send(comm_all_other_hosts,msgtag_space_point)
+    call comm_init_send (comm_all_other_hosts, msgtag_space_point)
 
     call commpack(N_points,status)
     do i=1,N_points
@@ -300,15 +316,16 @@ contains
        length = ps%N_equal_points*3
        call commpack(ps%position(1,1), length, 1, status)
     enddo
-
     call comm_send()
-
   end subroutine send_space_point
   !******************************************************
 
   !******************************************************
-  subroutine receive_space_point
-    ! receive representative surface points of the cavity
+  subroutine receive_space_point ()
+    !
+    ! Receive representative surface points of the cavity
+    !
+    implicit none
     !** End of interface *****************************************
 
     integer(kind=i4_kind)           :: i, length, status
@@ -326,7 +343,6 @@ contains
        length = point_in_space(i)%N_equal_points*3
        call communpack(point_in_space(i)%position(1,1), length, 1, status)
     enddo
-
   end subroutine receive_space_point
   !******************************************************
 

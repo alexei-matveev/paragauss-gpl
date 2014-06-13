@@ -83,8 +83,8 @@ module  iounitadmin_module
   ! after  call  open_special_units(). Both  will  remain negative  on
   ! slaves that do not do not call open_special_units():
   !
-  integer, public :: output_unit = -1 ! == 1 after opening
-  integer         :: trace_unit = -3 ! == 3 after opening
+  integer, public, protected :: output_unit = -1 ! == 1 after opening
+  integer :: trace_unit = -3                     ! == 3 after opening
   integer, parameter, public :: stdin_unit = 5
   integer, parameter, public :: stdout_unit = 6
 

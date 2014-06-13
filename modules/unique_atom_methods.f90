@@ -406,15 +406,8 @@ contains
      !
    use input_module, only: input_line_is_namelist, &
         input_intermediate_unit, input_error, input_read_to_intermediate
-   use iounitadmin_module, only: openget_iounit, return_iounit, &
-        write_to_output_units, write_to_trace_unit
-   use filename_module, only: inpfile
    use operations_module, only: operations_geo_opt, operations_core_density, &
-        operations_read_gx, operations_qm_mm, operations_gx_epeformat, &
-        operations_transit
-#ifdef WITH_MOLMECH
-   use operations_module, only: operations_qm_mm_new
-#endif
+        operations_read_gx, operations_qm_mm
 #ifdef WITH_EFP
    use operations_module, only: operations_integral, operations_scf, &
         operations_post_scf
@@ -426,22 +419,16 @@ contains
    use unique_atom_module, GLOB_n_unique_atoms => n_unique_atoms
    !^^^^ make it visible with another name, see comment below
    use atom_data_module, only: nuc_radius
-#ifdef WITH_MOLMECH
-   use qmmm_interface_module, only: gx, gx_qm, imomm, qm_mm, read_qmmm_input
-#endif
    implicit none
    integer(kind=i4_kind), intent(in):: loop
    !** End of interface *****************************************
 
    type(unique_atom_type), pointer :: ua
-   integer             ::  i,k,status,unit,i_ua,io_u,counter_equal,gx_count
-   character(len=5)         ::  gx_buff
-   integer ::  ieq_dummy, indexes(7), impu
+   integer ::  i, k, status, unit
 #ifdef WITH_EPE
    integer :: io_gxepe
    real(kind=r8_kind), dimension(3) :: r_gxepe
 #endif
-   real(kind=r8_kind) :: x_coord,y_coord,z_coord,z_dummy, iwork
    !
    ! FIXME: Does this still affect us?  Somehow
    ! UNIQUE_ATOM_MODULE::N_UNIQUE_ATOMS is not changed by
@@ -451,12 +438,10 @@ contains
 
    namelist /unique_atom_number/ N_unique_atoms
 
-   character(len=1)                             :: cha_loop
    character(len=12)                            :: name = ""
    real(kind=r8_kind)                      :: Z    = 0.0_r8_kind
    integer                                 :: N_equal_atoms = 0
    logical                                 :: fixed = .false.
-   logical                                 :: ex_gx
    integer                                 :: nuclear_spin = 0
    real(kind=r8_kind)                      :: nuclear_magnetic_moment = 0.0_r8_kind
    real(kind=r8_kind)                      :: nuclear_radius = 0.0_r8_kind
@@ -559,6 +544,43 @@ contains
 
    ! for geometry optimization read coordinates from gx file
    if (operations_geo_opt .or. operations_qm_mm .or. operations_read_gx) then
+      call read_geometry (loop, unique_atoms)
+   endif
+   end subroutine unique_atom_read
+   !*************************************************************
+
+   !*************************************************************
+   subroutine read_geometry (loop, unique_atoms)
+     !
+     ! Read  positions of uniqe  atoms from  gxfile or  elsewhere. Was
+     ! part of unique_atom_read() before.
+     !
+     ! FIXME:  Happens  to  also   set  the  foreign  module  variable
+     ! unique_atom_iwork!
+     !
+     use iounitadmin_module, only: openget_iounit, return_iounit, &
+          write_to_output_units, write_to_trace_unit
+     use operations_module, only: operations_transit, operations_gx_epeformat
+#ifdef WITH_MOLMECH
+     use operations_module, only: operations_qm_mm_new
+#endif
+     use filename_module, only: inpfile
+#ifdef WITH_MOLMECH
+     use qmmm_interface_module, only: gx, gx_qm, imomm, qm_mm, read_qmmm_input
+#endif
+     use unique_atom_module, only: unique_atom_iwork
+     implicit none
+     integer, intent (in) :: loop
+     type (unique_atom_type), intent (inout) :: unique_atoms(:)
+     ! *** end of interface ***
+
+     real (r8_kind) :: x_coord, y_coord, z_coord, z_dummy, iwork
+     character (len=1) :: cha_loop
+     character (len=5) ::  gx_buff
+     integer :: ieq_dummy, indexes(7), impu
+     integer :: i, i_ua, io_u, status, counter_equal, gx_count
+     logical :: ex_gx
+
 #ifdef WITH_MOLMECH
       nqm_mm_new: if (.not. operations_qm_mm_new) then
 #endif
@@ -701,13 +723,12 @@ contains
           end if
        endif nqm_mm_new
 #endif
-   endif
    return
 
 100     write(gx_buff,'(i5)') gx_count
         call error_handler("unique_atom_read: wrong format of GX file. Line - "//trim(gx_buff))
 101     call error_handler("unique_atom_read:  attempt to read after end of GX file")
-   end subroutine unique_atom_read
+   end subroutine read_geometry
    !*************************************************************
 
 

@@ -151,9 +151,12 @@ Module dipole_module
 
   ! In  dipole_nuclear, both real  atoms and  point charges  are taken
   ! into account:
-  real (r8_kind), public, protected :: dipole_total (3)   ! (i_xyz)
-  real (r8_kind), public, protected :: dipole_nuclear (3) ! (i_xyz)
-  real (r8_kind), public, protected :: dipole_total_spin (3, 2) ! (i_xyz)
+  real (r8_kind), public, protected :: dipole_total (3) ! x, y, and z
+  real (r8_kind), public, protected :: dipole_nuclear (3) ! x, y, and z
+  real (r8_kind), public, protected :: dipole_total_spin (3, 2) ! x, y, and z
+
+  real (r8_kind), private :: dipole_surface_charge (3) ! x, y, and z
+  real (r8_kind), private :: surface_charge
 
   real (r8_kind), allocatable, public, protected :: &
        dipole_total_irrep (:, :) ! (i_xyz ,i_ir)
@@ -508,6 +511,7 @@ Contains
         ! variables are allocated/set only on master.
         !
         use comm, only: comm_rank, comm_bcast
+        use solv_electrostat_module, only: surface_charge_moments
         Implicit None
         !** End of interface *****************************************
 
@@ -535,8 +539,11 @@ Contains
             n_ir = symmetry_data_n_irreps ()
          End If
 
-         ! Set global module variable:
+         ! Set global module variables:
          dipole_nuclear = dipole_nuclear_calculate()
+
+         ! PCM contribution:
+         call surface_charge_moments (surface_charge, dipole_surface_charge)
 
          ! Global module variable:
          If (.not. allocated (dipole_total_irrep)) Then
@@ -765,6 +772,7 @@ Contains
         ! only on rank-0.
         !
         use constants, only: angstrom
+        use operations_module, only: operations_solvation_effect
         Implicit None
         Integer (i4_kind), Intent (In) :: iounit
         Logical, Intent (In) :: detailed
@@ -814,13 +822,14 @@ Contains
          Write (iounit, Fmt=*)
          Write (iounit, Fmt='(49X,"X",16X,"Y",16X,"Z")')
 
-         ! Total
-         Write (iounit, Fmt='("Total Dipole Moment (A.U.)",11X,3F17.7)') dipole_total
+1001     format (A5, " Dipole Moment (A.U.)", 11X, 3F17.7)
+1002     format (A5, " Dipole Moment (C*ANGSTROEM)", 4X, 3F17.7)
+1003     format (A5, " Dipole Moment (C*M*10**-12)", 4X, 3F17.7)
 
-         Write (iounit, Fmt='("Total Dipole Moment (C*ANGSTROEM)",4X,3F17.7)')&
-        & dipole_total / angstrom
-         Write (iounit, Fmt='("Total Dipole Moment (C*M*10**-12)",4X,3F17.7)')&
-        & dipole_total * 100 / angstrom
+         ! Total
+         write (iounit, 1001) "Total", dipole_total
+         write (iounit, 1002) "Total", dipole_total / angstrom
+         write (iounit, 1003) "Total", dipole_total * 100 / angstrom
 
          ! Total using ES-format instead of F-format
          If (detailed) Then
@@ -833,11 +842,6 @@ Contains
            & dipole_total * 100 / angstrom
          End If
 
-         Write (iounit, Fmt=*)
-         Write (iounit, Fmt=*)
-         Write (iounit, Fmt=*)
-         Write (iounit, Fmt='(10X,"(A.U.)",33X,"X",16X,"Y",16X,"Z")')
-
          ! Nuclear
          Write (iounit, Fmt=*)
          Write (iounit, Fmt='("Nuclear Dipole Moment",16X,3F17.7)') dipole_nuclear
@@ -846,6 +850,16 @@ Contains
          Write (iounit, Fmt=*)
          Write (iounit, Fmt='("Total Electronic Dipole Moment",7X,3F17.7)') dipole_total_spin (:, 1) + &
         & dipole_total_spin (:, 2)
+
+         ! Apparent surface charge. Dont print zeros if no solvation:
+         if (operations_solvation_effect) then
+            write (iounit, Fmt=*)
+            write (iounit, 1001) "ASC", dipole_surface_charge
+            write (iounit, 1002) "ASC", dipole_surface_charge / angstrom
+            write (iounit, 1003) "ASC", dipole_surface_charge * 100 / angstrom
+            write (iounit, Fmt=*)
+            write (iounit, *) " ASC total charge", surface_charge
+         endif
 
          ! Total Spin
          If (open_shell) Then

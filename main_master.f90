@@ -27,36 +27,30 @@
 !===============================================================
 subroutine main_master()
 !
-!  Purpose: This routine serves as the MAIN routine for the
-!           master. Its only purpose is -up to now - to set
-!           up the filenames for I/O and to broadcast these
-!           to the slaves.
-!           The routines which divide the lcgto into its major
-!           parts are called from this level.
+!  This routine encodes the MASTER PLAN for all workers.  Historically
+!  it was executed only by  the rank-0 worker (usually called "master"
+!  processor), hence  the name.  By now  it is executed  in a parallel
+!  context.
 !
-!           (1) main_symm  -> symmetry_part
+!  The routines which divide the LCGTO into its major parts are called
+!  from this level:
 !
-!           (2) main_integral
+!  (1) main_symm() -> symmetry_part
 !
-!           (3) main_scf   -> does the SCF cycle including
-!                             Hamiltonian, Eigenvalue solution,
-!                             Reoccupation of levels ...
+!  (2) main_integral()
 !
-!           (4) post_scf_main -> does the calculation of the final total xc-energy
-!                                on the integration grid
-!                                if operations_gradients is true, also the xc-contributions
-!                                to the energy gradient will be calculated
+!  (3) main_scf() -> does the SCF cycle including Hamiltonian,
+!      eigenvalue solution, Reoccupation of levels ...
 !
-!           (5) main_gradient -> calculation of the energy gradients ( except xc-part )
+!  (4) post_scf_main() -> does the calculation of the final total
+!      xc-energy on the integration grid if operations_gradients is
+!      true, also the xc-contributions to the energy gradient will be
+!      calculated
 !
+!  (5) main_gradient() -> calculation of the energy gradients ( except
+!      xc-part )
 !
-!  Input/Output parameter:
-!            This routine does not have a formal parameter list.
-!            On this level every piece of information should be
-!            handled by modules.
-!
-!
-!  Subroutine called by: main
+!  Subroutine called by: main()
 !
 !
 !  Author: TB, FN
@@ -122,9 +116,7 @@ subroutine main_master()
   use type_module, only: i4_kind, r8_kind
   use operations_module ! defines which operations are to be performed
   use paragauss, only: toggle_legacy_mode
-  use comm_module, only: comm_init_send, comm_send, &
-       comm_all_other_hosts, comm_parallel
-  use msgtag_module, only: msgtag_intstore_dealloc
+  use comm_module, only: comm_parallel
   use filename_module, only: filesystem_is_parallel
   use iounitadmin_module, only: output_unit, stdout_unit, &
        write_to_output_units, write_to_trace_unit
@@ -183,7 +175,7 @@ subroutine main_master()
   use potential_module
   use elec_static_field_module
   use symmetry, only: main_symm
-  use interfaces, only: main_integral, IMAST
+  use interfaces, only: main_integral, IPARA
   use interfaces, only: potential_calculate
   use interfaces, only: main_molmech
 #ifdef WITH_MOLMECH
@@ -209,8 +201,7 @@ subroutine main_master()
   logical            :: epe_side_energy_converged
 #endif
   logical :: use_dens_mat ! FIXME: may be used uninitialized
-  FPP_TIMER_DECL(t_post_scf)
-  !------------ Executable part -----------------------------------
+
 
   DPRINT 'main_master: entered'
 
@@ -234,15 +225,10 @@ subroutine main_master()
   !
   ! that are executed by all workers and augment them.
   !
-
-  !
-  ! FIXME: convert  this to SPMD (single program,  multiple data) so
-  ! that all workers execute the same code.  Toggling a master-slave
-  ! mode  has an  effect of  starting main_slave()  daemon  by slave
-  ! workers. The master enters the block exactly once, the slaves do
-  ! not enter:
-  !
-  do while (toggle_legacy_mode())
+  ! FIXME: finish  converting to SPMD (single  program, multiple data)
+  ! so that all  workers execute the same code.  There  is still a few
+  ! cases of  a master-slave mode ---  search for toggle_legacy_mode()
+  ! blocks.
 
   !
   ! Print the  version info and  machine config, uses  output_unit, so
@@ -276,7 +262,6 @@ subroutine main_master()
   max_geo_loop = 1 ! will be eventualy reset to a higher value after read_input!
   loop         = 0
   geometry_converged = .false.
-  ! DONT number_nolines=0
 
   geometry_loop: do while ( tasks > 0 )
 
@@ -305,16 +290,16 @@ subroutine main_master()
      ! TODO: move call read_input() and
      !       subsequent control manupulations out of geometry loop!
      DPRINT 'main_master: call read_input()'
-     call read_input(loop)
+     call read_input (loop)
      DPRINT 'main_master: .'
 
      ! 7 runs for intensity calculation by finite difference of forces
      ! in presence of electric field.
-     if(efield_intensity()) then
+     if (efield_intensity()) then
        max_geo_loop = 7
        tasks = tasks + 1
        ! change the direction of electric field in all 6 direction i.e +/-X, +/-Y and +/- Z
-       call efield_change(loop)
+       call efield_change (loop)
      end if
 
 #ifdef WITH_OPTIMIZER
@@ -388,7 +373,7 @@ subroutine main_master()
 
 #ifdef WITH_EPE
      ! EPE lattice calculations
-     if(operations_epe_lattice) then
+     if (operations_epe_lattice) then
         call say("calling EPE-lattice optimization")
         call epe_lattice_optimization()
         call stop_timer(timer_initialisation)
@@ -398,10 +383,10 @@ subroutine main_master()
      end if
 #endif
 
-      if(operations_optimizer_only) then
-         call say("calling opimizer")
-            call optimizer_wrap(1,geometry_converged)
-            call stop_timer(timer_initialisation)
+      if (operations_optimizer_only) then
+         call say ("calling opimizer")
+         geometry_converged = optimizer_step (1)
+         call stop_timer (timer_initialisation)
          ! DONT exit geometry_loop
          tasks = tasks - 1
          cycle geometry_loop
@@ -431,9 +416,9 @@ subroutine main_master()
 #endif
 
      ! call symmetry part
-     if ( operations_symm .and. .not.operations_epe_lattice) then
-        call say(" calling symmetry part")
-        print_epe=loop.eq.1
+     if (operations_symm .and. .not. operations_epe_lattice) then
+        call say ("calling symmetry part")
+        print_epe = loop .eq. 1
         call main_symm()
      endif
 
@@ -463,9 +448,11 @@ subroutine main_master()
 
      ! generating suface charge distribution (solvation effect)
      if (operations_solvation_effect) then
-        call say("calling build_mol_surface")
-        call build_mol_surfaces()
-        if(stop_solv) then
+        call say ("call build_mol_surfaces()")
+        do while (toggle_legacy_mode())
+           call build_mol_surfaces()
+        enddo
+        if (stop_solv) then
            call stop_timer(timer_initialisation)
            ! DONT exit geometry_loop
            tasks = tasks - 1
@@ -482,10 +469,10 @@ subroutine main_master()
 #endif
 
      ! write gx file
-     if ( operations_make_gx) then
+     if (operations_make_gx) then
         call say("unique_atoms_make_gx")
 #ifndef WITH_EPE
-        !FIXME: is it ipto date?
+        ! FIXME: is it upto date?
         call unique_atom_make_gx (iloop= 1)
 #else
         call unique_atom_make_epegx()
@@ -493,15 +480,12 @@ subroutine main_master()
      end if
 
      !
-     ! Initialize various modules in part by broadcasting
-     ! initialisation information taken from input file.
+     ! Initialize   various   modules    in   part   by   broadcasting
+     ! initialisation  information taken  from  input file.   It is  a
+     ! convenient place to put the  code to be executed on all workers
+     ! ...
      !
-     call say("initialize_with_input")
-     !
-     ! One of the first things this sub does is telling slaves
-     ! to also call itself. It is a convenient place to put
-     ! the code to be executed on all workers ...
-     !
+     call say ("initialize_with_input")
      call initialize_with_input()
 
      call stop_timer(timer_initialisation)
@@ -528,31 +512,30 @@ subroutine main_master()
 
      ! do integral part
      if (operations_integral) then
-        call say("Starting the Integral Part")
+        call say ("Starting the Integral Part")
         !
         ! Not all integrals are needed in a property run without prior
         ! SCF.  On the other hand if SCF is performed anyway, no extra
         ! integrals are needed for properties (that is the theory):
         !
         if (operations_scf) then
-           call say ("calling integralpar_set(Normal)")
+           call say ("call integralpar_set (Normal)")
            call integralpar_set ('Normal')
         elseif (operations_properties) then
-           call say ("calling integralpar_set(Properties)")
+           call say ("call integralpar_set (Properties)")
            call integralpar_set ('Properties')
         else
            ABORT("ever happens?")
         endif
         call say ("done")
 
-        call main_integral(IMAST)
-
-        call say("done with Integral Part")
+        call main_integral (IPARA)
+        call say ("done with Integral Part")
      end if
 
      ! calculate integrals of external electrical field if one is applied
-     if ( efield_applied() ) then
-        call say("Calculating integrals of external electrical field")
+     if (efield_applied()) then
+        call say ("Calculating integrals of external electrical field")
 
         call efield_calculate_integrals()
      endif
@@ -560,12 +543,14 @@ subroutine main_master()
 
      ! calculate integrals of electrostatic potential
      if (operations_solvation_effect .and. operations_integral) then
-        call say("calculate integrals of electrostatic potential")
-        if (comm_parallel()) call send_space_point()
-        DPRINT 'main_master: call potential_calculate(Solv)'
-!       DONE inside of integralpar_module: integralpar_pot_for_secderiv=.false.
-        call potential_calculate('Solvation')
-        DPRINT 'main_master: .'
+        call say ("Calculate integrals of electrostatic potential ...")
+        do while (toggle_legacy_mode())
+           if (comm_parallel()) then
+              call send_space_point()
+           endif
+           call potential_calculate ('Solvation')
+        enddo
+        call say ("Done with integrals of electrostatic potential.")
      endif
 
 #ifdef WITH_EFP
@@ -575,50 +560,65 @@ subroutine main_master()
 #endif
 
      ! do scf part
-     if ( operations_scf ) then
+     if (operations_scf) then
         MEMSET(0)
-        call say("Starting the main SCF routine")
-        DPRINT 'main_master: Starting the main SCF routine'
-        call main_scf()
-        call say("done with the main SCF routine")
+        call say ("Starting the main SCF routine ...")
+        do while (toggle_legacy_mode())
+           call main_scf()
+        enddo
+        call say ("Done with the main SCF routine.")
         MEMSET(0)
      endif
 
-     ! calculate and print dipole moments
-     if ( operations_dipole .or. operations_gtensor .or. operations_hfc ) then
-        call say("main_dipole" )
-        call main_dipole()
+     ! Calculate and print dipole moments:
+     if (operations_dipole .or. operations_gtensor .or. operations_hfc) then
+        call say ("call main_dipole()")
+        do while (toggle_legacy_mode())
+           call main_dipole()
+        enddo
+        call say ("done main_dipole()")
      endif
 
-1111 if( operations_potential ) then
-        call say("Starting the potential routines")
-        if(esp_map) then
-           call calc_plane_grid()
-           call grid2space_2d()
-           if(V_electronic) then
-              if(use_saved_densmatrix) call open_densmat()
-              DPRINT 'main_master: call potential_calculate(Vel)'
-!             DONE inside of integralpar_module: integralpar_pot_for_secderiv=.false.
-              call potential_calculate('Potential')
-              DPRINT 'main_master: .'
+     ! Potential derived charges here (not the same as solvation, even
+     ! though  the same  buildign blocks  are used).  FIXME:  too much
+     ! logic/branches for  a master plan.   Leave here only  the entry
+     ! points, move logic to the respective modules:
+1111 if (operations_potential) then
+        call say ("Starting the potential routines ...")
+        if (esp_map) then
+           do while (toggle_legacy_mode())
+              call calc_plane_grid()
+              call grid2space_2d()
+           enddo
+           if (V_electronic) then
+              call say ("call potential_calculate (Vel)")
+              do while (toggle_legacy_mode())
+                 if (use_saved_densmatrix) then
+                    call open_densmat()
+                 endif
+                 call potential_calculate ('Potential')
+              enddo
            endif
-           call get_poten_and_shutdown_2d()
-           if(.not. V_electronic)then
-             ! DONT exit geometry_loop
+           do while (toggle_legacy_mode())
+              call get_poten_and_shutdown_2d()
+           enddo
+           if (.not. V_electronic) then
              tasks = tasks - 1
              cycle geometry_loop
            endif
-        elseif(pdc) then
-           call calc_shell_grid()
-           if(use_dens_mat) call open_densmat()
-           DPRINT 'main_master: call potential_calculate(pdc)'
-!          DONE inside of integralpar_module: integralpar_pot_for_secderiv=.false.
-           call potential_calculate('Potential')
-           DPRINT 'main_master: .'
-           call collect_poten_3d()
-           call calc_poten_derive_charges()
+        elseif (pdc) then
+           call say ("call potential_calculate (PDC)")
+           do while (toggle_legacy_mode())
+              call calc_shell_grid()
+              if (use_dens_mat) then
+                 call open_densmat()
+              endif
+              call potential_calculate ('Potential')
+              call collect_poten_3d()
+              call calc_poten_derive_charges()
+           enddo
         endif
-        call say("done with the potential routines")
+        call say ("Done with the potential routines.")
      endif
 
 #ifdef WITH_DFTPU
@@ -626,7 +626,9 @@ subroutine main_master()
      ! DFT+U output:
      !
      if (dft_plus_u_in_use) then
-        call dft_plus_u_output()
+        do while (toggle_legacy_mode ())
+           call dft_plus_u_output ()
+        enddo
      endif
 #endif
 
@@ -634,40 +636,27 @@ subroutine main_master()
      ! Otherwise a  read_overlap() called from  properties_main() will
      ! fail. Slaves execute properties_main() too:
      if (operations_properties) then
-        call say ("properties_main")
-        call properties_main()
-        call say ("done with properties")
+        call say ("call properties_main()")
+        do while (toggle_legacy_mode())
+           call properties_main()
+        enddo
+        call say ("done properties_main()")
      end if
 
-     ![[=== deallocate integralstore_3c_co =============================
-     ! kin and nuc are now always allocated
-     call integralstore_deallocate( deallocate_kin = .TRUE.                    &
-                                  , deallocate_nuc = .TRUE.                    )
+     ! Kin and Nuc are now always allocated, dellaocate:
+     call integralstore_deallocate (deallocate_kin=.true., deallocate_nuc=.true.)
 
-     if ( .not. options_integrals_on_file() .and. &
-          .not. integralpar_cpksdervs ) then
-        ! if integralpar_cpksdervs -- deallocate after cpks_g4constructs
+     if (.not. options_integrals_on_file() .and. .not. integralpar_cpksdervs) then
+        ! if integralpar_cpksdervs -- deallocate after
+        ! cpks_g4constructs()
 
-        ! deallocate integral storage ...
+        ! Deallocate integral storage ...
         call integralstore_deallocate()
 
-        ! deallocate PCM-integral storage (if been allocated) ...
+        ! Deallocate PCM-integral storage (if been allocated) ...
         call integralstore_deallocate_pcm()
-
-        ! FIXME: which one is right???  -- In main_slave() both
-        !        integralstore_deallocate and integralstore_deallocate_pcm
-        !        are called uncoditionally upon msgtag_intstore_dealloc!
-
-        !f( operations_potential )        call integralstore_deallocate_pcm()
-        !f( operations_solvation_effect ) call integralstore_deallocate_pcm()
-
-        ! ... and tell the slaves to do so ...
-        if ( comm_parallel() ) then
-           call comm_init_send(comm_all_other_hosts,msgtag_intstore_dealloc)
-           call comm_send()
-        endif
      end if
-     !]]================================================================
+
 
      ! FIXME: please specify the goal of GOTO by words as well,
      !        not just by the number!
@@ -675,20 +664,19 @@ subroutine main_master()
      if( operations_potential .and. use_saved_densmatrix) goto 1112
 
      ! do Post Scf calculation of Exchange Energy
-     if ( operations_post_scf ) then
+     if (operations_post_scf) then
 
         ! only if XC /= off:
-        if( xc_is_on(xc_ANY) )then
-           call say("post_scf_main" )
-           FPP_TIMER_START(t_post_scf)
-           call post_scf_main()
-           FPP_TIMER_STOP(t_post_scf)
-           print*,'t_post_scf=',FPP_TIMER_VALUE(t_post_scf)
+        if (xc_is_on (xc_ANY)) then
+           call say ("call post_scf_main()")
+           do while (toggle_legacy_mode())
+              call post_scf_main()
+           enddo
+           call say ("done post_scf_main()")
         endif
 
-        call say("write_energies" )
-
-        call write_energies(output_unit, post_scf=.true.)
+        call say ("write_energies")
+        call write_energies (output_unit, post_scf=.true.)
      end if
 
 #ifdef WITH_MOLMECH
@@ -703,7 +691,7 @@ subroutine main_master()
      ! response calculations with tdfrt response program
      if ( operations_response ) then
 #ifdef WITH_RESPONSE
-        call say("response_main" )
+        call say ("response_main")
         call response_main()
 #else
         ABORT('recompile -DWITH_RESPONSE')
@@ -712,18 +700,18 @@ subroutine main_master()
 
      MEMSET(0)
 #ifndef WITH_EPE
-     if ( operations_gradients ) then
-        call say("Starting main_gradient")
-
-        call main_gradient(loop) !!!(2)
-
-        call say("done with the integral part for gradients routine")
+     if (operations_gradients) then
+        call say ("call main_gradient()")
+        do while (toggle_legacy_mode())
+           call main_gradient (loop) ! (1)
+        enddo
+        call say ("done main_gradient()")
      endif
 #else
      ! do EPE calculations, FIXME: why inlining so much staff into this high
      ! level sub?
      if(operations_qm_epe .and. epe_relaxation) then
-        call say("main_epe_block" )
+        call say ("main_epe_block")
         call main_epe_block()
 
       call get_energy(tot=energy)
@@ -741,20 +729,18 @@ subroutine main_master()
            call epe_convergence_check(epe_side_energy_converged,loop)
          endif
 
-     ! calculate gradients
-        if ( operations_gradients.and..not.epe_relaxation .or. &
-           epe_relaxation.and.epe_side_energy_converged ) then
-           call say("Starting main_gradient")
+         ! calculate gradients
+        if (operations_gradients .and. .not. epe_relaxation .or. &
+           epe_relaxation .and. epe_side_energy_converged) then
+           call say ("Starting main_gradient() ...")
            if(epe_relaxation.and.epe_side_energy_converged) then
              call write_to_trace_unit('epe_relaxation.and.epe_side_energy_converged')
            endif
 
-           ! MOVED to parallel context in main_gradient:
-           ! if(integralpar_cpksdervs) call  send_eigvec_all()
-
-           call main_gradient(loop) !!!(1)
-
-           call say("done with the integral part for gradients routine")
+           do while (toggle_legacy_mode())
+              call main_gradient (loop) ! (2)
+           enddo
+           call say ("Done with the integral part for gradients routine.")
         elseif (operations_gradients) then
            !
            ! FIXME: clean up is the task of finalize_geometry()
@@ -805,7 +791,7 @@ subroutine main_master()
      ! gxfile with the new geometry updated by optimizer algorithm.
      ! May be usefull for work with alternative external optimizers:
      !
-     if ( operations_geo_opt .and. loop > max_geo_loop )then
+     if (operations_geo_opt .and. loop > max_geo_loop) then
        WARN('loop leaped beyond max_geo_loop')
        tasks = tasks - 1
        exit geometry_loop
@@ -813,20 +799,20 @@ subroutine main_master()
        ! condition it checks after entry is again "loop > max_geo_loop"
      endif
 
-     if (operations_geo_opt.or.operations_gx_test) then
+     if (operations_geo_opt .or. operations_gx_test) then
 #ifdef WITH_EFP
-        if(efp .and. qm_fixed) then
-           if(geom_converged(loop)) then
+        if (efp .and. qm_fixed) then
+           if (geom_converged (loop)) then
               tasks = tasks - 1
            end if
            cycle geometry_loop
         end if
 #endif
-        call say("system call to optimizer_wrap")
-        call optimizer_wrap(unique_atom_iwork,geometry_converged) !(1)
+        call say ("call optimizer_step()")
+        geometry_converged = optimizer_step (unique_atom_iwork)
 
-        if ( geometry_converged ) then
-           call say(" Geometry converged")
+        if (geometry_converged) then
+           call say ("Geometry converged")
            ! DONT exit geometry_loop
            tasks = tasks - 1
            ! nothing below seems to depend on it:
@@ -864,16 +850,14 @@ subroutine main_master()
 
   ! print timing
   if (output_timing_summary .or. output_timing_slaves .or. output_timing_detailedsummary) then
-    call say("printing timing")
+    call say ("printing timing")
     if (output_timing_summary .or. output_timing_detailedsummary) &
          call timer_print_summary(integralpar_int_part_name)
     if (output_timing_slaves) &
          call timer_print_slavetiming(integralpar_int_part_name)
   endif
 
-  call say("done")
-
-  enddo                         ! do while (toggle_legacy_mode())
+  call say ("done")
 
 contains
 
@@ -918,18 +902,44 @@ contains
   end subroutine epe_convergence_check
 #endif
 
-  subroutine optimizer_wrap(geo_loop,geo_conv)
+  function optimizer_step (geo_loop) result (converged)
+    !
+    ! Executed  by  all workers,  though  most  of  the work  is  done
+    ! serially.  The input "geo_loop"  schould be the same everywhere.
+    ! The output will be the same on all workers.
+    !
+    use comm, only: comm_rank, comm_bcast
+    implicit none
+    integer (i4_kind), intent (in) :: geo_loop
+    logical :: converged
+    ! *** end of interface ***
+
+    ! One of us does the work that includes some file-system mangling:
+    if (comm_rank() == 0) then
+       call do_optimizer_step (geo_loop, converged)
+    endif
+
+    ! Broadcast the result:
+    call comm_bcast (converged)
+  end function optimizer_step
+
+  subroutine do_optimizer_step (geo_loop, geo_conv)
+    !
+    ! FIXME: down  the call chain  there is some  file-system mangling
+    ! such as  (re)writing gx- and  hessian files.  This code  may not
+    ! work as intended if executed by more than one worker.
+    !
 #ifdef WITH_EPE
     use epecom_module, only: cross_boundary_3b,epe_rel_converged, &
          epe_basic_action => basic_action
 #endif
 #ifdef WITH_OPTIMIZER
     use optimizer, only: main_opt
-    use operations_module, only: operations_task &
-                               , namelist_tasks_used
+    use operations_module, only: operations_task, namelist_tasks_used
 #endif
-    integer(kind=i4_kind), intent(in)  :: geo_loop
-    logical              , intent(out) :: geo_conv
+    implicit none
+    integer (i4_kind), intent (in) :: geo_loop
+    logical, intent (out) :: geo_conv
     ! *** end of interface ***
 
     logical :: conv,stop_after_eperelaxation,convert_internal
@@ -999,7 +1009,7 @@ contains
        call write_to_trace_unit&
             ("optimizer: geometry  not yet converged in loop",inte =geo_loop)
     endif
-  end subroutine optimizer_wrap
+  end subroutine do_optimizer_step
 
   subroutine legal (version)
     use comm_module, only: comm_print_conf
@@ -1077,13 +1087,15 @@ contains
     call write_to_output_units('########################################################################')
   end subroutine legal
 
-  subroutine say(phrase)
+  subroutine say (phrase)
+    use comm, only: comm_rank
     use output_module, only: output_main_master
     use iounitadmin_module, only: write_to_output_units
     implicit none
-    character(len=*), intent(in) :: phrase
+    character (len=*), intent (in) :: phrase
     ! *** end of interface ***
 
+    print *, comm_rank(), "XXX", "main_master: "//phrase
     if( output_main_master ) then
         call write_to_output_units("main_master: "//phrase)
     endif

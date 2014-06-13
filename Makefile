@@ -987,11 +987,11 @@ FPPOPTIONS += -DWITH_GUILE
 # Two more  target to build.  These  scripts need to know  the path to
 # "bindir" and/or "pkgdatadir". Inline relevant paths:
 #
-scripts = runqm #baslib/bin/qm-find-basis
+scripts = runqm baslib/bin/qm-find-basis
 build: $(scripts)
 
 runqm: guile/runqm.scm
-#baslib/bin/qm-find-basis: baslib/bin/qm-find-basis.scm
+baslib/bin/qm-find-basis: baslib/bin/qm-find-basis.scm
 
 $(scripts):
 	sed -e 's|@bindir[@]|$(BASEDIR)|g' -e 's|@pkgdatadir[@]|$(BASEDIR)|g' $(^) > $(@)

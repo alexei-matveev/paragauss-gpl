@@ -235,14 +235,6 @@ subroutine main_master()
   !
   call legal (version)
 
-#ifdef WITH_EPE
-  epe_side_optimized_energy_prev=0.0_r8_kind
-#endif
-
-#ifdef WITH_MOLMECH
-  qm_mm_1_task=0  !!!!!!!!!!!AS
-#endif
-
   call write_to_trace_unit (" ")
   call write_to_trace_unit (" -------------------------------------------")
   call write_to_trace_unit (" ")
@@ -252,6 +244,14 @@ subroutine main_master()
   call write_to_trace_unit (" ")
   call write_to_trace_unit (" -------------------------------------------")
   call write_to_trace_unit (" ")
+
+#ifdef WITH_EPE
+  epe_side_optimized_energy_prev=0.0_r8_kind
+#endif
+
+#ifdef WITH_MOLMECH
+  qm_mm_1_task=0  !!!!!!!!!!!AS
+#endif
 
   ![[=== MAIN LOOP OVER TASKS/GEOMETRIES ===================================
 2001 CONTINUE ! an "entry point" for the task-loop

@@ -592,34 +592,32 @@ contains
 
   !*************************************************************
   subroutine grad_cart_for_opt ()
-    use math_module, only: zero
     implicit none
     !** End of interface ****************************************
 
-    integer(kind=i4_kind)   :: i,alloc_stat
+    integer (i4_kind) :: i, alloc_stat
     real (r8_kind), allocatable :: grad_prim(:)
 
-    allocate(grad_intern(n_internal),grad_prim(n_primitive), STAT=alloc_stat)
+    allocate (grad_intern(n_internal), grad_prim(n_primitive), STAT=alloc_stat)
     ASSERT(alloc_stat.eq.0)
-    grad_intern=zero
-    grad_prim =zero
+    grad_intern = 0.0
+    grad_prim = 0.0
 
-    do i=1,n_cart_grads
-       grad_prim(3*i-2)=grad_cartes(i,1)
-       grad_prim(3*i-1)=grad_cartes(i,2)
-       grad_prim(3*i)  =grad_cartes(i,3)
+    do i = 1, n_cart_grads
+       grad_prim(3 * i - 2) = grad_cartes(i, 1)
+       grad_prim(3 * i - 1) = grad_cartes(i, 2)
+       grad_prim(3 * i - 0) = grad_cartes(i, 3)
     end do
 
-    grad_intern=grad_prim(1:n_internal)
+    grad_intern = grad_prim(1:n_internal)
 #ifdef WITH_EFP
-    if(qm_fixed) then
-       grad_intern=grad_prim(3*n_atoms+1:3*n_atoms+n_internal)
+    if (qm_fixed) then
+       grad_intern = grad_prim(3 * n_atoms + 1:3 * n_atoms + n_internal)
     end if
 #endif
 
-    grad_max_comp = maxval(abs(grad_intern))
-    grad_mean_square = sqrt(sum(grad_intern**2)/n_internal)
-
+    grad_max_comp = maxval (abs (grad_intern))
+    grad_mean_square = sqrt (sum (grad_intern**2) / n_internal)
   end subroutine grad_cart_for_opt
   !*************************************************************
 

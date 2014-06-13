@@ -361,7 +361,7 @@ contains
          call error_handler("QMMM1: wrong transfer from pointcharge array to surface_points")
 
     call surf_points_grad_information()
-    call field_calculate()
+    call field_calculate ()
     call start_read_field_e()
     call get_field_nuc()
 

@@ -106,7 +106,7 @@ use prescf_module, only: prescf_init, prescf_finalize
 use solv_electrostat_module, only: build_solv_ham
 use elec_static_field_module, only: receive_surf_point, &
      surf_points_gradinfo_dealloc,surf_points_grad_information,read_field_e,send_receive_field, &
-     bounds_receive_field, bounds_free_field
+     bounds_free_field
 use interfaces, only: main_integral, IPARA, ISLAV
 use interfaces, only: chargefit
 use xpack, only: upck
@@ -320,9 +320,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       call say("read_field")
       call read_field_e
       call send_receive_field
-   case( msgtag_bounds_field )
-      call say("bounds_receive_field")
-      call bounds_receive_field()
    case( msgtag_free_bnds_fld )
       call say("free_bounds_field")
       call bounds_free_field()

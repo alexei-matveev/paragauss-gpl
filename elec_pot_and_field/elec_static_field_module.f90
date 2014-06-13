@@ -67,7 +67,7 @@ module elec_static_field_module
   public send_surf_point,receive_surf_point, dealloc_surf_points, surf_points_grad_information, &
        surf_points_gradinfo_dealloc,start_read_field_e,get_field_nuc,get_field_pc, &
        read_field_e,send_receive_field,destroy_field_file,deallocate_field,bounds_calc_field, &
-       bounds_send_field,bounds_receive_field,bounds_free_field,fill_surf_points, &
+       bounds_free_field, fill_surf_points, &
        transform_to_cart_field, field_integral_open, field_integral_close
   public receive_surf_point1,surf_points_grad_information1
 
@@ -1354,14 +1354,18 @@ contains
   !*************************************************************
 
   !*********************************************************
-  subroutine bounds_calc_field
+  subroutine bounds_calc_field ()
+    use comm, only: comm_size, comm_same
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     real(kind=r8_kind)      :: rhelp
     integer(kind=i4_kind)   :: i,alloc_stat,i_pr,ind,i_size
-    !------------ Executable code --------------------------------
 
-    i_pr=comm_get_n_processors()
+    ! Make sure the input is the same on all workers:
+    if (.not. comm_same(N_surface_points)) stop "FIX!"
+    if (.not. comm_same(totsym_field_length)) stop "FIX!"
+
+    i_pr = comm_size ()
 
     allocate (bounds%item_arr(i_pr),STAT=alloc_stat)
     if(alloc_stat.ne.0) call error_handler&
@@ -1424,79 +1428,4 @@ contains
   end subroutine bounds_free_field
   !*************************************************************
 
-!!$  !*************************************************************
-!!$  subroutine get_bounds_field(bounds1)
-!!$    !------------ Declaration of formal parameters ---------------
-!!$    type(poten_bounds),intent(out)          :: bounds1
-!!$    !** End of interface *****************************************
-!!$    integer(kind=i4_kind)             :: alloc_stat,i_pr
-!!$    !------------ Executable code --------------------------------
-!!$
-!!$    bounds1%lower1 = bounds%lower1
-!!$    bounds1%upper1 = bounds%upper1
-!!$    i_pr=comm_get_n_processors()
-!!$    allocate(bounds1%item_arr(i_pr),STAT=alloc_stat)
-!!$    if (alloc_stat.ne.0) call error_handler &
-!!$         ("potential : allocation of BOUNDS1 failed ")
-!!$    bounds1%item_arr = bounds%item_arr
-!!$
-!!$  end subroutine get_bounds_field
-!!$  !***************************************************************
-
-  !***************************************************************
-    subroutine bounds_send_field
-    ! purpose: send the bounds information to the slaves
-    !          - this is needed to perform the open-, read-
-    !            and close operation correctly
-    !** End of interface *****************************************
-    integer(kind=i4_kind) :: info,i_pr
-
-    ! ---------------- executable code ---------------------------
-
-    call comm_init_send(comm_all_other_hosts,msgtag_bounds_field) 
-    
-    call commpack(bounds%lower1,info)
-    if( info.ne.0) call error_handler &
-         ("field: BOUNDS pack failed(1)")
-    call commpack(bounds%upper1,info)
-    if( info.ne.0) call error_handler &
-         ("field: BOUNDS pack failed(2)")
-    i_pr=comm_get_n_processors()
-    call commpack(bounds%item_arr,i_pr,1,info)
-    if( info.ne.0) call error_handler &
-         ("field: BOUNDS pack failed(3)")
-
-    call comm_send()   
-
-  end subroutine bounds_send_field
-
-  !***************************************************************
-
-  !***************************************************************
-  subroutine bounds_receive_field
-    ! prupose: receive the information on the bounds
-    !          sending : see routine above
-    !** End of interface *****************************************
-    integer(kind=i4_kind) :: info,alloc_stat,i_pr
-    ! ----------- executable code -------------------------------
-
-    i_pr=comm_get_n_processors()
-
-    call communpack(bounds%lower1,info)
-    if (info.ne.0) call error_handler &
-         ("field: bounds unpack failed(1)")
-    call communpack(bounds%upper1,info)
-    if (info.ne.0) call error_handler &
-         ("field: bounds unpack failed(2)")
-    if(.not.associated(bounds%item_arr)) then
-       allocate(bounds%item_arr(i_pr),STAT=alloc_stat)
-       if (alloc_stat.ne.0) call error_handler &
-            ("field : BOUNDS_RECEIVE allocation failed")
-    endif
-    call communpack(bounds%item_arr,i_pr,1,info)
-    if (info.ne.0) call error_handler &
-         ("field: bounds unpack failed(3)")
-    
-  end subroutine bounds_receive_field
-  !**********************************************************
 end module elec_static_field_module

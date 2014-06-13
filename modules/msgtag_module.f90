@@ -193,7 +193,7 @@ INTEGER_T :: msgtag_start_field=          137
 INTEGER_T :: msgtag_finish_field=         138
 INTEGER_T :: msgtag_start_rho=            139
 INTEGER_T :: msgtag_finish_rho=           140
-INTEGER_T :: msgtag_bounds_field=         141
+!NTEGER_T :: msgtag_bounds_field=         141
 INTEGER_T :: msgtag_free_bnds_ptn=        142
 INTEGER_T :: msgtag_free_bnds_fld=        143
 !NTEGER_T :: msgtag_del_poten=            144
@@ -458,7 +458,7 @@ contains
     CMP(msgtag_finish_field)
     CMP(msgtag_start_rho)
     CMP(msgtag_finish_rho)
-    CMP(msgtag_bounds_field)
+!   CMP(msgtag_bounds_field)
     CMP(msgtag_free_bnds_ptn)
     CMP(msgtag_free_bnds_fld)
 !   CMP(msgtag_del_poten)

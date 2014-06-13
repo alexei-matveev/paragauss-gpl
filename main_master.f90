@@ -549,7 +549,7 @@ subroutine main_master()
 
 #ifdef WITH_EFP
      if (calc_Pol_centers() .and. operations_integral) then
-        call field_calculate()
+        call field_calculate ()
      end if
 #endif
 

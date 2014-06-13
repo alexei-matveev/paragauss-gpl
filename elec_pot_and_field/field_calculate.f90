@@ -27,10 +27,11 @@
 !===============================================================
 subroutine field_calculate
 !
-!  This is the warp procedure to calculate
-!  matrix elements (integrals) of electronic part
-!  of electrostatic field at some special points
+!  This is the warp procedure to calculate matrix elements (integrals)
+!  of electronic  part of electrostatic  field at some  special points
 !  (e.g. surface points of a solute cavity)
+!
+!  Runs in parallel context.
 !
 !  Author: AS
 !  Date: 03/00
@@ -53,29 +54,26 @@ subroutine field_calculate
   use iounitadmin_module
   use output_module        ! defines amount of output
   use integralpar_module, only: integralpar_set
-  use elec_static_field_module, only: bounds_calc_field, bounds_send_field
+  use elec_static_field_module, only: bounds_calc_field
   use comm_module, only: comm_parallel
-  use interfaces, only: main_integral, IMAST
+  use interfaces, only: main_integral, IPARA
 
   implicit none
 
-  if( output_int_progress ) call write_to_output_units &
+  if (output_int_progress) call write_to_output_units &
        ("field_calculate: Starting the Integral Part")
-  if( output_int_progress ) call write_to_output_units &
+  if (output_int_progress) call write_to_output_units &
        ("field_calculate: calling field_calculate ")
-  call write_to_trace_unit("field_calculate: calling field_calculate ")
-  call integralpar_set('Field')
+  call write_to_trace_unit ("field_calculate: calling field_calculate")
+  call integralpar_set ('Field')
 
-  ! FIXME: does this sub run in master-only context?
-  call main_integral(IMAST)
+  call main_integral (IPARA)
 
-  if( output_int_progress ) call write_to_output_units &
+  if (output_int_progress) call write_to_output_units &
        ("field_calculate: done with the Integral Part")
 
-  call bounds_calc_field
-  if (comm_parallel()) call bounds_send_field
-  
-  call write_to_trace_unit("field_calculate: finising field_calculate ")
+  call bounds_calc_field ()
 
+  call write_to_trace_unit ("field_calculate: finising field_calculate")
 end subroutine field_calculate
 

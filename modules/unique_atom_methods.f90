@@ -555,7 +555,7 @@ contains
      ! unique_atom_iwork!
      !
      use iounitadmin_module, only: openget_iounit, returnclose_iounit, &
-          write_to_output_units, write_to_trace_unit
+          write_to_output_units, write_to_trace_unit, output_unit
      use operations_module, only: operations_transit, operations_gx_epeformat
 #ifdef WITH_MOLMECH
      use operations_module, only: operations_qm_mm_new
@@ -591,8 +591,8 @@ contains
       inquire(file= trim(inpfile('epe.r')), exist=ex_gxepe)
       if(ex_gxepe) then
          call gxepe_allocate
-         io_gxepe=get_iounit()
-         open (io_gxepe,status='old',form='formatted',file=trim(inpfile('epe.r')))
+         io_gxepe = openget_iounit (file=trim (inpfile ('epe.r')), &
+              status='old', form='formatted')
       endif ! ex_gxepe
 #endif
 

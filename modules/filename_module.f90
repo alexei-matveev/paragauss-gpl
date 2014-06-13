@@ -101,7 +101,7 @@ module  filename_module
   integer, parameter, public :: filename_namelengthmax = max_path
 
   character (len=max_path), public, protected :: data_dir, &
-       sharedfs_dir, recover_dir, resp_dir
+       sharedfs_dir, resp_dir
 
   character (len=max_path), public, protected :: input_name
 
@@ -120,9 +120,17 @@ module  filename_module
 
   public :: filename_tmpdir
 
+  !
+  ! Your  should assume  that tmpfile(name)  will return  a path  to a
+  ! node-local directory  potentially different for  every worker. You
+  ! can assume that the outfile(name)  on the master will be delivered
+  ! to the user but the very  same funciton on other wokers may return
+  ! a path to some scratch file.
+  !
   public :: inpfile ! (name) -> path, returns full path to an input file
   public :: outfile ! (name) -> path, returns full path to an output file
   public :: tmpfile ! (name) -> path, returns full path to a temp file
+  public :: recfile ! (name) -> path, returns full path to a recover file
 
 
   !================================================================
@@ -137,12 +145,14 @@ module  filename_module
   character (len=max_path), private :: tmp_dir ! rank-specific
   character (len=max_path), private :: output_dir ! rank-specific
   character (len=max_path), private :: input_dir ! shared by all workers
+  character (len=max_path), private :: recover_dir ! shared by all workers
+
 
   !----------------------------------------------------------------
   !------------ Subroutines ---------------------------------------
 contains
 
-  function tmpfile(name) result(path)
+  function tmpfile (name) result (path)
     !
     !  Returns full path for within tmp_dir unique for each worker
     !
@@ -173,16 +183,16 @@ contains
     path = trim(tmp_base) // '/' // xxxx // "-" // trim(adjustl(name))
   end function tmpfile
 
-  function outfile(name) result(path)
+  function outfile (name) result (path)
     !
-    !  Returns filename with output dir (of this process) prepended
+    ! Returns filename with output dir (of this process) prepended.
     !
-    !  NOTE: historically slaves produce output files with the same names
-    !        as the master assuming their output directories are private.
-    !        On the other hand the output of slaves is never (rarely)
-    !        examined. This sub redirects the output of slaves to their
-    !        rank-specific files in tmp_dir and the output of master goes to
-    !        output_dir.
+    ! NOTE:  historically slaves  produce output  files with  the same
+    ! names  as  the  master  assuming their  output  directories  are
+    ! private.   On the  other  hand  the output  of  slaves is  never
+    ! (rarely) examined.   This sub redirects the output  of slaves to
+    ! their rank-specific  files in tmp_dir  and the output  of master
+    ! goes to output_dir.
     !
     implicit none
     character(len=*), intent(in)          :: name
@@ -196,16 +206,16 @@ contains
         !
         ! Master writes to final output dir:
         !
-        path = trim(output_dir) // '/' // trim(adjustl(name))
+        path = trim (output_dir) // '/' // trim (adjustl (name))
     else
         !
         ! Rank-specific output of slaves goes to temp dir:
         !
-        path = tmpfile(name)
+        path = tmpfile (name)
     endif
   end function outfile
 
-  function inpfile(name) result(path)
+  function inpfile (name) result (path)
     !
     !  Returns full path for within input_dir
     !
@@ -217,8 +227,24 @@ contains
     !
     ! input_dir is supposed to be shared (if slaves ever need it)
     !
-    path = trim(input_dir) // '/' // trim(adjustl(name))
+    path = trim (input_dir) // '/' // trim (adjustl (name))
   end function inpfile
+
+
+  function recfile (name) result (path)
+    implicit none
+    character (len=*), intent(in) :: name
+    character (len=max_path) :: path ! result
+    ! *** end of interface ***
+
+    !
+    ! Recover files  may need to be  saved between runs. Let  it be in
+    ! the user directory  and point all workers to  the same files. By
+    ! default recover_dir is the same as input_dir:
+    !
+    path = trim (recover_dir) // '/' // trim (adjustl (name))
+  end function recfile
+
 
   subroutine filename_set_input_dir(dir)
     implicit none

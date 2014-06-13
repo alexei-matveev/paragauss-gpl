@@ -1411,7 +1411,7 @@ contains
 
   subroutine eigvec_read()
     use iounitadmin_module, only: openget_iounit, returnclose_iounit
-    use filename_module, only: recover_dir
+    use filename_module, only: recfile
     implicit none
     ! *** end of interface ***
     integer(i4_kind) :: irr,n_irr,unit
@@ -1424,10 +1424,7 @@ contains
     ASSERT(allocated(eigvec_real))
     ASSERT(allocated(eigvec_imag))
 
-    DPRINT 'eid::eigvec_read: open ',trim(recover_dir)//'/'//EIGDATA_FILENAME
-    unit = openget_iounit(&
-         & trim(recover_dir)//'/'//EIGDATA_FILENAME,&
-         & form='unformatted')
+    unit = openget_iounit (recfile (EIGDATA_FILENAME), form='unformatted')
 
     read (unit) n_irr
     ASSERT(n_irr==size(eigvec_real))

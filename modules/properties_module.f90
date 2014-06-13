@@ -154,7 +154,7 @@ contains
     ! Purpose:  main  subroutine  for  doing properties.   Runs  in  a
     ! parallel context.
     !
-    use filename_module, only: recover_dir, outfile
+    use filename_module, only: recfile, outfile
     use population_module, only: population_mulliken
     use eigen_data_module, only: eigen_data_alloc, eigen_data_free
     use overlap_module, only: read_overlap
@@ -190,8 +190,8 @@ contains
        call eigen_data_alloc()
        ! Now read eigenvectors, occupations, ... from file
        call say ('reading saved_eigenvec.dat')
-       call readwriteblocked_startread(trim(recover_dir)//&
-            trim('/saved_eigenvec.dat'), th, variable_length=.true.)
+       call readwriteblocked_startread (recfile ('saved_eigenvec.dat'), &
+            th, variable_length=.true.)
        call fit_coeff_recover(th)
        call convergence_setup()
        call convergence_state_recover(th)

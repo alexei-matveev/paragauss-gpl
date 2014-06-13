@@ -372,9 +372,30 @@ This file contains geometry and Z-matrix for the calculated geometry. This file 
 
 To generate initial guess geometry one sets in PG input &tasks task='optimizer' ... / and in optimizer.input &OPERATIONS ... optimization=f, tsscan_mix=t .../. Not that for running this job a regular starting gx-file should be present. After this run a gx.rp_mix file will be generated with intermediate values of internal variables (80% of product and 20% of reactant). If one sets here optimization=t than initial geometry given in regular gx-file will be varied to geometry where all inter-atomic distances have intermediate values (again 80% of product and 20% of reactant). Resulting geometry is in the gxfile or in the last optimizer/gx.out.* file. The key tsscan_mix is set to false for all other tasks of optimizer module.
 
-To find a minimum energy point on a sphere (defined in the internal coordinates) with a radius equal to the distance from reactant to the current geometry point one sets in PG input &tasks task='hess,geo'.../ or &tasks task='nohess,geo'.../ and in optimizer.input &OPERATIONS ... optimization=t, tsscan_sphere=t .../. Constrained optimization is undertaken which preserves a fixed distance to reactant (optimization of n-1 variables). In general case this distance is defined via sum over all optimized internal variables. In a recommended specific case only variables defined via negative values of connectivity indexes of z-matrix (first 3 field in gx-file internal variables specification). In optimization protocol one can find calculated values for grad_max_sphere, grad_mean_sphere and for dEdR_sphere first order derivatives. Optimization stops when values for grad_max_sphere and grad_mean_sphere are below convergence criteria for gradients as default value for ' &CONVERGENCE max_dedr_sphere /' is set to 1.0 and should be satisfied for any reasonable geometry. If it is set to a small sensible value than after constrained optimization steps in direction to reactant will be maid until gradients become larger then the doubled values of gradient convergence criteria and new constrained optimization will be undertaken. This actions are repeat determining reaction path. In optimizer/flepo.* output files energies corresponding to constraineIONS ts_search=t ... /.
-For example of optimizer.input see /home/nasluzov/tsscan_sphere_optimizer.input
-For example of  gx-file see /home/nasluzov/tsscan_sphere_gxfile
+To find a minimum energy point on a sphere (defined in the internal
+coordinates) with a radius equal to the distance from reactant to the
+current geometry point one sets in PG input &tasks task='hess,geo'.../
+or &tasks task='nohess,geo'.../ and in optimizer.input &OPERATIONS
+... optimization=t, tsscan_sphere=t .../. Constrained optimization is
+undertaken which preserves a fixed distance to reactant (optimization
+of n-1 variables). In general case this distance is defined via sum
+over all optimized internal variables. In a recommended specific case
+only variables defined via negative values of connectivity indexes of
+z-matrix (first 3 field in gx-file internal variables specification).
+In optimization protocol one can find calculated values for
+grad_max_sphere, grad_mean_sphere and for dEdR_sphere first order
+derivatives. Optimization stops when values for grad_max_sphere and
+grad_mean_sphere are below convergence criteria for gradients as
+default value for ' &CONVERGENCE max_dedr_sphere /' is set to 1.0 and
+should be satisfied for any reasonable geometry. If it is set to a
+small sensible value than after constrained optimization steps in
+direction to reactant will be maid until gradients become larger then
+the doubled values of gradient convergence criteria and new
+constrained optimization will be undertaken. This actions are repeat
+determining reaction path.  In optimizer/flepo.* output files energies
+corresponding to constraineIONS ts_search=t ...  /.  For example of
+optimizer.input see /home/nasluzov/tsscan_sphere_optimizer.input For
+example of gx-file see /home/nasluzov/tsscan_sphere_gxfile
 
 === Other tasks related to the optimizer and optimizer.input file ===
 Together with the frequency calculation in internal coordinates, the [[thermodynamic properties module]] is called, which should substitute the manual spread-sheet-calculations of thermodynamic corrections.

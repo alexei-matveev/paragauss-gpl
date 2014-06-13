@@ -445,14 +445,12 @@ contains
     !
     !          grad_intern = B**-1 * grad_cartes
     !          B**-1 = bmat_inv
-    !** End of interface ****************************************
     use coordinates_module, only: bmat_inv, tmat, reduc_mat
     use math_module, only: zero,round,invert_matrix
     USE_DEBUG
-#if 0 /* mass_weighted */
-    real(kind=r8_kind):: grad_cartessian_length
-    real(kind=r8_kind):: grad_cartessian_vec(3*n_atoms+3*n_dummy),gmat_sq(3*n_atoms+3*n_dummy,3*n_atoms+3*n_dummy)
-#endif
+    implicit none
+    !** End of interface ****************************************
+
     integer(kind=i4_kind)   :: k,i,start,ende,alloc_stat
     real(kind=r8_kind),pointer  :: grad(:)
 
@@ -474,36 +472,9 @@ contains
                   bmat_inv(start,i)*grad_cartes(k,1) + &
                   bmat_inv(start+1,i)*grad_cartes(k,2) + &
                   bmat_inv(start+2,i)*grad_cartes(k,3)
-#if 0 /* mass_weighted */
-          grad_cartessian_vec(start)=grad_cartes(k,1)
-          grad_cartessian_vec(start+1)=grad_cartes(k,2)
-          grad_cartessian_vec(start+2)=grad_cartes(k,3)
-#endif
           enddo
           if (abs(grad(i))<=1.0e-10_r8_kind ) grad(i)=zero
     enddo
-#if 0 /* mass_weighted */
-!    grad=matmul(transpose(bmat_inv),grad_cartessian_vec)
-!    grad_cartessian_length=dot_product(matmul(grad_prim,gmat_sqr),grad_prim)
-!   write(OPT_STDOUT,*) sqrt(grad_cartessian_length),' grad_cartessian_length'
-    gmat_sqr=matmul(bmat_inv,transpose(bmat_inv))
-    gmat_sq=gmat_sqr
-    call  invert_matrix(size(gmat_sqr,1),gmat_sqr)
-!    grad_cartessian_vec=matmul (matmul( matmul(gmat_sqr,bmat_inv) , transpose(bmat_inv)) ,grad_cartessian_vec)
-    write(OPT_STDOUT,*) sum( matmul(transpose(gmat_sqr), transpose(gmat_sq))),'unit matrix'
-    gmat_sqr=matmul(gmat_sqr,transpose(gmat_sq))
-    write(OPT_STDOUT,*) gmat_sqr(1,1), gmat_sqr(2,2),'1,1;2,2'
-!    write(OPT_STDOUT,*) sum( matmul(gmat_sqr, transpose(matmul(bmat_inv,transpose(bmat_inv))) )), 'unit matrix'
-#if 0
-    do i=1,size(grad)
-     write(OPT_STDOUT,*) grad_cartessian_vec(i)
-    enddo
-#else
-    do i=1,size(grad_cartessian_vec),3
-    write(OPT_STDOUT,*) grad_cartessian_vec(i:min(i+2, size(grad_cartessian_vec)))
-    enddo
-#endif
-#endif
     if (zmat_coordinates.and.zmat_format) then
        grad_intern = matmul(reduc_mat,grad_prim)
     endif

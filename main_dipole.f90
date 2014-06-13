@@ -65,7 +65,12 @@ subroutine  main_dipole
 # include "def.h"
   !------------ Modules used --------------------------------------
   use type_module ! type specification parameters
-  use dipole_module
+  use comm, only: comm_rank
+  use dipole_module, only: dipole_integrals, &
+       dipole_offdiagonals_calculated, dipole_xes_spectra, dipole_allocate, &
+       dipole_calculate, dipole_print, dipole_free, dipole_make_xes_spectra, &
+       dipole_trans_response, dipole_transitionmoment_uf, &
+       dipole_transitionmoment_f, dipole_write_simol
 #ifdef WITH_GTENSOR
   use hfc_module
   use gtensor_module
@@ -235,9 +240,15 @@ subroutine  main_dipole
 
   call start_timer (timer_dipole_print)
 
-  ! print dipole moments
-  call say ("print dipole moment")
-  call dipole_print (output_unit, output_dipole_detailed)
+  !
+  ! Print dipole  moments. The struct with  the data to  be printed is
+  ! only valid on master. See dipole_calculate().
+  !
+  if (comm_rank() == 0) then
+     call say ("call dipole_print()")
+     call dipole_print (output_unit, output_dipole_detailed)
+     call say ("done dipole_print()")
+  endif
 
 
   ! print total dipol moment to a special file used for simol frequency calculations

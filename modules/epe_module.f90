@@ -342,8 +342,6 @@ contains
   subroutine epe_read_write_reference()
     !  Purpose: Writes and reads epe_reference configuration.
     !           Called by master.
-    !------------ Modules used ------------------- ---------------
-    use epecom_module, only: epedata_dir
     implicit none
    !------------ Declaration of local variables -----------------
    integer(kind=i4_kind) :: status

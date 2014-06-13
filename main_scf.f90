@@ -898,14 +898,12 @@ contains
        rec_option = 'read_fragment'
     end select
     if (recover) then
-       inquire (&
-            file=trim (recover_dir) // "/" // trim (rec_file) // ".dat", &
+       inquire (file=trim (recover_dir) // "/" // trim (rec_file) // ".dat", &
             exist=recover)
        if (.not. recover) then
           if (operations_geo_opt .or. operations_qm_mm) then
-             call say ('Warning: No Recover File "' // trim (rec_file) // ".dat"//'"')
              recover_mode = recover_nothing
-             recover = .false.
+             call say ('Warning: No Recover File "' // trim (rec_file) // ".dat"//'"')
              call say ('         "'//trim (rec_option)//'" temporarily turned off !')
           else
              call error_handler &

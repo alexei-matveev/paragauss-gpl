@@ -16,13 +16,15 @@ Version 1, 05/02/1998
 
 = Read Me First =
 
-Description of solvent effect specific options can be found in [[Solvation_Manual| solvation manual]].
+Description of solvent effect specific options can be found in
+[[Solvation_Manual| solvation manual]].
 
 ----
 
 = How to start ParaGaus: the ttfs Script =
 
-The ttfs script is the driver script of the ParaGauss Program. Calculations can only be started using this script.
+The ttfs script is the driver script of the ParaGauss
+Program. Calculations can only be started using this script.
 
 == Usage ==
 
@@ -74,7 +76,10 @@ For obtaining on-line help:
  
   ttfs_''version'' -help
 
-The options listed above may appear in arbitrary order except for <code>-lcgtooptions</code> that must appear last. All options are optional. The first argument <code>''name''</code> as described below is obligatory.
+The options listed above may appear in arbitrary order except for
+<code>-lcgtooptions</code> that must appear last. All options are
+optional. The first argument <code>''name''</code> as described below
+is obligatory.
 
 The following options are SP2-specific:
 
@@ -88,7 +93,9 @@ The following options are VPP-specific:
 
 == Location and naming of input and output files ==
 
-The ttfs script offers flexibility in naming and locating input and output files. Principally, two philosophies are supported for separating files of different calculations:
+The ttfs script offers flexibility in naming and locating input and
+output files. Principally, two philosophies are supported for
+separating files of different calculations:
 
 ; one specific directory for each calculation
 : use <code>''name''</code> to specify directory (absolute path recommended). No file name extensions are necessary.
@@ -179,13 +186,38 @@ Running a simple calculation with version <code>''version'' </code> of ttfs scri
 
 <code> ttfs_[#ttfsopt_version ''version''] [#ttfsopt_name ''name''] [#ttfsopt_name_is_extension -name_is_extension] [#ttfsopt_dir -dir] ''dir'' [#ttfsopt_zip -zip] [#ttfsopt_save_old_output -save_old_output] [#ttfsopt_vers -vers] ''mainversion'' </code>
 
-Running a calculation with version <code>''version'' </code> of ttfs script. All [#Input_Files input] and [#Output_Files output] files are located in directory <code>''dir''</code> that is used for several different calculations. The filenames have the postfix extension <code>''name''</code> that is used to keep the different calculations apart. Output files will automatically be compressed. Old output files of a previous run will be moved to filenames with _''number'' appended with ''number'' being the lowest number not yet used. All files of one run obtain the same ''number''. For instance, the previous output file "output.''name''.gz" would be moved to "output.''name''_''number''.gz". The version <code>''mainversion''</code> of the ParaGauss executable will be used.
+Running a calculation with version <code>''version'' </code> of ttfs
+script. All [#Input_Files input] and [#Output_Files output] files are
+located in directory <code>''dir''</code> that is used for several
+different calculations. The filenames have the postfix extension
+<code>''name''</code> that is used to keep the different calculations
+apart. Output files will automatically be compressed. Old output files
+of a previous run will be moved to filenames with _''number'' appended
+with ''number'' being the lowest number not yet used. All files of one
+run obtain the same ''number''. For instance, the previous output file
+"output.''name''.gz" would be moved to
+"output.''name''_''number''.gz". The version
+<code>''mainversion''</code> of the ParaGauss executable will be used.
 
 <br />
 
 <code> ttfs_[#ttfsopt_version ''version''] [#ttfsopt_name ''name''] [#ttfsopt_restartable -restartable] </code>
 
-Running a geometry optimization calculation with version <code>''version'' </code> of ttfs script. All [#Input_Files input] and [#Output_Files output] files are located in directory <code>''name''</code> that is only used for this calculations. The filenames have no postfix extension. Old output files of a previous run will be moved to filenames with _''number'' appended with ''number'' being the lowest number not yet used. All files of one run obtain the same ''number''. For instance, the previous output file "output" would be moved to "output_''number''". Recover files from the last run are not moved and will be reused as a start for the SCF procedure (See [[#RECOVER_OPTIONS|RECOVER_OPTIONS]]). This is useful when not all the geometry optimization cycles can be performed at once due to time limits of the queue system. The [#ttfs_exit_status exit status] of the ttfs script could be used for automatic resubmission of the job.
+Running a geometry optimization calculation with version
+<code>''version'' </code> of ttfs script. All [#Input_Files input] and
+[#Output_Files output] files are located in directory
+<code>''name''</code> that is only used for this calculations. The
+filenames have no postfix extension. Old output files of a previous
+run will be moved to filenames with _''number'' appended with
+''number'' being the lowest number not yet used. All files of one run
+obtain the same ''number''. For instance, the previous output file
+"output" would be moved to "output_''number''". Recover files from the
+last run are not moved and will be reused as a start for the SCF
+procedure (See [[#RECOVER_OPTIONS|RECOVER_OPTIONS]]). This is useful
+when not all the geometry optimization cycles can be performed at once
+due to time limits of the queue system. The [#ttfs_exit_status exit
+status] of the ttfs script could be used for automatic resubmission of
+the job.
 
 <br /><br />
 
@@ -195,7 +227,16 @@ Running a geometry optimization calculation with version <code>''version'' </cod
 
 = Input and Output Files =
 
-See chapter "[#ttfs_files location and naming of input and output files]" in the description of the [#ttfs_script ttfs script] for the location of input and output files. "[#ttfsopt_name ''name'']" referenced below is the name of the calculation described there. Input files and intermediate files are allowed to have the postfix extension ".[#ttfsopt_name ''name'']". Output files, intermediate files, and run time control files will also obtain this extension if the flags [#ttfsopt_name_is_extension -name_is_extension] or [#ttfsopt_extend_outputnames -extend_outputnames] were given as arguments to the [#ttfs_script ttfs script].
+See chapter "[#ttfs_files location and naming of input and output
+files]" in the description of the [#ttfs_script ttfs script] for the
+location of input and output files. "[#ttfsopt_name ''name'']"
+referenced below is the name of the calculation described there. Input
+files and intermediate files are allowed to have the postfix extension
+".[#ttfsopt_name ''name'']". Output files, intermediate files, and run
+time control files will also obtain this extension if the flags
+[#ttfsopt_name_is_extension -name_is_extension] or
+[#ttfsopt_extend_outputnames -extend_outputnames] were given as
+arguments to the [#ttfs_script ttfs script].
 
 == Input Files ==
 
@@ -233,7 +274,15 @@ See chapter "[#ttfs_files location and naming of input and output files]" in the
 
 These files will be located in the input directory in case input and output directories are separate.
 
-During SCF Iterations, it is possible to save and recover the state of the calculation at various points of the SCF loop. This option is both useful for recovering crashed calculations and to save computing time by starting the SCF part with a good approximation of the orbitals when performing a [#Geometry_Optimization geometry optimization]. The files "saved_*.dat" listed below are used for this purpose. The [[#RECOVER_OPTIONS|namelist RECOVER_OPTIONS]] controls if and which files are written / read. The files will automatically be compressed and are binary.
+During SCF Iterations, it is possible to save and recover the state of
+the calculation at various points of the SCF loop. This option is both
+useful for recovering crashed calculations and to save computing time
+by starting the SCF part with a good approximation of the orbitals
+when performing a [#Geometry_Optimization geometry optimization]. The
+files "saved_*.dat" listed below are used for this purpose. The
+[[#RECOVER_OPTIONS|namelist RECOVER_OPTIONS]] controls if and which
+files are written / read. The files will automatically be compressed
+and are binary.
 
 ; saved_ksmatrix.dat
 : SCF-recover file as described above: hamiltonian
@@ -352,7 +401,9 @@ It might be necessary for huge calculations to make the PVM buffer used by the P
  setenv PVMBUFSIZE 104857600
  </nowiki>
 
-Remove these lines again as soon as your large calculations are complete since you request a vast amount of spoiled memory for each PVM job otherwise.
+Remove these lines again as soon as your large calculations are
+complete since you request a vast amount of spoiled memory for each
+PVM job otherwise.
 
 <br />
 
@@ -360,7 +411,14 @@ Remove these lines again as soon as your large calculations are complete since y
 
 == gx file ==
 
-This file contains geometry and Z-matrix for the calculated geometry. This file is used to communicate between the ParaGauss program and the geometry optimizer. ParaGauss takes its input geometry from this file. At the end of each geometry loop, ParaGauss appends the calculated energy and gradients to the file. Then it invokes the geometry optimizer that reads in the file, calculates a new geometry and updates the gx file. After that, ParaGauss reads in the file once more at the beginning of the next geometry loop.
+This file contains geometry and Z-matrix for the calculated
+geometry. This file is used to communicate between the ParaGauss
+program and the geometry optimizer. ParaGauss takes its input geometry
+from this file. At the end of each geometry loop, ParaGauss appends
+the calculated energy and gradients to the file. Then it invokes the
+geometry optimizer that reads in the file, calculates a new geometry
+and updates the gx file. After that, ParaGauss reads in the file once
+more at the beginning of the next geometry loop.
 
 == simol program ==
 
@@ -368,9 +426,22 @@ This file contains geometry and Z-matrix for the calculated geometry. This file 
 
 [/home/ttfs/DOCUMENTATION/DOK/optimizer/input_doc.ps find the instructions here ...]
 
-'''Transition state scan sphere model option''' is to be used to locate approximately TS between product and reactant. Geometries of reactant and product should be located in gx.reactant and gx.product files (use of 'ln -s' command is recommended).
+'''Transition state scan sphere model option''' is to be used to
+locate approximately TS between product and reactant. Geometries of
+reactant and product should be located in gx.reactant and gx.product
+files (use of 'ln -s' command is recommended).
 
-To generate initial guess geometry one sets in PG input &tasks task='optimizer' ... / and in optimizer.input &OPERATIONS ... optimization=f, tsscan_mix=t .../. Not that for running this job a regular starting gx-file should be present. After this run a gx.rp_mix file will be generated with intermediate values of internal variables (80% of product and 20% of reactant). If one sets here optimization=t than initial geometry given in regular gx-file will be varied to geometry where all inter-atomic distances have intermediate values (again 80% of product and 20% of reactant). Resulting geometry is in the gxfile or in the last optimizer/gx.out.* file. The key tsscan_mix is set to false for all other tasks of optimizer module.
+To generate initial guess geometry one sets in PG input &tasks
+task='optimizer' ... / and in optimizer.input &OPERATIONS
+... optimization=f, tsscan_mix=t .../. Not that for running this job a
+regular starting gx-file should be present. After this run a gx.rp_mix
+file will be generated with intermediate values of internal variables
+(80% of product and 20% of reactant). If one sets here optimization=t
+than initial geometry given in regular gx-file will be varied to
+geometry where all inter-atomic distances have intermediate values
+(again 80% of product and 20% of reactant). Resulting geometry is in
+the gxfile or in the last optimizer/gx.out.* file. The key tsscan_mix
+is set to false for all other tasks of optimizer module.
 
 To find a minimum energy point on a sphere (defined in the internal
 coordinates) with a radius equal to the distance from reactant to the
@@ -398,7 +469,10 @@ optimizer.input see /home/nasluzov/tsscan_sphere_optimizer.input For
 example of gx-file see /home/nasluzov/tsscan_sphere_gxfile
 
 === Other tasks related to the optimizer and optimizer.input file ===
-Together with the frequency calculation in internal coordinates, the [[thermodynamic properties module]] is called, which should substitute the manual spread-sheet-calculations of thermodynamic corrections.
+
+Together with the frequency calculation in internal coordinates, the
+[[thermodynamic properties module]] is called, which should substitute
+the manual spread-sheet-calculations of thermodynamic corrections.
 
 = Input Description =
 
@@ -541,7 +615,8 @@ The [#Namelist_Format format of namelists] is described above.
 
 ===CONVERGENCE_LIST===
 
-This namelist sets convergence criteria for SCF procedure and geometry optimization.
+This namelist sets convergence criteria for SCF procedure and geometry
+optimization.
 
  
   &CONVERGENCE_LIST
@@ -608,9 +683,22 @@ The namelist must directly be followed by a line containing the field vector of 
 
 This namelist selects which dipole transition moments should be printed.
 
-There is also the possibility to create intensities for Xray Emission Spectra (XES). The Xray emission is caused by the recombination of a valence orbital and a previously generated core hole. In the theoretical approach the calculation is performend in the frozen orbital groundstate approximation. The data will be written to the file xes.dat in the output directory and will contain 2 columns. The columns are the Kohn Sham eigenvalue (in au) of the valence orbital and the intensity. The intensity is calculated, according to Fermi's Golden rule as the product of the square of the dipole transition matrix element and the difference between the core orbital and the valence orbital to the power 4..
+There is also the possibility to create intensities for Xray Emission
+Spectra (XES). The Xray emission is caused by the recombination of a
+valence orbital and a previously generated core hole. In the
+theoretical approach the calculation is performend in the frozen
+orbital groundstate approximation. The data will be written to the
+file xes.dat in the output directory and will contain 2 columns. The
+columns are the Kohn Sham eigenvalue (in au) of the valence orbital
+and the intensity. The intensity is calculated, according to Fermi's
+Golden rule as the product of the square of the dipole transition
+matrix element and the difference between the core orbital and the
+valence orbital to the power 4..
 
-This namelist only has effects if dipole calculation are switched on in namelist [[#TASKS|TASKS]] or [[#OPERATIONS|OPERATIONS]] or [[#PROPERTIES|PROPERTIES]] and [[#OUTPUT_DIPOLE|OUTPUT_DIPOLE_TRANSITIONM_F]] is switched on as well.
+This namelist only has effects if dipole calculation are switched on
+in namelist [[#TASKS|TASKS]] or [[#OPERATIONS|OPERATIONS]] or
+[[#PROPERTIES|PROPERTIES]] and
+[[#OUTPUT_DIPOLE|OUTPUT_DIPOLE_TRANSITIONM_F]] is switched on as well.
 
  
   &DIPOLE_TRANSITIONMOMENTS
@@ -631,9 +719,15 @@ This namelist only has effects if dipole calculation are switched on in namelist
      Z                             =      0.00000 # (the default)
   /DIPOLE_TRANSITIONMOMENTS
 
-To select valence excitations from occupied to empty orbitals, set SHOW_VALENCE_EXCITATIONS. All Excitations up to MAX_VALENCE_EXCITATION_ENERGY will be printed. [eV]
+To select valence excitations from occupied to empty orbitals, set
+SHOW_VALENCE_EXCITATIONS. All Excitations up to
+MAX_VALENCE_EXCITATION_ENERGY will be printed. [eV]
 
-To select core excitations, set SHOW_CORE_EXCITATIONS. All excitation from orbitals in the energy range between CORE_EXCITATION_FROM_E_MIN and CORE_EXCITATION_FROM_E_MAX to orbitals in the energy range between CORE_EXCITATION_TO_E_MIN and CORE_EXCITATION_TO_E_MAX are printed. [eV]
+To select core excitations, set SHOW_CORE_EXCITATIONS. All excitation
+from orbitals in the energy range between CORE_EXCITATION_FROM_E_MIN
+and CORE_EXCITATION_FROM_E_MAX to orbitals in the energy range between
+CORE_EXCITATION_TO_E_MIN and CORE_EXCITATION_TO_E_MAX are
+printed. [eV]
 
 ; MAKE_XES_SPECTRA
 : Calculate a XES spectrum. The (imaginary) core hole is defined by the next 4 items.
@@ -648,7 +742,8 @@ To select core excitations, set SHOW_CORE_EXCITATIONS. All excitation from orbit
 
 ===FERMI===
 
-This namelist controls level broadening in the SCF procedure. Default is no level broadening.
+This namelist controls level broadening in the SCF procedure. Default
+is no level broadening.
 
  
   &FERMI
@@ -683,9 +778,11 @@ This namelist controls level broadening in the SCF procedure. Default is no leve
 
 ===FRAGMENT===
 
-Describes one fragment used in the fragment orbital analysis described together with namelist [[#FRAG_ORB_ANALYSIS|FRAG_ORB_ANALYSIS]].
+Describes one fragment used in the fragment orbital analysis described
+together with namelist [[#FRAG_ORB_ANALYSIS|FRAG_ORB_ANALYSIS]].
 
-Must directly follow this namelist and appear [[#FRAG_ORB_ANALYSIS|N_FRAGMENTS]] times.
+Must directly follow this namelist and appear
+[[#FRAG_ORB_ANALYSIS|N_FRAGMENTS]] times.
 
  
   &FRAGMENT
@@ -696,7 +793,9 @@ Must directly follow this namelist and appear [[#FRAG_ORB_ANALYSIS|N_FRAGMENTS]]
 ; N_ATOMS
 : number of atoms included in the fragment
 
-Must be followed by a line containing the indices (integer format) of the included atoms. The indices refer to the number of the unique atom.
+Must be followed by a line containing the indices (integer format) of
+the included atoms. The indices refer to the number of the unique
+atom.
 
 <br /><br />
 
@@ -704,9 +803,25 @@ Must be followed by a line containing the indices (integer format) of the includ
 
 Main namelist for doing a fragment orbital analysis.
 
-The fragment orbital analysis is only performed, if FRAG_ORB_ANALYSIS is set to true in the [[#PROPERTIES|namelist PROPERTIES]]. The system under study must be divided into a arbitrary number of fragments by the user. Every atom of the complete system must be in exactly on fragment. The position of the atoms in the fragments must be the same as in the complete system. Of course all input parameters have to be the same in all inputs. The complete system and all fragments have to be calculated separately. Important: Set SAVE_EIGENVEC and SAVE_EIGENVEC_ALL to true [([#RECOVER_OPTIONS|namelist RECOVER_OPTIONS]]) For every FRAGMENT one needs the file "saved_fragment.dat". This can be obtained by setting SAVE_AS_FRAGMENT to true [([#RECOVER_OPTIONS|namelist RECOVER_OPTIONS]]) during a normal single point or gradient run or during a properties run.
+The fragment orbital analysis is only performed, if FRAG_ORB_ANALYSIS
+is set to true in the [[#PROPERTIES|namelist PROPERTIES]]. The system
+under study must be divided into a arbitrary number of fragments by
+the user. Every atom of the complete system must be in exactly on
+fragment. The position of the atoms in the fragments must be the same
+as in the complete system. Of course all input parameters have to be
+the same in all inputs. The complete system and all fragments have to
+be calculated separately. Important: Set SAVE_EIGENVEC and
+SAVE_EIGENVEC_ALL to true [([#RECOVER_OPTIONS|namelist
+RECOVER_OPTIONS]]) For every FRAGMENT one needs the file
+"saved_fragment.dat". This can be obtained by setting SAVE_AS_FRAGMENT
+to true [([#RECOVER_OPTIONS|namelist RECOVER_OPTIONS]]) during a
+normal single point or gradient run or during a properties run.
 
-To do the actual fragment orbital analysis, for the complete system the file "saved_eigenvec.dat" and for every fragment a file "saved_fragment.dat''n'' (''n'' is the number of the fragment) must be in the input directory. The user is responsible for the correct names of the files.
+To do the actual fragment orbital analysis, for the complete system
+the file "saved_eigenvec.dat" and for every fragment a file
+"saved_fragment.dat''n'' (''n'' is the number of the fragment) must be
+in the input directory. The user is responsible for the correct names
+of the files.
 
  
   &FRAG_ORB_ANALYSIS
@@ -745,7 +860,9 @@ Fragment one co 1, 4 and 8 and fragment 3 atom 3.
 
 <br />
 
-As a result one gets for every orbital (between EIG_MIN and EIG_MAX) the Mulliken populations in terms of the fragment orbitals. A sample ouput for two fragments:
+As a result one gets for every orbital (between EIG_MIN and EIG_MAX)
+the Mulliken populations in terms of the fragment orbitals. A sample
+ouput for two fragments:
 
 <br />
 
@@ -773,11 +890,20 @@ As a result one gets for every orbital (between EIG_MIN and EIG_MAX) the Mullike
 
 ===                  GRID          ===
 
-This optional namelists starts the specification of the grid used in the SCF part. If no Post Hoc grid is specified, the SCF grid is used in the Post Hoc Part as well.
+This optional namelists starts the specification of the grid used in
+the SCF part. If no Post Hoc grid is specified, the SCF grid is used
+in the Post Hoc Part as well.
 
-This namelist may only appear after the number of unique atoms was specified in [[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]]. The grid must be specified together in one block. In case the optional [[#GRIDATOM|namelist GRIDATOM]] appears, it must directly follow this namelist [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] times. Namelist GRID may also be omitted and grid specification be started with [[#GRIDATOM|namelist GRIDATOM]].
+This namelist may only appear after the number of unique atoms was
+specified in [[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]]. The
+grid must be specified together in one block. In case the optional
+[[#GRIDATOM|namelist GRIDATOM]] appears, it must directly follow this
+namelist [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] times. Namelist GRID
+may also be omitted and grid specification be started with
+[[#GRIDATOM|namelist GRIDATOM]].
 
-Though there are default settings and grid specification is optional, it is highly recommended to do so.
+Though there are default settings and grid specification is optional,
+it is highly recommended to do so.
 
  
   &GRID
@@ -794,11 +920,19 @@ Though there are default settings and grid specification is optional, it is high
 
 ===                  GRIDATOM          ===
 
-This optional namelists specifies the grid for one unique atom used in the SCF part. If no Post Hoc grid is specified, the SCF grid is used in the Post Hoc Part as well.
+This optional namelists specifies the grid for one unique atom used in
+the SCF part. If no Post Hoc grid is specified, the SCF grid is used
+in the Post Hoc Part as well.
 
-This optional namelist may only appear after the number of unique atoms was specified in [[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]] and appear [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] times in direct consecution. In case the optional [[#GRID|namelist GRID]] appears, it must directly precede this namelist since the grid must be specified together in one block.
+This optional namelist may only appear after the number of unique
+atoms was specified in [[#UNIQUE_ATOM_NUMBER|namelists
+UNIQUE_ATOM_NUMBER]] and appear [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]]
+times in direct consecution. In case the optional [[#GRID|namelist
+GRID]] appears, it must directly precede this namelist since the grid
+must be specified together in one block.
 
-Though there are default settings and grid specification is optional, it is highly recommended to do so.
+Though there are default settings and grid specification is optional,
+it is highly recommended to do so.
 
  
   &GRIDATOM # unique atom   1
@@ -829,9 +963,19 @@ Though there are default settings and grid specification is optional, it is high
 
 ===                  GRID_PH          ===
 
-This optional namelists starts the specification of the grid used in the Post Hoc part. If no Post Hoc grid is specified, the SCF grid is used in the Post Hoc Part as well. If you are calculating energy gradients, it is strongly recommended to use in the Post Hoc part the same grid as in the SCF part.
+This optional namelists starts the specification of the grid used in
+the Post Hoc part. If no Post Hoc grid is specified, the SCF grid is
+used in the Post Hoc Part as well. If you are calculating energy
+gradients, it is strongly recommended to use in the Post Hoc part the
+same grid as in the SCF part.
 
-This namelist may only appear after the number of unique atoms was specified in [[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]]. The grid must be specified together in one block. In case the optional [[#GRIDATOM_PH|namelist GRIDATOM_PH]] appears, it must directly follow this namelist [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] times. Namelist GRID_PH may also be omitted and grid specification be started with [[#GRIDATOM_PH|namelist GRIDATOM_PH]].
+This namelist may only appear after the number of unique atoms was
+specified in [[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]]. The
+grid must be specified together in one block. In case the optional
+[[#GRIDATOM_PH|namelist GRIDATOM_PH]] appears, it must directly follow
+this namelist [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] times. Namelist
+GRID_PH may also be omitted and grid specification be started with
+[[#GRIDATOM_PH|namelist GRIDATOM_PH]].
 
  
   &GRID_PH
@@ -845,9 +989,16 @@ See [[#GRID|namelist GRID]] for a description of these switches..
 
 ===                  GRIDATOM_PH          ===
 
-This optional namelists specifies the grid for one unique atom used in the Post Hoc part. If no Post Hoc grid is specified, the SCF grid is used in the Post Hoc Part as well.
+This optional namelists specifies the grid for one unique atom used in
+the Post Hoc part. If no Post Hoc grid is specified, the SCF grid is
+used in the Post Hoc Part as well.
 
-This optional namelist may only appear after the number of unique atoms was specified in [[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]] and appear [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] times in direct consecution. In case the optional [[#GRID_PH|namelist GRID_PH]] appears, it must directly precede this namelist since the grid must be specified together in one block.
+This optional namelist may only appear after the number of unique
+atoms was specified in [[#UNIQUE_ATOM_NUMBER|namelists
+UNIQUE_ATOM_NUMBER]] and appear [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]]
+times in direct consecution. In case the optional [[#GRID_PH|namelist
+GRID_PH]] appears, it must directly precede this namelist since the
+grid must be specified together in one block.
 
  
   &GRIDATOM_PH # unique atom   1
@@ -860,7 +1011,8 @@ This optional namelist may only appear after the number of unique atoms was spec
      RIONIC  =      FALSE # (the default)
   /GRIDATOM_PH
 
-The meaning of the keywords is the same as in the [[#GRIDATOM|namelist GRIDATOM]]
+The meaning of the keywords is the same as in the [[#GRIDATOM|namelist
+GRIDATOM]]
 
 <br /><br />
 
@@ -872,7 +1024,10 @@ The meaning of the keywords is the same as in the [[#GRIDATOM|namelist GRIDATOM]
 
 ===                  MACHINEPARAMETERS          ===
 
-This namelists allows to control the vector length used when doing numerical calculations on grids. This parameter is critical for speed and memory requirements. The default setting is 2048 for the VPP and 128 otherwise. The other option are for debug purpose only.
+This namelists allows to control the vector length used when doing
+numerical calculations on grids. This parameter is critical for speed
+and memory requirements. The default setting is 2048 for the VPP and
+128 otherwise. The other option are for debug purpose only.
 
  
   &MACHINEPARAMETERS
@@ -965,7 +1120,10 @@ This namelist contains options to control model density approach calculations. (
 
 ===                  MIXING          ===
 
-This namelist controls the mixing procedure used in the SCF cycles to promote convergence. In the first START_AFTER_CYCLE SCF-cycles a mixing with the fixed coefficients given here is used. After that, dynamic mixing is used, i.e. the coefficients are calculated.
+This namelist controls the mixing procedure used in the SCF cycles to
+promote convergence. In the first START_AFTER_CYCLE SCF-cycles a
+mixing with the fixed coefficients given here is used. After that,
+dynamic mixing is used, i.e. the coefficients are calculated.
 
  
   &MIXING
@@ -995,7 +1153,8 @@ This namelist controls the mixing procedure used in the SCF cycles to promote co
 
 ===                  OCCUPATION          ===
 
-This namelist controls the reoccupation of orbitals during the SCF procedure
+This namelist controls the reoccupation of orbitals during the SCF
+procedure
 
 :: ''Information on how to specify fixed spin/magnetic moment you will find at [[Convergence]]-page. This description of the namelist appears to be outdated''
 
@@ -1019,11 +1178,14 @@ This namelist controls the reoccupation of orbitals during the SCF procedure
 
 ===                  OPERATIONS          ===
 
-This namelist is replaced by [[#TASKS|namelist TASKS]] and just kept for compatibility. Its use is no longer recommended.
+This namelist is replaced by [[#TASKS|namelist TASKS]] and just kept
+for compatibility. Its use is no longer recommended.
 
-Various combinations of operations are not allowed and will produce error messages when reading input.
+Various combinations of operations are not allowed and will produce
+error messages when reading input.
 
-The following debug switches kept for backward compatibility must be set to FALSE:
+The following debug switches kept for backward compatibility must be
+set to FALSE:
 
 * OPERATIONS_DEBUG_ORBITALS
 * OPERATIONS_DEBUG_GRID
@@ -1063,7 +1225,9 @@ Default is to perform Single Point Calculation and Calculate Gradients.
 
 ===                  ORBITAL_LIST          ===
 
-Must directly follow namelist [[#ORBITAL_PLOT|ORBITAL_PLOT]] [[#ORBITAL_PLOT|N_INPUT_LINES]] times. Describes orbitals to be plotted.
+Must directly follow namelist [[#ORBITAL_PLOT|ORBITAL_PLOT]]
+[[#ORBITAL_PLOT|N_INPUT_LINES]] times. Describes orbitals to be
+plotted.
 
  
   &ORBITAL_LIST
@@ -1139,9 +1303,11 @@ Now N_INPUT_LINES namelists [[#ORBITAL_LIST|ORBITAL_LIST]] are required to follo
 
 This namelist controls the overall amount of output written to file.
 
-For normal calculations, it is highly recommended to use the default setting and drop the namelist.
+For normal calculations, it is highly recommended to use the default
+setting and drop the namelist.
 
-The namelist may be followed by namelists OUTPUT_??? to set separate switches that control the output of various entities (see below).
+The namelist may be followed by namelists OUTPUT_??? to set separate
+switches that control the output of various entities (see below).
 
  
   &OUTPUT
@@ -1165,9 +1331,11 @@ The namelist may be followed by namelists OUTPUT_??? to set separate switches th
 
 This namelist controls the overall amount of output written to file.
 
-For normal calculations, it is highly recommended to use the default setting and drop the namelist.
+For normal calculations, it is highly recommended to use the default
+setting and drop the namelist.
 
-The namelist may be followed by namelists OUTPUT_??? to set separate switches that control the output of various entities (see below).
+The namelist may be followed by namelists OUTPUT_??? to set separate
+switches that control the output of various entities (see below).
 
  
   &OUTPUT
@@ -1201,7 +1369,8 @@ The namelist may be followed by namelists OUTPUT_??? to set separate switches th
 
 This namelist controls amount of output of Dipole part.
 
-Dipole calculation must be switched on in namelist [[#TASKS|TASKS]] or [[#OPERATIONS|OPERATIONS]].
+Dipole calculation must be switched on in namelist [[#TASKS|TASKS]] or
+[[#OPERATIONS|OPERATIONS]].
 
  
   &OUTPUT_DIPOLE
@@ -1243,7 +1412,8 @@ Dipole calculation must be switched on in namelist [[#TASKS|TASKS]] or [[#OPERAT
 
 ===                  OUTPUT_IOUNITADMIN          ===
 
-This namelists determines which files should be used for output. File "output" is always used.
+This namelists determines which files should be used for output. File
+"output" is always used.
 
  
   &OUTPUT_IOUNITADMIN
@@ -1326,9 +1496,11 @@ This namelists determines which files should be used for output. File "output" i
 
 ===                  OUTPUT_TRACE          ===
 
-Debug trace information about progress of execution of various important subroutines.
+Debug trace information about progress of execution of various
+important subroutines.
 
-Beware of setting OUTPUT_PVM_MSGTAGS to TRUE. This will produce a huge protocol of all PVM communications.
+Beware of setting OUTPUT_PVM_MSGTAGS to TRUE. This will produce a huge
+protocol of all PVM communications.
 
  
   &OUTPUT_TRACE
@@ -1369,7 +1541,12 @@ Beware of setting OUTPUT_PVM_MSGTAGS to TRUE. This will produce a huge protocol 
 
 ===                  POINTCHARGE          ===
 
-This namelists describes the type and position of one [#Unique_atoms unique point charge]. It must be directly preceded by [[#POINTCHARGE_NUMBER|namelists POINTCHARGE_NUMBER]] and appear [[#POINTCHARGE_NUMBER|POINTCHARGE_N ]] times. See chapter [#Describing_the_Geometry Describing the Geometry] for understanding the concept.
+This namelists describes the type and position of one [#Unique_atoms
+unique point charge]. It must be directly preceded by
+[[#POINTCHARGE_NUMBER|namelists POINTCHARGE_NUMBER]] and appear
+[[#POINTCHARGE_NUMBER|POINTCHARGE_N ]] times. See chapter
+[#Describing_the_Geometry Describing the Geometry] for understanding
+the concept.
 
  
   &POINTCHARGE
@@ -1386,28 +1563,38 @@ This namelists describes the type and position of one [#Unique_atoms unique poin
 ; N_EQUAL_CHARGES
 : number of [#Symmetry_equivalent_atoms symmetry equivalent charges]. This is cross-checked by the symmetry part.
 
-This namelist must be directly followed by one line containing the cartesian coordinate of one charge in atomic units (free format). The coordinates of the other [#Symmetry_equivalent_atoms symmetry equivalent charges] are calculated automatically.
+This namelist must be directly followed by one line containing the
+cartesian coordinate of one charge in atomic units (free format). The
+coordinates of the other [#Symmetry_equivalent_atoms symmetry
+equivalent charges] are calculated automatically.
 
 <br /><br />
 
 ===                  POINTCHARGE_NUMBER          ===
 
-This namelists gives the number of [#Unique_atoms unique point charges] of the problem. It starts the description of the point charges involved. Point charges are centers that carry a nuclear charge but no orbital basis functions.
+This namelists gives the number of [#Unique_atoms unique point
+charges] of the problem. It starts the description of the point
+charges involved. Point charges are centers that carry a nuclear
+charge but no orbital basis functions.
 
-Do not confuse the number of unique point charges with the total number of point charges since there might be [#Symmetry_equivalent_atoms symmetry equivalent point charges].
+Do not confuse the number of unique point charges with the total
+number of point charges since there might be
+[#Symmetry_equivalent_atoms symmetry equivalent point charges].
 
  
   &POINTCHARGE_NUMBER
      POINTCHARGE_N = 0 # (the default)
   /POINTCHARGE_NUMBER  (namelist may be dropped)
 
-This namelist must be directly be followed by POINTCHARGE_N [[#POINTCHARGE|namelists POINTCHARGE]].
+This namelist must be directly be followed by POINTCHARGE_N
+[[#POINTCHARGE|namelists POINTCHARGE]].
 
 <br /><br />
 
 ===                  POPCOLUM          ===
 
-must appear N_COLUMNS times directly after [[#POPULATION|namelist POPULATION]].
+must appear N_COLUMNS times directly after [[#POPULATION|namelist
+POPULATION]].
 
  
   &POPCOLUM
@@ -1415,12 +1602,15 @@ must appear N_COLUMNS times directly after [[#POPULATION|namelist POPULATION]].
   /POPCOLUM
   1  2   3   1   4  0
 
-In the next line a list of N_CONTRIB contributions in integer format is recommended. Every contribution consists of two numbers, the number of the atom and the angular momentum (s=0,p=1,d=2,...). Example:
+In the next line a list of N_CONTRIB contributions in integer format
+is recommended. Every contribution consists of two numbers, the number
+of the atom and the angular momentum (s=0,p=1,d=2,...). Example:
 
  
   1  2   3   1   4  0
 
-means, that the d population of atom 1, the p population of atom 3 and the s population of atom 4 will be summed up.
+means, that the d population of atom 1, the p population of atom 3 and
+the s population of atom 4 will be summed up.
 
 <br /><br />
 
@@ -1462,7 +1652,13 @@ This namelist controls the population analysis output.
 
 ===                  PROPERTIES          ===
 
-Main namelist for properties part. In order to do the properties, either OPERATIONS_PROPERTIES (see [[#OPERATIONS|namelist OPERATIONS]])must be set to true, or TASK must be set to "PROPERTIES"(see [[#TASKS|namelist TASKS]]). If you calculate properties without scf and integral part ( what will be the usual case and is exactly what happens, if you set TASK to "PROPERTIES"), the following requirements have to be fulfilled:
+Main namelist for properties part. In order to do the properties,
+either OPERATIONS_PROPERTIES (see [[#OPERATIONS|namelist
+OPERATIONS]])must be set to true, or TASK must be set to
+"PROPERTIES"(see [[#TASKS|namelist TASKS]]). If you calculate
+properties without scf and integral part ( what will be the usual case
+and is exactly what happens, if you set TASK to "PROPERTIES"), the
+following requirements have to be fulfilled:
 
 * READ_EIGENVEC=true in [[#RECOVER_OPTIONS|namelist RECOVER_OPTIONS]].
 * The file saved_eigenvec.dat must be in the input directory. Attention: It must have been generated previously with the option SAVE_EIGENVEC_ALL=.true. in [[#RECOVER_OPTIONS|namelist RECOVER_OPTIONS]].
@@ -1488,17 +1684,30 @@ Main namelist for properties part. In order to do the properties, either OPERATI
 
 ===                  RECOVER_OPTIONS          ===
 
-During SCF Iterations, it is possible to save and recover the state of the calculation at various points of the SCF loop. This Options are both useful for recovering crashed calculations and to save computing time by starting the SCF part with a good approximation of the orbitals when performing [#Geometry_Optimization geometry optimization].
+During SCF Iterations, it is possible to save and recover the state of
+the calculation at various points of the SCF loop. This Options are
+both useful for recovering crashed calculations and to save computing
+time by starting the SCF part with a good approximation of the
+orbitals when performing [#Geometry_Optimization geometry
+optimization].
 
-The corresponding files are stored by the [#ttfs_script ttfs script] in compressed form (gzip) but are also accepted uncompressed for input.
+The corresponding files are stored by the [#ttfs_script ttfs script]
+in compressed form (gzip) but are also accepted uncompressed for
+input.
 
-When performing [#Geometry_Optimization geometry optimization], it is allowed to demand recovering even if the corresponding files do not yet exist. Otherwise, this will result in an error.
+When performing [#Geometry_Optimization geometry optimization], it is
+allowed to demand recovering even if the corresponding files do not
+yet exist. Otherwise, this will result in an error.
 
-Mixing coefficients, energy and SCF cycle are always stored. If you want to recover but reset SCF cycle counting use switch RESET_SCFCYCLE.
+Mixing coefficients, energy and SCF cycle are always stored. If you
+want to recover but reset SCF cycle counting use switch
+RESET_SCFCYCLE.
 
-It is recommended to use switches SAVE_SCFSTATE and READ_SCFSTATE for normal save and recover.
+It is recommended to use switches SAVE_SCFSTATE and READ_SCFSTATE for
+normal save and recover.
 
-When using geometry optimization, the default for SAVE_SCFSTATE and READ_SCFSTATE and RESET_SCFCYCLE is switched to true.
+When using geometry optimization, the default for SAVE_SCFSTATE and
+READ_SCFSTATE and RESET_SCFCYCLE is switched to true.
 
  
   &RECOVER_OPTIONS
@@ -1592,13 +1801,21 @@ This namelist must be directly followed by N_IRREP [[#IRREP|namelists IRREP]].
 
 ===                  SYMMETRY_GROUP          ===
 
-This namelist determines the symmetry of the problem, i.e. the point group of molecule calculated.
+This namelist determines the symmetry of the problem, i.e. the point
+group of molecule calculated.
 
-Using higher symmetry drastically reduces computational effort and helps in case of SCF convergence problems due to an over-complete basis set. The symmetry is also used to create symmetry equivalent atoms from only one specified atom of that type.
+Using higher symmetry drastically reduces computational effort and
+helps in case of SCF convergence problems due to an over-complete
+basis set. The symmetry is also used to create symmetry equivalent
+atoms from only one specified atom of that type.
 
-For each point group, certain conventions exist concerning the direction and location of symmetry elements (See [#Describing_the_Geometry Geometry equivalent atoms]).
+For each point group, certain conventions exist concerning the
+direction and location of symmetry elements (See
+[#Describing_the_Geometry Geometry equivalent atoms]).
 
-This namelist may only be used if new symmetry part is used (See [[#OPERATIONS|namelist OPERATIONS]]). Otherwise use [[#SYMMETRY_DATA|namelist SYMMETRY_DATA]].
+This namelist may only be used if new symmetry part is used (See
+[[#OPERATIONS|namelist OPERATIONS]]). Otherwise use
+[[#SYMMETRY_DATA|namelist SYMMETRY_DATA]].
 
  
   &SYMMETRY_GROUP
@@ -1640,7 +1857,8 @@ This namelist may only be used if new symmetry part is used (See [[#OPERATIONS|n
 
 ===                  TASKS          ===
 
-Either this namelist or the outdated [[#OPERATIONS|namelist OPERATIONS]] is required as first namelist.
+Either this namelist or the outdated [[#OPERATIONS|namelist
+OPERATIONS]] is required as first namelist.
 
 It determines which tasks should be performed by ParaGaus.
 
@@ -1694,7 +1912,12 @@ It determines which tasks should be performed by ParaGaus.
 
 ===                  UNIQUE_ATOM          ===
 
-This obligatory namelists describes of the type and position of one [#Unique_atoms unique atom]. It must be directly preceded by [[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]] and appear [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] times. See chapter [#Describing_the_Geometry Describing the Geometry] for understanding the concept.
+This obligatory namelists describes of the type and position of one
+[#Unique_atoms unique atom]. It must be directly preceded by
+[[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]] and appear
+[[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] times. See chapter
+[#Describing_the_Geometry Describing the Geometry] for understanding
+the concept.
 
  
   &UNIQUE_ATOM
@@ -1711,17 +1934,31 @@ This obligatory namelists describes of the type and position of one [#Unique_ato
 ; N_EQUAL_ATOMS
 : number of [#Symmetry_equivalent_atoms symmetry equivalent atoms]. This is cross-checked by the symmetry part.
 
-This namelist must be directly followed by one line containing the cartesian coordinate of one atom in atomic units (free format). The coordinates of the other [#Symmetry_equivalent_atoms symmetry equivalent atoms] are calculated automatically. In the outdated case that the new symmetry part is not used (See [[#OPERATIONS|namelist OPERATIONS]]), the namelist must be followed by N_EQUAL_ATOMS lines with the cartesian coordinate of all equal atoms in atomic units instead.
+This namelist must be directly followed by one line containing the
+cartesian coordinate of one atom in atomic units (free format). The
+coordinates of the other [#Symmetry_equivalent_atoms symmetry
+equivalent atoms] are calculated automatically. In the outdated case
+that the new symmetry part is not used (See [[#OPERATIONS|namelist
+OPERATIONS]]), the namelist must be followed by N_EQUAL_ATOMS lines
+with the cartesian coordinate of all equal atoms in atomic units
+instead.
 
-In case of a [#Geometry_Optimization geometry optimization] the coordinates given here are ignored and the coordinates are taken from the [#gx_file gx_file] instead.
+In case of a [#Geometry_Optimization geometry optimization] the
+coordinates given here are ignored and the coordinates are taken from
+the [#gx_file gx_file] instead.
 
 <br /><br />
 
 ===                  UNIQUE_ATOM_BASIS          ===
 
-This namelist is part of the orbital or charge or exchange fit function basis set specification of one unique atom. It describes the basis functions of one angular momentum or, in case of fitfunctions, also the r<sup>2</sup>- type basis.
+This namelist is part of the orbital or charge or exchange fit
+function basis set specification of one unique atom. It describes the
+basis functions of one angular momentum or, in case of fitfunctions,
+also the r<sup>2</sup>- type basis.
 
-The namelist may only appear within the basis set specification block started with [[#UNIQUE_ATOM_BASISSET|namelist UNIQUE_ATOM_BASISSET]]. The syntax of this block is described there.
+The namelist may only appear within the basis set specification block
+started with [[#UNIQUE_ATOM_BASISSET|namelist
+UNIQUE_ATOM_BASISSET]]. The syntax of this block is described there.
 
  
   &UNIQUE_ATOM_BASIS
@@ -1754,17 +1991,28 @@ The namelist must directly followed by:
 * one line containing N_EXPONENTS exponents for the gauss functions of the primitive basis.
 * N_CONTRACTED_FCTS lines containing N_EXPONENTS contraction coefficients. Each line describes how one contracted basis function is build as a linear combination of primitive basis functions with the given coefficients.
 
-In the example above, [#Continuation_Line continuation lines] were used. The [#Number_Format number format] is quite free.
+In the example above, [#Continuation_Line continuation lines] were
+used. The [#Number_Format number format] is quite free.
 
 <br /><br />
 
 ===                  UNIQUE_ATOM_BASISSET          ===
 
-This namelist starts the specification of the orbital and fit function basis sets of one unique atom. The basis for orbitals and charge and exchange fitfunction are independent of each other but are all specified here. It is obligatory to specify the basis sets for all unique atoms.
+This namelist starts the specification of the orbital and fit function
+basis sets of one unique atom. The basis for orbitals and charge and
+exchange fitfunction are independent of each other but are all
+specified here. It is obligatory to specify the basis sets for all
+unique atoms.
 
-The basis specification block may only appear after the number of unique atoms N_UNIQUE_ATOMS was specified in [[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]]. N_UNIQUE_ATOMS blocks starting with namelist UNIQUE_ATOM_BASISSET must appear in direct consecution.
+The basis specification block may only appear after the number of
+unique atoms N_UNIQUE_ATOMS was specified in
+[[#UNIQUE_ATOM_NUMBER|namelists UNIQUE_ATOM_NUMBER]]. N_UNIQUE_ATOMS
+blocks starting with namelist UNIQUE_ATOM_BASISSET must appear in
+direct consecution.
 
-It is recommended to use one [#Include_File include file] for the basis set block of each unique atom. The locations of basis set libraries on our platforms are:
+It is recommended to use one [#Include_File include file] for the
+basis set block of each unique atom. The locations of basis set
+libraries on our platforms are:
 
 * HPs: /users/hp4/ttfs/bases
 * Power Challenge: /home/ttfs/bases
@@ -1805,11 +2053,22 @@ Each of the namelists [[#UNIQUE_ATOM_BASIS|UNIQUE_ATOM_BASIS]] and [[#UNIQUE_ATO
 
 ===                  UNIQUE_ATOM_GLOB_CON          ===
 
-This namelist is part of the charge or exchange fit function basis set specification of one unique atom. It describes one global contraction of either charge or exchange fitfunctions of one unique atom.
+This namelist is part of the charge or exchange fit function basis set
+specification of one unique atom. It describes one global contraction
+of either charge or exchange fitfunctions of one unique atom.
 
-Global contractions are linear combinations of primitive basis functions of several different angular momenta. In the normal case you want linear combinations within one angular moment only, it is recommended to use local contractions described in [[#UNIQUE_ATOM_BASIS|namelist UNIQUE_ATOM_BASIS]] instead for the sake of better performance and clarity. Within one unique atom, it is not allowed to mix local and global contractions of either charge or exchange fitfunctions.
+Global contractions are linear combinations of primitive basis
+functions of several different angular momenta. In the normal case you
+want linear combinations within one angular moment only, it is
+recommended to use local contractions described in
+[[#UNIQUE_ATOM_BASIS|namelist UNIQUE_ATOM_BASIS]] instead for the sake
+of better performance and clarity. Within one unique atom, it is not
+allowed to mix local and global contractions of either charge or
+exchange fitfunctions.
 
-The namelist may only appear within the basis set specification block started with [[#UNIQUE_ATOM_BASISSET|namelist UNIQUE_ATOM_BASISSET]]. The syntax of this block is described there.
+The namelist may only appear within the basis set specification block
+started with [[#UNIQUE_ATOM_BASISSET|namelist
+UNIQUE_ATOM_BASISSET]]. The syntax of this block is described there.
 
  
   &UNIQUE_ATOM_GLOB_CON
@@ -1822,7 +2081,9 @@ The namelist may only appear within the basis set specification block started wi
 ; N_CONTRIBUTING_FCTS
 : number of primitive basis functions contributing to the contraction
 
-The namelist must directly be followed by N_CONTRIBUTING_FCTS lines each describing one contributing primitive basis function. Each line must contain the following in this order:
+The namelist must directly be followed by N_CONTRIBUTING_FCTS lines
+each describing one contributing primitive basis function. Each line
+must contain the following in this order:
 
 * Index of angular momentum. Note that -1 means l=0, 0 means r<sup>2</sup>-function
 * Index of independent function of same IRREP, partner and angular momentum
@@ -1833,19 +2094,30 @@ The namelist must directly be followed by N_CONTRIBUTING_FCTS lines each describ
 
 ===                  UNIQUE_ATOM_INDP_FCT          ===
 
-This outdated namelist is part of the description of the symmetry adaption coefficients that is only necessary in case no symmetry part is run (See [[#OPERATIONS|namelist OPERATIONS]]).
+This outdated namelist is part of the description of the symmetry
+adaption coefficients that is only necessary in case no symmetry part
+is run (See [[#OPERATIONS|namelist OPERATIONS]]).
 
-It specifies the number N_FCTS of independent functions of the same IRREP, unique atom, angular momentum and exponent / contraction.
+It specifies the number N_FCTS of independent functions of the same
+IRREP, unique atom, angular momentum and exponent / contraction.
 
-The symmetry adaption coefficients block may only appear after the number of unique atoms N_UNIQUE_ATOMS was specified in [[#UNIQUE_ATOM_NUMBER|namelist UNIQUE_ATOM_NUMBER]] and the basis set (See [[#UNIQUE_ATOM_BASISSET|namelists UNIQUE_ATOM_BASISSET]]), the symmetry group and Irreps (See [[#SYMMETRY_DATA|namelist SYMMETRY_DATA]]) are known.
+The symmetry adaption coefficients block may only appear after the
+number of unique atoms N_UNIQUE_ATOMS was specified in
+[[#UNIQUE_ATOM_NUMBER|namelist UNIQUE_ATOM_NUMBER]] and the basis set
+(See [[#UNIQUE_ATOM_BASISSET|namelists UNIQUE_ATOM_BASISSET]]), the
+symmetry group and Irreps (See [[#SYMMETRY_DATA|namelist
+SYMMETRY_DATA]]) are known.
 
-This namelist is read in in a 3-fold loop running is the following order over:
+This namelist is read in in a 3-fold loop running is the following
+order over:
 
 * All [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] unique atoms.
 * All [[#SYMMETRY_DATA|N_IRREP]] Irreps.
 * All [[#UNIQUE_ATOM_BASISSET|Max(LMAX_OB,LMAX_CH,LMAX_XC)]] angular momenta of the given unique atom.
 
-Each namelist UNIQUE_ATOM_INDP_FCT must directly be followed by N_FCTS [[#UNIQUE_ATOM_SYMADAPT|namelists UNIQUE_ATOM_SYMADAPT]]. All the symmetry adaption description must be written together in one block.
+Each namelist UNIQUE_ATOM_INDP_FCT must directly be followed by N_FCTS
+[[#UNIQUE_ATOM_SYMADAPT|namelists UNIQUE_ATOM_SYMADAPT]]. All the
+symmetry adaption description must be written together in one block.
 
  
   &UNIQUE_ATOM_INDP_FCT
@@ -1854,16 +2126,20 @@ Each namelist UNIQUE_ATOM_INDP_FCT must directly be followed by N_FCTS [[#UNIQUE
 
 <br />
 
-In case the integrals are not calculated (See [[#OPERATIONS|namelist OPERATIONS]]), a section describing the renormalization coefficients for the orbital and fit function basis directly follows:
+In case the integrals are not calculated (See [[#OPERATIONS|namelist
+OPERATIONS]]), a section describing the renormalization coefficients
+for the orbital and fit function basis directly follows:
 
-Lines of coefficients are read in in a 4-fold loop running is the following order over:
+Lines of coefficients are read in in a 4-fold loop running is the
+following order over:
 
 * All [[#UNIQUE_ATOM_NUMBER|N_UNIQUE_ATOMS]] unique atoms.
 * The type of basis: first orbitals, then charge fitfunctions and finally exchange fitfunctions.
 * The angular momenta up to [[#UNIQUE_ATOM_BASISSET|LMAX_OB / LMAX_CH / LMAX_XC]]. In case of fitfunctions the order is as follows: l=0, r<sup>2</sup>, l=1, ...
 * All [[#SYMMETRY_DATA|N_IRREP]] Irreps.
 
-Within this loop, two lines are read in if the number of floats contained is greater zero:
+Within this loop, two lines are read in if the number of floats
+contained is greater zero:
 
 * The first line contains [[#UNIQUE_ATOM_BASIS|N_EXPONENTS]] coefficients in case global contractions are used (i.e. [[#UNIQUE_ATOM_BASISSET|N_GLOB_CONS_??]] greater zero) and [[#UNIQUE_ATOM_BASIS|N_UNCONTRACTED_FCTS]] coefficients otherwise. These are renormalization coefficients for uncontracted basis functions.
 * The second line contains [[#UNIQUE_ATOM_BASIS|N_CONTRACTED_FCTS]] coefficients for the (locally) contracted basis functions.
@@ -1872,26 +2148,41 @@ Within this loop, two lines are read in if the number of floats contained is gre
 
 ===                  UNIQUE_ATOM_NUMBER          ===
 
-This obligatory namelists gives the number of [#Unique_atoms unique atoms] of the problem. It starts the description of the type and position of the atoms involved. See chapter [#Describing_the_Geometry Describing the Geometry] for understanding the concept.
+This obligatory namelists gives the number of [#Unique_atoms unique
+atoms] of the problem. It starts the description of the type and
+position of the atoms involved. See chapter [#Describing_the_Geometry
+Describing the Geometry] for understanding the concept.
 
-Do not confuse the number of unique atoms with the total number of atoms since there might be [#Symmetry_equivalent_atoms symmetry equivalent atoms].
+Do not confuse the number of unique atoms with the total number of
+atoms since there might be [#Symmetry_equivalent_atoms symmetry
+equivalent atoms].
 
  
   &UNIQUE_ATOM_NUMBER
      N_UNIQUE_ATOMS = 2 # (no default)
   /UNIQUE_ATOM_NUMBER # this namelist is obligatory
 
-This namelist must be directly be followed by N_UNIQUE_ATOMS [[#UNIQUE_ATOM|namelists UNIQUE_ATOM]].
+This namelist must be directly be followed by N_UNIQUE_ATOMS
+[[#UNIQUE_ATOM|namelists UNIQUE_ATOM]].
 
 <br /><br />
 
 ===                  UNIQUE_ATOM_SYMADAPT          ===
 
-This outdated namelist is part of the description of the symmetry adaption coefficients that is only necessary in case no symmetry part is run (See [[#OPERATIONS|namelist OPERATIONS]]). The syntax of this block is described in [[#UNIQUE_ATOM_INDP_FCT|namelists UNIQUE_ATOM_INDP_FCT]].
+This outdated namelist is part of the description of the symmetry
+adaption coefficients that is only necessary in case no symmetry part
+is run (See [[#OPERATIONS|namelist OPERATIONS]]). The syntax of this
+block is described in [[#UNIQUE_ATOM_INDP_FCT|namelists
+UNIQUE_ATOM_INDP_FCT]].
 
-It describes how the symmetry adapted basis functions of one particular IRREP, unique atom, angular momentum and [[#UNIQUE_ATOM_INDP_FCT|independent function]] is constructed.
+It describes how the symmetry adapted basis functions of one
+particular IRREP, unique atom, angular momentum and
+[[#UNIQUE_ATOM_INDP_FCT|independent function]] is constructed.
 
-This namelist must be directly preceded by [[#UNIQUE_ATOM_INDP_FCT|namelists UNIQUE_ATOM_INDP_FCT]] and appear the number [[#UNIQUE_ATOM_INDP_FCT|N_FCTS]] of independent function times in direct consecution.
+This namelist must be directly preceded by
+[[#UNIQUE_ATOM_INDP_FCT|namelists UNIQUE_ATOM_INDP_FCT]] and appear
+the number [[#UNIQUE_ATOM_INDP_FCT|N_FCTS]] of independent function
+times in direct consecution.
 
  
   &UNIQUE_ATOM_SYMADAPT
@@ -1901,7 +2192,9 @@ This namelist must be directly preceded by [[#UNIQUE_ATOM_INDP_FCT|namelists UNI
      1          1   0.5
      2          1   0.5
 
-This namelist must be directly followed by N_FCTS lines each describing one contributing summand by the following numbers in this order:
+This namelist must be directly followed by N_FCTS lines each
+describing one contributing summand by the following numbers in this
+order:
 
 * Index of equal atom
 * magnetical quantum number
@@ -1912,7 +2205,10 @@ This namelist must be directly followed by N_FCTS lines each describing one cont
 ===                  XC_CONTROL          ===
 
 ==== XC Keyword ====
-The XC keyword is a fast and simple way to specify the desired selection of the XC density functional.
+
+The XC keyword is a fast and simple way to specify the desired
+selection of the XC density functional.
+
   &XC_CONTROL
     XC = "VWN"
   /XC_CONTROL
@@ -2016,25 +2312,43 @@ Allowed values are
  |}
 
 
-NB: will raise errors if no XC functional is found. To disable XC contributions set XC = "none".
+NB: will raise errors if no XC functional is found. To disable XC
+contributions set XC = "none".
 
 
 ==== User defined combinations ====
-Since V3.1.9 ParaGauss offers also the possibility for user defined linear combinations of different XC contributions. This is done via the XC keyword by specifying XC = "contribution1:weight1 contribution2:weight2 ...".
-For example the above TPSSh functional where 10% of the TPSS exchange contribution are substituted by 10% of exact exchange may also be defined as:
+
+Since V3.1.9 ParaGauss offers also the possibility for user defined
+linear combinations of different XC contributions. This is done via
+the XC keyword by specifying XC = "contribution1:weight1
+contribution2:weight2 ...".  For example the above TPSSh functional
+where 10% of the TPSS exchange contribution are substituted by 10% of
+exact exchange may also be defined as:
 
   &XC_CONTROL
     XC = "TPSSX:0.9 EXX:0.1 TPSSC:1.0"
   /XC_CONTROL
 
-NB: as of ParaGauss V3.2.0 only the following contributions have been ported to user defined combinations: PBEX, PBEC, PBEN, PBENx, PBENC, TPSSx, TPSSc, EXX
+NB: as of ParaGauss V3.2.0 only the following contributions have been
+ported to user defined combinations: PBEX, PBEC, PBEN, PBENx, PBENC,
+TPSSx, TPSSc, EXX
 
 ==== Explicit Flags (Deprecated) ====
 <span style="color:#FF0000;"> Namelist entries flagged for deletion. Dont use them any more! </span>
 
-Selects the exchange correlation functional used in the SCF part. If not specified otherwise (see [[ParaGauss_User_Manual#PHXC_CONTROL_.28Deprecated.29 | namelist PHXC_CONTROL]]) the same potential is also used for the post hoc part.
+Selects the exchange correlation functional used in the SCF part. If
+not specified otherwise (see
+[[ParaGauss_User_Manual#PHXC_CONTROL_.28Deprecated.29 | namelist
+PHXC_CONTROL]]) the same potential is also used for the post hoc part.
 
-Note the philosophy of the namelist: To permit a maximum flexibility in the choice of the functionals, there are no predefined combinations of exchange correlation functionals. The user is responsible for the selection of a meaningfull combination. For example, to perform a "VWN" calculation VWN and XALPHA must be set to true, as VWN only contains the correlation and does not include the LDA exchange. If you want to use a GGA correction, also the LDA functionals have to be selected.
+Note the philosophy of the namelist: To permit a maximum flexibility
+in the choice of the functionals, there are no predefined combinations
+of exchange correlation functionals. The user is responsible for the
+selection of a meaningfull combination. For example, to perform a
+"VWN" calculation VWN and XALPHA must be set to true, as VWN only
+contains the correlation and does not include the LDA exchange. If you
+want to use a GGA correction, also the LDA functionals have to be
+selected.
  
   &XC_CONTROL
      XC             = "undef" # (the default)</span>
@@ -2095,7 +2409,9 @@ Note the philosophy of the namelist: To permit a maximum flexibility in the choi
 <br /><br />
 
 === Deprecated Namelists ===
-Namelists that are not present in current versions or that are going to be deleted soon
+
+Namelists that are not present in current versions or that are going
+to be deleted soon
 
 ====                  PVMOPTIONS (Deleted)         ====
 
@@ -2135,12 +2451,15 @@ This namelist controls parallel execution of program.
 
 <span style="color:#FF0000;"> Namelist FLAGGED FOR DELETION in a future version. dont use it any more!</span>
 
-Since version 3.1.5 entries are ignored and the all possible functionals calculated.
-Exceptions are MGGAs when a spin-orbit calculation is performed and hybrids when no exact exchange energy is available.
+Since version 3.1.5 entries are ignored and the all possible
+functionals calculated.  Exceptions are MGGAs when a spin-orbit
+calculation is performed and hybrids when no exact exchange energy is
+available.
 
 
 Selects the exchange correlation potential used in the Post Hoc part.
-Default is to copy the settings from SCF part (see [[#XC_CONTROL|namelist XC_CONTROL]]).
+Default is to copy the settings from SCF part (see
+[[#XC_CONTROL|namelist XC_CONTROL]]).
  
   &PHXC_CONTROL
      <span class="so[">[#PHXC_CONTRO|-XC XC]] = "undef"</span>
@@ -2250,15 +2569,40 @@ See [[#XC_CONTROL|namelist XC_CONTROL]] for a explanation of the keywords and fu
 
 = Describing the Geometry =
 
-ParaGaus allows to use the known natural symmetry of the molecule in order to reduce the computational effort. In case of SCF convergence problems due to an over-complete basis set the use of symmetry may also help.
+ParaGaus allows to use the known natural symmetry of the molecule in
+order to reduce the computational effort. In case of SCF convergence
+problems due to an over-complete basis set the use of symmetry may
+also help.
 
-The symmetry is also used in the input geometry description of atoms and point charges.
+The symmetry is also used in the input geometry description of atoms
+and point charges.
 
-The atoms or charges are grouped together as so-called '''unique atoms / charges''' that share the same name, nuclear charge and (for atoms) basis set and numerical grid. Moreover, all of the atoms or charges within this group must be symmetry-equivalent, i.e. they must be the complete set of centers that can be obtained from one center within this group using the [#symmetry transformations symmetry transformations] of the [[#SYMMETRY_GROUP|chosen symmetry group]]. The atoms / charges within one unique atom / charge group are called '''symmetry equivalent atoms / charges'''.
+The atoms or charges are grouped together as so-called '''unique atoms
+/ charges''' that share the same name, nuclear charge and (for atoms)
+basis set and numerical grid. Moreover, all of the atoms or charges
+within this group must be symmetry-equivalent, i.e. they must be the
+complete set of centers that can be obtained from one center within
+this group using the [#symmetry transformations symmetry
+transformations] of the [[#SYMMETRY_GROUP|chosen symmetry group]]. The
+atoms / charges within one unique atom / charge group are called
+'''symmetry equivalent atoms / charges'''.
 
-This is used in the input. The number of unique [[#UNIQUE_ATOM_NUMBER|atoms]] / [[#POINTCHARGE_NUMBER|chE_ATOM]] / [[#POINTCHARGE|POINTCHARGE]] is used to specify the name, nuclear charge and number of equal charges and the coordinate of one equal atom / charge. The coordinates of the remaining equal atoms / charges are automatically calculated using the [#symmetry transformations symmetry transformations] of the [[#SYMMETRY_GROUP|chosen symmetry group]]. The specified number of equals is used for a cross-check only. For each unique atom, an own [[#UNIQUE_ATOM_BASISSET|basis set]] and [[#GRIDATOM|numerical grid]] must also be given.
+This is used in the input. The number of unique
+[[#UNIQUE_ATOM_NUMBER|atoms]] / [[#POINTCHARGE_NUMBER|chE_ATOM]] /
+[[#POINTCHARGE|POINTCHARGE]] is used to specify the name, nuclear
+charge and number of equal charges and the coordinate of one equal
+atom / charge. The coordinates of the remaining equal atoms / charges
+are automatically calculated using the [#symmetry transformations
+symmetry transformations] of the [[#SYMMETRY_GROUP|chosen symmetry
+group]]. The specified number of equals is used for a cross-check
+only. For each unique atom, an own [[#UNIQUE_ATOM_BASISSET|basis set]]
+and [[#GRIDATOM|numerical grid]] must also be given.
 
-The set of '''symmetry transformations''' within one symmetry group are not completely defined by the symmetry group alone. The location and orientation of the rotation axis, planes and centers of symmetry is still open. Therefore conventions are introduced for each symmetry group:
+The set of '''symmetry transformations''' within one symmetry group
+are not completely defined by the symmetry group alone. The location
+and orientation of the rotation axis, planes and centers of symmetry
+is still open. Therefore conventions are introduced for each symmetry
+group:
 
 {| border="4"
 ! symmetry group
@@ -2315,7 +2659,9 @@ The set of '''symmetry transformations''' within one symmetry group are not comp
 ; "I"
 ; "IH"
 
-'''Warning:''' In the case of [#Geometry_Optimization Geometry Optimization] the coordinates specified in the input file are ignored and the real coordinates are taken from the [#gx_file gx file].
+'''Warning:''' In the case of [#Geometry_Optimization Geometry
+Optimization] the coordinates specified in the input file are ignored
+and the real coordinates are taken from the [#gx_file gx file].
 
 <br /><br />
 
@@ -2325,5 +2671,7 @@ The set of '''symmetry transformations''' within one symmetry group are not comp
 
 = Helper Programs =
 
-The [/home/ttfs/DOCUMENTATION/DOK/paraplot.dvi paraplot] program that plots orbitals or densities in a two dimensional way is described seperately.
+The [/home/ttfs/DOCUMENTATION/DOK/paraplot.dvi paraplot] program that
+plots orbitals or densities in a two dimensional way is described
+seperately.
 

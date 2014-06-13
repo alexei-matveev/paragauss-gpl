@@ -74,7 +74,6 @@ use virtual_levels_module, only: eigvec_vir_dealloc
 use pointcharge_module
 use induced_dipoles_module, only: send_receive_id
 use calc_id_module, only: calc_Pol_ham
-use post_scf_module, only: post_scf_main
 use eigen_data_module, only: eigen_data_solve1, alloc_eigen, free_eigen
 use fit_coeff_module, only: fit_coeff_receive
 #ifdef WITH_RESPONSE
@@ -205,9 +204,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    case (msgtag_open_densmat)
       call say("msgtag_open_densmat")
       call open_densmat()
-   case (msgtag_post_scf)
-      call say("post_scf_main")
-      call post_scf_main()
    case (msgtag_grid_close)
       call say("grid_close")
       call grid_close1(.false.)

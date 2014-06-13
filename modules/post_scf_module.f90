@@ -93,8 +93,6 @@ module post_scf_module
   use orbital_module
   use density_data_module
   use comm_module
-  use commpack_module
-  use msgtag_module
   use occupied_levels_module, only: sndrcv_eigvec_occ
   use fit_coeff_module, only: fit_coeff_sndrcv, coeff_charge, coeff_spin, &
                               fit_coeff_shutdown, &
@@ -341,6 +339,7 @@ contains
     use dlb, only: dlb_print_statistics
 #endif
     !** End of interface **************************************
+
     integer(kind=i4_kind) :: alloc_stat,dummy,i,ua,n_ea
     integer(kind=i4_kind) :: i_ua,j_ua,ii
 #ifdef FPP_TIMERS
@@ -349,26 +348,8 @@ contains
     integer(kind=i4_kind) :: np, rank
 #endif
 
-!   print*,' POST_SCF integralpars_2devs', integralpar_2dervs
-    if(comm_i_am_master()) then
-
-       ! write to trace unit to show progress of calculation
-       call dtrace("Entering PostSCF part")
-
-       if (comm_parallel()) then
-          !
-          ! TELL SLAVES TO ENTER POST_SCF_MAIN!
-          ! NOTE: before entering post_scf_main slaves MUST
-          !       receive the staff (via main_slave) sent up
-          !       to this point in this sub!
-          !
-          if(output_post_scf_main) &
-              call write_to_output_units &
-              ("POST_SCF_MAIN: starting slaves")
-          call comm_init_send(comm_all_other_hosts,msgtag_post_scf)
-          call comm_send()
-       endif
-    end if
+    ! Write to trace unit to show progress of calculation:
+    call dtrace ("Entering PostSCF part")
 
     call ph_cntrl_setup()
     dummy=1
@@ -6221,15 +6202,15 @@ contains
 
 !AG ] End Insert from pg_V2.1_MDA (subroutine post_scf_calc_xcmda_etot_grads)
 
-  subroutine dtrace(msg)
+  subroutine dtrace (msg)
     use comm, only: comm_rank
     use iounitadmin_module, only: write_to_trace_unit
     implicit none
     character(len=*), intent(in) :: msg
     ! *** end of interface ***
 
-    if ( comm_rank() == 0 ) then
-       call write_to_trace_unit(msg)
+    if (comm_rank() == 0) then
+       call write_to_trace_unit (msg)
     endif
   end subroutine dtrace
 

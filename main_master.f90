@@ -666,9 +666,7 @@ subroutine main_master()
         ! only if XC /= off:
         if (xc_is_on (xc_ANY)) then
            call say ("call post_scf_main()")
-           do while (toggle_legacy_mode())
-              call post_scf_main()
-           enddo
+           call post_scf_main()
            call say ("done post_scf_main()")
         endif
 

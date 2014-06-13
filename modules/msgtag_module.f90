@@ -105,7 +105,7 @@ INTEGER_T :: msgtag_int_2cob3c_result=     44
 INTEGER_T :: msgtag_int_rel_setup=         46
 INTEGER_T :: msgtag_int_rel_shutdown=      47
 INTEGER_T :: msgtag_int_2cob3c_filesize=   48
-INTEGER_T :: msgtag_post_scf=              50
+!NTEGER_T :: msgtag_post_scf=              50
 INTEGER_T :: msgtag_ph_send=               51
 INTEGER_T :: msgtag_gridph_close=          53
 INTEGER_T :: msgtag_main_gradient=         54
@@ -352,7 +352,7 @@ contains
     CMP(msgtag_int_rel_setup)
     CMP(msgtag_int_rel_shutdown)
     CMP(msgtag_int_2cob3c_filesize)
-    CMP(msgtag_post_scf)
+    !CMP(msgtag_post_scf)
     CMP(msgtag_ph_send)
     CMP(msgtag_gridph_close)
     CMP(msgtag_main_gradient)

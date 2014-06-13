@@ -192,13 +192,10 @@ subroutine main_gradient(loop)
                                  , grad_mda_xcpot_cartesian                    &
                                  , dervs_totalsym                              &
                                  , dervs_cartesian                             &
-                                 , dervs_fit_ch_cartesian                      &
-                                 , calc_cluster_epe_energy                     &
                                  , cpks_gradient_totalsym                      &
                                  , cpks_grad_fit_totasym                       &
                                  , cpks_grad_fit_ch_cartesian                  &
                                  , partial_cartesian                           &
-                                 , cluster_epe_energy                          &
                                  , gradient_data_setup                         &
                                  , gradient_data_write_cartesians              &
                                  , gradient_data_write_cart_hess               &
@@ -209,6 +206,9 @@ subroutine main_gradient(loop)
                                  , gradient_data_write_gxfile                  &
                                  , gradient_data_shutdown                      &
                                  , cpks_add_fitmat_ch_grads
+#ifdef WITH_EPE
+  use gradient_data_module, only: calc_cluster_epe_energy, cluster_epe_energy
+#endif
 #ifdef WITH_MOLMECH
   use gradient_data_module, only: qm_grads_to_qmmm
 #endif
@@ -225,8 +225,7 @@ subroutine main_gradient(loop)
   use unique_atom_module, only: unique_atoms, N_unique_atoms, &
       N_moving_unique_atoms, moving_unique_atom_index, &
       unique_atom_grad_info
-  use pointcharge_module, only: n_timps, moving_unique_timp_index, &
-       n_moving_unique_timps ,moving_pc, print_pc_grad, &
+  use pointcharge_module, only: moving_pc, print_pc_grad, &
        pc_grad_cart_write, transform_pc_grad_to_cart
 #ifdef WITH_EPE
   use ewaldpc_module, only: cluster_nuc_epe_en, epe_relaxation
@@ -256,8 +255,7 @@ subroutine main_gradient(loop)
 #endif
   use datatype
   use calc3c_switches
-  use cpksdervs_matrices, only: cpks,cpksalloc, &
-                                cpks_fitcoeff_grads, dervs_totalsym_fit
+  use cpksdervs_matrices, only: cpksalloc
 #ifdef WITH_SECDER
   use cpks_utils, only: cpks_bcast_hr1 &
                       , cpks_free_hr1
@@ -267,25 +265,24 @@ subroutine main_gradient(loop)
                                , dft_plus_u_grad_finalize                      &
                                , dft_plus_u_mo_grad_init
 #endif
-  use density_data_module, only: gendensmat_occ                                &
-                               , densmat                                       &
-                               , density_data_free
+  use density_data_module, only: gendensmat_occ, density_data_free
+#ifdef WITH_ERI4C
+  use density_data_module, only: densmat
+#endif
   use overlap_module, only: overlap
   use error_module, only: MyID
   use interfaces, only: main_integral, integral_trafo, RELGRAD, RELSDER
   use interfaces, only: potential_calculate
   use interfaces, only: grad_solv_calculate
   use occupation_module, only: dealloc_occ_num
-  use symmetry_data_module, only: number_of_irreps, irrep_dimensions
 #ifdef WITH_EXPERIMENTAL
+  use symmetry_data_module, only: irrep_dimensions
   use cpks_common, only: cpks_alloc_p1w1, cpks_free_p1w1, cpks_p1, cpks_w1
   use cpks_utils, only: cpks_calc_p1w1
 #endif
-#ifdef WITH_ERI4C
-  use eri4c_options,      only: J_exact                                        &
-                              , K_exact
+#if WITH_ERI4C == 1
+  use eri4c_options, only: J_exact, K_exact
 #endif
-  !
   implicit none
 
 
@@ -1400,7 +1397,7 @@ subroutine core_gradient_calc()
 #endif
   implicit none
   !------------ Declaration of local variables -----------------
-  real(kind=r8_kind)          :: za,zb,dist,wa,tot_en,dist2
+  real(kind=r8_kind)          :: za,zb,dist,wa,dist2
   real(kind=r8_kind)          :: zca,zcb,C,A
   integer(kind=i4_kind)       :: ma,na,nb,eq_b,i, n_equal_charges
 ! integer(kind=i4_kind)       :: na1,na2
@@ -1410,9 +1407,13 @@ subroutine core_gradient_calc()
 ! real(kind=r8_kind) :: dervs_core(9,9)=0.0_r8_kind
   real(kind=r8_kind), allocatable,dimension(:,:) :: totalsym_cartesian_aa, totalsym_cartesian_ba
   real(kind=r8_kind), allocatable,dimension(:,:,:) :: totalsym_cartesian_bb,totalsym_cartesian_ab
+  integer (i4_kind) :: k
+#ifdef WITH_EPE
+  real (r8_kind) :: tot_en
   character(len=300) :: inp_dir !!!!!!!!!AS
   logical :: lcomp_ch !!!!!!!!!!!AS
-  integer(kind=i4_kind) :: funit,k
+  integer (i4_kind) :: funit
+#endif
 
   !------------ Executable code --------------------------------
 
@@ -1835,7 +1836,6 @@ end subroutine add_solv_grads
     ! dervs(X,Y) += SUM(kl) aY(k) * GX(k,l) * a(l)
     !
     ! input: cpks_fitcoeff_grads calculated in cpks_g4_constructs
-    use fit_coeff_module, only: coeff_charge
     use cpksdervs_matrices
     implicit none
     real(r8_kind), intent(inout) :: dervs(:,:)

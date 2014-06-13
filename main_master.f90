@@ -557,9 +557,7 @@ subroutine main_master()
      if (operations_scf) then
         MEMSET (0)
         call say ("Starting the main SCF routine ...")
-        do while (toggle_legacy_mode())
-           call main_scf()
-        enddo
+        call main_scf()
         call say ("Done with the main SCF routine.")
         MEMSET (0)
      endif

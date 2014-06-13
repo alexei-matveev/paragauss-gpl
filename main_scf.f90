@@ -27,7 +27,7 @@
 !===============================================================
 subroutine main_scf()
   !
-  !  Purpose: Main Level of the SCF part.
+  !  Purpose: Main Level of the SCF part. Executed on all workers.
   !
   !  Subroutine called by: main_master
   !
@@ -66,6 +66,7 @@ subroutine main_scf()
 # include "def.h"
   use type_module, only: i4_kind, r8_kind ! type specification parameters
   use interfaces, only: chargefit
+  use paragauss, only: toggle_legacy_mode
   use prescf_module, only: prescf_init, prescf_finalize
   use time_module, only: start_timer, stop_timer ! timing routines
   use timer_module, only: timer_grid_setup, timer_scf, timer_scf_chfit, &
@@ -182,22 +183,21 @@ subroutine main_scf()
   logical :: do_update
 !endif
 
-  !------------ Executable code -----------------------------------
   !
-  ! FIXME: main_scf() runs  on master only. If you  are thinking about
-  ! adding  code  to  be  executed  on all  workers,  consider  adding
-  ! code/calls to/from one of the subs called from here:
+  ! As of  now main_scf()  runs on all  workers.  If you  are thinking
+  ! about adding code  to be executed on all  workers, consider adding
+  ! code/calls  outside of  the legacy  mode blocks  or to  other subs
+  ! executed in parallel:
   !
-  !     - prescf_init()
-  !     - grid_main()
-  !     - ham_calc_main()
-  !     - prescf_finalize()
-  !     - ...
+  !   - prescf_init()
+  !   - grid_main()
+  !   - ham_calc_main()
+  !   - prescf_finalize()
+  !   - ...
   !
-  ! that are executed by all workers.
-  !
-
   call say ("start")
+
+  do while (toggle_legacy_mode ())
 
   ! We are called once again, remember that:
   scf_count = scf_count + 1
@@ -793,6 +793,7 @@ subroutine main_scf()
   call say ("convergence_shutdown")
   call convergence_shutdown()
 
+  enddo                         ! while (toggle_legacy_mode())
   call say ("end")
 
 contains

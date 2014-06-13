@@ -141,8 +141,7 @@ Module dipole_module
   !   i.e. : the secound index is only used up to the value of the third
 
   Logical, Public :: dipole_offdiagonals_calculated
-  Type (dipole_type), Allocatable, Target, Public :: dipole_moments &
-       & (:, :)!(n_spin,n_ip)
+  Type (dipole_type), Allocatable, Target, Public :: dipole_moments(:, :) ! (n_spin, n_ip)
   ! n_ip is a combined index for Irrep and Partner
   !      as defined in symmetry_data_module
   ! n_ip is a combined index for Irrep and Partner
@@ -152,8 +151,9 @@ Module dipole_module
 
   ! In  dipole_nuclear, both real  atoms and  point charges  are taken
   ! into account:
-  real (r8_kind), public, protected :: dipole_nuclear (3), &
-       dipole_total_spin (3, 2), dipole_total (3) ! (i_xyz)
+  real (r8_kind), public, protected :: dipole_total (3)   ! (i_xyz)
+  real (r8_kind), public, protected :: dipole_nuclear (3) ! (i_xyz)
+  real (r8_kind), public, protected :: dipole_total_spin (3, 2) ! (i_xyz)
 
   real (r8_kind), allocatable, public, protected :: &
        dipole_total_irrep (:, :) ! (i_xyz ,i_ir)
@@ -497,14 +497,20 @@ Contains
   !*************************************************************
 
 
-      Subroutine dipole_calculate
-    !  Purpose: calculates the dipole moments of all orbitals
-    !           plus the total dipole moment and the dipole
-    !           moments for each Irrep and the nuclear dipole moment.
-    ! the values are all stored in public variables of this module
-    !** End of interface *****************************************
-         Implicit None
-    !------------ Declaration of local variables -----------------
+      Subroutine dipole_calculate ()
+        !
+        ! Calculates the dipole moments of all orbitals plus the total
+        ! dipole moment and the dipole  moments for each Irrep and the
+        ! nuclear dipole moment.  The  values are all stored in public
+        ! variables of this module,
+        !
+        ! Runs  on  all  workers,  but  check the  body,  some  module
+        ! variables are allocated/set only on master.
+        !
+        use comm, only: comm_rank, comm_bcast
+        Implicit None
+        !** End of interface *****************************************
+
          Integer (Kind=i4_kind) :: i_ir, n_ir, i_pa, n_pa, i_ip, n_ip, &
         & i_spin, n_spin, i_orb, n_orb, i_bas1, i_bas2, i_bas12, i_xyz, &
         & status
@@ -516,11 +522,11 @@ Contains
          Real (Kind=r8_kind) :: coeff, coeff_real, coeff_imag
          Logical :: allocate_necessary
          Type (dipole_type), Pointer :: dm
-    !------------ Executable code --------------------------------
-!
+
+
          allocate_necessary = .Not. allocated (dipole_moments)
          n_spin = symmetry_data_n_spin ()
-!
+
          If (options_spin_orbit) Then
             n_ip = symmetry_data_n_ip_proj ()
             n_ir = symmetry_data_n_proj_irreps ()
@@ -529,19 +535,30 @@ Contains
             n_ir = symmetry_data_n_irreps ()
          End If
 
-         ! set global module variable:
+         ! Set global module variable:
          dipole_nuclear = dipole_nuclear_calculate()
 
-         If (allocate_necessary) Then
-            Allocate (dipole_moments(n_spin, n_ip), &
-           & dipole_total_irrep(3, n_ir), Stat=status)
-            If (status .Ne. 0) Call error_handler ("dipole_calculate: a&
-           &llocate of dipole_moments failed")
+         ! Global module variable:
+         If (.not. allocated (dipole_total_irrep)) Then
+            Allocate (dipole_total_irrep(3, n_ir), Stat=status)
+            ASSERT (status==0)
          End If
-!
-         dipole_total_irrep = 0.0_r8_kind
-         dipole_total_spin = 0.0_r8_kind
-!
+
+         !
+         ! Do no work ---  get results, lazy slaves. Seriousely, there
+         ! is SIGSEGV lurking somewhere ...
+         !
+         if (comm_rank() /= 0) goto 999
+
+         ! This will only be available on rank-0:
+         If (allocate_necessary) Then
+            Allocate (dipole_moments(n_spin, n_ip), Stat=status)
+            ASSERT (status==0)
+         End If
+
+         dipole_total_irrep = 0.0
+         dipole_total_spin = 0.0
+
          i_ip = 1
          irrep: Do i_ir = 1, n_ir
             If (options_spin_orbit) Then
@@ -552,11 +569,11 @@ Contains
                n_pa = symmetry_data_n_partners (i_ir)
             End If
             partner: Do i_pa = 1, n_pa
-!
+
                int_x => dipole_integrals(1, i_ip, i_ip)%diagonal
                int_y => dipole_integrals(2, i_ip, i_ip)%diagonal
                int_z => dipole_integrals(3, i_ip, i_ip)%diagonal
-!
+
                If (options_spin_orbit) Then
                   int_x_imag => dipole_integrals(1, i_ip, &
                  & i_ip)%diagonal_imag
@@ -566,7 +583,7 @@ Contains
                  & i_ip)%diagonal_imag
                End If
                spin: Do i_spin = 1, n_spin
-!
+
                   If (options_spin_orbit) Then
                      dm => dipole_moments (1, i_ip)
                      eigenvector_real => eigvec_real(i_ir)%m(:, :)
@@ -577,7 +594,7 @@ Contains
                      eigenvector => eigvec(i_ir)%m(:, :, i_spin)
                      occupation => occ_num(i_ir)%m(:, i_spin)
                   End If
-!
+
                   If (allocate_necessary) Then
                      Allocate (dm%occupied(3, n_orb), dm%real(3, &
                     & n_orb), Stat=status)
@@ -585,15 +602,15 @@ Contains
                     &culate: allocate of dipole_moments%dipoles_xxx fai&
                     &led")
                   End If
-!
+
                   dm%occupied = 0.0_r8_kind
-!
+
                   If (options_spin_orbit) Then
-                !
-                ! SPIN ORBIT
-                !
+                     !
+                     ! SPIN ORBIT
+                     !
                      orbitals_so: Do i_orb = 1, n_orb
-!
+
                         i_bas12 = 1
                         Do i_bas1 = 1, n_orb
                            Do i_bas2 = 1, i_bas1 - 1
@@ -637,11 +654,11 @@ Contains
                           & int_z_imag (i_bas12) * coeff_imag
                            i_bas12 = i_bas12 + 1
                         End Do
-!
+
                      End Do orbitals_so
                   Else
                      orbitals: Do i_orb = 1, n_orb
-!
+
                         i_bas12 = 1
                         Do i_bas1 = 1, n_orb
                            Do i_bas2 = 1, i_bas1 - 1
@@ -666,10 +683,10 @@ Contains
                           & i_orb) + int_z (i_bas12) * coeff
                            i_bas12 = i_bas12 + 1
                         End Do
-!
+
                      End Do orbitals
                   End If
-!
+
                   Do i_xyz = 1, 3
                      dm%real (i_xyz, :) = dm%occupied(i_xyz, :) * &
                     & occupation / n_pa
@@ -681,17 +698,24 @@ Contains
                     & dipole_total_spin (i_xyz, i_spin) + &
                     & dm%total(i_xyz)
                   End Do
-!
+
                End Do spin
-!
+
                i_ip = i_ip + 1
             End Do partner
-!
+
          End Do irrep
-!
-         dipole_total = dipole_nuclear - dipole_total_spin (:, 1) - &
-        & dipole_total_spin (:, 2)
-!
+
+999      continue
+         !
+         ! Make these results known everywhere:
+         !
+         call comm_bcast (dipole_total_spin)
+         call comm_bcast (dipole_total_irrep)
+
+         ! Another module global var:
+         dipole_total = dipole_nuclear - &
+              (dipole_total_spin (:, 1) + dipole_total_spin (:, 2))
       End Subroutine dipole_calculate
 
 
@@ -731,32 +755,33 @@ Contains
 
 
       Subroutine dipole_print (iounit, detailed)
-        !  Purpose: prints the dipole moments of all orbitals
-        !           plus the total dipole moment and the dipole
-        !           moments for each Irrep to iounit.
-        !  dipole_calculate must be called before
+        !
+        ! Prints  the dipole moments  of all  orbitals plus  the total
+        ! dipole  moment and  the  dipole moments  for  each Irrep  to
+        ! iounit.  dipole_calculate must be called before
+        !
+        ! This should run on master only. See dipole_calculate() which
+        ! allocates  and  computes  orbital-resolved  "dipole_moments"
+        ! only on rank-0.
         !
         use constants, only: angstrom
         Implicit None
-    !------------ Declaration of formal parameters ---------------
-         Integer (Kind=i4_kind), Intent (In) :: iounit
-         Logical, Intent (In) :: detailed
-    !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-         Integer (Kind=i4_kind) :: i_ir, i_pa, i_ip, i_spin, n_spin, &
-        & i_orb, n_orb, iostat
+        Integer (i4_kind), Intent (In) :: iounit
+        Logical, Intent (In) :: detailed
+        !** End of interface *****************************************
+
+         Integer (i4_kind) :: i_ir, i_pa, i_ip, i_spin, n_spin, i_orb, n_orb
          Logical :: open_shell
-         Real (Kind=r8_kind), Pointer :: eigenvalue (:), occupation (:)
+         Real (r8_kind), Pointer :: eigenvalue (:), occupation (:)
          Type (dipole_type), Pointer :: dm
-         Integer (Kind=i4_kind) :: n_irreps, i
-         Integer (Kind=i4_kind), Allocatable :: n_partners (:), &
-        & dim_irrep (:)
-         Character(len=12), Allocatable :: irrepname (:)
-    !------------ Executable code --------------------------------
-!
-         If ( .Not. allocated(dipole_moments)) Call error_handler ("dip&
+         Integer (i4_kind) :: n_irreps, i
+         Integer (i4_kind), Allocatable :: n_partners (:), dim_irrep (:)
+         Character (len=12), Allocatable :: irrepname (:)
+
+         ! Slaves will complain right here:
+         If (.Not. allocated (dipole_moments)) Call error_handler ("dip&
         &ole_print: dipole moments have not been calculated before")
-!
+
          n_spin = symmetry_data_n_spin ()
          If (options_spin_orbit) Then
             n_irreps = symmetry_data_n_proj_irreps ()
@@ -778,254 +803,143 @@ Contains
             End Do
          End If
          open_shell = n_spin .Eq. 2
-!
-    ! Haeder
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler&
-        & ("dipole_print: write of blank failed")
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat,&
-        & Fmt='(30X,"#####################")')
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & haeder failed")
-         Write (iounit, IoStat=IoStat,&
-        &Fmt='(30X,"##  DIPOLE MOMENTS  ##")')
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & haeder failed")
-         Write (iounit, IoStat=IoStat,&
-        & Fmt='(30X,"#####################")')
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & haeder failed")
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat, Fmt='(49X,"X",16X,"Y",16X,"Z")')
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & legend failed")
-!
-    ! Total
-         Write (iounit, IoStat=IoStat,&
-        & Fmt='("Total Dipole Moment (A.U.)",11X,3F17.7)') dipole_total
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & total dipole moment failed")
-!
-         Write (iounit, IoStat=IoStat,&
-        & Fmt='("Total Dipole Moment (C*ANGSTROEM)",4X,3F17.7)')&
+
+         ! Haeder
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt='(30X,"#####################")')
+         Write (iounit, Fmt='(30X,"##  DIPOLE MOMENTS  ##")')
+         Write (iounit, Fmt='(30X,"#####################")')
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt='(49X,"X",16X,"Y",16X,"Z")')
+
+         ! Total
+         Write (iounit, Fmt='("Total Dipole Moment (A.U.)",11X,3F17.7)') dipole_total
+
+         Write (iounit, Fmt='("Total Dipole Moment (C*ANGSTROEM)",4X,3F17.7)')&
         & dipole_total / angstrom
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & total dipole moment failed")
-         Write (iounit, IoStat=IoStat,&
-        & Fmt='("Total Dipole Moment (C*M*10**-12)",4X,3F17.7)')&
+         Write (iounit, Fmt='("Total Dipole Moment (C*M*10**-12)",4X,3F17.7)')&
         & dipole_total * 100 / angstrom
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & total dipole moment failed")
-!
-    ! Total using ES-format instead of F-format
+
+         ! Total using ES-format instead of F-format
          If (detailed) Then
-            Write (iounit, IoStat=IoStat, Fmt=*)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of blank failed")
-            Write (iounit, IoStat=IoStat, Fmt=*)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of blank failed")
-            Write (iounit, IoStat=IoStat,&
-           & Fmt='("Total Dipole Moment (A.U.)",11X,3ES17.10)') dipole_total
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of total dipole moment failed")
-            Write (iounit, IoStat=IoStat,&
-           &  Fmt='("Total Dipole Moment (C*ANGSTROEM)",4X,3ES17.10)')&
+            Write (iounit, Fmt=*)
+            Write (iounit, Fmt=*)
+            Write (iounit, Fmt='("Total Dipole Moment (A.U.)",11X,3ES17.10)') dipole_total
+            Write (iounit, Fmt='("Total Dipole Moment (C*ANGSTROEM)",4X,3ES17.10)')&
            & dipole_total / angstrom
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of total dipole moment failed")
-            Write (iounit, IoStat=IoStat,&
-           & Fmt='("Total Dipole Moment (C*M*10**-12)",4X,3ES17.10)') &
+            Write (iounit, Fmt='("Total Dipole Moment (C*M*10**-12)",4X,3ES17.10)') &
            & dipole_total * 100 / angstrom
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of total dipole moment failed")
          End If
-!
-!
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat,&
-        & Fmt='(10X,"(A.U.)",33X,"X",16X,"Y",16X,"Z")')
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & legend failed")
-!
-    ! Nuclear
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat,&
-        &  Fmt='("Nuclear Dipole Moment",16X,3F17.7)') dipole_nuclear
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & nuclear dipole moment failed")
-!
-    ! Total electronic
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat,&
-        &  Fmt='("Total Electronic Dipole Moment",7X,3F17.7)') dipole_total_spin (:, 1) + &
+
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt='(10X,"(A.U.)",33X,"X",16X,"Y",16X,"Z")')
+
+         ! Nuclear
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt='("Nuclear Dipole Moment",16X,3F17.7)') dipole_nuclear
+
+         ! Total electronic
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt='("Total Electronic Dipole Moment",7X,3F17.7)') dipole_total_spin (:, 1) + &
         & dipole_total_spin (:, 2)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & total electronic moment failed")
-!
-    ! Total Spin
+
+         ! Total Spin
          If (open_shell) Then
-            Write (iounit, IoStat=IoStat, Fmt=*)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of blank failed")
+            Write (iounit, Fmt=*)
             Do i_spin = 1, 2
-               Write (iounit, IoStat=IoStat,&
-              & Fmt='("Total (all Irreps) for Spin",I3,7X,3F17.7)')&
+               Write (iounit, Fmt='("Total (all Irreps) for Spin",I3,7X,3F17.7)')&
               & i_spin, dipole_total_spin (:, &
               & i_spin)
-               If (iostat .Ne. 0) Call error_handler ("dipole_print: wr&
-              &ite of total spin dipole moment failed")
             End Do
          End If
-!
-    ! For single Irreps
+
+         ! For single Irreps
          i_ip = 1
          Do i_ir = 1, n_irreps
-            Write (iounit, IoStat=IoStat, Fmt=*)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of blank failed")
-            Write (iounit, IoStat=IoStat,&
-           & Fmt='("IRREP No",I3,A4,"  Total",15X,3F17.7)')&
+            Write (iounit, Fmt=*)
+            Write (iounit, Fmt='("IRREP No",I3,A4,"  Total",15X,3F17.7)')&
            & i_ir, trim (irrepname(i_ir)), &
            & dipole_total_irrep (:, i_ir)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of total irrep dipole moment failed")
             Do i_pa = 1, n_partners (i_ir)
                Do i_spin = 1, n_spin
                   If (n_partners(i_ir) .Gt. 1) Then
                      If (open_shell) Then
-                        Write (iounit, IoStat=IoStat,&
-                       & Fmt='(14X,"Partner",I3,"  Spin",I3,4X,3F17.7)')&
+                        Write (iounit, Fmt='(14X,"Partner",I3,"  Spin",I3,4X,3F17.7)')&
                        & i_pa, i_spin, &
                        & dipole_moments(i_spin, i_ip)%total
                      Else
-                        Write (iounit, IoStat=IoStat,&
-                       & Fmt='(14X,"Partner",I3,13X,3F17.7)') i_pa, &
+                        Write (iounit, Fmt='(14X,"Partner",I3,13X,3F17.7)') i_pa, &
                        & dipole_moments(i_spin, i_ip)%total
                      End If
                   Else
                      If (open_shell) Then
-                        Write (iounit, IoStat=IoStat,&
-                       & Fmt='(14X,"Spin",I3,16X,3F17.7)') i_spin, dipole_moments(i_spin, &
+                        Write (iounit, Fmt='(14X,"Spin",I3,16X,3F17.7)') i_spin, dipole_moments(i_spin, &
                        & i_ip)%total
                      End If
                   End If
-                  If (iostat .Ne. 0) Call error_handler ("dipole_print:&
-                 & write of partner dipole moment failed")
                End Do
                i_ip = i_ip + 1
             End Do
          End Do
-!
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-         Write (iounit, IoStat=IoStat, Fmt=*)
-         If (iostat .Ne. 0) Call error_handler ("dipole_print: write of&
-        & blank failed")
-!
-!
-    ! for single orbitals
+
+         Write (iounit, Fmt=*)
+         Write (iounit, Fmt=*)
+
+         ! for single orbitals
          orbital_output: If (detailed) Then
-!
-            Write (iounit, IoStat=IoStat, Fmt=*)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of blank failed")
-            Write (iounit, IoStat=IoStat, Fmt=*)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of blank failed")
-            Write (iounit, IoStat=IoStat,&
-           & Fmt='(35X,"## DIPOLE MOMENTS OF SINGLE ORBITALS  ##")')
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of detailed haeder failed")
-!
+
+            Write (iounit, Fmt=*)
+            Write (iounit, Fmt=*)
+            Write (iounit, Fmt='(35X,"## DIPOLE MOMENTS OF SINGLE ORBITALS  ##")')
+
             i_ip = 1
             irrep: Do i_ir = 1, n_irreps
                n_orb = dim_irrep (i_ir)
                partner: Do i_pa = 1, n_partners (i_ir)
                   spin: Do i_spin = 1, n_spin
-!
+
                      dm => dipole_moments (i_spin, i_ip)
                      eigenvalue => eigval(i_ir)%m(:, i_spin)
                      occupation => occ_num(i_ir)%m(:, i_spin)
-!
-                     Write (iounit, IoStat=IoStat, Fmt=*)
-                     If (iostat .Ne. 0) Call error_handler ("dipole_pri&
-                    &nt: write of blank failed")
-                     Write (iounit, IoStat=IoStat, Fmt=*)
-                     If (iostat .Ne. 0) Call error_handler ("dipole_pri&
-                    &nt: write of blank failed")
+
+                     Write (iounit, Fmt=*)
+                     Write (iounit, Fmt=*)
                      If (open_shell) Then
-                        Write (iounit, IoStat=IoStat,&
-                       & Fmt='("IRREP No",I3,A4,"  Partner",I3,"  Spin",I3)') i_ir, trim &
+                        Write (iounit, Fmt='("IRREP No",I3,A4,"  Partner",I3,"  Spin",I3)') i_ir, trim &
                        & (irrepname(i_ir)), i_pa, i_spin
                      Else
-                        Write (iounit, IoStat=IoStat,&
-                       & Fmt='("IRREP No",I3,A4,"  Partner",I3)') i_ir, trim &
+                        Write (iounit, Fmt='("IRREP No",I3,A4,"  Partner",I3)') i_ir, trim &
                        & (irrepname(i_ir)), i_pa
                      End If
-                     If (iostat .Ne. 0) Call error_handler ("dipole_pri&
-                    &nt: write of orbital dipole moments haeder failed"&
-                    & )
-                     Write (iounit, IoStat=IoStat, Fmt=*)
-                     If (iostat .Ne. 0) Call error_handler ("dipole_pri&
-                    &nt: write of blank failed")
-                     Write (iounit, IoStat=IoStat,&
+                     Write (iounit, Fmt=*)
+                     Write (iounit,&
                     & Fmt='(10X,"(A.U.)",32X,"With assumed Occupation 1.0",20X,"With real Occupation")')
-                     If (iostat .Ne. 0) Call error_handler ("dipole_pri&
-                    &nt: write of orbital legend failed")
-                     Write (iounit, IoStat=IoStat,&
+                     Write (iounit,&
                     &Fmt='(" Orbital   Eigenvalue      Occupation",9X,"X",14X,"Y",14X,"Z",14X,"X",14X,"Y",14X,"Z")')
-                     If (iostat .Ne. 0) Call error_handler ("dipole_pri&
-                    &nt: write of orbital legend failed")
-!
+
                      orbitals: Do i_orb = 1, n_orb
-                        Write (iounit, IoStat=IoStat,&
-                       & Fmt='(I5,3X,F13.5,7F15.5)') i_orb, eigenvalue (i_orb) * &
+                        Write (iounit, Fmt='(I5,3X,F13.5,7F15.5)') i_orb, eigenvalue (i_orb) * &
                        & 27.211652_r8_kind, occupation (i_orb), &
                        & dm%occupied(:, i_orb), dm%real(:, i_orb)
-                        If (iostat .Ne. 0) Call error_handler ("dipole_&
-                       &print: write of orbital dipole moments failed")
                      End Do orbitals
-!
+
                   End Do spin
                   i_ip = i_ip + 1
                End Do partner
             End Do irrep
-!
-            Write (iounit, IoStat=IoStat, Fmt=*)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of blank failed")
-            Write (iounit, IoStat=IoStat, Fmt=*)
-            If (iostat .Ne. 0) Call error_handler ("dipole_print: write&
-           & of blank failed")
-!
+
+            Write (iounit, Fmt=*)
+            Write (iounit, Fmt=*)
          End If orbital_output
-!
+
          Deallocate (dim_irrep, n_partners, irrepname)
-!
       End Subroutine dipole_print
-  !*************************************************************
+
+
       Subroutine dipole_write_simol ()
     !  Purpose: writes total dipole moment in a.u. in formatted way
     !  to file "dipmom.sav" used by simole to calculate fequencies.

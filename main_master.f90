@@ -1086,14 +1086,12 @@ contains
   end subroutine legal
 
   subroutine say (phrase)
-    use comm, only: comm_rank
     use output_module, only: output_main_master
     use iounitadmin_module, only: write_to_output_units
     implicit none
     character (len=*), intent (in) :: phrase
     ! *** end of interface ***
 
-    print *, comm_rank(), "XXX", "main_master: "//phrase
     if (output_main_master) then
         call write_to_output_units ("main_master: "//phrase)
     endif

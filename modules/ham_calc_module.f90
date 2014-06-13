@@ -765,7 +765,7 @@ contains
     !    trace                   - expectation value
     !
     !------------ Modules ----------------------------------------
-    use comm, only: comm_reduce, comm_rank, comm_bcast
+    use comm, only: comm_reduce, comm_rank
     use iounitadmin_module,   only: output_unit                                &
                                   , stdout_unit
     use spin_orbit_module,    only: whatis                                     &

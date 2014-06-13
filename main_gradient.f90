@@ -162,16 +162,8 @@ subroutine main_gradient(loop)
   use output_module        ! defines amount of output
   use iounitadmin_module   ! to open output units
   ! comm related information and routines
-  use comm, only: comm_rank
-  use comm_module, only: comm_parallel &
-                                 , comm_get_n_processors                       &
-                                 , comm_all_other_hosts                        &
-                                 , comm_master_host                            &
-                                 , commpack                                    &
-                                 , communpack                                  &
-                                 , comm_init_send                              &
-                                 , comm_send                                   &
-                                 , comm_save_recv
+  use comm, only: comm_rank, comm_reduce
+  use comm_module, only: comm_parallel
   use integralpar_module   ! steering information for integral part
   use operations_module, only: operations_geo_opt,operations_post_scf, &
                                operations_core_density,operations_solvation_effect, &
@@ -684,8 +676,10 @@ subroutine main_gradient(loop)
          call cpks_free_hr1()
       endif
 
-      if(comm_parallel()) call collect_dervs() !!!!!!!!!!!!!AS
-      DPRINT MyID//'collect_dervs done'
+      ! Sum  partial contributions  to second  derivatives  on master.
+      ! FIXME:  should  we  do   allreduce  instead  to  minimize  the
+      ! differences between workers?
+      call comm_reduce (dervs_totalsym)
    endif ! integralpar_cpksdervs
 #endif
 
@@ -1021,28 +1015,6 @@ contains
    cpksalloc(132)=1
 
   end subroutine store_dervs_cart
-
-   subroutine collect_dervs()
-   use gradient_data_module, only : dervs_totalsym
-   use msgtag_module, only: msgtag_packed_message
-
-   real(kind=r8_kind):: help(size(dervs_totalsym,1),size(dervs_totalsym,1))
-   integer(kind=i4_kind):: i_p,info
-   if (rank == 0) then
-    do i_p=2,comm_get_n_processors()
-    call comm_save_recv(comm_all_other_hosts,191)
-    call communpack(help(1,1),size(dervs_totalsym),1,info)
-    ASSERT(info.eq.0)
-    dervs_totalsym=dervs_totalsym+help
-    enddo
-   else
-    call comm_init_send(comm_master_host,191)
-    call commpack(dervs_totalsym(1,1),size(dervs_totalsym),1,info)
-    ASSERT(info.eq.0)
-   call comm_send()
-   endif
-  end subroutine collect_dervs
-
 
   subroutine average_xc_dervs(dervs_final)
     ! purpose : builds final gradient by averaging over all

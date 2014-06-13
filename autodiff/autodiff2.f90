@@ -355,9 +355,11 @@ contains
     negative = -1.0_rk
     invalid = sqrt(negative)
 
-    CODE0( invalid )
-    CODE1( invalid )
-    CODE2( invalid )
+    ! Here addition  of x  is a workaround  for the  "unused argument"
+    ! warning:
+    CODE0( invalid + D0(x) )
+    CODE1( invalid + D0(x) )
+    CODE2( invalid + D0(x) )
   end function nan
 
 #if NVAR == 1

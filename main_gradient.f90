@@ -218,7 +218,6 @@ subroutine main_gradient(loop)
   use post_scf_module, only: post_scf_deallocate_grad_xc,grad_xc,grad_grid, &
                              dervs_xc
   use grid_module, only: weight_grads
-  use msgtag_module
   use fit_coeff_module, only: fit_coeff_sndrcv, ICHFIT, IXCFIT, coeff_charge
   use options_module, only : options_relativistic, options_split_gradients, &
                              options_xcmode, xcmode_model_density           &
@@ -324,17 +323,6 @@ subroutine main_gradient(loop)
 
   ! indicates if XC is required at all:
   xc  = xc_is_on(xc_ANY) .and. operations_post_scf
-
-  if(comm_i_am_master()) then
-     ! CONTEXT: MASTER ONLY
-     ! first thing to do is tell slaves to call myself!
-     if(comm_parallel()) then
-        DPRINT MyID,"main_gradient: tell slaves to call me"
-        call say( "main_gradient: starting slaves")
-        call comm_init_send(comm_all_other_hosts, msgtag_main_gradient)
-        call comm_send()
-     endif
-  endif
 
 #ifdef WITH_EFP
   if(efp .and. n_efp > 1 .and. qm_fixed) then

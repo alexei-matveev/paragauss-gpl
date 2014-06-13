@@ -108,7 +108,7 @@ INTEGER_T :: msgtag_int_2cob3c_filesize=   48
 !NTEGER_T :: msgtag_post_scf=              50
 INTEGER_T :: msgtag_ph_send=               51
 INTEGER_T :: msgtag_gridph_close=          53
-INTEGER_T :: msgtag_main_gradient=         54
+!NTEGER_T :: msgtag_main_gradient=         54
 !NTEGER_T :: msgtag_gradient_send_3c=      55
 INTEGER_T :: msgtag_grad_3c=               56
 !NTEGER_T :: msgtag_gradient_send_fit_ch=  57
@@ -355,7 +355,7 @@ contains
     !CMP(msgtag_post_scf)
     CMP(msgtag_ph_send)
     CMP(msgtag_gridph_close)
-    CMP(msgtag_main_gradient)
+    !CMP(msgtag_main_gradient)
     CMP(msgtag_grad_3c)
     CMP(msgtag_grad_ch)
     CMP(msgtag_occ_levels_eigval)

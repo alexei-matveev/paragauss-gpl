@@ -698,9 +698,7 @@ subroutine main_master()
 #ifndef WITH_EPE
      if (operations_gradients) then
         call say ("call main_gradient()")
-        do while (toggle_legacy_mode())
-           call main_gradient (loop) ! (1)
-        enddo
+        call main_gradient (loop) ! (1)
         call say ("done main_gradient()")
      endif
 #else
@@ -733,9 +731,7 @@ subroutine main_master()
              call write_to_trace_unit ('epe_relaxation.and.epe_side_energy_converged')
            endif
 
-           do while (toggle_legacy_mode())
-              call main_gradient (loop) ! (2)
-           enddo
+           call main_gradient (loop) ! (2)
            call say ("Done with the integral part for gradients routine.")
         elseif (operations_gradients) then
            !

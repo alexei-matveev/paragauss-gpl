@@ -217,10 +217,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       ! overwire parallel context, to be sure:
       context = ISLAV + IAND(context,NOT(IPARA))
       call main_integral(context)
-   case(msgtag_main_gradient)
-      call say("main_gradient")
-      call main_gradient(UNUSED_INT) ! loop variable is not used on slaves
-
    case(msgtag_fit_coeff_send)
       call say("fit_coeff_receive")
       call fit_coeff_receive()

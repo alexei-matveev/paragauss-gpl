@@ -413,7 +413,8 @@ contains
         operations_post_scf
 #endif
    use options_module, only: options_relativistic
-   use unique_atom_module, only: GLOB_n_unique_atoms => n_unique_atoms
+   use unique_atom_module, only: unique_atom_iwork, &
+        GLOB_n_unique_atoms => n_unique_atoms
    !^^^^ make it visible with another name, see comment below
    use atom_data_module, only: nuc_radius
    implicit none
@@ -535,15 +536,17 @@ contains
         call input_error("unique_atom_read: Sorry! &
         &Fixed atoms not yet completely implemented for relativistic forces")
 
-   ! for geometry optimization read coordinates from gx file
+   ! For geometry  optimization read coordinates  from gxfile.  FIXME:
+   ! Happens    to   also    set   the    foreign    module   variable
+   ! unique_atom_iwork!
    if (operations_geo_opt .or. operations_qm_mm .or. operations_read_gx) then
-      call read_geometry (loop, unique_atoms)
+      call read_geometry (loop, unique_atoms, unique_atom_iwork)
    endif
    end subroutine unique_atom_read
    !*************************************************************
 
    !*************************************************************
-   subroutine read_geometry (loop, unique_atoms)
+   subroutine read_geometry (loop, unique_atoms, iwork)
      !
      ! Read  positions of uniqe  atoms from  gxfile or  elsewhere. Was
      ! part of unique_atom_read() before.
@@ -564,13 +567,13 @@ contains
 #ifdef WITH_EPE
      use ewaldpc_module, only: gxepe_array, EX_GXEPE, gxepe_impu, n_epe_r
 #endif
-     use unique_atom_module, only: unique_atom_iwork
      implicit none
      integer, intent (in) :: loop
      type (unique_atom_type), intent (inout) :: unique_atoms(:)
+     integer, intent (out) :: iwork
      ! *** end of interface ***
 
-     real (r8_kind) :: x_coord, y_coord, z_coord, z_dummy, iwork
+     real (r8_kind) :: x_coord, y_coord, z_coord, z_dummy, rwork
      character (len=1) :: cha_loop
      character (len=5) ::  gx_buff
      integer :: ieq_dummy, indexes(7), impu
@@ -657,10 +660,10 @@ contains
 
 
          gx_count = gx_count + 1
-         read(io_u, *, iostat=status) iwork
+         read(io_u, *, iostat=status) rwork
          if (status .gt. 0) call error_handler &
               ("unique_atom_read: reading iwork from gxfile")
-         unique_atom_iwork = int(-iwork, i4_kind)
+         iwork = int (-rwork, i4_kind)
          call returnclose_iounit (io_u)
       else !read_in_gxfile
          if(operations_gx_epeformat) call error_handler("unique_atom_read: GXFILE is absent")
@@ -685,7 +688,7 @@ contains
          call write_to_trace_unit('Be carefull if you use internal coordinates,')
          call write_to_trace_unit('optimization cannot be done.')
          call write_to_trace_unit('**********************************************')
-         unique_atom_iwork=1
+         iwork = 1
       end if read_in_gxfile
 
 #ifdef WITH_EPE
@@ -707,8 +710,8 @@ contains
 #ifdef WITH_MOLMECH
        else nqm_mm_new
           if (imomm) then
-             call read_qmmm_input(iwork)
-             unique_atom_iwork = int(-iwork, i4_kind)
+             call read_qmmm_input (rwork)
+             iwork = int(-rwork, i4_kind)
              i = 0
              do i_ua = 1, N_unique_atoms
                 counter_equal = 1

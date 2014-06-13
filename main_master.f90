@@ -121,6 +121,7 @@ subroutine main_master()
 # include "def.h"
   use type_module, only: i4_kind, r8_kind
   use operations_module ! defines which operations are to be performed
+  use paragauss, only: toggle_legacy_mode
   use comm_module, only: comm_init_send, comm_send, &
        comm_all_other_hosts, comm_parallel
   use msgtag_module, only: msgtag_intstore_dealloc
@@ -215,10 +216,15 @@ subroutine main_master()
 
   !
   ! If  you are  thinking  about adding  code  to be  executed on  all
-  ! workers, consider adding  it to main.f90 --- it  still runs in the
-  ! parallel context.
+  ! workers, consider  adding it outside  of the "legacy"  mode blocks
+  ! enclosed by
   !
-  ! Alternatively pick one of the subs in the body such as
+  !   do while (toggle_legacy_mode())
+  !      ...
+  !   enddo
+  !
+  ! Alternatively add  it to main.f90 or  pick one of the  subs in the
+  ! body such as
   !
   !     - initialize_with_input()
   !     - main_gradient()
@@ -228,6 +234,15 @@ subroutine main_master()
   !
   ! that are executed by all workers and augment them.
   !
+
+  !
+  ! FIXME: convert  this to SPMD (single program,  multiple data) so
+  ! that all workers execute the same code.  Toggling a master-slave
+  ! mode  has an  effect of  starting main_slave()  daemon  by slave
+  ! workers. The master enters the block exactly once, the slaves do
+  ! not enter:
+  !
+  do while (toggle_legacy_mode())
 
   !
   ! Print the  version info and  machine config, uses  output_unit, so
@@ -857,6 +872,8 @@ subroutine main_master()
   endif
 
   call say("done")
+
+  enddo                         ! do while (toggle_legacy_mode())
 
 contains
 

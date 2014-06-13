@@ -76,9 +76,10 @@ module paragauss
   !------------ Interface statements ------------------------------
 
   !------------ public functions and subroutines ------------------
-  public :: qm_init!() -> world
-  public :: qm_run!(world)
-  public :: qm_finalize!(world)
+  public :: qm_init             ! () -> world
+  public :: qm_run              ! (world)
+  public :: qm_finalize         ! (world)
+  public :: toggle_legacy_mode  ! ()
 
   !================================================================
   ! End of public interface of module
@@ -146,18 +147,10 @@ contains
     call initialize_environment()
 
     !
-    ! FIXME: convert  this to SPMD (single program,  multiple data) so
-    ! that all workers execute the same code.  Toggling a master-slave
-    ! mode  has an  effect of  starting main_slave()  daemon  by slave
-    ! workers. The master enters the block exactly once, the slaves do
-    ! not enter:
+    ! This runs  on all  workers. Thinks of  it as of  master-plan for
+    ! everyone:
     !
-    do while (toggle_legacy_mode())
-       !
-       ! Only executed on master, slaves never enter this block.
-       !
-       call main_master()
-    enddo
+    call main_master()
 
     !
     ! For the moment, this value is only meaningful on master, let him

@@ -749,8 +749,8 @@ contains
     !
     use comm, only: comm_rank
     use atoms_data_module
-    use group_module, only: ylm_trafos, sub_group, group_coset, &
-         symm_transformation_int, group_num_el, group_coset_decomp
+    use group_module, only: sub_group, group_coset, &
+         symm_transformation_int, group_coset_decomp
     use unique_atom_module, only: N_unique_atoms,unique_atoms
     use symmetry_data_module, only: symmetry_data_point_group
     use symm_module, only: symm_adapt_centers
@@ -1728,7 +1728,6 @@ contains
     use unique_atom_module, only : N_unique_atoms,unique_atoms
 !!$    use pointcharge_module, only: pointcharge_N, pointcharge_array !@@@@@@@@@@@@@@
     use dipole_module, only : dipole_total
-    use operations_module, only : operations_dipole
     !------------ Declaration of formal parameters ------------------
     !== End of interface ============================================
     !------------ Declaration of local variables --------------------

@@ -116,7 +116,6 @@ subroutine main_master()
   use type_module, only: i4_kind, r8_kind
   use operations_module ! defines which operations are to be performed
   use paragauss, only: toggle_legacy_mode
-  use comm_module, only: comm_parallel
   use filename_module, only: filesystem_is_parallel
   use iounitadmin_module, only: output_unit, stdout_unit, &
        write_to_output_units, write_to_trace_unit
@@ -172,7 +171,7 @@ subroutine main_master()
 #endif
   use density_data_module, only: open_densmat !!!!!!!!!!!!!!!!!!AS
   use solv_cavity_module, only: stop_solv
-  use potential_module
+  use potential_module, only: send_recv_space_point
   use elec_static_field_module
   use symmetry, only: main_symm
   use interfaces, only: main_integral, IPARA
@@ -543,10 +542,8 @@ subroutine main_master()
      ! calculate integrals of electrostatic potential
      if (operations_solvation_effect .and. operations_integral) then
         call say ("Calculate integrals of electrostatic potential ...")
+        call send_recv_space_point()
         do while (toggle_legacy_mode())
-           if (comm_parallel()) then
-              call send_space_point()
-           endif
            call potential_calculate ('Solvation')
         enddo
         call say ("Done with integrals of electrostatic potential.")

@@ -26,15 +26,11 @@
 ! Public interface of module
 !===============================================================
 subroutine  main_dipole
-  !----------------------------------------------------------------
   !
-  !  Purpose: main routine of dipole part
-  !           runs dipole integral part,
-  !           calculates dipole moments and prints them
-  !           defines offdiagonals_required
-  !
-  !  Subroutine called by: main_master
-  !  Important calls: call dipoleg_calculate
+  !  Main  routine  of  dipole   part.   Runs  dipole  integral  part,
+  !  calculates dipole  moments and prints  them.  Runs in  a parallel
+  !  context.   Called  by:   main_master().   Important  calls:  call
+  !  dipoleg_calculate().
   !
   !  References: Ph.D. Thesis A Goerling
   !
@@ -86,12 +82,12 @@ subroutine  main_dipole
   use response_module, only: response_do_dipole
 #endif
   use options_module, only: options_spin_orbit
-  use interfaces, only: main_integral, IMAST
+  use interfaces, only: main_integral, IPARA
 
   implicit none
 
   !------------ Declaration of local variables --------------------
-  logical  :: offdiagonals_required, new_integrals_required,  &
+  logical :: offdiagonals_required, new_integrals_required,  &
        old_integrals_exist
   integer :: iounit
 
@@ -118,8 +114,7 @@ subroutine  main_dipole
      call integralpar_set ('DipoleOff')
 
      call say ("main_integral")
-     ! FIXME: does this sub run in master-only context?
-     call main_integral (IMAST)
+     call main_integral (IPARA)
 
      call stop_timer (timer_dipole_integral)
 
@@ -162,7 +157,7 @@ subroutine  main_dipole
      call integralpar_set ('DipoleOff')
 
      call say ("main_gten: main_integral")
-     call main_integral (IMAST)
+     call main_integral (IPARA)
 
      call stop_timer (timer_dipole_integral)
 
@@ -225,7 +220,7 @@ subroutine  main_dipole
        call integralpar_set ('Dipole')
      endif
      call say ("main_integral")
-     call main_integral (IMAST)
+     call main_integral (IPARA)
 
      call stop_timer (timer_dipole_integral)
   endif

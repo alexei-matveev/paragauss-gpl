@@ -572,9 +572,7 @@ subroutine main_master()
      ! Calculate and print dipole moments:
      if (operations_dipole .or. operations_gtensor .or. operations_hfc) then
         call say ("call main_dipole()")
-        do while (toggle_legacy_mode())
-           call main_dipole()
-        enddo
+        call main_dipole()
         call say ("done main_dipole()")
      endif
 

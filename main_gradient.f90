@@ -162,8 +162,8 @@ subroutine main_gradient(loop)
   use output_module        ! defines amount of output
   use iounitadmin_module   ! to open output units
   ! comm related information and routines
-  use comm_module         , only : comm_i_am_master                            &
-                                 , comm_parallel                               &
+  use comm, only: comm_rank
+  use comm_module, only: comm_parallel &
                                  , comm_get_n_processors                       &
                                  , comm_all_other_hosts                        &
                                  , comm_master_host                            &
@@ -289,12 +289,13 @@ subroutine main_gradient(loop)
   integer(i4_kind), intent(in) :: loop ! used only on master so far
   ! *** end of interface ***
 
+  integer :: rank
   logical :: model_density, split_gradients
   integer (kind=i4_kind) :: i, n_equal_max
 ! real(kind=r8_kind),allocatable :: gradient_totalsym_fit(:)
   integer(i4_kind) :: IFIT
   integer(i4_kind) :: IREL
-  logical :: tty ! used in say subprogram
+  logical :: tty                ! used in say() subprogram
   logical :: xc ! indicates if XC is required at all
   integer, parameter :: grads=1, deriv=2
 #ifdef WITH_EFP
@@ -313,9 +314,12 @@ subroutine main_gradient(loop)
   ! ================ CONTEXT: ALL PROCESSORS ===============
   FPP_TIMER_START(tot)
   DPRINT MyID,"main_gradient:  start"
-  ! tty is used in subrogram say to determine wheter the current processor should print the
-  ! given output
-  tty = output_main_gradient .and. comm_i_am_master()
+
+  rank = comm_rank ()
+
+  ! Tty is  used in subrogram  say() to determine whether  the current
+  ! processor should print the given output:
+  tty = output_main_gradient .and. rank == 0
 
   ! indicates if XC is required at all:
   xc  = xc_is_on(xc_ANY) .and. operations_post_scf
@@ -344,7 +348,7 @@ subroutine main_gradient(loop)
   DPRINT MyID,"done"
 
   ! ================ CONTEXT: MASTER ONLY ==================
-  master1: if(comm_i_am_master()) then
+  master1: if (rank == 0) then
 
      solv_eff: if(operations_solvation_effect) then
         ! Calculations  of the additional  contributions to  the total
@@ -463,7 +467,7 @@ subroutine main_gradient(loop)
      call dft_plus_u_grad_finalize()
 #endif
 
-     if(integralpar_2dervs.and.comm_i_am_master()) then
+     if (integralpar_2dervs .and. rank == 0) then
         ! === context: master only ===
           ! orbital gradient_totalsym contribs calculated
           ! to be summed up with fit_charge contribs and
@@ -478,7 +482,7 @@ subroutine main_gradient(loop)
      call gradient_sndrcv_fit_ch()   !  msgtag_grad_ch
 
    ! ================ CONTEXT: MASTER ONLY ==================
-   master2: if(comm_i_am_master())then
+   master2: if (rank == 0) then
 
      call say ("add_fit_ch_grads")
 
@@ -533,7 +537,7 @@ subroutine main_gradient(loop)
            call grad_solv_calculate('Q_SolvGrads')
         end if
 
-        if(comm_i_am_master()) then
+        if (rank == 0) then
            if(VTN) then
               call say ("solvation nuc_grad_vtn")
               call nuc_grad_vtn(gradient_index)
@@ -550,7 +554,7 @@ subroutine main_gradient(loop)
         end if
 
         if(integralpar_2dervs) then
-           if(comm_i_am_master()) then
+           if (rank == 0) then
               call say ("nuc_solv_2nd_deriv ")
               call nuc_solv_2nd_deriv()
            end if
@@ -569,7 +573,7 @@ subroutine main_gradient(loop)
      if (operations_solvation_effect) then
         if (integralpar_2dervs) then
 #if 1 /* def IMPL_CONTRIBS_TO_DERVS */
-           if (comm_i_am_master()) then
+           if (rank == 0) then
               call charge_solv_2nd_deriv()
            end if
 #endif
@@ -583,7 +587,7 @@ subroutine main_gradient(loop)
 
 
    ! ================ CONTEXT: MASTER ONLY ==================
-   master3: if(comm_i_am_master())then
+   master3: if (rank == 0) then
 
 #ifdef IMPL_CONTRIBS_TO_DERVS
      if( xc )then
@@ -688,7 +692,7 @@ subroutine main_gradient(loop)
 
 1001 continue ! .not. operations_integral !!!!!!!!!!!!!
    ! ================ CONTEXT: MASTER ONLY ==================
-   master4: if(comm_i_am_master())then
+   master4: if (rank == 0) then
 
     QM2: if(operations_integral) then ! if QM gradients exist
        !vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -862,7 +866,7 @@ subroutine main_gradient(loop)
      call post_scf_deallocate_grad_xc()
 
   ! ================ CONTEXT: MASTER ONLY ==================
-  master5: if(comm_i_am_master())then
+  master5: if (rank == 0) then
 
 #ifdef WITH_MOLMECH
      if(operations_qm_mm_new) then
@@ -878,7 +882,7 @@ subroutine main_gradient(loop)
 #endif
         if (operations_geo_opt .or. operations_qm_mm) then
            call say ("call gradient_data_write_gxfile()")
-           call gradient_data_write_gxfile(loop)
+           call gradient_data_write_gxfile (loop)
            call say ("done gradient_data_write_gxfile()")
         end if
 #ifdef WITH_MOLMECH
@@ -1024,7 +1028,7 @@ contains
 
    real(kind=r8_kind):: help(size(dervs_totalsym,1),size(dervs_totalsym,1))
    integer(kind=i4_kind):: i_p,info
-   if(comm_i_am_master()) then
+   if (rank == 0) then
     do i_p=2,comm_get_n_processors()
     call comm_save_recv(comm_all_other_hosts,191)
     call communpack(help(1,1),size(dervs_totalsym),1,info)

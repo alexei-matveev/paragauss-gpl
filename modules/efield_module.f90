@@ -374,15 +374,16 @@ contains
 
 
   !*************************************************************
-  subroutine efield_calculate_integrals()
-    !  Purpose: calculates integrals of external electrical field.
-    !  for this purpose, dipol integral part is run, but dipol
-    !  integrals are deallocated afterwards again
-    !  The integrals are either stored integralstore_module
-    !  or written to tape efield.dat. They are used in scf
-    !  part by ham_calc_module.
-    !** End of interface *****************************************
-    !------------ Modules used ----------------------------------
+  subroutine efield_calculate_integrals ()
+    !
+    ! Purpose: calculates integrals of external electrical field.  for
+    ! this purpose, dipole integral  part is run, but dipole integrals
+    ! are deallocated afterwards again The integrals are either stored
+    ! integralstore_module  or written to  tape efield.dat.   They are
+    ! used in scf part by ham_calc_module.
+    !
+    ! Runs on all workers.
+    !
     use integralstore_module, only: integralstore_2cob_efield                  &
                                   , integralstore_allocate_efield              &
                                   , integralstore_deallocate_efield
@@ -394,9 +395,10 @@ contains
     use timer_module, only: timer_efield, timer_dipole_integral
     use time_module
     use iounitadmin_module, only: output_unit, write_to_output_units
-    use interfaces, only: main_integral, IMAST
+    use interfaces, only: main_integral, IPARA
     implicit none
-    !------------ Executable code --------------------------------
+    !** End of interface *****************************************
+
     if (.not. apply) call error_handler( &
          "efield_calculate_integrals: no external electrival field applied")
 
@@ -419,7 +421,7 @@ contains
        call start_timer(timer_dipole_integral)
        call integralpar_set('Dipole')
 
-       call main_integral(IMAST)
+       call main_integral (IPARA)
        call stop_timer(timer_dipole_integral)
        call print_timer(timer_dipole_integral,output_unit, &
          "Calculation of dipole integrals", &

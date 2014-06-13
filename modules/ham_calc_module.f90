@@ -778,9 +778,8 @@ contains
                                   , set_energy                                 &
                                   , write_energy                               &
                                   , direct_2c_energy_calc_and_add
-    use eri4c_options, only: J_exact
 #if WITH_ERI4C == 1
-    use eri4c_options, only: K_exact
+    use eri4c_options, only: J_exact, K_exact
 #endif
     use options_module,       only: options_spin_orbit
     use unique_atom_module,   only: unique_atoms

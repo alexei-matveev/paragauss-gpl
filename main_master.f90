@@ -840,14 +840,6 @@ subroutine main_master()
 #endif
   !]]=== eof MAIN LOOP OVER TASKS/GEOMETRIES ================================
 
-  if ( comm_parallel() ) then
-     ! tell slaves to exit main_slave loop, this does not terminate
-     ! them. See main.f90 fro what follows.
-     call say("tell slaves to exit main_slave loop")
-     call comm_init_send(comm_all_other_hosts,msgtag_finito)
-     call comm_send()
-  endif
-
   ! print timing
   if (output_timing_summary .or. output_timing_slaves .or. output_timing_detailedsummary) then
     call say("printing timing")

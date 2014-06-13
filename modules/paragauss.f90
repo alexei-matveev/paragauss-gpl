@@ -103,7 +103,7 @@ contains
     !  Date: 10/95
     !
     use iso_c_binding
-    use comm, only: comm_rank, comm_world_push, comm_barrier, comm_bcast
+    use comm, only: comm_world_push, comm_barrier, comm_bcast
     use comm_module, only: comm_enroll, comm_end ! legacy comm routines
     use initialization, only: initialize_environment, finalize
     use dlb, only: dlb_init, dlb_finalize
@@ -147,13 +147,17 @@ contains
 
     !
     ! FIXME: convert  this to SPMD (single program,  multiple data) so
-    !        that all workers execute the same code.
+    ! that all workers execute the same code.  Toggling a master-slave
+    ! mode  has an  effect of  starting main_slave()  daemon  by slave
+    ! workers. The master enters the block exactly once, the slaves do
+    ! not enter:
     !
-    if ( comm_rank() == 0 ) then
+    do while (toggle_legacy_mode())
+       !
+       ! Only executed on master, slaves never enter this block.
+       !
        call main_master()
-    else
-       call main_slave()
-    endif
+    enddo
 
     !
     ! For the moment, this value is only meaningful on master, let him
@@ -240,6 +244,66 @@ contains
     ! finish MPI
     call comm_finalize()
   end subroutine qm_finalize
+
+
+  function toggle_legacy_mode() result (flag)
+    !
+    ! Slaves enter the receive/dispatch loop in main_slave() and leave
+    ! upon  receiving of  a message  sent  from here.  On slaves,  the
+    ! return value is unconditionally  false.  On master, the function
+    ! returns true/false  on odd/even calls, respectively.  To be used
+    ! in constructs like this:
+    !
+    !   do while (toggle_legacy_mode())
+    !     !
+    !     ! Master  does some work,  eventually sending  slaves orders
+    !     ! that  are handled  in main_slave().  Master  executes this
+    !     ! block exactly once, slaves do not enter here.
+    !     !
+    !     ...
+    !   enddo
+    !
+    ! The idea  is to  migrate to common  control flow on  all workers
+    ! only  occasionally  entering  legacy  master/slave  mode  during
+    ! transition period.
+    !
+    ! I have a dream that one  day all of the workers will execute the
+    ! same code irrespective of their rank. ABOLISH THE SLAVERY!
+    !
+    use comm, only: comm_rank
+    use comm_module, only: comm_init_send, comm_send, comm_all_other_hosts
+    use msgtag_module, only: msgtag_finito
+    implicit none
+    logical :: flag
+    ! *** end of interface ***
+
+    ! On master, flips on every call:
+    logical, save :: legacy_mode = .false.
+
+    if (comm_rank() /= 0) then
+       legacy_mode = .not. legacy_mode ! flip!
+       !
+       ! Exit upon receival of a msgtag_finito:
+       !
+       call main_slave()
+       legacy_mode = .not. legacy_mode ! flip!
+    else
+       if (legacy_mode) then
+          !
+          ! Second call.  If we are already in  master/slave mode then
+          ! tell   the  slaves   to   leave  that   mode  by   exiting
+          ! main_slave():
+          !
+          call comm_init_send (comm_all_other_hosts, msgtag_finito)
+          call comm_send()
+       endif
+       legacy_mode = .not. legacy_mode ! flip!
+    endif
+
+    ! Slaves flip it twice, thus always return false:
+    flag = legacy_mode
+  end function toggle_legacy_mode
+
 
   subroutine qm_run_once()
     !

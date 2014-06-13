@@ -32,8 +32,7 @@ module  filename_module
   !
   !  Defines:
   !
-  !     inpfile(name), outfile(name), tmpfile(name),
-  !     data_dir, sharedfs_dir,
+  !     inpfile(name), outfile(name), tmpfile(name), data_dir,
   !     input_name
   !
   ! The names are read in from environment variables
@@ -100,12 +99,11 @@ module  filename_module
   !------------ Declaration of public variables -------------------
   integer, parameter, public :: filename_namelengthmax = max_path
 
-  character (len=max_path), public, protected :: data_dir, &
-       sharedfs_dir, resp_dir
+  character (len=max_path), public, protected :: data_dir, resp_dir
 
   character (len=max_path), public, protected :: input_name
 
-  logical, public, protected :: filesystem_is_parallel = .FALSE.
+  logical, public, parameter :: filesystem_is_parallel = .FALSE.
 
   !------------ public functions and subroutines ------------------
 
@@ -300,18 +298,9 @@ contains
 
     !
     ! Ask   environment  variable   "TTFSTMP"  that   should  describe
-    ! directory  for scratch  data. If  "TTFSSHAREDFS" is  set, assume
-    ! tmp_dir is shared among all nodes:
+    ! directory for scratch data:
     !
-    filesystem_is_parallel = .false.
-    sharedfs_dir = "/do/not/use"
-
-    if (env ("TTFSTMP", tmp_base)) then
-       ! fine, nothing to be done
-    else if (env ("TTFSSHAREDFS", sharedfs_dir)) then
-       filesystem_is_parallel = .true.
-       tmp_base = sharedfs_dir
-    else
+    if (.not. env ("TTFSTMP", tmp_base)) then
        WARN ("TTFSTMP not set, using ." )
        tmp_base = "."
     endif
@@ -388,8 +377,6 @@ contains
     implicit none
     ! *** end of interface ***
 
-    call comm_bcast(filesystem_is_parallel)
-    call comm_bcast(sharedfs_dir)
     call comm_bcast(tmp_base)
     call comm_bcast(data_dir)
     call comm_bcast(output_dir)
@@ -410,7 +397,7 @@ contains
     ! FIXME: one should not even try to access directories of
     !        other workers as it is not always possible.
     !        Maybe we should implement tmpfile(name, rank) instead?
-    ASSERT(filesystem_is_parallel)
+    ASSERT (filesystem_is_parallel)
 
     filename_tmpdir = append_hostindex(tmp_base, hostindex)
   end function filename_tmpdir

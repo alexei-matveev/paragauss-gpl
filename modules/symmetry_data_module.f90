@@ -203,7 +203,6 @@ public &
      symmetry_data_i_ip_proj, &
      symmetry_data_n_ip, &
      symmetry_data_n_ip_proj, &
-     symmetry_data_unmap_i_ip, &
      symmetry_data_pseudo,&
      symmetry_data_dimension_proj, &
      symmetry_data_n_partners_proj, &
@@ -343,6 +342,7 @@ contains
   end function symmetry_data_i_ip_proj
   !*************************************************************
 
+#if 0
   !*************************************************************
   subroutine symmetry_data_unmap_i_ip(i_ip,i_ir,i_pa)
     ! purpose : returns irrep and partner indices i_ir and i_pa
@@ -366,6 +366,7 @@ contains
     i_pa = ir_and_pa_of_ip_proj(2,i_ip)
   end subroutine symmetry_data_unmap_i_ip_proj
   !*************************************************************
+#endif
 
   !*************************************************************
   integer function symmetry_data_n_ip()

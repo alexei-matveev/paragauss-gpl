@@ -1002,16 +1002,16 @@ contains
     character (len=*), intent (in) :: version
     ! *** end of interface ***
 
-    !
-    ! This prints machine config:
-    !
-    if (output_unit > 0) then
-       call comm_print_conf (output_unit)
-    endif
+    ! Slaves  may need  to have  output_unit <  0,  otherwise multiple
+    ! copies of the header will be printed:
+    if (output_unit <= 0) return
 
-    if (stdout_unit > 0) then
-       call comm_print_conf (stdout_unit)
-    endif
+    !
+    ! This prints machine config, both to output and to tty:
+    !
+    call comm_print_conf (output_unit)
+    ASSERT(stdout_unit>0)
+    call comm_print_conf (stdout_unit)
 
     !
     ! Legal header:

@@ -1995,28 +1995,39 @@ Allowed values are
 |-
 || "TPSS"        || MGGA ||
 |-
-|| "revTPSS"     || MGGA ||
+|| "revTPSS"     || MGGA || currently deactivated
 |-
 || "M06L"        || MGGA ||
 |-
 || "VS98"        || MGGA ||
 |-
-|| "HartreeFock" || WFT ||
+|| "HartreeFock" || WFT || currently deactivated
 |-
-|| "B3LYP"       || HGGA ||
+|| "B3LYP"       || HGGA || currently deactivated
+|-
+|| "PBE0"       || HGGA ||
+|-
+|| "TPSSh"       || HMGGA ||
+|-
+|| "M06"       || HMGGA ||
+|-
+|| "EXX"       || WFT || pure exact exchange
  |-
  |}
-
-   
 
 
 NB: will raise errors if no XC functional is found. To disable XC contributions set XC = "none".
 
+
 ==== User defined combinations ====
-<span style="color:#FF0000;"> Coming soon</span>
+Since V3.1.9 ParaGauss offers also the possibility for user defined linear combinations of different XC contributions. This is done via the XC keyword by specifying XC = "contribution1:weight1 contribution2:weight2 ...".
+For example the above TPSSh functional where 10% of the TPSS exchange contribution are substituted by 10% of exact exchange may also be defined as:
 
+  &XC_CONTROL
+    XC = "TPSSX:0.9 EXX:0.1 TPSSC:1.0"
+  /XC_CONTROL
 
-Allows a user defined specification of linear combinations of different XC contributions
+NB: as of ParaGauss V3.2.0 only the following contributions have been ported to user defined combinations: PBEX, PBEC, PBEN, PBENx, PBENC, TPSSx, TPSSc, EXX
 
 ==== Explicit Flags (Deprecated) ====
 <span style="color:#FF0000;"> Namelist entries flagged for deletion. Dont use them any more! </span>

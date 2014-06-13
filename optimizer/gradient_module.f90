@@ -302,17 +302,18 @@ contains
 
   end subroutine gradient_alloc
 
-  subroutine gradient_read(io_gx,zero,io_gxstore,analitic_hessian)
+  subroutine gradient_read (io_gx, zero, io_gxstore)
     ! Purpose: read in the scf and post-scf energies and
     !          the actual gradient from the gxfile. The gradient
     !          in (in cartesians) includes, of course, also those
     !          componentes which arise from dummy atoms, although
     !          these are set and kept to zero. To fill in only those
     !          which belong to a 'real' atom, the dummy_list is used.
+    implicit none
     integer(kind=i4_kind),intent(in)  :: io_gx
     integer(kind=i4_kind),intent(in),optional  :: io_gxstore
-    logical,intent(in),optional:: analitic_hessian
     !** End of interface ****************************************
+
     integer(kind=i4_kind)             :: n,i
     integer(kind=i4_kind)             :: stat
     logical, optional                 :: zero ! do not raed gradients,

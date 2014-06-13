@@ -133,10 +133,6 @@ contains
     ! geometry iteration, so is this the execution of this sub.
     !
     use comm, only: comm_rank
-    use comm_module,              only: comm_init_send                         &
-                                      , comm_send                              &
-                                      , comm_all_other_hosts
-    use msgtag_module,            only: msgtag_init
     use operations_module, only: operations_write_input_slave, operations_bcast, &
         operations_post_scf, operations_response
 #ifdef WITH_MOLMECH
@@ -201,18 +197,6 @@ contains
     if(operations_epe_lattice) return
 #endif
     rank = comm_rank()
-
-    if ( rank == 0 ) then
-        !
-        ! Tell slaves to also call initialize_with_input():
-        !
-        call comm_init_send(comm_all_other_hosts, msgtag_init)
-        call comm_send()
-    endif
-
-    !
-    ! From here on we run in a parallel context ...
-    !
 
     !
     ! FIXME: for some reason broadcasting was sometimes disabled.
@@ -425,9 +409,6 @@ contains
     ! Note that this sub is called every geometry iteration.
     !
     use comm, only: comm_rank
-    use comm_module, only: comm_init_send, comm_send, &
-        comm_all_other_hosts
-    use msgtag_module, only: msgtag_finalize_geometry
     use operations_module, only: operations_scf, operations_integral, &
         operations_gradients, operations_symm, &
         operations_solvation_effect, operations_gx_test
@@ -473,18 +454,6 @@ contains
     integer(IK) :: rank, memstat
 
     rank = comm_rank()
-
-    if ( rank == 0 ) then
-        !
-        ! Tell slaves to also call finalize_geometry():
-        !
-        call comm_init_send(comm_all_other_hosts, msgtag_finalize_geometry)
-        call comm_send()
-    endif
-
-    !
-    ! From here on we run in a parallel context ...
-    !
 
     !
     ! Some of this code vas moved from main_gradient():
@@ -599,14 +568,12 @@ contains
     call pointcharge_close()
 
     !
-    ! main_symm() is not parallelized, though we might have called it
-    ! everywhere instead of broadcasting symmetrization coefficients:
+    ! main_symm() is not a parallel code, though we call it everywhere
+    ! instead of broadcasting symmetrization coefficients:
     !
-    if ( rank == 0 ) then
-        if ( operations_symm ) then
-            ! no comm:
-            call main_symm(MAIN_SYMM_DONE)
-        endif
+    if (operations_symm) then
+       ! no comm:
+       call main_symm (MAIN_SYMM_DONE)
     endif
 
     ! FIXME: why only then?

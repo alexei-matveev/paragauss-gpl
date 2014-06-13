@@ -64,7 +64,6 @@ use iounitadmin_module, only: write_to_output_units
 use ham_calc_module, only: ham_calc_main
 use comm_module
 use msgtag_module
-use initialization, only: initialize_with_input, finalize_geometry
 use grid_module, only: grid_main1, grid_close1
 use xc_hamiltonian, only: xc_setup, build_xc, xc_close
 use xcfit_hamiltonian, only: xcfit_setup, build_xcfit, xcfit_close
@@ -121,8 +120,8 @@ use qmmm_interface_module, only: slave_run
 #endif
 
 implicit none
-integer(kind=i4_kind) :: msgtag
-integer(kind=i4_kind) :: context
+integer (i4_kind) :: msgtag
+integer (i4_kind) :: context
 
 integer(i4_kind), parameter :: UNUSED_INT = -1
 real(r8_kind) :: UNUSED_REAL_1, UNUSED_REAL_2
@@ -132,18 +131,8 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    call comm_save_recv(comm_master_host, comm_any_message)
 
    msgtag = comm_msgtag()
-   DPRINT 'main_slave: received msgtag=',msgtag
-   select case (  msgtag  )
-   case( msgtag_init )
-      call initialize_with_input()
-      !
-      ! NOTE:  writing after the  call is  probably a  measure against
-      ! trying to write to a file without proper initialization first:
-      !
-      call say("initialize_with_input done")
-   case( msgtag_finalize_geometry )
-      call say("finalize_geometry")
-      call finalize_geometry()
+   DPRINT 'main_slave: received msgtag=', msgtag
+   select case (msgtag)
    case( msgtag_occ_levels)
       call say("receive_eigvec_occ")
       call sndrcv_eigvec_occ1()

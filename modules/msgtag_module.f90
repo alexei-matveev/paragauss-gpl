@@ -64,10 +64,10 @@ INTEGER_T :: msgtag_finito=                 5
 INTEGER_T :: msgtag_eigensolve=             6
 INTEGER_T :: msgtag_charge_fit=             7
 INTEGER_T :: msgtag_borders=                8
-INTEGER_T :: msgtag_finalize_geometry=      9
+!NTEGER_T :: msgtag_finalize_geometry=      9
 ! do not use INTEGER_T :: msgtag_filenames=             10
 INTEGER_T :: msgtag_commdata=              11
-INTEGER_T :: msgtag_init=                  12
+!NTEGER_T :: msgtag_init=                  12
 INTEGER_T :: msgtag_debugorbitals=         13
 !NTEGER_T :: msgtag_pcalc_pert_coeff=      14
 INTEGER_T :: msgtag_SendBackEig=           15
@@ -317,7 +317,7 @@ contains
     CMP(msgtag_borders)
     !CMP(msgtag_corr)
     CMP(msgtag_commdata)
-    CMP(msgtag_init)
+    !MP(msgtag_init)
     CMP(msgtag_debugorbitals)
     !MP(msgtag_bounds)
     CMP(msgtag_SendBackEig)

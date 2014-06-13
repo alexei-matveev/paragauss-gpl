@@ -597,7 +597,7 @@ contains
     !** End of interface ****************************************
 
     integer(kind=i4_kind)   :: i,alloc_stat
-    real (r8_kind), allocatable, target :: grad_prim(:)
+    real (r8_kind), allocatable :: grad_prim(:)
 
     allocate(grad_intern(n_internal),grad_prim(n_primitive), STAT=alloc_stat)
     ASSERT(alloc_stat.eq.0)

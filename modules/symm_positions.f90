@@ -1940,6 +1940,13 @@ contains
                  unique_atoms(i_ua)%position(3,i_eq) / angstrom
          enddo
       enddo
+      ! This line matched  by the /^ -------/ perl  pattern is used in
+      ! the testsuite helper geom.pl to  detect the end of the section
+      ! while extracting  geometry summary.  Earlier  versions did not
+      ! print XYZ format, so the  marker should better remain here and
+      ! not further down:
+      write (output_unit, *) " "
+      write (output_unit, *) "-----------------------------------------------------------------------"
 
       write (output_unit, *) " "
       write (output_unit, *) "-- Geometry in xyz format ---------------------------------------------"
@@ -1956,7 +1963,6 @@ contains
                  unique_atoms(i_ua) % position(3, i_eq) / angstrom
          enddo
       enddo
-      write(output_unit,*)"-----------------------------------------------------------------------"
 
 1000  format('au         ',F5.1,2X,A4,2X,3(F11.6,7X))
 1100  format('angstrom   ',F5.1,2X,A4,2X,3(F11.6,7X))

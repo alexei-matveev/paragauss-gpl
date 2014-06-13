@@ -66,19 +66,15 @@ MINOR = .2
 # Maintenance number OR branch abbreviation (e.g. your initials):
 EXTRA = .1
 # Change or increment this:
-BUILD =
+BUILD = $(shell date +%Y%m%d)
 
-VERS = V$(MAJOR)$(MINOR)$(EXTRA)$(BUILD)
-
-# version for ttfs, read_operations, ( and get_mpi_config ):
-# scriptvers := $(VERS)
-scriptvers := V$(MAJOR)$(MINOR)
+VERS = V$(MAJOR)$(MINOR)$(EXTRA)-$(BUILD)
 
 #
 # The *printed* version of ParaGauss.  Use no spaces, or you will deal
 # with shell-escape sequences:
 #
-paragauss_vers = $(VERS)-$(shell date +%Y%m%d)
+paragauss_vers = $(VERS)
 
 
 # compile optimizer into PG:

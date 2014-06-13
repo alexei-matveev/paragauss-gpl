@@ -95,18 +95,15 @@ module  filename_module
   save
   !== Interrupt end of public interface of module =================
 
+  integer, parameter, private :: max_path = MAX_PATH
+
   !------------ Declaration of public variables -------------------
-  integer, parameter,  public :: filename_namelengthmax = MAX_PATH
+  integer, parameter, public :: filename_namelengthmax = max_path
 
-  character(len=filename_namelengthmax), public, protected ::&
-         data_dir                                  &
-       , sharedfs_dir                              &
-       , recover_dir                               &
-       , resp_dir
+  character (len=max_path), public, protected :: data_dir, &
+       sharedfs_dir, recover_dir, resp_dir
 
-  character(len=filename_namelengthmax), public, protected :: &
-         filename_outextension                     &
-       , input_name
+  character (len=max_path), public, protected :: input_name
 
   logical, public, protected :: filesystem_is_parallel = .FALSE.
 
@@ -123,13 +120,9 @@ module  filename_module
 
   public :: filename_tmpdir
 
-!ifdef _ITANIUM_NSK
-! public :: get_ttfs_env
-!endif
-
-  public :: inpfile!(name) ! returns full path to an input file
-  public :: outfile!(name) ! returns full path to an output file
-  public :: tmpfile!(name) ! returns full path to a temp file
+  public :: inpfile ! (name) -> path, returns full path to an input file
+  public :: outfile ! (name) -> path, returns full path to an output file
+  public :: tmpfile ! (name) -> path, returns full path to a temp file
 
 
   !================================================================
@@ -140,10 +133,10 @@ module  filename_module
 
   integer, private :: my_hostindex = -1 ! initialized in filename_setup()
 
-  character(len=filename_namelengthmax), private :: tmp_base ! rank non-specific
-  character(len=filename_namelengthmax), private :: tmp_dir ! rank-specific
-  character(len=filename_namelengthmax), private :: output_dir ! rank-specific
-  character(len=filename_namelengthmax), private :: input_dir ! shared by all workers
+  character (len=max_path), private :: tmp_base ! rank non-specific
+  character (len=max_path), private :: tmp_dir ! rank-specific
+  character (len=max_path), private :: output_dir ! rank-specific
+  character (len=max_path), private :: input_dir ! shared by all workers
 
   !----------------------------------------------------------------
   !------------ Subroutines ---------------------------------------
@@ -161,7 +154,7 @@ contains
     !
     implicit none
     character(len=*), intent(in)          :: name
-    character(len=filename_namelengthmax) :: path ! result
+    character(len=max_path) :: path ! result
     ! *** end of interface ***
 
     character(len=4) :: xxxx
@@ -193,7 +186,7 @@ contains
     !
     implicit none
     character(len=*), intent(in)          :: name
-    character(len=filename_namelengthmax) :: path ! result
+    character(len=max_path) :: path ! result
     ! *** end of interface ***
 
     ! call filename_setup() first:
@@ -218,7 +211,7 @@ contains
     !
     implicit none
     character(len=*), intent(in)          :: name
-    character(len=filename_namelengthmax) :: path ! result
+    character(len=max_path) :: path ! result
     ! *** end of interface ***
 
     !
@@ -331,13 +324,6 @@ contains
       input_name = "input"
     endif
 
-    ! ask environment variable "TTFSOUTEXTENSION" that should describe
-    ! ending appended to files written to output_dir
-    if( .not. env("TTFSOUTEXTENSION", filename_outextension) ) then
-      ! must die, dont warn anymore ...
-      filename_outextension = "" ! no extension
-    endif
-
     ! ask environment variable   "TTFSRESPDIR"
     !    -> Final output from response module, i.e.
     !       binary interface-integral-files for response
@@ -357,7 +343,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     character(len=*),intent(in)           :: i_name
     integer, intent(in)                   :: hostindex
-    character(len=filename_namelengthmax) :: o_name ! <<< result
+    character(len=max_path) :: o_name ! <<< result
     !** End of interface *****************************************
 
     character(len=4) :: char
@@ -365,7 +351,7 @@ contains
     write(char,'(I4)') hostindex
     char = adjustl(char)
 
-    o_name = repeat(" ",filename_namelengthmax)
+    o_name = repeat(" ",max_path)
     o_name = trim(i_name) //"/"//trim(char) ! // "/"
   end function append_hostindex
   !*************************************************************
@@ -384,13 +370,12 @@ contains
     call comm_bcast(output_dir)
     call comm_bcast(input_dir)
     call comm_bcast(input_name)
-    call comm_bcast(filename_outextension)
     call comm_bcast(resp_dir)
   end subroutine bcast
 
 #endif
 
-  character(len=filename_namelengthmax) function filename_tmpdir(hostindex)
+  character(len=max_path) function filename_tmpdir(hostindex)
     !  Purpose: returns name of tmpdir associated with processor
     !  with index hostindex
     !------------ Declaration of formal parameters ---------------
@@ -479,7 +464,7 @@ contains
     character(LEN=*),intent(inout) :: val
     logical                        :: def !<<<result
     ! *** end of interface **
-    character(len=filename_namelengthmax) :: work_dir
+    character(len=max_path) :: work_dir
     integer :: namelength,i,nn
     integer(kind=i4_kind) :: ttfs_env
     character(len=200) :: input_line

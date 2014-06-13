@@ -899,11 +899,10 @@ contains
    !*************************************************************
 
    !*************************************************************
-   subroutine symmetry_data_set( n_irrep, n_proj_irrep, point_group, &
-        n_spin, totalsymmetric_irrep, index, dim, dim_proj, partner, partner_proj,&
-        name, name_proj, pseudo, proj, jz  &
-        , spin_orbit &
-        )
+   subroutine symmetry_data_set (n_irrep, n_proj_irrep, point_group, &
+        n_spin, index, dim, dim_proj, partner, partner_proj, &
+        name, name_proj, pseudo, proj, jz, &
+        spin_orbit)
      ! purpose: sets the private data acordind to arguments passed.
      ! if n_irrep is given, allocation is done
      ! the arguments dim, partner and name refer to irrep index
@@ -912,7 +911,6 @@ contains
      integer, intent(in), optional :: n_proj_irrep
      character(len=*),    optional :: point_group
      integer, intent(in), optional :: n_spin
-     integer, intent(in), optional :: totalsymmetric_irrep
      integer, intent(in), optional :: index
      logical, intent(in), optional :: proj
      ! the following arguments refer to irrep index
@@ -962,9 +960,6 @@ contains
      if ( present(n_spin) ) then
         ssym%n_spin  = n_spin
         n_spin_set = .true.
-     endif
-     if ( present(totalsymmetric_irrep) ) then
-        ssym%totalsymmetric_irrep  = totalsymmetric_irrep
      endif
      if ( present(index) ) then
         if (present(dim).or.present(partner).or.present(name).or.present(pseudo)) then

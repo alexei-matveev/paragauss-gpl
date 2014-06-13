@@ -299,63 +299,62 @@ contains
     !** End of interface *****************************************
 
     !
-    ! ask environment variable "TTFSTMP" that should describe
-    ! directory for scratch data. If "TTFSSHAREDFS" is set,
-    ! assume tmp_dir is shared among all nodes:
+    ! Ask   environment  variable   "TTFSTMP"  that   should  describe
+    ! directory  for scratch  data. If  "TTFSSHAREDFS" is  set, assume
+    ! tmp_dir is shared among all nodes:
     !
     filesystem_is_parallel = .false.
     sharedfs_dir = "/do/not/use"
 
-    if ( env("TTFSTMP", tmp_base) ) then
+    if (env ("TTFSTMP", tmp_base)) then
        ! fine, nothing to be done
-    else if( env("TTFSSHAREDFS", sharedfs_dir) ) then
+    else if (env ("TTFSSHAREDFS", sharedfs_dir)) then
        filesystem_is_parallel = .true.
        tmp_base = sharedfs_dir
     else
-       WARN("TTFSTMP not set, using ." )
+       WARN ("TTFSTMP not set, using ." )
        tmp_base = "."
     endif
 
-    ! ask environment variable "TTFSINPUTDIR" that should describe
+    ! Ask  environment variable  "TTFSINPUTDIR"  that should  describe
     ! directory where input data are originally stored
-    if( .not. env("TTFSINPUTDIR", input_dir) )then
-      WARN("TTFSINPUTDIR not set, using ." )
+    if (.not. env ("TTFSINPUTDIR", input_dir)) then
+      ! WARN ("TTFSINPUTDIR not set, using .")
       input_dir = "."
     endif
 
-    ! ask environment variable "TTFSOUTPUTDIR" that should describe
+    ! Ask  environment variable  "TTFSOUTPUTDIR" that  should describe
     ! directory where output data will finally be copied to
-    if( .not. env("TTFSOUTPUTDIR", output_dir) )then
-      WARN("TTFSOUTPUTDIR not set, using ." )
+    if (.not. env ("TTFSOUTPUTDIR", output_dir)) then
+      ! WARN ("TTFSOUTPUTDIR not set, using ." )
       output_dir = "."
     endif
 
-    ! ask environment variable "TTFSDATADIR" that should describe
+    ! Ask  environment  variable  "TTFSDATADIR" that  should  describe
     ! directory for intermediate files living longer than the job
-    if( .not. env("TTFSDATADIR", data_dir) )then
-      WARN("TTFSDATADIR not set, using "//trim(tmp_base))
+    if (.not. env ("TTFSDATADIR", data_dir)) then
+      ! WARN ("TTFSDATADIR not set, using "//trim(tmp_base))
       data_dir = tmp_base ! FIXME: or rather output_dir?
     endif
 
-    ! ask environment variable "TTFSRECOVERDIR" that should describe
+    ! Ask environment  variable "TTFSRECOVERDIR" that  should describe
     ! directory where scf recover files are stored
-    if( .not. env("TTFSRECOVERDIR", recover_dir) )then
-      WARN("TTFSRECOVERDIR not set, using "//trim(input_dir) )
+    if (.not. env ("TTFSRECOVERDIR", recover_dir)) then
+      ! WARN ("TTFSRECOVERDIR not set, using "//trim(input_dir))
       recover_dir = input_dir
     endif
 
-    ! ask environment variable "TTFSINPUT" that is name of input file
-    if( .not. env("TTFSINPUT", input_name) )then
-      WARN("TTFSINPUT not set, using 'input'")
+    ! Ask environment variable "TTFSINPUT" that is name of input file
+    if (.not. env ("TTFSINPUT", input_name)) then
+      ! WARN ("TTFSINPUT not set, using 'input'")
       input_name = "input"
     endif
 
-    ! ask environment variable   "TTFSRESPDIR"
-    !    -> Final output from response module, i.e.
-    !       binary interface-integral-files for response
-    !       program package RESTDD
-    if( .not. env("TTFSRESPDIR", resp_dir) ) then
-      WARN("TTFSRESPDIR not set, using "//trim(tmp_base))
+    ! Ask  environment  variable "TTFSRESPDIR"  ->  Final output  from
+    ! response  module,   i.e.   binary  interface-integral-files  for
+    ! response program package RESTDD
+    if (.not. env ("TTFSRESPDIR", resp_dir)) then
+      ! WARN ("TTFSRESPDIR not set, using "//trim(tmp_base))
       resp_dir = tmp_base
     endif
   end subroutine guess_environment
@@ -425,13 +424,13 @@ contains
    end subroutine filename_shutdown
   !*************************************************************
 
-  recursive function env(var, val) result(def)
+  recursive function env (var, val) result (def)
     !
     !
     implicit none
-    character(LEN=*),intent(in)    :: var
-    character(LEN=*),intent(inout) :: val
-    logical                        :: def !<<<result
+    character (len=*), intent (in) :: var
+    character (len=*), intent (inout) :: val
+    logical :: def              ! result
     ! *** end of interface **
 
     integer :: stat, length

@@ -1,0 +1,2 @@
+perl -p -e 's/save_eigenvec\s*=\s*(f|false|t|true)//i' input>inputT
+perl -p -e 's/&recover_options/&recover_options save_eigenvec=t/i' inputT>input

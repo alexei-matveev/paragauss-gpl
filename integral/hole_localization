@@ -1,0 +1,7 @@
+sed '/&OCCUPATION/a\
+    HOLE_LOCALIZATION  = t\
+    N_HOLES            =          0' input>inputT
+mv inputT input
+echo  #    List of Holes                 #
+echo  # index   irrep   spin    occ
+echo  #     1       1       1    0.000  # Hole No.   1

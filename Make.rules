@@ -1,0 +1,165 @@
+#-*- makefile -*-
+#
+# ParaGauss, a program package for high-performance computations
+# of molecular systems
+# Copyright (C) 2014
+# T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+# M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+# A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+# T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+# M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+# M. Roderus, N. Rösch
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as published
+# by the Free Software Foundation [1].
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Please see the accompanying LICENSE file for further information.
+#
+
+vpath %.h   $(BASEDIR)/include
+vpath %.inc $(BASEDIR)/include
+
+mpif.h:
+	touch $(BASEDIR)/include/mpif.h
+fxdr.inc:
+	touch $(BASEDIR)/include/fxdr.inc
+
+
+mkdepf90         = $(BINDIR)/mkdepf90
+ifeq ($(UPPERCASE.mod),1)
+	mkdepf90_options = -uc
+endif
+byproduct_build  = $(BINDIR)/byproduct_build
+remove          ?= rm
+
+ifeq ($(MAKECMDGOALS),clean)
+  nodeps = 1
+endif
+
+ifneq ($(nodeps),1)
+include $(f90objs:.o=.m.dep)
+include $(f90objs:.o=.o.dep)
+include $(cobjs:.o=.d)
+endif
+
+#
+# How to build dependencies for Fortran objects:
+#
+%.o.dep %.m.dep: %.$(src_ext)
+	$(mkdepf90) $(mkdepf90_options) -src $< -objdir $(@D) -mdeps $*.m.dep -odeps $*.o.dep
+
+.SECONDARY: $(f90objs:.o=.$(src_ext))
+#.SECONDARY:
+#.INTERMEDIATE: $(f90objs:.o=.$(src_ext))
+
+#
+# How to build dependencies for C objects:
+#
+%.d: %.c
+	$(CC) -MT $(@:.d=.o) -MM $(<) > $(@)
+
+# put @ at the beginning of a command
+# to reduce verbosity
+
+# how to preprocess sources:
+%.$(src_ext) : %.f
+	cp -p $< $@
+
+%.$(src_ext) : %.f90
+	$(f90_fpp)
+
+# how to compile Fortran sources:
+%.o : %.f
+	$(f_compile)
+
+%.o : %.$(src_ext) #%.f90
+	$(f90_compile)
+
+# how to compile C sources:
+%.o : %.c
+	$(c_compile)
+
+# for quick-hacks: recompile without
+# rebuild of outdated prerequisites:
+.PHONY: %.compile compile
+%.compile :
+	rm -f $*.o
+	rm -f $*.$(src_ext)
+	$(MAKE) nodeps=1 $*.o
+
+compile :
+	$(MAKE) nodeps=1
+
+define f90_fpp
+$(FPP) $(FPPOPTIONS) $< $*.$(src_ext)
+endef
+
+# compile these with F90ALTFLAGS:
+$(f90objs_altflags) : altflags=1
+
+# the rest with F90FLAGS
+%.o                 : alflags=0
+
+# debug targets
+$(debug_targets) : DEBUG=1
+
+# NOOPT targets
+$(noopt_targets) : NOOPT=1
+
+define f90_do_compile
+( cd $(@D); $(FC) $(FFLAGS) $(INCLUDE) -c $(*F).$(src_ext) )
+endef
+
+# command to compare if MOD-files have changed:
+# Intel seems to store "random" number at bytes 45:46 (decimal)
+# use "cmp -s -i 46" in that special case
+ifndef CMPMOD
+CMPMOD = cmp -s
+endif
+
+define f90_compile
+$(byproduct_build) -bld '$(f90_do_compile)' -provides '$@ $(byproduct)' -cmp '$(CMPMOD)' -quiet
+endef
+
+define f_compile
+(cd $(@D); $(F77) $(FBASEFLAGS) $(F90FLAGS) $(INCLUDE) -c $(<F) )
+endef
+
+define c_compile
+( cd $(@D); rm -f $(@F) ; \
+$(CC) -c $(CCFLAGS) $(CINCLUDE) $(<F) -o $(@F); \
+test -f $(@F) )
+endef
+
+# .f.doc:
+# 	perl $(BINDIR)/make_interface.perl $<
+
+# .fp.doc:
+# 	perl $(BINDIR)/make_interface.perl $<
+
+# .f90.doc:
+# 	perl $(BINDIR)/make_interface.perl $<
+
+##### CHECK DEPENDENCIES (old, and the only way) #####
+objlist =       objlist.makedependent
+depfile =       Dependencies.inc
+makedependent = $(BINDIR)/makedependent -l -n -imd
+#
+# type 'make chkdepend' to CHECK dependencies
+# 
+chkdepend $(depfile):
+	rm -f $(objlist)
+	@echo $(f90objs) > $(objlist)
+	rm -f $(depfile)
+	$(makedependent) > $(depfile)
+
+# do not include $(depfile)
+

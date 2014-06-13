@@ -1,0 +1,4 @@
+sed '/&MAIN_OPTIONS/a\
+ DIRECTACCESS_INTEGRALS = t \
+ QUADRUPELS_RECLENGTH  =         32 ' input>inputT
+mv inputT input

@@ -1,0 +1,13 @@
+cp trace_output trace_output_before_save_reg_ref
+perl -p -e 's/operations_make_reg_reference\s*=\s*(false|f)/OPERATIONS_MAKE_REG_REFERENCE = TRUE/i; \
+            s/n_iterations\s*=\s*\d+/N_ITERATIONS = 3/i; \
+            s/qm_interfaced_mode\s*=\s*(false|f)/QM_INTERFACED_MODE = TRUE/i; \
+            s/basic_action\s*=\s*0/BASIC_ACTION = 1/i; \
+            s/make_epe_reference\s*=\s*(true|t)/MAKE_EPE_REFERENCE = FALSE/i; \
+            s/use_epe_reference\s*=\s*(true|t)/USE_EPE_REFERENCE = FALSE/i; \
+            s/use_pgdata\s*=\s*(true|t)/USE_PGDATA = FALSE/i' $1.epe > epe.input
+rm reg_reference
+perl -p -e 's/operations_epe_lattice\s*=\s*(false|f)/OPERATIONS_EPE_LATTICE = TRUE/i' input > temp_input
+mv temp_input input
+touch save_reg_reference\ step\ executed
+

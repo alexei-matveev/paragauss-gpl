@@ -1,0 +1,16 @@
+sed 's/operations_make_reg_reference=t/operations_make_reg_reference=f/g' $1.epe \
+|sed 's/region_I_output=f/region_I_output=t/g'  \
+|sed 's/n_iterations=3/n_iterations=99/g'  \
+|sed 's/n_iterations = 3/n_iterations=99/g' \
+|sed 's/qm_interfaced_mode=t/qm_interfaced_mode=f/g' \
+|sed 's/basic_action=0/basic_action=1/g'  \
+|sed 's/make_epe_reference=t/make_epe_reference=f/g' \
+|sed 's/use_epe_reference=t/use_epe_reference=f/g'  \
+|sed 's/periodic_optimization=f/periodic_optimization=t/g' \
+|sed 's/use_pgdata=t/use_pgdata=f/g' >epe_temp_input
+mv epe_temp_input $1.epe
+sed 's/OPERATIONS_Epe_lattice = f/OPERATIONS_EPE_LATTICE = t/g' input \
+|sed 's/OPERATIONS_EPE_LATTICE = f/OPERATIONS_EPE_LATTICE = t/g' \
+|sed 's/OPERATIONS_epe_lattice = f/OPERATIONS_EPE_LATTICE = t/g' > temp_input
+mv temp_input input
+

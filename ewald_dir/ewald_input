@@ -1,0 +1,80 @@
+#The [input-key]'s may be in the arbitrary order, any other words, except for
+#described [input_keys]/keys will be omitted
+
+ Simbol # is used only for convenience as comment (not mandatory)
+
+#Task
+[task]
+make_ewald_array
+
+#Definition of crystal lattice : lattice_vectors/{units[xyz,angstrem]}
+[lattice_vectors]
+angstrem
+     002.1040000000   02.1040000000  000.0000000000 
+     002.1040000000  -02.1040000000  000.0000000000 
+     000.0000000000  000.0000000000 -100.0000000000 
+
+#Definition of the unit cell
+[atom_positions]
+[n_atoms_in_cell]
+12
+xyz_angstrem
+Mg  2.1040000      0.0000000      0.0482211000   2.0000000000   
+O   0.0000000      0.0000000      0.0452343000  -2.0000000000   
+O   2.1040000      0.0000000     -2.0673344000  -2.0000000000    
+Mg  0.0000000      0.0000000     -2.0676832000   2.0000000000   
+Mg  2.1040000      0.0000000     -4.1903844000   2.0000000000  
+O   0.0000000      0.0000000     -4.1904716000  -2.0000000000    
+O   2.1040000      0.0000000     -6.3128602000  -2.0000000000    
+Mg  0.0000000      0.0000000     -6.3129505000   2.0000000000  
+Mg  2.1040000      0.0000000     -8.4356513000   2.0000000000  
+O   0.0000000      0.0000000     -8.4359978000  -2.0000000000    
+O   2.1040000      0.0000000    -10.5485672000  -2.0000000000    
+Mg  0.0000000      0.0000000    -10.551554900    2.0000000000  
+[n_cluster_atoms]
+4
+O   0.0000000      0.0000000      0.0452343000
+Mg  2.1040000      0.0000000      0.0482211000
+O   2.1040000      0.0000000     -2.0673344000
+Mg  0.0000000      0.0000000     -2.0676832000
+
+#The desciption of PC-array to generate : pc_array/{units...}/R_max_pc {value}
+[pc_array]
+a.u.
+R_max_pc 20.0
+
+# Ewald summation parameter : ewald_parameter/{value}
+[ewald_parameter]
+0.1
+
+#The symmetry of main_screep_sphere axes : main_aes_order/{one of C3, C4}
+[main_axes_order]
+C4
+
+#The approximate estimate for the number of 
+# points on SCREEP-sphere : number_of_screep_points/{N, arbitrary integer}
+[number_of_screep_points]
+128
+
+#The direction of main sphere axes : main_axes_direction/{x y z, arb.units}
+[main_axes_direction]
+0.0  0.0  1.0
+
+#SCREEP-sphere Radius : r_screep/{value, a.u. only as yet}
+[r_screep]
+10.0d0
+
+#The position of SCREEP_sphere center: center_screep/{xyz, a.u }
+[center_screep]
+0.00000000 0.000000000 0.00000000
+
+#Allowed for <screep_procedure> : screep_pc, screep_multipole/{I-scheme lmax},
+#                                 screep_multipole_pc (combimed, not implemented}
+[screep_procedure]
+screep_pc
+3 9
+
+#The last input-key 
+[end_input]
+
+

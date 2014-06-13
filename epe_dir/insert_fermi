@@ -1,0 +1,22 @@
+cp -p input input.old
+sed '/&OCCUPATION/c\
+ &FERMI\
+    FERMI_GAUSS           =     t  \
+    FERMI_FERMI           =     FALSE \
+    FERMI_SINUS           =     FALSE \
+    FERMI_ENERGY_RANGE    =   0.20000 \
+    FERMI_SIGMA           =   0.00000 \
+    FERMI_CUTOFF          =   5.00000 \
+    FERMI_NEWTON_MAX      =       100 \
+    FERMI_ACCURACY        = 1.000E-10 \
+ \/FERMI (namelist may be dropped)\
+ &OCCUPATION\
+    FIXED_SPIN_DIFF    =      t\
+    MAGN_MOMENT        =   2.000000\
+    MIN_SPIN_DIFF      =  1.000E-03\
+    DIAG_OFFSET_EV     =   1.000000\
+    N_NONEMPTY_IRREPS  =          0\
+    HOLE_LOCALIZATION  =      f\
+    HOLE_UPDATE        =      FALSE\
+    N_HOLES            =          0 ' input >inputT
+mv inputT input

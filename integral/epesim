@@ -1,0 +1,12 @@
+#!/bin/csh
+set infile = $1
+setenv bbase `pwd`
+echo $bbase
+termin:
+epe $1
+sim c.$1
+if (-e conv) goto endd
+goto termin
+endd:
+
+

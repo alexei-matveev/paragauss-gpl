@@ -1,0 +1,98 @@
+&description
+ OPLS force field parameters for non bonded interactions
+ between QM solute subsystem and MM solvent (TIP4P water)
+
+ Atomic types and names
+ ---------------------------------------------------------
+ Type          Name for MolMech       Charge       OPLS
+                  input file                       types
+ ---------------------------------------------------------
+ H(tip4p)              H               0.52
+ O(tip4p)              O               0.00
+ q(tip4p)              OQ             -1.04
+
+ H(water)              HW              0.00(0.52)
+ O(water)              OW              0.00(-1.04)
+
+ H(H3O+)               H+              0.524
+ O(H3O+)               O+             -0.571
+
+ U(UO2_2+)             U               2.50
+ O(UO2_2+)             OU             -0.25
+
+ H(CH3,CH2,CH)         HC              0.00
+ CH2(C-CH2-C)          CH2             0.00          9
+ CH3(CH3-C)            CH3C            0.00          7
+ C(HCOO-)              COO             0.70          17
+  (RCOO-)
+  (HCOOH)                              0.50          1
+  (RCOOH)
+ CH3(H3C-O)            CH3O            0.25          63
+ O(-COO-)              OO             -0.80          18
+  (-C=O)                              -0.45          2
+ O(RCOOH)              OH             -0.58          ?
+  (RCOOCH3)                           -0.40          62
+ H(RCOOH)              HO              0.435         24
+ C(C6H6)               CA              0.00          11
+  (C6H6R)
+
+ Internal parameters for water has to be used to exclude 
+ interaction between atoms within molecule and keep internal 
+ energy equal to zero.
+ Only van der Waals interactions between QM and MM parts are 
+ used for QM/MM calculations. 
+ Real MM charges of QM atoms are zero. But if you want to
+ optimize by MM tip4p waters around fixed QM cluster QM
+ atoms has to cary definite charges which can be taken
+ from here.
+
+ Jorgencen, W., Tirado-Rives, J. JACS 1988, V110,P1657
+ Guilbaud, P., Wipff, G. J Mol Struc (Theochem) 1996, V366, P55
+ Singh, U. C., Brown, F. K., Bash, P. A., Kolmann, P. A.
+ JACS 1987, V109, P1607
+ Jorgensen, W. L., Chandrasekhar, J., Madura, J. D.,
+ Impey, R. W., Klein. M. L. J Chem Phys 1983, V79, P926
+&end 
+
+&types
+ H      H_      0.52
+ O      O_      0.00
+ OQ     O_     -1.04
+ HW     H_      0.00
+ OW     O_      0.00
+ H+     H_      0.00
+ O+     O_      0.00
+ U      U_      0.00
+ OU     O_      0.00
+ HC     H_      0.00
+ CH2    C_      0.00
+ CH3C   C_      0.00
+ COO    C_      0.00
+ CH3O   C_      0.00
+ OO     O_      0.00
+ OH     O_      0.00
+ HO     H_      0.00
+ CA     C_      0.00
+&end
+
+&tip4p
+ H   O   harm_str   0.0  0.9572
+ H   OQ  harm_str   0.0  0.9572
+ H   O   H  harm_bnd  0.0  104.52
+ H   OQ  H  harm_bnd  0.0  104.52
+&end
+
+&lennard_jones
+ O        3.15365  s   0.155
+ OW       3.15365  s   0.155
+ O+       1.70000  r   0.150
+ U        1.58000  r   0.400
+ OU       1.75000  r   0.200
+ CH2      3.90500  s   0.118
+ CH3C     3.91000  s   0.160
+ COO      3.75000  s   0.105
+ CH3O     3.80000  s   0.170
+ OO       2.96000  s   0.210
+ OH       3.00000  s   0.170
+ CA       3.75000  s   0.110
+&end

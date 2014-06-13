@@ -1,0 +1,284 @@
+%% LyX 1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[12pt,american]{article}
+\usepackage[T1]{fontenc}
+\usepackage[iso88595]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{setspace}
+\onehalfspacing
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Bold symbol macro for standard LaTeX users
+\newcommand{\boldsymbol}[1]{\mbox{\boldmath $#1$}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{setspace}
+
+
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+\usepackage{array}
+
+
+
+\usepackage{babel}
+\makeatother
+\begin{document}
+
+\title{The effective fragment potential (EFP) method in \\
+ \textsc{ParaGauss}.\\
+ (user manual)}
+
+
+\author{Aleksey M. Shor}
+
+\maketitle
+
+\section{Introduction}
+
+The effective fragment potential (EFP) approach belongs to the large
+family of hybrid QM/MM methods realized for studying chemical processes
+in solutions. The original version of the EFP method was derived within
+the quantum chemical package GAMESS in Mark S. Gordon's theoretical
+group of Iowa State University and oriented to model chemical reactions
+in water as solvent. There are two versions of the original EFP approach
+derived in frameworks of HF and DFT methods. The main feature of the
+EFP method is that all parameters used to describe solute-solvent
+and solvent-solvent interactions are based on QM reference data. Interesting
+persons can be referred to two original papers \cite{Day 96,Adamovic 03}
+to get full information on details of EFP method.
+
+The EFP approach in \textsc{ParaGauss} is based on DFT variant of
+original method. It means all EFP-DFT parameters were taken from GAMESS
+without any modifications. The EFP method uses a {}``so-called''
+fixed water model and in this part is similar to simple water models
+as TIPn or SPC. Structural parameters of water molecule are 0.9439
+\AA(O-H) and 106.7$^{\circ}$(H-O-H). These data are differed slightly
+from those presented in the paper \cite{Adamovic 03} but they are
+used in GAMESS code and therefore we also use them in our implementation.
+TIPn and SPC water models are very simple. They use from 3 to 5 centers
+(just point charges) to model electrostatic interaction and only center
+to model van der Waals interaction. On the contrary EFP water model
+is much complex. Five multipole centers (up to octopoles) are used
+to describe electrostatic interactions. Additional five centers are
+applied to describe polarization of water molecule. Four centers are
+used to mimic repulsion between waters themselves and EFP water and
+QM solute. Such complex definition of EFP water model allows to reproduce
+very accurately energetic and structural parameters of a system QM
+solute + EFP water solvent.
+
+
+\section{Running EFP calculations}
+
+As the EFP method belongs to QM/MM family to begin EFP calculations
+an user have to activate in \textsc{ParaGauss} \textbf{input} file
+QM/MM option in namelists \texttt{\textsc{OPERATIONS}} of \texttt{\textsc{TASKS}}.\\
+ \texttt{\textsc{\&OPERATIONS}}~\\
+ \texttt{\textsc{\ldots{}}}~\\
+ \texttt{\textsc{OPERATIONS\_QM\_MM\_NEW = TRUE}}~\\
+ \texttt{\textsc{\ldots{}}}~\\
+ \texttt{\textsc{/OPERATIONS}}\\
+ or\\
+ \texttt{\textsc{\&TASKS}}~\\
+ \texttt{\textsc{\ldots{}}}~\\
+ \texttt{\textsc{QM\_MM\_NEW = TRUE}}~\\
+ \texttt{\textsc{\ldots{}}}~\\
+ \texttt{\textsc{/TASKS}}\\
+ All other options which define calculations of energy, gradients
+or geometrical optimization are the same as in regular QM runs.
+
+The second step which has to be done is to include in \textbf{input}
+file the namelist \texttt{QMMM} and choose EFP as used QM/MM method.\\
+ \texttt{\&QMMM}~\\
+ \texttt{METHOD = {}``EFP''}~\\
+ \texttt{/QMMM}\\
+ The \texttt{QMMM} namelist should be included in \textbf{input} file
+after namelist \texttt{OPERATIONS} (or \texttt{TASKS}).
+
+In a usual manner an user have to define QM atoms. \textbf{Here one
+has to remember that the current implementation of EFP approach can
+be run just without symmetry (symmetry group C1)}.
+
+Just after specifying QM atoms EFP water molecules should be defined.
+The first EFP namelist is \texttt{EFP\_DATA}:\\
+ \texttt{\&EFP\_DATA}~\\
+ \texttt{N\_EFP = 0 ~~~~~~~~~~~~~~(default)}~\\
+ \texttt{FIXED\_REGION = {}``NO'' ~~~~(default), {}``EFP'',
+{}``QM''~}~\\
+ \texttt{N\_DENSITY\_UPDATES = 15 ~(default)~}~\\
+ \texttt{ENERGY\_CONV = 0.0000001 (default)~}~\\
+ \texttt{/EFP\_DATA}\\
+ The most important parameter in that namelist and only that has to
+defined explicitly is \texttt{N\_EFP}. It defines number of EFP waters
+in the system under study. \\
+ The remaining three parameters (\texttt{FIXED\_REGION}, \texttt{N\_DENSITY\_UPDATES}
+and \texttt{ENERGY\_CONV}) three possible variants of optimization
+of the QM/EFP system. The default task is the full optimization of
+the whole QM/EFP system (\texttt{FIXED\_REGION = {}``NO''}). Also
+it is possible to perform separate optimization of the QM(\texttt{FIXED\_REGION
+= {}``EFP''}) and EFP (\texttt{FIXED\_REGION = {}``QM''}) parts.
+To optimize the EFP part keeping the QM cluster fixed the exact frozen
+density approach is used. It means to reach the minimum of energy
+of just the EFP part optimization a user needs to recalculate periodically
+electronic density of the QM cluster. The number of density recalculation
+is defined by parameter \texttt{N\_DENSITY\_UPDATES}. The only parameter
+that controls the convergence of separate optimization of the EFP
+part is \texttt{ENERGY\_CONV}. That parameter defines the minimal
+deviation of the total QM/EFP energy after EFP optimization taking
+place between electronic density updates. The number of geometry steps
+of EFP optimization between QM density updates and convergence parameters
+are defined as usual by \textsc{ParaGauss} and Optimizer input files.\\
+ Just after the namelist \texttt{EFP\_DATA}, \texttt{N}th namelists
+\texttt{EFP\_WATER} have to follow:\\
+ \texttt{\&EFP\_WATER}~\\
+ \texttt{NAME1 = {}``O1''} or \texttt{{}``H2''}~\\
+ \texttt{COOR1 = XXX, YYY, ZZZ,}~\\
+ \texttt{NAME2 = {}``H2''} or \texttt{{}``O1''}~\\
+ \texttt{COOR2 = XXX, YYY, ZZZ,}~\\
+ \texttt{NAME3 = {}``H3''}~\\
+ \texttt{COOR3 = XXX, YYY, ZZZ}~\\
+ \texttt{/EFP\_WATER}\\
+ Here parameters \texttt{NAME1(2,3)} specify names of EFP water atoms.
+Parameters \texttt{COOR1(2,3)} define coordinates of water atoms.
+Atoms in EFP water have predefined names which cannot be changed.
+Oxygen is named \texttt{{}``O1''} and two hydrogen have names \texttt{{}``H2''}
+and \texttt{{}``H3''}. The valid order of water atoms within \texttt{EFP\_WATER}
+namelist is \texttt{{}``O1''}, \texttt{{}``H2''} and \texttt{{}``H3''}
+or \texttt{{}``H2''}, \texttt{{}``O1''} and \texttt{{}``H3''}.
+It is not easy to specify positions of EFP water atoms to satisfy
+its fixed structure. Fortunately program checks input structure of
+EFP water molecules and correct atomic positions to guaranty valid
+water structure. Therefore an user can define approximate positions
+of EFP water atoms. One also should takes into account that program
+changes coordinates of hydrogens leaving oxygen in user defined position.
+
+
+\section{Geometry optimization}
+
+To perform geometry optimization of hybrid QM/EFP system Cartesian
+coordinates are used. To use Cartesian optimization an user should
+activate parameter \texttt{CART\_COORDINATES} within namelist \texttt{COORDINATES}
+of \textbf{optimizer.input} file.\\
+ \texttt{\&COORDINATES}~\\
+ \texttt{CART\_COORDINATES = TRUE}~\\
+ \texttt{DELOCALIZED\_COORDINATES = FALSE}~\\
+ \texttt{ZMAT\_COORDINATES = FALSE}~\\
+ \texttt{/COORDINATES}\\
+ One also should know choosing EFP method for calculation will automatically
+activate Cartesian optimization.
+
+As usual to carry out structural optimization \textbf{gxfile} has
+to be used. The format of \textbf{gxfile} for Cartesian optimization
+is the same as for optimization in internal coordinates but in the
+first case an user is avoided to define Z matrix. Below the example
+of \textbf{gxfile} for EFP calculation of water trimmer is presented.
+
+\noindent \texttt{\footnotesize 1.00 ~~~~1.110389253612 ~~~~1.335976091545
+~~~~1.503212357197 ~1 1 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize 8.00 ~~~~2.658289496409 ~~~~1.552195249838
+~~~~0.534740103514 ~2 2 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize 1.00 ~~~~4.025949957238 ~~~~1.505205277090
+~~~~1.756694213035 ~3 3 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize 1.02 ~~~-1.945297856212 ~~~-1.089728128238
+~~~~0.671226075878 ~4 4 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize 8.01 ~~~-2.072949963024 ~~~-0.054448293629
+~~~~2.118044948249 ~4 4 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize 1.03 ~~~-3.532436421078 ~~~~0.948237221584
+~~~~1.903789737485 ~4 4 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize 1.02 ~~~~1.546238534532 ~~~-1.108404235283
+~~~-1.741414301468 ~5 5 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize 8.01 ~~~~0.169554461403 ~~~-2.142549670753
+~~~-2.206890863366 ~5 5 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize 1.03 ~~~-0.043584534092 ~~~-1.950616952037
+~~~-3.967322017812 ~5 5 ~~0 0 0 ~~0 0 0} ~\\
+ \texttt{\footnotesize ~-1.0 ~~~~0.000000000000 ~~~~0.000000000000
+~~~~0.000000000000 ~0 0 ~~0 0 0 ~~0 0 0 0}{\footnotesize \par{}}{\footnotesize \par}
+
+Here the first three lines are QM water. The last six lines describe
+two EFP water molecules. As in \textsc{ParaGauss} \textbf{input} file
+in \textbf{gxfile} EFP water atoms have predefined names: 8.01 (oxygen),
+1.02 and 1.03 (hydrogens). The same \textbf{gxfile} can be used for
+all three variants of optimization of the QM/EFP system. But \textbf{Hessian}
+files are not the same (\textbf{just remember that}).
+
+
+\section{Generation of the second water shell utility \protect \protect \\
+ (solute\_in\_water)}
+
+The EFP method is used to study processes in water as the solvent.
+Usually the solute and the first shell of the solvent molecules (
+water) are treated on QM level. The the first shell of waters can
+be prepared by hand as hardly exceed ten molecules with well definite
+orientations. But already the second water shell contains some tens
+molecules whose orientations in a space are quite random.
+
+To make his work easier one can use utility {}``\textbf{solute\_in\_water}''
+to distribute water molecules around the QM cluster which can contains
+not only the solute but also waters in the first solvent shell. The
+algorithm to distribute water molecules is quite simple. The program
+has internally stored bulk of water - 216 water molecules within the
+cubic box ($18\times18\times18$ \AA$^{3}$) that actually is the
+periodic cell. User puts his QM cluster in the center of the cube
+(actually the program does it) and the program chooses just those
+water molecules that do not overlap QM cluster (sum of van der Waals
+atomic radii is used as criteria of overlapping) and that are closer
+to QM cluster than the user defined outer radius of the shell.
+
+An input file for {}``\textbf{solute\_in\_water}'' utility is quite
+simple:\\
+ \texttt{R=R\_O{[}; N=N\_w; S=}\texttt{\underbar{TIP}} \texttt{(or
+EFP); W=}\texttt{\underbar{A}} \texttt{(or M); L=}\texttt{\underbar{C}}
+\texttt{(or D){]}}\\
+ \texttt{N\_qm}\\
+ \texttt{NAME\_1~~~~~X\_1~~~~~Y\_1~~~~~Z\_1}~\\
+ \texttt{NAME\_2~~~~~X\_2~~~~~Y\_2~~~~~Z\_2}\\
+ \texttt{.........................}~\\
+ \texttt{NAME\_N\_qm~~X\_N\_qm~~Y\_N\_qm~~Z\_N\_qm}\\
+ The first line here is the list of input parameters separated by
+{}``\texttt{;}'' and affecting the number and distribution of solvent
+water molecules within the shell:\\
+ \texttt{R} - the outer radius of the water shell (\AA); \\
+ \texttt{N} - the number of water molecules within the water shell;\\
+ \texttt{S} - the solvent type: either {}``\texttt{TIP}'' (default)
+or {}``\texttt{EFP}''. In the first case user chooses the box containing
+TIP4P waters, otherwise the box will be filled by EFP waters;\\
+ \texttt{W} - defines rule to remove water molecules. {}``\texttt{A}''
+means that water molecule will be removed if just one its \textbf{A}toms
+overlaps the QM cluster (default). On the contrary {}``\texttt{M}''
+defines water excluding if all atoms of a \textbf{M}olecule overlap
+the QM cluster .\\
+\texttt{L -} defines location of the QM cluster within water box.
+The default parameter is {}``\texttt{C}'' which means that the QM
+cluster will be located in the \textbf{C}enter of the box. To put
+the QM cluster in a ran\textbf{D}om position the letter {}``\texttt{D}''
+has to be chosen.
+
+Any of parameters \texttt{N}, \texttt{S}, \texttt{W} and \texttt{L}
+can be dropped. In this case default values will be applied. Only
+parameter that cannot be dropped is the outer shell radius (\texttt{R}).
+
+The second input line defines number of QM atoms (\texttt{N\_qm}).
+And the next \texttt{N\_qm} lines define atomic names and Cartesian
+coordinates (\AA) of the QM cluster.
+
+To execute the utility user just should write in a terminal window:
+\textbf{\textit{/path/solute\_in\_water < input}}.
+
+As result three new files will be created in the current directory:
+\texttt{QM\_shell.xyz} - usual XYZ file, \texttt{QM\_shell.inp} -
+the part of \textsc{ParaGauss} input file, and \texttt{gx.QM\_shell}
+- gxfile.
+
+\begin{thebibliography}{1}
+\bibitem{Day 96}Day P. N., Jensen J. H., Gordon M. S., Webb S. P., Stevens W. J.,
+Krauss M., Garmer D., Basch H., Cohen D. J Chem Phys, 1996, V 105,
+P. 1968-1986. 
+\bibitem{Adamovic 03}Adamovic I., Freitag M. A., Gordon M. S. J Chem Phys, 2003, V. 118,
+P. 6725-6732. \end{thebibliography}
+
+\end{document}

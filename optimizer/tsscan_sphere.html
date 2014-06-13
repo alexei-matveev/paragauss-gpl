@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Linux)">
+	<META NAME="CREATED" CONTENT="20080206;15553000">
+	<META NAME="CHANGED" CONTENT="20080207;11175300">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21.59cm 27.94cm; margin: 2cm }
+		P { margin-bottom: 0.21cm }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P STYLE="margin-bottom: 0cm; line-height: 150%"><B><I>Transition
+state scan sphere model option</I> </B><SPAN STYLE="font-weight: medium">is
+to be used to locate approximately TS between product and reactant.
+Geometries of reactant and product  should be located in gx.reactant
+and gx.product files (use of  'ln -s'  command is recommended).</SPAN></P>
+<P STYLE="margin-bottom: 0cm; font-weight: medium; line-height: 150%">
+	To generate <B><I>initial guess geometry</I></B> one sets in PG
+input <I>&amp;tasks task='optimizer' ... / </I><SPAN STYLE="font-style: normal">and
+in optimizer.input  </SPAN><I>&amp;OPERATIONS ... optimization=f,
+tsscan_mix=t .../. </I><SPAN STYLE="font-style: normal">Not that for
+running this   job a </SPAN><SPAN STYLE="font-style: normal">regular
+starting gx-file should be present. After this run a <B><I>gx.rp_mix</I></B>
+file will be generated with intermediate values of internal variables
+(80% of product and 20% of reactant). If one sets here </SPAN><I>optimization=t
+</I><SPAN STYLE="font-style: normal">than</SPAN><I> </I><SPAN STYLE="font-style: normal">initial
+geometry given in regular gx-file will be varied to geometry where
+all inter-atomic distances have intermediate values (again 80% of
+product and 20% of reactant). Resulting geometry is in the gxfile or
+in the  last optimizer/gx.out.*  file. The key  </SPAN><I>tsscan_mix
+</I><SPAN STYLE="font-style: normal">is set to</SPAN><SPAN STYLE="font-style: normal">
+false for all other tasks of optimizer module.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; font-weight: medium; line-height: 150%">
+	To find a minimum energy point on a sphere (defined in the internal
+coordinates) with a radius equal to the distance from reactant to the
+current geometry point one sets in PG input <I>&amp;tasks
+task='hess,geo'</I>.../ or <I>&amp;tasks task='nohess,geo'</I>.../ 
+and  in optimizer.input <I>&amp;OPERATIONS ... optimization=t,
+tsscan_sphere=t .../. </I><SPAN STYLE="font-style: normal">Constrained
+optimization is</SPAN><I> </I>undertaken which preserves a fixed
+distance to reactant (optimization of n-1 variables). In <B><I>general
+case</I></B> this distance is defined via sum over all optimized
+internal variables. In a <B><I>recommended specific case</I></B> only
+variables defined via negative values of connectivity indexes of
+z-matrix (first 3  field in gx-file internal variables
+specification). In optimization protocol  one can find calculated
+values for <I>grad_max_sphere</I>,     <I>grad_mean_sphere</I> and
+for <I>dEdR_sphere</I> first order derivatives. Optimization stops
+when  values for  <I>grad_max_sphere</I> and  <I>grad_mean_sphere</I>
+are below convergence criteria for gradients as default value for '
+<I>&amp;CONVERGENCE max_dedr_sphere /'</I> is set to 1.0 and should
+be satisfied for any reasonable geometry. If it is set to a small
+sensible value than after constrained optimization  steps in
+direction to reactant will be maid until gradients become larger then
+the doubled values of gradient convergence criteria and new
+constrained optimization will be undertaken. This actions are repeat
+determining reaction path. In optimizer/flepo.* output files energies
+corresponding to constrained minimization are marked with label <I>'<B>T</B>'</I>
+and those to steps along reaction path with <I>'<B>F</B>'</I> 
+</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm; font-style: normal; font-weight: medium; line-height: 150%">
+Total energy                           : -272.701342110414 T</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm; font-style: normal; font-weight: medium; line-height: 150%">
+Total energy                           : -272.701371054618 F</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm; font-weight: medium; line-height: 150%">
+<SPAN STYLE="font-style: normal">Transition state should be located
+between points were  <I>dEdR_sphere </I>change sign (see also profile
+defined by final points of constrained optimizations. Success  of the
+search is dependent on choice of internal variables defining
+constrained optimization sphere which are  to be selected with due
+consideration. After approximate location of TS exact Hessian have to
+be calculated and finally  direct  local  TS search procedure  have
+to be initiated, </SPAN><I>&amp;OPERATIONS ts_search=t ... /.</I></P>
+</BODY>
+</HTML>

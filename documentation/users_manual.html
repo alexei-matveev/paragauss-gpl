@@ -1,0 +1,3955 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN"
+  "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<TITLE>ParaGauss User's Manual</TITLE>
+<style type="text/css">
+ <!--
+   .so { background: #DEF; }
+ //-->
+</style>
+</HEAD>
+
+
+
+<BODY BGCOLOR="#ffffff">
+<FONT SIZE=3>
+
+
+<B><FONT SIZE=8>
+<P ALIGN="CENTER">
+ParaGauss User's Manual
+</P>
+</FONT></B>
+<BR>
+<FONT SIZE=4><I>
+<P ALIGN="CENTER">
+Th Belling, U Birkenheuer, S Kr&uuml;ger, M Mayer, F N&ouml;rtemann,
+M Staufer, N R&ouml;sch
+</P>
+<BR>
+<P ALIGN="CENTER">
+ParaGauss Version V19
+</P>
+<BR>
+<P ALIGN="CENTER">
+Version 1, 05/02/1998
+</P>
+</FONT></I>
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="Contents"></A>
+<B><FONT SIZE=7>Contents</FONT></B>
+</A>
+</H1>
+
+
+<OL type="A"><FONT SIZE=4>
+<li><a href="#Read_Me_First">Read Me First</a>
+<LI><A HREF="#How_to_run_ParaGaus">How to run ParaGaus</A>
+  <OL type="I"><FONT SIZE=3>
+  <LI><A HREF="#ttfs_script">The ttfs Script</A>
+    <OL><FONT SIZE=2>
+    <LI><A HREF="#ttfs_usage">usage</A>
+    <LI><A HREF="#ttfs_files">location and naming of input and output files</A>
+    <LI><A HREF="#ttfs_various">various useful options</A>
+    <LI><A HREF="#ttfs_debug">debug options</A>
+    <LI><A HREF="#ttfs_versions">selecting versions of called programs</A>
+    <LI><A HREF="#ttfs_lcgto">previous execution of old lcgto</A>
+    <LI><A HREF="#ttfs_exit_status">exit status</A>
+    <LI><A HREF="#ttfs_examples">examples</A>
+    </FONT></OL>
+  <LI><A HREF="#Input_and_Output_Files">Input and Output Files</A>
+    <OL><FONT SIZE=2>
+    <LI><A HREF="#Input_Files">Input Files</A>
+    <LI><A HREF="#Output_Files">Output Files</A>
+    <LI><A HREF="#Intermediate_Files">Intermediate Files</A>
+    <LI><A HREF="#Runtime_control_Files">Runtime control Files</A>
+    </FONT></OL>
+  <LI><A HREF="#Calculation_Modes">Calculation modes</A>
+    <OL><FONT SIZE=2>
+    <LI><A HREF="#Standard_mode">Standard mode</A>
+    <LI><A HREF="#Scalar_Relativity">Scalar Relativity</A>
+    <LI><A HREF="#Spin_Orbit">Spin-Orbit</A>
+    </FONT></OL>
+  <LI><A HREF="#Submitting_Jobs">Submitting Jobs</A>
+    <OL><FONT SIZE=2>
+    <LI><A HREF="#submit_HP">HP</A>
+    <LI><A HREF="#submit_Power_Challenge">Power Challenge</A>
+    <LI><A HREF="#submit_SP2">SP2</A>
+    <LI><A HREF="#submit_VPP">VPP</A>
+    </FONT></OL>
+  <LI><A HREF="#Geometry_Optimization">Geometry Optimization</A>
+    <OL><FONT SIZE=2>
+    <LI><A HREF="#gx_file">gx file</A>
+    <LI><A HREF="#simol_program">simol program</A>
+    <LI><A HREF="#optimizer_program">optimizer - a new optimization tool</A><br>
+    Brandnew! You will also find instructions on how to compose
+    gxfiles and including many tips and tricks for optimizations.
+    </FONT></OL>
+  <LI> <A HREF="file:/home/ttfs/DOCUMENTATION/DOK/howto_orbitalplot.html"> Orbital Plots </A><br>
+    </FONT></OL>
+<LI><A HREF="#Input_Description">Input Description</A>
+  <OL type="I"><FONT SIZE=3>
+  <LI><A HREF="#Format">Format</A>
+  <LI><A HREF="#Syntax">Syntax</A>
+  <LI><A HREF="#Explication_of_Namelists">Explication of Namelists</A>
+    <OL><FONT SIZE=2>
+    <LI><A HREF="#namelist_CONVERGENCE_LIST">CONVERGENCE_LIST</A>
+    <LI><A HREF="#namelist_EFIELD">EFIELD</A>
+    <LI><A HREF="#namelist_DIPOLE_TRANSITIONMOMENTS">DIPOLE_TRANSITIONMOMENTS</A>
+    <LI><A HREF="#namelist_FERMI">FERMI</A>
+    <LI><A HREF="#namelist_FRAGMENT">FRAGMENT</A>
+    <LI><A HREF="#namelist_FRAG_ORB_ANALYSIS">FRAG_ORB_ANALYSIS</A>
+    <LI><A HREF="#namelist_GRID">GRID</A>
+    <LI><A HREF="#namelist_GRIDATOM">GRIDATOM</A>
+    <LI><A HREF="#namelist_GRID_PH">GRID_PH</A>
+    <LI><A HREF="#namelist_GRIDATOM_PH">GRIDATOM_PH</A>
+    <LI><A HREF="#namelist_INTEGRALPAR">INTEGRALPAR</A>
+    <LI><A HREF="#namelist_INTEGRALQUADRUPEL">INTEGRALQUADRUPEL</A>
+    <LI><A HREF="#namelist_IRREP">IRREP</A>
+    <LI><A HREF="#namelist_MACHINEPARAMETERS">MACHINEPARAMETERS</A>
+    <LI><A HREF="#namelist_MAIN_OPTIONS">MAIN_OPTIONS</A>
+    <LI><A HREF="#namelist_MDA_OPTIONS">MDA_OPTIONS</A>
+    <LI><A HREF="#namelist_MIXING">MIXING</A>
+    <LI><A HREF="#namelist_OCCUPATION">OCCUPATION</A>
+    <LI><A HREF="#namelist_OPERATIONS">OPERATIONS</A>
+    <LI><A HREF="#namelist_ORBITAL_LIST">ORBITAL_LIST</A>
+    <LI><A HREF="#namelist_ORBITAL_PLOT">ORBITAL_PLOT</A>
+    <LI><A HREF="#namelist_OUTPUT">OUTPUT</A>
+    <LI><A HREF="#namelist_OUTPUT_CONFIG">OUTPUT_CONFIG</A>
+    <LI><A HREF="#namelist_OUTPUT_DIPOLE">OUTPUT_DIPOLE</A>
+    <LI><A HREF="#namelist_OUTPUT_INTEGRAL">OUTPUT_INTEGRAL</A>
+    <LI><A HREF="#namelist_OUTPUT_IOUNITADMIN">OUTPUT_IOUNITADMIN</A>
+    <LI><A HREF="#namelist_OUTPUT_POST_HOC">OUTPUT_POST_HOC</A>
+    <LI><A HREF="#namelist_OUTPUT_SCF">OUTPUT_SCF</A>
+    <LI><A HREF="#namelist_OUTPUT_SYM">OUTPUT_SYM</A>
+    <LI><A HREF="#namelist_OUTPUT_TIMING">OUTPUT_TIMING</A>
+    <LI><A HREF="#namelist_OUTPUT_TRACE">OUTPUT_TRACE</A>
+    <LI><A HREF="#namelist_OUTPUT_UNIQUE_ATOMS">OUTPUT_UNIQUE_ATOMS</A>
+    <LI><A HREF="#namelist_PHXC_CONTROL">PHXC_CONTROL</A>
+    <LI><A HREF="#namelist_POINTCHARGE">POINTCHARGE</A>
+    <LI><A HREF="#namelist_POINTCHARGE_NUMBER">POINTCHARGE_NUMBER</A>
+    <LI><A HREF="#namelist_POPCOLUM">POPCOLUM</A>
+    <LI><A HREF="#namelist_POPULATION">POPULATION</A>
+    <LI><A HREF="#namelist_PROPERTIES">PROPERTIES</A>
+    <LI><A HREF="#namelist_PVMOPTIONS">PVMOPTIONS</A>
+    <LI><A HREF="#namelist_RECOVER_OPTIONS">RECOVER_OPTIONS</A>
+    <LI><A HREF="#namelist_SPIN_ORBIT">SPIN_ORBIT</A>
+    <LI><A HREF="#namelist_SYMMETRY_DATA">SYMMETRY_DATA</A>
+    <LI><A HREF="#namelist_SYMMETRY_GROUP">SYMMETRY_GROUP</A>
+    <LI><A HREF="#namelist_TASKS">TASKS</A>
+    <LI><A HREF="#namelist_UNIQUE_ATOM">UNIQUE_ATOM</A>
+    <LI><A HREF="#namelist_UNIQUE_ATOM_BASIS">UNIQUE_ATOM_BASIS</A>
+    <LI><A HREF="#namelist_UNIQUE_ATOM_BASISSET">UNIQUE_ATOM_BASISSET</A>
+    <LI><A HREF="#namelist_UNIQUE_ATOM_GLOB_CON">UNIQUE_ATOM_GLOB_CON</A>
+    <LI><A HREF="#namelist_UNIQUE_ATOM_INDP_FCT">UNIQUE_ATOM_INDP_FCT</A>
+    <LI><A HREF="#namelist_UNIQUE_ATOM_NUMBER">UNIQUE_ATOM_NUMBER</A>
+    <LI><A HREF="#namelist_UNIQUE_ATOM_SYMADAPT">UNIQUE_ATOM_SYMADAPT</A>
+    <LI><A HREF="#namelist_XC_CONTROL">XC_CONTROL</A>
+    </FONT></OL>
+  <LI><A HREF="#Sample_Input">Sample Input</A>
+  <LI><A HREF="#Describing_the_Geometry">Describing the Geometry</A>
+  </FONT></OL>
+<BR>
+<LI><A HREF="#Helper_Programs">Helper Programs</A>
+</FONT></OL>
+
+
+
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+<div class="so">
+<a name="Read_Me_First"><h1>Read Me First</h1></a>
+<p> ParaGauss is permanently devoloping.  You may know how
+    difficult it is to keep documentation up to date or
+    simply consistent.
+    So, some version control staff for everybody ...
+<p class="so"> Paragraphs with light blue background (like this one)
+    are written mainly for those who uses
+    <a href="#Spin_Orbit">spin-orbit</a> or
+    things around it. So if you see the text in this color
+    you may safely ignore it if you do not care about
+    spin-orbit.
+    <br>(AM)
+    (enable CSS, on your brouser. You need JavaScript on Netscape for
+     example)
+</div>
+</br>
+Description of solvent effect specific options can be found 
+    <A HREF="solvation/solv_manual.html">here</A>.
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="How_to_run_ParaGaus"></A>
+<B><FONT SIZE=7>How to run ParaGaus</FONT></B>
+</H1>
+
+
+
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+<H2>
+<A NAME="ttfs_script"></A>
+<B><FONT SIZE=5>The ttfs Script</FONT></B>
+</H2>
+
+<P>
+The ttfs script is the driver script of the ParaGauss Program.
+Calculations can only be started using this script.
+</P>
+
+
+
+<H3>
+<A NAME="ttfs_usage"></A>
+<B><FONT SIZE=4>usage</FONT></B>
+</H3>
+
+<PRE>
+ ttfs_<A HREF="#ttfsopt_version"><I>version</I></A> \
+   <A HREF="#ttfsopt_name"><I>name</I></A> \
+   [ <A HREF="#ttfsopt_name_is_extension">-name_is_extension</A> ] \
+   [ <A HREF="#ttfsopt_extend_outputnames">-extend_outputnames</A> ] \
+   [ <A HREF="#ttfsopt_inputdir">-inputdir</A> <I>inputdir</I> ]  \
+   [ <A HREF="#ttfsopt_outputdir">-outputdir</A> <I>outputdir</I> ]  \
+   [ <A HREF="#ttfsopt_dir">-dir</A> <I>dir</I> ] \
+   [ <A HREF="#ttfsopt_newinput">-newinput</A> <I>filename</I> ]  \
+   [ <A HREF="#ttfsopt_gxfile">-gxfile</A> <I>filename</I> ] \
+   [ <A HREF="#ttfsopt_restartable">-restartable</A> ] \
+   [ <A HREF="#ttfsopt_save_old_output">-save_old_output</A> ] \
+   [ <A HREF="#ttfsopt_zip">-zip</A> ] \
+   [ <A HREF="#ttfsopt_vpp_mbx_size">-vpp_mbx_size</A>  <I>number</I> ] \
+   [ <A HREF="#ttfsopt_us">-us</A> |
+     <A HREF="#ttfsopt_pd">-pd</A> ] \
+   [ <A HREF="#ttfsopt_shared_fs">-shared_fs</A>  <I>dir</I> ] \
+   [ <A HREF="#ttfsopt_recover_in_datadir">-recover_in_datadir</A> ] \
+   [ <A HREF="#ttfsopt_keep_slaveoutput">-keep_slaveoutput</A> ] \
+   [ <A HREF="#ttfsopt_keep_core">-keep_core</A> ]  \
+   [ <A HREF="#ttfsopt_profile">-profile</A> |
+     <A HREF="#ttfsopt_count">-count</A>  <I>sourcedir</I> |
+     <A HREF="#ttfsopt_vpp_stats">-vpp_stats</A>  <I>optionnumber</I> ]  \
+   [ <A HREF="#ttfsopt_vers">-vers</A> <I>version</I> ] \
+   [ <A HREF="#ttfsopt_scriptvers">-scriptvers</A> <I>version</I> ] \
+   [ <A HREF="#ttfsopt_interfacevers">-interfacevers</A> <I>version</I> ] \
+   [ <A HREF="#ttfsopt_simolvers">-simolvers</A> <I>version</I> ]  \
+   [ <A HREF="#ttfsopt_opt">-opt</A> <I>geometry optimization program</I> ] \
+   [ <A HREF="#ttfsopt_integral">-integral</A> |
+     <A HREF="#ttfsopt_integral_split">-integral_split</A> |
+     <A HREF="#ttfsopt_split">-split</A> | 
+     <A HREF="#ttfsopt_split_scf">-split_scf</A> |
+     <A HREF="#ttfsopt_scf">-scf</A> |
+     <A HREF="#ttfsopt_interfacefile">-interfacefile</A> |
+     <A HREF="#ttfsopt_paragau">-paragau</A> |
+     <A HREF="#ttfsopt_help">-help</A> ]  \
+   [ <A HREF="#ttfsopt_datadir">-datadir</A> <I>datadir</I> ] \
+   [ <A HREF="#ttfsopt_rm_datadir">-rm_datadir</A> |
+     <A HREF="#ttfsopt_keep_datadir">-keep_datadir</A> ] \
+   [ <A HREF="#ttfsopt_oldinput">-oldinput</A> <I>filename</I> ]  \
+   [ <A HREF="#ttfsopt_interfaces">-interfaces</A> <I>filename</I> ]  \
+   [ <A HREF="#ttfsopt_lcgtooptions">-lcgtooptions</A> <I>option</I> [<I>option</I> ...] ]
+</PRE>
+
+<P>
+For obtaining on-line help:
+</P>
+<PRE>
+ ttfs_<I>version</I> -help
+</PRE>
+
+<P>
+The options listed above may appear in arbitrary order except for
+<CODE>-lcgtooptions</CODE> that must appear last. All options are optional.
+The first argument <CODE><I>name</I></CODE> as described below is obligatory.
+</P>
+<P>
+The following options are SP2-specific:
+<CODE><UL>
+<LI>[ -us | -pd ]
+<LI>[ -shared_fs  <I>dir</I> ]
+</UL></CODE>
+<P>
+<P>
+The following options are VPP-specific:
+<CODE><UL>
+<LI>[ -profile | -count  <I>sourcedir</I> | -vpp_stats  <I>optionnumber</I> ]
+<LI>[ -vpp_mbx_size  <I>number</I> ]
+</UL></CODE>
+<P>
+
+
+
+<H3>
+<A NAME="ttfs_files"></A>
+<B><FONT SIZE=4>location and naming of input and output files</FONT></B>
+</H3>
+
+<P>
+The ttfs script offers flexibility in naming and locating
+input and output files. Principally, two philosophies are supported for
+separating files of different calculations:
+<DL>
+<DT>one specific directory for each calculation
+<DD>use <CODE><I>name</I></CODE> to specify directory (absolute path recommended).
+  No file name extensions are necessary.
+<DT>several calculations in one directory kept apart by file name extensions.
+<DD>use <CODE><I>name</I></CODE> to specify file name extensions and set
+  <CODE>-name_is_extension</CODE>.
+  Files are located either in present working directory or the one
+  specified with <CODE>-dir <I>dir</I></CODE>.
+</DL>
+Separating input and output directory and naming files individually is also
+supported via the switches described below.
+</P>
+
+<DL>
+<DT><A NAME="ttfsopt_name"></A><CODE><I>name</I></CODE>
+<DD>The meaning differs depending if you set
+   <A HREF="#ttfsopt_name_is_extension"><CODE>-name_is_extension</CODE></A>.
+   <UL>
+   <LI>In case you do not set this flag, <CODE><I>name</I></CODE> is the
+   default input and output directory of your calculation.
+   Both relative and absolute paths are valid, but the absolute one is recommended.
+   The last part of <CODE><I>name</I></CODE> is also a valid postfix for input files
+   that allows to keep input files for different calculations in one
+   input directory apart. In case you set <CODE>-extend_outputnames</CODE>
+   it will also be the postfix to all output files.
+   <LI>In case you set this flag, <CODE><I>name</I></CODE> is a postfix to all input
+   and output files. The directory where your input and output files
+   are located is the present working directory unless you specify other
+   with <CODE>-dir</CODE> or <CODE>-inputdir</CODE> and <CODE>-outputdir</CODE>.
+   </UL>
+   Intermediate directories used during the calculation are also
+   termed according to <CODE><I>name</I></CODE>.
+<DT><A NAME="ttfsopt_name_is_extension"></A><CODE>[ -name_is_extension ]</CODE>
+<DD><CODE><I>name</I></CODE> is not used to set inputdir and outputdir but only as extension
+   to input and output filenames. This implies automatically 
+   <A HREF="#ttfsopt_extend_outputnames"><CODE>-extend_outputnames</CODE></A>.
+   Note that input files without extensions are also accepted if none with extension exist.
+<DT><A NAME="ttfsopt_extend_outputnames"></A><CODE>[ -extend_outputnames ]</CODE>
+<DD>use last part of <CODE><I>name</I></CODE> as extension to output files.
+<DT><A NAME="ttfsopt_inputdir"></A><CODE>[ -inputdir <I>inputdir</I> ]</CODE>
+<DD>directory that holds input files.
+   Default is <CODE><I>name</I></CODE>, of if 
+   <A HREF="#ttfsopt_name_is_extension"><CODE>-name_is_extension</CODE></A>
+   is given present working directory.
+<DT><A NAME="ttfsopt_outputdir"></A><CODE>[ -outputdir <I>outputdir</I> ]</CODE>
+<DD>directory where to store output files of new program run.
+   If directory already exists old output files will be overwritten.
+   Default is <CODE><I>name</I></CODE>, of if 
+   <A HREF="#ttfsopt_name_is_extension"><CODE>-name_is_extension</CODE></A>
+   is given present working directory.
+<DT><A NAME="ttfsopt_dir"></A><CODE>[ -dir <I>dir</I> ]</CODE>
+<DD>equivalent to <CODE><A HREF="#ttfsopt_inputdir">-inputdir</A> <I>dir</I>
+   <A HREF="#ttfsopt_outputdir">-outputdir</A> <I>dir</I></CODE>.
+<DT><A NAME="ttfsopt_newinput"></A><CODE>[ -newinput <I>filename</I> ]</CODE>
+<DD>input file in <CODE><I>inputdir</I></CODE> to new program.
+   Default is file input.
+<DT><A NAME="ttfsopt_gxfile"></A><CODE>[ -gxfile <I>filename</I> ]</CODE>
+<DD><A HREF="#gx_file">gx file</A> in <CODE><I>inputdir</I></CODE>
+    containing geometry and Z-matrix for geometry optimization. Default is gx.
+</DL>
+
+
+
+<H3>
+<A NAME="ttfs_various"></A>
+<B><FONT SIZE=4>various useful options</FONT></B>
+</H3>
+
+<DL>
+<DT><A NAME="ttfsopt_restartable"></A><CODE>[ -restartable ]</CODE>
+<DD>leave <A HREF="#gx_file">gx file</A> and scf restart files in place instead
+   of renaming them. This allows to restart calculation without modifying
+   input/output directory.
+   Default is moving these files to protect them from accidental modifications.
+   The switch also implies -save_old_output (see below).
+<DT><A NAME="ttfsopt_save_old_output"></A><CODE>[ -save_old_output ]</CODE>
+<DD>move old output files (output, input.out, gx.start, trace file) to
+   files with _<CODE><I>number</I></CODE> appended where <CODE><I>number</I></CODE>
+   is the lowest one without existing files.
+   All files of one run will obtain the same <CODE><I>number</I></CODE>.
+<DT><A NAME="ttfsopt_zip"></A><CODE>[ -zip ]</CODE>
+<DD>compress output files
+<DT><A NAME="ttfsopt_vpp_mbx_size"></A><CODE>[ -vpp_mbx_size <I>number</I> ]</CODE>
+<DD>set size of mailbox for incoming PVM messages on VPP.
+  <I>number</I> can take the following values resulting in the given mbx sizes on each host:
+  <TABLE>
+  <TR><TD>1<TD>4 MB</TR>
+  <TR><TD>4<TD>16 MB</TR>
+  <TR><TD>16<TD>64 MB (this is the default)</TR>
+  <TR><TD>64<TD>256 MB</TR>
+  </TABLE>
+<DT><A NAME="ttfsopt_shared_fs"></A><CODE>[ -shared_fs <I>dir</I> ]</CODE>
+<DD>use <CODE><I>dir</I></CODE> as shared scratch file system on SP2"
+<DT><A NAME="ttfsopt_recover_in_datadir"></A><CODE>[ -recover_in_datadir ]</CODE>
+<DD>fetch and/or write scf recover files to <CODE><I>datadir</I></CODE> during calculation.
+   Default is to store them in <CODE><I>inputdir</I></CODE> during calculation.
+</DL>
+
+
+
+<H3>
+<A NAME="ttfs_debug"></A>
+<B><FONT SIZE=4>debug options</FONT></B>
+</H3>
+
+<DL>
+<DT><A NAME="ttfsopt_us"></A><CODE>[ -us ]</CODE>
+<DD>use user space PVMe instead of Internet protocol PVMe on SP2"
+<DT><A NAME="ttfsopt_pd"></A><CODE>[ -pd ]</CODE>
+<DD>use public domain PVM instead of Internet protocol PVMe on SP2"
+<DT><A NAME="ttfsopt_keep_slaveoutput"></A><CODE>[ -keep_slaveoutput ]</CODE>
+<DD>copy the slave output directories to the directoies termed after 
+   the hostnames or 1, 2, ... created in <CODE><I>outputdir</I></CODE>.
+<DT><A NAME="ttfsopt_keep_core"></A><CODE>[ -keep_core ]</CODE>
+<DD>keep the core file for debugging in case new program crashes.
+<DT><A NAME="ttfsopt_profile"></A><CODE>[ -profile ]</CODE>
+<DD>produce profiling information. Perform profiling by statistically recording
+   position of program. Only available on VPP for 1 processor run.
+<DT><A NAME="ttfsopt_count"></A><CODE>[ -count <I>sourcedir</I> ]</CODE>
+<DD> produce profiling information. Count number of execution of loops
+   and store vector lengths. Only available on VPP for 1 processor run.
+   <CODE><I>sourcedir</I></CODE> must be directory containing the source files
+   the executable was build from.
+   Attention: an executable compiled with flag -Wc and linked with -lfjcnt is required.
+<DT><A NAME="ttfsopt_vpp_stats"></A><CODE>[ -vpp_stats <I>option_number </I>]</CODE>
+<DD>produce profiling information of parallel run. Only available on VPP.
+  <CODE><I>option_number</I></CODE> can be a sum of the following flags:
+  <TABLE>
+  <TR><TD>1<TD>Global performance (CPU times, instructions count...)</TR>
+  <TR><TD>2<TD>Communication overhead (total send/receive times,...)</TR>
+  <TR><TD>4<TD>Global profile (Top routines, top ten per processor)</TR>
+  <TR><TD>8<TD>Detailed profile per processor</TR>
+  <TR><TD>16<TD>Extended profile (detailed plus system calls)</TR>
+  <TR><TD>32<TD>Unix background activity</TR>
+  <TR><TD>64<TD>IO traces</TR>
+  <TR><TD>128<TD>No batch output (keep trace files for MPTools)</TR>
+  </TABLE>
+</DL>
+
+
+
+<H3>
+<A NAME="ttfs_versions"></A>
+<B><FONT SIZE=4>selecting versions of called programs</FONT></B>
+</H3>
+
+<P>
+The versions of various programs called by the ttfs script can be
+selected individually. For normal purpose, the defaults should be fine.
+In most cases, the programs use the same
+<A NAME="ttfsopt_version"></A><CODE><I>version</I></CODE>
+as the <CODE>ttfs_<I>version</I></CODE> script.
+</P>
+
+<DL>
+<DT><A NAME="ttfsopt_vers"></A><CODE>[ -vers <I>version</I> ]</CODE>
+<DD>version of ParaGauss program to use
+   Default is <CODE><I>version</I></CODE> of  <CODE>ttfs_<I>version</I></CODE> script.
+<DT><A NAME="ttfsopt_scriptvers"></A><CODE>[ -scriptvers <I>version</I> ]</CODE>
+<DD>version of help programs to use
+   Default is <CODE><I>version</I></CODE> of <CODE>ttfs_<I>version</I></CODE> script.
+<DT><A NAME="ttfsopt_interfacevers"></A><CODE>[ -interfacevers <I>interfacevers</I> ]</CODE>
+<DD>version of the program read_ftn1 to use
+   Default is <CODE><I>version</I></CODE> of <CODE>ttfs_<I>version</I></CODE> script.
+<DT><A NAME="ttfsopt_simolvers"></A><CODE>[ -simolvers <I>simolvers</I> ]</CODE>
+<DD>Version of <A HREF="#simol_program">Simol-Program</A>. Default is _v170. If a TS-Search
+   is to be performed or a minimum has to be found using the eigenmode following,
+   _v180 is recommended.
+   If you want to calculate frequencies, please specify _v170ttfs.
+<DT><A NAME="ttfsopt_opt"></A><CODE>[ -opt <I>geometry optimization program</I> ]</CODE>
+<DD>Can be either <A HREF="#simol_program">'simol'</A> or 'optimizer', 
+   the new optimization program. However, 'simol' is still strongly recommended.
+   This is also the default.
+</DL>
+
+
+
+<H3>
+<A NAME="ttfs_lcgto"></A>
+<B><FONT SIZE=4>previous execution of old lcgto</FONT></B>
+</H3>
+ 
+<P>
+The use of the options described in this chapter is no longer necessary for normal purpose
+calculations except for the switch <CODE>-help</CODE> that gives an on-line help.
+</P>
+<P>
+The previous execution of old lcgto is not possible on the VPP.
+</P>
+<P>
+The ttfs script allows to convert inputs from old lcgto and to use
+precalculated integrals from old lcgto. If this is really necessary
+is determined automatically by reading the namelists <A HREF="#namelist_TASKS">TASKS</A>
+or <A HREF="#namelist_OPERATIONS">OPERATIONS</A> from the input file and
+checking if the input file contains a line "<CODE>read intermediate input</CODE>" that
+makes the program read in an intermediate file produced by a special
+version of old lcgto.
+</P>
+<P>
+In case a previous run of lcgto is found necessary the default is to execute this
+run and the ParaGauss run all at once. The script can also execute the process
+in several steps:
+</P>
+<OL type="A">
+<LI>For running only the scf part of new program with precalculated integrals,
+  three steps are necessary:
+  <OL>
+  <LI>running old lcgto to calculate integrals
+  <LI>splitting of integral files according to number of processors desired
+  <LI>distribution of integral files to hosts and run of new program for SCF procedure
+  </OL>
+  Step 1 and 2 are not parallel, but step 3 is. It is necessary to specify the location
+  where the integrals are kept with <CODE>[ -datadir <I>dir</I> ]</CODE>.
+<LI>For converting input but running the integral part of new program, two steps are necessary:
+  <OL>
+  <LI>running old lcgto to calculate interface information
+  <LI>setting up of directories and run of new program
+     (only if input file requests interface file)
+  </OL>
+  Step 1 is not parallel, but step 2 is.
+  Please note that ISTOP 2 in input to old lcgto is enough.
+</OL>
+
+<DL>
+<DT><CODE>[ <A NAME="ttfsopt_integral"></A>-integral | 
+   <A NAME="ttfsopt_integral_split"></A>-integral_split | 
+   <A NAME="ttfsopt_split"></A>-split | 
+   <A NAME="ttfsopt_split_scf"></A>-split_scf |
+   <A NAME="ttfsopt_scf"></A>-scf | 
+   <A NAME="ttfsopt_interfacefile"></A>-interfacefile | 
+   <A NAME="ttfsopt_paragau"></A>-paragau | 
+   <A NAME="ttfsopt_help"></A>-help ]</CODE>
+<DD>
+  tasks as described above:
+  <TABLE>
+  <TR><TD><CODE>-integral<CODE><TD>A.1</TR>
+  <TR><TD><CODE>-integral_split<CODE><TD>A.1 + A.2</TR>
+  <TR><TD><CODE>-split<CODE><TD>A.2</TR>
+  <TR><TD><CODE>-split_scf<CODE><TD>A.2 + A.3</TR>
+  <TR><TD><CODE>-scf<CODE><TD>A.3</TR>
+  <TR><TD><CODE>-interfacefile<CODE><TD>B.1</TR>
+  <TR><TD><CODE>-paragau<CODE><TD>B2</TR>
+  <TR><TD><CODE>-help<CODE><TD>gives on-line help</TR>
+  <TR><TD>Default<TD>complete run (A.1 + A.2 + A.3 / B.1 + B.2 / only ParaGauss)</TR>
+  </TABLE>
+<DT><A NAME="ttfsopt_datadir"></A><CODE>[ -datadir <I>datadir</I> ]</CODE>
+<DD>directory that holds or will receive integral files and output from old lcgto
+   This directory can be reused from previous runs and must be specified
+   if no integrals are calculated.
+   Look at end of output of previous run (TTFSDATADIR) to obtain this directory.
+<DT></A><CODE>[ <A NAME="ttfsopt_rm_datadir">-rm_datadir | 
+   <A NAME="ttfsopt_keep_datadir">-keep_datadir ]</CODE>
+<DD>remove or keep datadir TTFSDATADIR that holds integrals
+   when calculation is finished.
+   Default is to keep this directory and giving its name in the end of calculation for mode A
+   and removing the directory for mode B.
+<DT><A NAME="ttfsopt_oldinput"></A><CODE>[ -oldinput <I>filename</I> ]</CODE>
+<DD>input file to old lcgto with ending .inp omitted in <CODE><I>inputdir</I></CODE>.
+   Please note that for mode B ISTOP 2 in input to old lcgto is enough.
+   Default is taking the file <CODE><A HREF="#ttfsopt_name"><I>name</I></A>.inp</CODE>
+   or the only file ending with .inp in directory if it does nor exist.
+<DT><A NAME="ttfsopt_interfaces"></A><CODE>[ -interfaces <I>filename</I> ]</CODE>
+<DD>interfaces input to new program.
+   If specified, interfaces file will be located in <CODE><I>inputdir</I></CODE>
+   Default is file interfaces in directory <CODE><I>datadir</I></CODE> for mode A 
+   and <CODE><I>inputdir</I></CODE> for mode B
+<DT><A NAME="ttfsopt_lcgtooptions"></A>
+   <CODE>[ -lcgtooptions <I>option</I> [<I>option</I> ...] ]</CODE>
+<DD>Options to pass to old lcgto script.
+   These options must be given last of all !
+   Default is <CODE>v168_beta -exedir /users/hp4/ttfs/bin -kit</CODE>
+</DL>
+
+
+<H3>
+<A NAME="ttfs_exit_status"></A>
+<B><FONT SIZE=4>exit status</FONT></B>
+</H3>
+<P>
+The ttfs script returns zero in case of successful execution and
+other values in case of errors. In the case of geometry optimization,
+zero is returned as long as the optimization did not yet converge
+within the number <A HREF="#namelist_CONVERGENCE_LIST">MAX_GEO_ITERATION</A>
+of points allowed and 100 if the optimization converged.
+</P>
+<P>
+This is useful in the case of geometry optimization.
+If not all the geometry optimization cycles can be performed
+at once due to time limits of the queue system,
+the exit status of the ttfs script can be used for
+automatic resubmission of the job.
+</P>
+<P>
+The exit status of a program can be obtained via the shell variable "$status"
+directly after the execution of the program.
+</P>
+
+
+
+<H3>
+<A NAME="ttfs_examples"></A>
+<B><FONT SIZE=4>examples</FONT></B>
+</H3>
+
+<P><CODE>
+ttfs_<A HREF="#ttfsopt_version"><I>version</I></A>
+<A HREF="#ttfsopt_name"><I>name</I></A>
+</CODE></P>
+<P>
+Running a simple calculation with version
+<CODE><I>version</I> </CODE> of ttfs script.
+All <A HREF="#Input_Files">input</A> and <A HREF="#Output_Files">output</A> files
+are located in the separate directory <CODE><I>name</I></CODE>
+that is only used for this calculation.
+The file names have no postfix extension.
+Old output files will be overwritten.
+</P>
+<BR>
+<P><CODE>
+ttfs_<A HREF="#ttfsopt_version"><I>version</I></A>
+<A HREF="#ttfsopt_name"><I>name</I></A>
+<A HREF="#ttfsopt_name_is_extension">-name_is_extension</A>
+<A HREF="#ttfsopt_dir">-dir</A> <I>dir</I>
+<A HREF="#ttfsopt_zip">-zip</A>
+<A HREF="#ttfsopt_save_old_output">-save_old_output</A>
+<A HREF="#ttfsopt_vers">-vers</A> <I>mainversion</I>
+</CODE></P>
+<P>
+Running a calculation with version
+<CODE><I>version</I> </CODE> of ttfs script.
+All <A HREF="#Input_Files">input</A> and <A HREF="#Output_Files">output</A> files
+are located in directory <CODE><I>dir</I></CODE>
+that is used for several different calculations.
+The filenames have the postfix extension
+<CODE><I>name</I></CODE> that is used to keep the different calculations apart.
+Output files will automatically be compressed.
+Old output files of a previous run will be moved to filenames with _<I>number</I>
+appended with <I>number</I> being the lowest number not yet used. All files of one
+run obtain the same <I>number</I>. For instance, the previous output file
+"output.<I>name</I>.gz" would be moved to "output.<I>name</I>_<I>number</I>.gz".
+The version <CODE><I>mainversion</I></CODE> of the ParaGauss executable will be used.
+</P>
+<BR>
+<P><CODE>
+ttfs_<A HREF="#ttfsopt_version"><I>version</I></A>
+<A HREF="#ttfsopt_name"><I>name</I></A>
+<A HREF="#ttfsopt_restartable">-restartable</A>
+</CODE></P>
+<P>
+Running a geometry optimization calculation with version
+<CODE><I>version</I> </CODE> of ttfs script.
+All <A HREF="#Input_Files">input</A> and <A HREF="#Output_Files">output</A> files
+are located in directory <CODE><I>name</I></CODE>
+that is only used for this calculations.
+The filenames have no postfix extension.
+Old output files of a previous run will be moved to filenames with _<I>number</I>
+appended with <I>number</I> being the lowest number not yet used. All files of one
+run obtain the same <I>number</I>. For instance, the previous output file
+"output" would be moved to "output_<I>number</I>".
+Recover files from the last run are not moved and will be reused as a start
+for the SCF procedure (See <A HREF="#namelist_RECOVER_OPTIONS">RECOVER_OPTIONS</A>).
+This is useful when not all the geometry optimization cycles can be performed
+at once due to time limits of the queue system.
+The <A HREF="#ttfs_exit_status">exit status</A> of the ttfs script could be used for
+automatic resubmission of the job.
+</P>
+
+
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+<H2>
+<A NAME="Input_and_Output_Files"></A>
+<B><FONT SIZE=5>Input and Output Files</FONT></B>
+</H2>
+
+<P>
+See chapter "<A HREF="#ttfs_files">location and naming of input and output files</A>"
+in the description of the <A HREF="#ttfs_script">ttfs script</A>
+for the location of input and output files.
+"<A HREF="#ttfsopt_name"><I>name</I></A>" referenced below is the name of the
+calculation described there.
+Input files and intermediate files are allowed to have the postfix extension
+".<A HREF="#ttfsopt_name"><I>name</I></A>". Output files,  intermediate files,
+and run time control files will also obtain this extension if the flags
+<A HREF="#ttfsopt_name_is_extension">-name_is_extension</A>
+or <A HREF="#ttfsopt_extend_outputnames">-extend_outputnames</A>
+were given as arguments to the <A HREF="#ttfs_script">ttfs script</A>.
+<P>
+
+
+<H3>
+<A NAME="Input_Files"></A>
+<B><FONT SIZE=4>Input Files</FONT></B>
+</H3>
+
+<DL>
+<DT>input
+<DD>ParaGaus input file as described <A HREF="#Input_Description">below</A>
+    The name can be altered by argument <A HREF="#ttfsopt_newinput">-newinput</A>
+    to the ttfs script.
+<DT>gx
+<DD><A HREF="#gx_file">gx file</A> containing geometry and
+    Z-matrix for <A HREF="#Geometry_Optimization">geometry optimization</A>.
+    This file will be updated automatically by the geometry optimizer at the
+    end of each geometry loop.
+    The name can be altered by argument <A HREF="#ttfsopt_gxfile">-gxfile</A>
+    to the ttfs script.
+<DT><A HREF="#ttfsopt_name"><I>name</I></A>.inp
+<DD>Outdated. Input file to old lcgto if previous run of old lcgto is done
+    (See chapter "<A HREF="#ttfs_lcgto">previous execution of old lcgto</A>"
+    in ttfs script part).
+    The name can be altered by argument <A HREF="#ttfsopt_oldinput">-oldinput</A>
+    to the ttfs script.
+</DL>
+
+
+<H3>
+<A NAME="Output_Files"></A>
+<B><FONT SIZE=4>Output Files</FONT></B>
+</H3>
+
+<DL>
+<DT>output
+<DD>ParaGauss main output file.
+<DT>input.out
+<DD>This file contains an expanded form of the input. It is in the input format
+    and can directly be used as input for a new run. It protocolls all the
+    options used, also all options implied by defaults. This file can also
+    be used as a starting point for editing. The amount of information written
+    to the file is controlled by the switch ECHO_INPUT_LEVEL in the 
+    <A HREF="#namelist_TASKS">namelist TASKS</A>.
+<DT>trace_output
+<DD>This file is used to monitor the progress of the calculation.
+    However, at the end of the calculation it also contains
+    an table giving an overview over the SCF-cycles.
+    Moreover, in the case of <A HREF="#Geometry_Optimization">geometry optimization</A>
+    the updated <A HREF="#gx_file">gx file</A> will be appended to this file 
+    at the end of each geometry loop (not on the VPP).
+<DT>debug_output
+<DD>For debug output only. Only generated in case you set IOUNITADMIN_USE_DEBUG
+    in <A HREF="#namelist_OUTPUT_IOUNITADMIN">namelist OUTPUT_IOUNITADMIN</A>.
+<DT>buggy_log
+<DD>For debug output only. Only generated in case you set IOUNITADMIN_USE_BUGGY
+    in <A HREF="#namelist_OUTPUT_IOUNITADMIN">namelist OUTPUT_IOUNITADMIN</A>.
+    This file is well suited for finding the exact location of a program crash since
+    it is always opened and closed.
+<DT>gx.start
+<DD>When starting a <A HREF="#Geometry_Optimization">geometry optimization</A>,
+    the original <A HREF="#gx_file">gx file</A> "gx" is copied to "gx.start".
+<DT>listing
+<DD>The listing of the contents of the temporary directory used by the master
+    during the calculation at the end of the calculation.
+<DT>simol/trace_simol
+<DD>In case of <A HREF="#Geometry_Optimization">geometry optimization</A> on the VPP,
+    this file is used to append the output of the optimizer and the updated
+    <A HREF="#gx_file">gx file</A> at the end of each geometry loop.
+<DT>simol/dfp.<A HREF="#ttfsopt_name"><I>name</I></A>
+<DD>In case of <A HREF="#Geometry_Optimization">geometry optimization</A>,
+    this file is used to append the output of the optimizer at the end of each geometry loop.
+<DT><A HREF="#ttfsopt_name"><I>name</I></A>.out
+<DD>Outdated. Putput file of old lcgto if previous run of old lcgto is done
+    (See chapter "<A HREF="#ttfs_lcgto">previous execution of old lcgto</A>"
+    in ttfs script part).
+</DL>
+
+
+<H3>
+<A NAME="Intermediate_Files"></A>
+<B><FONT SIZE=4>Intermediate Files</FONT></B>
+</H3>
+
+<P>
+These files will be located in the input directory in case input and
+output directories are separate.
+</P>
+During SCF Iterations, it is possible to save and recover the state of the calculation at
+various points of the SCF loop. This option is both useful for recovering crashed
+calculations and to save computing time by starting the SCF part with a good approximation
+of the orbitals when performing a <A HREF="#Geometry_Optimization">geometry optimization</A>.
+The files "saved_*.dat" listed below are used for this purpose. The 
+<A HREF="#namelist_RECOVER_OPTIONS">namelist RECOVER_OPTIONS</A>
+controls if and which files are written / read. The files will automatically be compressed
+and are binary.
+</P>
+
+<DL>
+<DT>saved_ksmatrix.dat
+<DD>SCF-recover file as described above: hamiltonian
+<DT>saved_eigenvec.dat
+<DD>SCF-recover file as described above: eigenvectors
+<DT>saved_scfstate.dat
+<DD>SCF-recover file as described above: charge fit coefficients and exchange part of hamiltonian
+<DT>saved_fitcoeff.dat
+<DD>SCF-recover file as described above: fit coefficients
+<DT>simol
+<DD>In case of <A HREF="#Geometry_Optimization">geometry optimization</A>,
+    this directory contains intermediate and output files of the 
+    <A HREF="#simol_program">simol program</A>.
+<DT><A HREF="#ttfsopt_name"><I>name</I></A>.gsn 
+    <A HREF="#ttfsopt_name"><I>name</I></A>.fl9
+    <A HREF="#ttfsopt_name"><I>name</I></A>.fl10
+<DD>In case of <A HREF="#Geometry_Optimization">geometry optimization</A>,
+    these files are used by the <A HREF="#simol_program">simol program</A>
+    to store intermediate values.
+<DT>interfaces
+<DD>Outdated. Interface file produced by old lcgto and read in in case input file
+    contains line "<CODE>read intermediate input</CODE>".
+    (See chapter "<A HREF="#ttfs_lcgto">previous execution of old lcgto</A>"
+    in ttfs script part).
+    The name can be altered by argument <A HREF="#ttfsopt_interfaces">-interfaces</A>
+    to the ttfs script.
+<DT>eigenvectors.dat occ_num.dat
+<DD>Outdated. The files "eigenvectors.dat" and "occ_num.dat" are produced by old
+    lcgto. These file may not be compressed. They are only read if integrals are taken
+    from old lcgto as well.
+    (See chapter "<A HREF="#ttfs_lcgto">previous execution of old lcgto</A>"
+    in ttfs script part).
+</DL>
+
+
+<H3>
+<A NAME="Runtime_control_Files"></A>
+<B><FONT SIZE=4>Runtime control Files</FONT></B>
+</H3>
+
+<P>
+These files will be located in the output directory in case input and
+output directories are separate.
+</P>
+
+<DL>
+<DT>trace_output
+<DD>This file is used to monitor the progress of the calculation.
+    It is always opened and closed and so always shows the actual
+    task the program is executing.
+    It also contains a table giving an overview over the SCF-cycles.
+<DT>scfcontrol
+<DD>This file only exist while the SCF part is executed. It is automatically
+    generated and read in each SCF-cycle. It allows to change certain settings
+    made in the input file at run time. It contains the namelists
+    <A HREF="#namelist_CONVERGENCE_LIST">CONVERGENCE_LIST</A>,
+    <A HREF="#namelist_MIXING">MIXING</A>,
+    <A HREF="#namelist_RECOVER_OPTIONS">RECOVER_OPTIONS</A> and
+    <A HREF="#namelist_FERMI">FERMI</A> described in the
+    <A HREF="#Input_Description">Input Description</A> below.
+    To abort a running calculation, edit the namelists
+    <A HREF="#namelist_CONVERGENCE_LIST">CONVERGENCE_LIST</A>:
+    Set MAX_ITERATION below the present SCF-cycle number and set STOP_IF_NOT_CONVERGED.
+</DL>
+
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+<!-- ................................................. -->
+<DIV class="so">
+<a name="Calculation_Modes">
+ <h2>Calculation Modes</h2>
+</a>
+<!-- ................................................. -->
+<a name="Standard_mode">
+ <h3>Standard Mode</h3>
+</a>
+<p> Needs a willing person to describe
+<!-- ................................................. -->
+<a name="Scalar_Relativity">
+ <h3>Scalar Relativity</h3>
+</a>
+<p> Needs a willing person to describe
+<!-- ................................................. -->
+<a name="Spin_Orbit">
+ <h3>Spin Orbit</h3>
+</a>
+<p> Spin-Orbit (SO) calculations is another step further
+after <a href="#Scalar_Relativity">SR</a> calculations.
+Up to date it is the only possibility to do single-point
+SO-calculations.
+<p> There are several SO modes possible:
+<ul>
+ <li> So-called "plain" spin-orbit where only the kinetic energy
+      and nuclear attraction are corrected for relativistic effects.
+      This is an SO counterpart of SR calculations.
+ <li> One can turn relativistic transformations of coulomb (hartree)
+      term on - so called V<sub>ee</sub> run. One can do that to
+      different levels of accuracy:
+      <ul>
+       <li> first order DK transformation of hartree term
+       <li> two flawors of the second order DK
+      </ul>
+</ul>
+<p> To start an SO calculation one needs:
+<ul>
+ <li> make sure that you are going to do a single-point
+      calculation - check namelists
+      <a href="#namelist_OPERATIONS"><tt>OPERATIONS</tt></a>
+      and
+      <a href="#namelist_TASKS"><tt>TASKS</tt></a>
+ <li> turn on <tt>RELATIVISTIC</tt> and
+      <tt>SPIN_ORBIT</tt> switches in namelist
+      <a href="#namelist_MAIN_OPTIONS"><tt>MAIN_OPTIONS</tt></a>.
+      Note that SO calculations are always 'spin-restricted' even if 'polarized',
+      so make sure that switch <tt>SPIN_RESTRICTED</tt> is <tt>TRUE</tt>
+      in this namelist.
+ <li> in the namelist <a href="#namelist_SPIN_ORBIT"><tt>SPIN_ORBIT</tt></a>
+      specify what level of SO you want.
+ <li> you may want to speed up you calculation by setting
+      <tt>XC="...,spatial"</tt> in
+      <a href="#namelist_XC_CONTROL">XC_CONTROL</a>
+ <li> you may want to set <tt>XC = "vwn,gga:all"</tt> in
+      <a href="#namelist_PHXC_CONTROL"><tt>PHXC_CONTROL</tt></a>
+      namelist
+</ul>
+</DIV><!-- class="so" -->
+<!-- ................................................. -->
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+<H2>
+<A NAME="Submitting_Jobs"></A>
+<B><FONT SIZE=5>Submitting Jobs</FONT></B>
+</H2>
+
+
+<H3>
+<A NAME="submit_HP"></A>
+<B><FONT SIZE=4>HP</FONT></B>
+</H3>
+
+<P>
+On the HPs, ParaGauss must be run interactively.
+Only users assigned a special permission to run long
+jobs without being reniced by the superuser can do so.
+</P>
+<P>
+Before starting ParaGauss, a PVM deamon must be running on all hosts.
+To start the daemon in case it is not yet running, perform the following
+steps:
+<UL>
+<LI>Enter PVM console (This will start the daemon in case it is not yet running):
+    <BR><CODE>&gt; <B>pvm</B></CODE>
+<LI>Check if all host are included in the virtual machine:
+    <BR><CODE>pvm&gt; <B>conf</B></CODE>
+<LI>Add the missing hosts (use "<CODE><I>hostname</I>+atm</CODE>" since we
+    use a special version of PVM adapted to use our ATM network). For instance:
+    <BR><CODE>pvm&gt; <B>add hp1atm</B></CODE>
+<LI>Leave the PVM console letting the deamon alive:
+    <BR><CODE>pvm&gt; <B>quit</B></CODE>
+</UL>
+</P>
+<P>
+After that, you can directly start ParaGauss by calling the
+<A HREF="#ttfs_script">ttfs script</A> from the command line or
+by executing a script file containing the call to the
+<A HREF="#ttfs_script">ttfs script</A>.
+</P>
+<P>
+After ParaGauss finished, you can kill the PVM deamon:
+<BR><CODE>&gt; <B>pvm</B></CODE>
+<BR><CODE>pvm&gt; <B>halt</B></CODE>
+</P>
+<BR>
+
+
+<H3>
+<A NAME="submit_Power_Challenge"></A>
+<B><FONT SIZE=4>Power Challenge</FONT></B>
+</H3>
+
+<P>
+You must use the queue system to start ParaGauss.
+</P>
+<P>
+Here is an example script file:
+</P>
+<PRE>
+#!/bin/tcsh
+#$ -cwd
+#$ -q para        
+#$ -cwd
+source /etc/cshrc
+source ~/.login
+/home/ttfs/bin.sgi/ttfs_<I>version name</I>
+</PRE>
+<P>
+Submit this file with the following command:
+<BR><CODE>&gt; <B>qsub <I>time_estimate</I> -pe pvm <I>proc_nbr script_file</I></B></CODE>
+<BR>where
+<TABLE>
+<TR><TD><CODE><I><B>time_estimate</B></I></CODE>
+    <TD>is an estimate of the run time in the format "hh:mm"</TR>
+<TR><TD><CODE><I><B>proc_nbr</B></I></CODE>
+    <TD>is the number of processors</TR>
+<TR><TD><CODE><I><B>script_file</B></I></CODE>
+    <TD>is the script file described above. It must be executable.</TR>
+</TABLE>
+</P>
+<P>
+It might be necessary for huge calculations to make the PVM buffer used by the PVM daemon
+bigger than the default: In case you obtain error masseges like the following
+<PRE>
+libpvm [t40002]: da_new() Warning: shared buffer full, using malloc
+libpvm [t40002]: peer_send() Message(s) too long for shared buffer, deadlocked.
+</PRE>
+... add the following lines to yout "<CODE>~/.cshrc"</CODE>" file:
+<PRE>
+# set larger PVM buffer size for huge jobs
+setenv PVMBUFSIZE 104857600
+</PRE>
+Remove these lines again as soon as your large calculations are complete
+since you request a vast amount of spoiled memory for each PVM job otherwise.
+</P>
+<BR>
+
+
+
+<H3>
+<A NAME="submit_SP2"></A>
+<B><FONT SIZE=4>SP2</FONT></B>
+</H3>
+
+<P>
+A complete manual on how to submit jobs on the VPP
+can be found in the WWW under
+<A HREF="http://www.lrz-muenchen.de/services/compute/sp2/loadleveler/index.html">
+"http://www.lrz-muenchen.de/services/compute/sp2/loadleveler/index.html"</A>
+</P>
+
+<P>
+</P>
+<BR>
+
+
+
+<H3>
+<A NAME="submit_VPP"></A>
+<B><FONT SIZE=4>VPP</FONT></B>
+</H3>
+
+<P>
+A complete manual on how to submit jobs on the VPP
+can be found in the WWW under
+<A HREF="http://www.lrz-muenchen.de/services/compute/vpp/jobs/">
+"http://www.lrz-muenchen.de/services/compute/vpp/jobs/"</A>
+</P>
+
+<H4>
+<B><FONT SIZE=3>queue system</FONT></B>
+</H4>
+
+<P>
+Here is an example script file:
+</P>
+<PRE>
+#!/bin/csh
+# @$-lt "8:00:00"         # per process CPU time limit
+# @$-lT "8:00:00"         # per request CPU time limit
+# @$-lm 1800MB            # per-process memory size limits
+# @$-lM 1800MB            # per-request memory size limits
+# @$-lP 8                 # Number of Processors
+# @$-r "<I>jobname</I>"          # name of request
+# @$-nr                   # this request is not restartable
+# @$-mb                   # mail at beginning of job
+# @$-me                   # mail at end of job
+# @$-mu <I>mailaddress</I>       # user to send mail to
+# @$-x                    # export all environment variables
+
+~t3831ak/bin/ttfs_<I>version absolute_path_directory_as_name</I>
+
+</PRE>
+<P>
+Submit this file with the following command:
+<BR><CODE>&gt; <B>qsub <I>script_file</I></B></CODE>
+</P>
+<P>
+You do not specify the queues you want your yob to run in directly
+but by setting the number of processors, the time limit and the
+memory size limit per processor. Here are the limits of the available queues:
+<TABLE BORDER=4>
+<TR><TH>queue<TH>number of processors<TH>time limit [hour]<TH>memory size limit [MB]</TR>
+<TR><TD><A NAME="vpp_interactive_limits"></A>interactive jobs<TD>4<TD>15 min<TD>1800</TR>
+<TR><TD>p4_1h<TD>4<TD>1<TD>1800</TR>
+<TR><TD>p4_4h<TD>4<TD>4<TD>1800</TR>
+<TR><TD>p8_1h<TD>8<TD>1<TD>1800</TR>
+<TR><TD>p8_8h<TD>8<TD>8<TD>1800</TR>
+<TR><TD>p16_1h<TD>16<TD>1<TD>1800</TR>
+<TR><TD>p16_8h<TD>16<TD>8<TD>1800</TR>
+</TABLE>
+</P>
+<P>
+To see the state of your jobs, use the following command:
+<BR><CODE>&gt; <B>qq -p</B></CODE>
+<BR>The <CODE>qq</CODE> command has various switches. For on-line help type:
+<BR><CODE>&gt; <B>qq -h</B></CODE>
+</P>
+<P>
+To monitor the performance of your running jobs type:
+<BR><CODE>&gt; <B>myflops</B></CODE>
+</P>
+
+<H4>
+<B><FONT SIZE=3>interactive</FONT></B>
+</H4>
+
+<P>
+You may also execute small jobs
+<A HREF="#vpp_interactive_limits">(see table above)</A> interactively 
+with the help of the <CODE>JOBEXEC</CODE> command:
+<BR><CODE>&gt; <B>JOBEXEC -c -em simplex -vp <I>proc_nbr</I>
+     -mem 600 -v -wait `pwd`/<I>script_file</I></B></CODE>
+<BR>where
+<TABLE>
+<TR><TD><CODE><I><B>proc_nbr</B></I></CODE>
+    <TD>is the number of processors</TR>
+<TR><TD><CODE><I><B>script_file</B></I></CODE>
+    <TD>is the script file described above</TR>
+</TABLE>
+</P>
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+
+<H2>
+<A NAME="Geometry_Optimization"></A>
+<B><FONT SIZE=5>Geometry Optimization</FONT></B>
+</H2>
+
+
+<H3>
+<A NAME="gx_file"></A>
+<B><FONT SIZE=4>gx file</FONT></B>
+</H3>
+
+<P>
+This file contains geometry and Z-matrix for the calculated geometry.
+This file is used to communicate between the ParaGauss program and the 
+geometry optimizer. ParaGauss takes its input geometry from this file.
+At the end of each geometry loop, ParaGauss appends the calculated
+energy and gradients to the file. Then it invokes the  geometry optimizer
+that reads in the file, calculates a new geometry and updates the gx file.
+After that, ParaGauss reads in the file once more at the beginning of
+the next geometry loop.
+</P>
+
+<H3>
+<A NAME="simol_program"></A>
+<B><FONT SIZE=4>simol program</FONT></B>
+</H3>
+
+<H3>
+<A NAME="optimizer_program"></A>
+<B><FONT SIZE=4>Optimizer</FONT></B><br>
+<a
+href="/home/ttfs/DOCUMENTATION/DOK/optimizer/input_doc.ps">find the instructions here ...</a>
+</H3>
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+
+
+
+<H1>
+<A NAME="Input_Description"></A>
+<B><FONT SIZE=7>Input Description</FONT></B>
+</H1>
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+
+
+
+<H2>
+<A NAME="Format"></A>
+<B><FONT SIZE=5>Format</FONT></B>
+</H2>
+
+<P>
+The input format is intended to be as free as possible.
+</P>
+<P>
+The following special features are supported:
+</P>
+<DL>
+<DT><A NAME="Comments"></A>Comments
+<DD>Everything after character "#" in line is ignored
+<DT>Empty lines
+<DD>... are ignored.
+<DT><A NAME="Continuation_Line"></A>Continuation lines
+<DD>The preceding line must contain "%".
+Everything after this character is ignored and the next line is read.
+This is helpful when formatting lines containing numbers.
+Namelist may be written in several lines anyway.
+<DT><A NAME="Include_File"></A>Include Files
+<DD>"~" at the beginning of line followed by filename makes this file to be read.
+When the end of the include file is reached reading continues in the previous file after the
+include line. Recursive includes are also allowed, i.e the include files may contain new
+include directives.
+<DT>Masking special characters
+<DD>"#", "%" and "\" can be masked with an "\" preceding it.
+<DT><A NAME="Number_Format"></A>Number Formats for Real Numbers
+<DD>There are no fixed formats. Any normal notation will be accepted. For instance:
+<UL>
+<LI>1.001
+<LI>1
+<LI>1.0E00-1
+</UL>
+</DL>
+
+<BR><BR>
+
+<P>
+<A NAME="Namelist_Format"></A>The main building blocks are so called "<B>namelists</B>"
+that obey the following rules:
+</P>
+<UL TYPE="SQUARE">
+<LI>Namelists start with the character "&" directly followed by the name of the namelist.
+<LI>After that there are statements of the kind "<I>Variable</I>=<I>Value</I>". Where
+  <UL TYPE="SQUARE">
+  <LI><I>Variable</I> is the name of a variable that is included in the namelist.
+  <LI><I>Value</I> is a value assigned to the variable. The format depends upon the type
+  of the variable used:
+    <UL TYPE="SQUARE">
+    <LI>For Numbers any notation as described above can be used
+    <LI>Strings must be quoted. They are case-sensitive.
+    <LI>Logicals can be assigned the following values: T F TRUE FALSE .T. .F. .TRUE. .FALSE.
+    </UL>
+  <LI>An arbitrary number of blanks (including 0) is allowed before and after "="
+  </UL>
+<LI>Statements are separated by one or more of the following items:
+  <UL TYPE="SQUARE">
+  <LI>One or more blanks
+  <LI>the character ","
+  <LI>A new line
+  </UL>
+<LI>The first statement and the Namelist name are separated by one or more of the
+following items:
+  <UL TYPE="SQUARE">
+  <LI>One or more blanks
+  <LI>A new line
+  </UL>
+<LI>Namelists end with the character "/". Everything after that in the line is ignored.
+For clarity, it is good practice to repeat the name of the namelist here.
+<LI>Namelists may be written in one or more lines.
+<LI>Namelists are case-insensitive, i.e. using capital or minor letters makes no difference.
+<LI>The order in which the statements appear is free.
+<LI>It is not necessary to assign values to all variables in the namelist.
+Variables that are omitted will be assigned default values.
+However, certain variables specially denoted in the description of the namelists below
+do not have default values and need to be specified.
+</UL>
+<P>
+Here is an example:
+</P>
+<PRE>
+ &NAMELIST_NAME
+    int_var=1, REAL_VAR=0.7E1
+    String_Var = "Hello"
+ /NAMELIST_NAME
+</PRE>
+
+
+
+
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+<H2>
+<A NAME="Syntax"></A>
+<B><FONT SIZE=5>Syntax</FONT></B>
+</H2>
+
+<P>
+The input consists of namelists,
+sometimes directly followed by lines containing lists of numeric parameters
+(This is mentioned for each of the relevant namelist individually in the
+<A HREF="#Explication_of_Namelists">explication of namelists</A> below.).
+</P>
+<P>
+Most of the namelists can appear in arbitrary order, 
+but some have to appear together in <B><A NAME="fixed_blocks">blocks with fixed order</A></B>:
+<DL>
+<DT><A NAME="Molecular_Geometry">Molecular Geometry</A>
+<DD>The namelists <A HREF="#namelist_UNIQUE_ATOM_NUMBER">UNIQUE_ATOM_NUMBER</A>
+and <A HREF="#namelist_UNIQUE_ATOM">UNIQUE_ATOM</A> have to be grouped together
+as described with namelist <A HREF="#namelist_UNIQUE_ATOM_NUMBER">UNIQUE_ATOM_NUMBER</A>.
+<DT><A NAME="Point_Charge_Geometry">Point Charge Geometry</A>
+<DD>The namelists <A HREF="#namelist_POINTCHARGE_NUMBER">POINTCHARGE_NUMBER</A>
+and <A HREF="#namelist_POINTCHARGE">POINTCHARGE</A> have to be grouped together
+as described with namelist <A HREF="#namelist_POINTCHARGE_NUMBER">POINTCHARGE_NUMBER</A>
+<DT><A NAME="Basis_Set">Basis Set</A>
+<DD>The namelists <A HREF="#namelist_UNIQUE_ATOM_BASISSET">UNIQUE_ATOM_BASISSET</A>,
+<A HREF="#namelist_UNIQUE_ATOM_BASIS">UNIQUE_ATOM_BASIS</A>
+and <A HREF="#namelist_UNIQUE_ATOM_GLOB_CON">UNIQUE_ATOM_GLOB_CON</A>
+have to be grouped together
+as described with namelist <A HREF="#namelist_UNIQUE_ATOM_BASISSET">UNIQUE_ATOM_BASISSET</A>.
+<DT><A NAME="SCF_Grid">SCF Grid</A>
+<DD>The namelists <A HREF="#namelist_GRID">GRID</A>
+and <A HREF="#namelist_GRIDATOM">GRIDATOM</A> have to be grouped together
+as described with namelist <A HREF="#namelist_GRID">GRID</A>.
+<DT><A NAME="Post_Hoc_Grid">Post Hoc Grid</A>
+<DD>The namelists <A HREF="#namelist_GRID_PH">GRID_PH</A>
+and <A HREF="#namelist_GRIDATOM_PH">GRIDATOM_PH</A> have to be grouped together
+as described with namelist <A HREF="#namelist_GRID_PH">GRID_PH</A>.
+In case this optional block does not appear the settings from the SCF grid are used.
+<DT><A NAME="Output_Options">Output Options</A>
+<DD>The namelists <A HREF="#namelist_OUTPUT">OUTPUT</A>, 
+<A HREF="#namelist_OUTPUT_CONFIG">OUTPUT_CONFIG</A>,
+<A HREF="#namelist_OUTPUT_DIPOLE">OUTPUT_DIPOLE</A>,
+<A HREF="#namelist_OUTPUT_INTEGRAL">OUTPUT_INTEGRAL</A>,
+<A HREF="#namelist_OUTPUT_IOUNITADMIN">OUTPUT_IOUNITADMIN</A>,
+<A HREF="#namelist_OUTPUT_POST_HOC">OUTPUT_POST_HOC</A>,
+<A HREF="#namelist_OUTPUT_SCF">OUTPUT_SCF</A>,
+<A HREF="#namelist_OUTPUT_SYM">OUTPUT_SYM</A>,
+<A HREF="#namelist_OUTPUT_TIMING">OUTPUT_TIMING</A>,
+<A HREF="#namelist_OUTPUT_TRACE">OUTPUT_TRACE</A>,
+and <A HREF="#namelist_OUTPUT_UNIQUE_ATOMS">OUTPUT_UNIQUE_ATOMS</A> have to be grouped together
+as described with namelist <A HREF="#namelist_OUTPUT">OUTPUT</A>. In case it appears, the
+optional namelists <A HREF="#namelist_OUTPUT">OUTPUT</A> must start the block. The remaining
+optional namelists may appear in arbitrary order.
+<DT><A NAME="Information_on_Irreps">Information on Irreps</A>
+<DD>This block is only required in the outdated case the new symmetry part is not used.
+The namelists <A HREF="#namelist_SYMMETRY_DATA">SYMMETRY_DATA</A>
+and <A HREF="#namelist_IRREP">IRREP</A> have to be grouped together
+as described with namelist <A HREF="#namelist_SYMMETRY_DATA">SYMMETRY_DATA</A>.
+<DT><A NAME="Symmetry_Adaption_Coefficients">Symmetry Adaption Coefficients</A>
+<DD>This block is only required in the outdated case the new symmetry part is not used.
+The namelists <A HREF="#namelist_UNIQUE_ATOM_INDP_FCT">UNIQUE_ATOM_INDP_FCT</A>
+and <A HREF="#namelist_UNIQUE_ATOM_SYMADAPT">UNIQUE_ATOM_SYMADAPT</A> have to be grouped together
+as described with namelist <A HREF="#namelist_UNIQUE_ATOM_INDP_FCT">UNIQUE_ATOM_INDP_FCT</A>.
+In case no integrals are calculated this block also contains renormalization coefficients.
+<DT>The optional user conctrolled population analysis block
+<DD>It consist of namelist <A HREF="#namelist_POPULATION">POPULATION</A> followd by
+possibly several namelists <A HREF="#namelist_POPCOLUM">POCOLUMN</A> as described with
+namelist <A HREF="#namelist_POPULATION">POPULATION</A>.
+<DT>The optional fragment orbital analysis block
+<DD>It consist of namelist <A HREF="#namelist_FRAG_ORB_ANALYSIS">FRAG_ORB_ANALYSIS</A>
+followd by namelists <A HREF="#namelist_FRAGMENT">FRAGMENT</A>.
+as described with <A HREF="#namelist_FRAG_ORB_ANALYSIS">FRAG_ORB_ANALYSIS</A>. 
+<DT>The optional orbital plot block
+<DD>It consist of namelist <A HREF="#namelist_ORBITAL_PLOT">ORBITAL_PLOT</A>
+followd by namelists <A HREF="#namelist_ORBITAL_LIST">ORBITAL_LIST</A>
+as described with <A HREF="#namelist_ORBITAL_PLOT">ORBITAL_PLOT</A>.
+</DL>
+</P>
+<P>
+Some additional rules concerning the order of the remaining namelists and the blocks listed above
+have to be observed:
+<UL>
+<LI>Either the <A HREF="#namelist_TASKS">namelist TASKS</A> of the outdated 
+<A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A> must start the input.
+Those namelists are mutually exclusive.
+<LI>The <A HREF="#Molecular_Geometry">molecular geometry block</A> contains the specification
+of the number of <A HREF="#Unique_atoms">unique atoms</A>. Thus it must precede the following
+blocks that need this information:
+  <UL TYPE="SQUARE">
+  <LI><A HREF="#Basis_Set">Basis Set</A>
+  <LI><A HREF="#SCF_Grid">SCF Grid</A>
+  <LI><A HREF="#Post_Hoc_Grid">Post Hoc Grid</A>
+  <LI><A HREF="#Symmetry_Adaption_Coefficients">Symmetry Adaption Coefficients</A>
+  </UL>
+<LI>The outdated <A HREF="#Symmetry_Adaption_Coefficients">Symmetry Adaption Coefficients</A>
+block must be preceded by the following blocks:
+  <UL TYPE="SQUARE">
+  <LI><A HREF="#Molecular_Geometry">Molecular Geometry</A>
+  <LI><A HREF="#Information_on_Irreps">Information on Irreps</A>
+  <LI><A HREF="#Basis_Set">Basis Set</A>
+  </UL>
+</UL>
+</P>
+<P>
+Each of the blocks listed above and each of the remaining namelist not contained in
+a block may only appear once.
+</P>
+<P>
+Most of the namelist and blocks are optional and default values are used if they are omitted.
+However the following namelist and blocks are required:
+<UL>
+<LI>Either the <A HREF="#namelist_TASKS">namelist TASKS</A> of the outdated 
+<A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A> must start the input.
+Those namelists are mutually exclusive.
+<LI>The <A HREF="#Molecular_Geometry">Molecular Geometry</A> block.
+<LI>The <A HREF="#Basis_Set">Basis Set</A> block.
+<LI>The <A HREF="#namelist_PVMOPTIONS">namelist PVMOPTIONS</A> to specify the number of
+processors.
+<LI>The use of the optional <A HREF="#SCF_Grid">SCF Grid</A> block and the optional
+<A HREF="#namelist_MAIN_OPTIONS">MAIN_OPTIONS</A> is highly recommended.
+<LI>In the outdated case no symmetry part is run the blocks
+<A HREF="#Information_on_Irreps">Information on Irreps</A>
+and <A HREF="#Symmetry_Adaption_Coefficients">Symmetry Adaption Coefficients</A> are also
+required.
+</UL>
+</P>
+<P>
+The outdated use of the <A NAME="Information_on_Irreps">Information on Irreps</A> block and the
+<A HREF="#Symmetry_Adaption_Coefficients">Symmetry Adaption Coefficients</A> blocks
+is only allowed in case the symmetry part is not run.
+(See <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>.)
+In this case the <A HREF="#namelist_SYMMETRY_GROUP">namelists SYMMETRY_GROUP</A> is forbidden.
+</P>
+<P>
+It is possible to convert old lcgto inputs with the help of the
+<A HREF="#ttfs_script">ttfs script</A>. In this case an intermediate file will be generated
+by a special version of lcgto. To read in this intermediate file the input file must contain
+one line "read intermediate input". The <A HREF="#Molecular_Geometry">Molecular Geometry</A>
+block, the <A HREF="#Basis_Set">Basis Set</A> block,
+the <A HREF="#Information_on_Irreps">Information on Irreps</A> block
+and the <A HREF="#Symmetry_Adaption_Coefficients">Symmetry Adaption Coefficients</A> block
+or the <A HREF="#namelist_SYMMETRY_GROUP">namelists SYMMETRY_GROUP</A> must all be omitted
+since this information will be taken from the intermediate file. Note that other information
+from the old lcgto input is not converted (for instance: grid, exchange potential ...)
+and must be specified manually in the input file.
+</P>
+<P>
+In case of errors in the input file, an error message giving the filename and the
+line number of the last processed line and showing this line will be produced when
+the first error is detected and the program will stop. Consecuting errors are not detected.
+</P>
+
+
+
+
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+<H2>
+<A NAME="Explication_of_Namelists"></A>
+<B><FONT SIZE=5>Explication of Namelists</FONT></B>
+</H2>
+
+<P>
+The <A HREF="#Namelist_Format">format of namelists</A> is described above.
+</P>
+<BR><BR>
+
+
+<H3>
+<A NAME="namelist_CONVERGENCE_LIST"></A>
+<B><FONT SIZE=4>CONVERGENCE_LIST</FONT></B>
+</H3>
+<P>
+This namelist sets convergence criteria for SCF procedure and geometry optimization.
+</P>
+<PRE>
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =       100 # (the default)
+    ENERGY_CRITERION      = 1.000E-05 # (the default)
+    ENERGY_DEV_CHECKED    =         4 # (the default)
+    COEFF_CRITERION       = 1.000E-05 # (the default)
+    COEFF_DEV_CHECKED     =         1 # (the default)
+    COULOMB_CRITERION     = 1.000E-05 # (the default)
+    COULOMB_DEV_CHECKED   =         0 # (the default)
+    DENSITY_CRITERION     = 1.000E-05 # (the default)
+    DENSITY_DEV_CHECKED   =         1 # (the default)
+    MAX_GEO_ITERATION     =         1 # (the default)
+    STOP_IF_NOT_CONVERGED =     FALSE # (the default)
+ /CONVERGENCE_LIST (namelist may be dropped)
+</PRE>
+<DL>
+<DT>MAX_ITERATION<DD>Maximal number of SCF cycles allowed.
+<DT>ENERGY_CRITERION<DD>Maximal difference in total energy for the last
+ENERGY_DEV_CHECKED SCF cycles.
+<DT>ENERGY_DEV_CHECKED<DD>Check energy criterion for the last
+ENERGY_DEV_CHECKED SCF cycles. Setting to 0 switches off criterion.
+<DT>COEFF_CRITERION<DD>Maximal difference in charge fit coefficients for the
+last COEFF_DEV_CHECKED SCF cycles.
+<DT>COEFF_DEV_CHECKED<DD>Check charge fit coefficient criterion for the last
+COEFF_DEV_CHECKED SCF cycles. Setting to 0 switches off criterion.
+<DT>COULOMB_CRITERION<DD>The self interaction between the fitted charge density
+of two SCF cycles is required to be below this limit.
+<DT>COULOMB_DEV_CHECKED<DD>Check coulomb criterion for the last
+COULOMB_DEV_CHECKED SCF cycles. Setting to 0 switches off criterion.
+<DT>DENSITY_CRITERION<DD>Maximal difference in density matrix for the last
+DENSITY_DEV_CHECKED SCF cycles
+<DT>DENSITY_DEV_CHECKED<DD>Check density criterion for the last
+DENSITY_DEV_CHECKED SCF cycles. Setting to 0 switches off criterion.
+<DT>MAX_GEO_ITERATION<DD>Maximal number of geometry optimization cycles allowed
+<DT>STOP_IF_NOT_CONVERGED<DD>Abort calculation if no SCF convergence was reached
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_EFIELD"></A>
+<B><FONT SIZE=4>EFIELD</FONT></B>
+</H3>
+<P>
+Allows to apply homogeneous external electrical field.
+The field applied must conserve the <A HREF="#namelist_SYMMETRY_GROUP">selected symmetry</A>.
+</P>
+<P>
+Note that the calculation of gradients of the external electrical field are not yet implemented
+and only single point calculations are possible.
+</P>
+<PRE>
+ &EFIELD
+    APPLY              =        FALSE # (the default)
+    REVERSE_FOR_SPINS  =        FALSE # (the default)
+ /EFIELD (namelist may be dropped)
+   0.000000       0.000000       0.000000
+</PRE>
+<DL>
+<DT>APPLY<DD>Switch on electrical field.
+<DT>REVERSE_FOR_SPINS<DD>Apply the field in opposite direction for second spin in the case of
+an open shell calculation. (Unphysical !)
+</DL>
+<P>
+The namelist must directly be followed by a line containing the field vector of the electrical
+field ([au], free format).
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_DIPOLE_TRANSITIONMOMENTS"></A>
+<B><FONT SIZE=4>DIPOLE_TRANSITIONMOMENTS</FONT></B>
+</H3>
+<P>
+This namelist selects which dipole transition moments should be
+printed.
+<P>
+There is also the possibility to create intensities for Xray
+Emission Spectra (XES). The Xray emission is caused by the
+recombination of a valence orbital and a previously generated core
+hole. In the theoretical approach the calculation is performend in the
+frozen orbital groundstate approximation. The data will be written to the file xes.dat
+in the output directory and will contain 2 columns. The columns
+are the Kohn Sham eigenvalue (in au) of the valence orbital and the
+intensity. The intensity is calculated, according to Fermi's Golden
+rule as the product of the square of the dipole transition matrix
+element and the difference between the core orbital and the valence
+orbital to the power 4..   
+</P>
+<P>
+This namelist only has effects if dipole calculation are switched on in namelist
+<A HREF="#namelist_TASKS">TASKS</A> or
+<A HREF="#namelist_OPERATIONS">OPERATIONS</A> or
+<A HREF="#namelist_PROPERTIES">PROPERTIES</A> 
+and <A HREF="#namelist_OUTPUT_DIPOLE">OUTPUT_DIPOLE_TRANSITIONM_F</A> is switched on as well.
+</P>
+<PRE>
+ &DIPOLE_TRANSITIONMOMENTS
+    SHOW_VALENCE_EXCITATIONS      =         TRUE # (the default)
+    SHOW_CORE_EXCITATIONS         =        FALSE # (the default)
+    MAX_VALENCE_EXCITATION_ENERGY =     10.00000 # (the default)
+    CORE_EXCITATION_FROM_E_MIN    =      0.00000 # (the default)
+    CORE_EXCITATION_FROM_E_MAX    =      0.00000 # (the default)
+    CORE_EXCITATION_TO_E_MIN      =      0.00000 # (the default)
+    CORE_EXCITATION_TO_E_MAX      =      0.00000 # (the default)
+    MAKE_XES_SPECTRA              =        FALSE # (the default)
+    CORE_HOLE_IRREP               =            0 # (the default)
+    CORE_HOLE_SPIN                =            0 # (the default)
+    CORE_HOLE_PARTNER             =            0 # (the default)
+    I_CORE_HOLE                   =            0 # (the default)
+    X                             =      0.00000 # (the default)
+    Y                             =      0.00000 # (the default)
+    Z                             =      0.00000 # (the default)
+ /DIPOLE_TRANSITIONMOMENTS
+</PRE>
+<P>
+To select valence excitations from occupied to empty orbitals, set SHOW_VALENCE_EXCITATIONS.
+All Excitations up to MAX_VALENCE_EXCITATION_ENERGY will be printed. [eV]
+</P>
+<P>
+To select core excitations, set SHOW_CORE_EXCITATIONS. All excitation from orbitals in the energy
+range between CORE_EXCITATION_FROM_E_MIN and CORE_EXCITATION_FROM_E_MAX to orbitals in the energy
+range between CORE_EXCITATION_TO_E_MIN and CORE_EXCITATION_TO_E_MAX are printed. [eV]
+</P>
+<DL>
+<DT>MAKE_XES_SPECTRA<DD>Calculate a XES spectrum. The (imaginary) core hole is
+defined by the next 4 items.
+<DT>CORE_HOLE_IRREP<DD>Irrep of the core hole.
+<DT>CORE_HOLE_SPIN<DD>Spin of the core hole.
+<DT>CORE_HOLE_PARTNER<DD>Partner of the core hole.
+<DT>I_CORE_HOLE<DD>Number of the core hole within the irrep.
+<DT>X,Y,Z<DD>Unity vector, pointing in the direction of the Efield
+vector of the emitted light.
+</DL>
+<BR>
+<BR>
+ 
+
+<H3>
+<A NAME="namelist_FERMI"></A>
+<B><FONT SIZE=4>FERMI</FONT></B>
+</H3>
+<P>
+This namelist controls level broadening in the SCF procedure. Default is no level broadening.
+</P>
+<PRE>
+ &FERMI
+    FERMI_GAUSS           =     FALSE # (the default)
+    FERMI_FERMI           =     FALSE # (the default)
+    FERMI_SINUS           =     FALSE # (the default)
+    FERMI_ENERGY_RANGE    =   0.00000 # (the default)
+    FERMI_SIGMA           =   0.00000 # (the default)
+    FERMI_CUTOFF          =   5.00000 # (the default)
+    FERMI_FIX_UP_AND_DOWN =     FALSE # (the default)
+    FERMI_COMMON_EF       =      TRUE # (the default)
+    FERMI_UNPAIRED        =         0 # (the default)
+    FERMI_NEWTON_MAX      =       100 # (the default)
+    FERMI_ACCURACY        = 1.000E-10 # (the default)
+    FERMI_LEVEL_BROAD     =     FALSE # (the default) outdated
+ /FERMI (namelist may be dropped)
+</PRE>
+<DL>
+<DT>FERMI_GAUSS<DD>
+<DT>FERMI_FERMI<DD>
+<DT>FERMI_SINUS<DD>
+<DT>FERMI_ENERGY_RANGE<DD>
+<DT>FERMI_SIGMA<DD>
+<DT>FERMI_CUTOFF<DD>
+<DT>FERMI_FIX_UP_AND_DOWN<DD>
+<DT>FERMI_COMMON_EF<DD>
+<DT>FERMI_UNPAIRED<DD>
+<DT>FERMI_NEWTON_MAX<DD>
+<DT>FERMI_ACCURACY<DD>
+<DT>FERMI_LEVEL_BROAD<DD>
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_FRAGMENT"></A>
+<B><FONT SIZE=4>FRAGMENT</FONT></B>
+</H3>
+
+<P>
+Describes one fragment used in the fragment orbital
+analysis described together with namelist
+<A HREF="#namelist_FRAG_ORB_ANALYSIS">FRAG_ORB_ANALYSIS</A>.
+<P>
+Must directly follow this namelist and appear
+<A HREF="#namelist_FRAG_ORB_ANALYSIS">N_FRAGMENTS</A> times.
+</P>
+<PRE>
+ &FRAGMENT
+    N_ATOMS = 3
+ /FRAGMENT
+ 1  4  8
+</PRE>
+<DL>
+<DT>N_ATOMS<DD>number of atoms included in the fragment
+</DL>
+<P>
+Must be followed by a line containing the indices (integer format) of the included atoms.
+The indices refer to the number of the unique atom.
+
+</P>
+<BR>
+<BR>
+
+
+
+<H3>
+<A NAME="namelist_FRAG_ORB_ANALYSIS"></A>
+<B><FONT SIZE=4>FRAG_ORB_ANALYSIS</FONT></B>
+</H3>
+
+<P>
+Main namelist for doing a fragment orbital analysis.
+<P>
+The fragment orbital analysis is only performed, if FRAG_ORB_ANALYSIS is set to
+true in the <A HREF="#namelist_PROPERTIES">namelist PROPERTIES</A>.
+The system under study must be
+devided into a arbitrary number of fragments by the user. Every atom
+of the complete system must be in exactly on fragment. The position of
+the atoms in the fragments must be the same as in the complete
+system. Of course all input parameters have to be the same in all
+inputs. The complete system and all fragments have to be calculated
+seperately. Important: Set SAVE_EIGENVEC and SAVE_EIGENVEC_ALL to true
+(<A HREF="#namelist_RECOVER_OPTIONS">namelist RECOVER_OPTIONS</A>)
+For every FRAGMENT one needs the file "saved_fragment.dat".
+This can be optained by setting SAVE_AS_FRAGMENT
+to true (<A HREF="#namelist_RECOVER_OPTIONS">namelist RECOVER_OPTIONS</A>)
+during a normal single point or gradient run or during a properties run.
+<P>
+To do the actual fragment orbital analysis, for the complete system the
+file "saved_eigenvec.dat" and for every fragment a file
+"saved_fragment.dat<I>n</I> (<I>n</I> is the number
+of the fragment) must be in the input directory. The user is
+responsible for the correct names of the files. 
+</P>
+<PRE>
+ &FRAG_ORB_ANALYSIS
+    N_FRAGMENTS =  0 # (the default)
+    POP_LIMIT   =  1.000E-02 # (the default)
+    EIG_MIN     = -1.000E+02 # (the default)
+    EIG_MAX     =  1.000E+01 # (the default)
+ /FRAG_ORB_ANALYSIS
+</PRE>
+<DL>
+<DT>N_FRAGMENTS<DD>number of fragments. 
+<DT>POP_LIMIT<DD>Threshold: If the contribution of a fragment orbital to a
+orbital is below POP_LIMIT, then this contribution will not be listed
+in the output.
+<DT>EIG_MIN<DD>Minimal eigenvalue (in eV), which will be considered in
+the fragment orbital analysis. 
+<DT>EIG_MAX<DD>Maximal eigenvalue (in eV), which will be considered in
+the fragment orbital analysis.
+</DL>
+<P>
+For every of the N_FRAGMENTS fragment a namelist
+<A HREF="#namelist_FRAGMENT">namelist FRAGMENT</A>
+and a input line containing integer numbers must follow.
+<BR>Example:
+<PRE>
+ &FRAG_ORB_ANALYSIS
+    N_FRAGMENTS =  3 
+    POP_LIMIT   =  1.000E-02
+    EIG_MIN     = -1.000E+02
+    EIG_MAX     =  1.000E+01 
+ /FRAG_ORB_ANALYSIS 
+ &FRAGMENT n_atoms=4 /
+ 2  5  6  7
+ &FRAGMENT n_atoms=3 / 
+ 1  4  8
+ &FRAGMENT n_atoms=1 /
+ 3
+</PRE>
+Fragment one contains atoms 2,5,6 and 7, fragment two contains atoms
+1, 4 and 8 and fragment 3 atom 3.
+</P>
+<BR>
+<P>
+As a result one gets for every orbital (between EIG_MIN and EIG_MAX) the Mulliken
+populations in terms of the fragment orbitals. A sample ouput for two fragments:
+</P>
+<BR>
+<PRE>
+  162  57 A1     1 2.0000    -12.093438
+  Fragment:    1      Sum: 0.8601845
+  4/ 0.2945/-0.5773   5/ 0.5566/ 0.6890   6/ 0.0082/-0.0819   8/ 0.0010/ 0.0220
+  Fragment:    2      Sum: 0.1418295
+  53/ 0.0050/ 0.0605  54/ 0.0353/-0.1610  55/ 0.0104/-0.0927  56/ 0.0405/-0.1856
+  57/ 0.0051/ 0.0637
+  58/ 0.0051/ 0.0606  59/ 0.0033/ 0.0511  60/ 0.0073/ 0.0782  61/ 0.0120/ 0.0923
+  62/ 0.0014/ 0.0424
+</PRE>
+<BR>
+<DL>
+<DT>
+First line:
+<DD> 
+The number of the orbital, the number within the irrep, the irrep, the
+spin, the occupation and the eigenvalue (eV).
+<DT>
+Second line:
+<DD>
+Number of the fragment, total contribution of the fragment to the orbital
+<DT>
+Next line:
+<DD>
+Composition of the orbital: number of the fragment orbital/Mulliken
+population/MO coefficient  ...
+<BR>
+The MO coefficient may help to decide if a orbital interaction is
+bonding or antibonding.
+<DT>
+...  
+</DL>
+<BR>
+<BR>
+
+
+
+<H3>
+<A NAME="namelist_GRID"></A>
+<B><FONT SIZE=4>GRID</FONT></B>
+</H3>
+<P>
+This optional namelists starts the specification of the grid used in the SCF part.
+If no Post Hoc grid is specified, the SCF grid is used in the Post Hoc Part as well.
+</P>
+<P>
+This namelist may only appear after the number of unique atoms was specified in
+<A HREF="#namelist_UNIQUE_ATOM_NUMBER">namelists UNIQUE_ATOM_NUMBER</A>.
+The grid must be specified together in one block.
+In case the optional <A HREF="#namelist_GRIDATOM">namelist GRIDATOM</A> appears, it must
+directly follow this namelist <A HREF="#namelist_UNIQUE_ATOM_NUMBER">N_UNIQUE_ATOMS</A> times.
+Namelist GRID may also be omitted and grid specification be started with
+<A HREF="#namelist_GRIDATOM">namelist GRIDATOM</A>.
+</P>
+<P>
+Though there are default settings and grid specification is optional, it is highly
+recommended to do so.
+</P>
+<PRE>
+ &GRID
+    SYM_REDUCE   = FALSE # (the default)
+    WEIGHT_GRADS = FALSE # (the default)
+ /GRID (namelist may be dropped)
+</PRE>
+<DL>
+<DT>SYM_REDUCE<DD>If set to true, the local symmetry of a atom will be
+fully exploided to reduce the size of the integration grid. This may
+save a lot of CPU time. But be carefull: This option is not fully
+tested. Together with WEIGHT_GRADS=.true. no problems should occur,
+but if WEIGHT_GRADS is set to false, a rotation of the grid may take
+place and lead to a slight change of the total energy.
+<DT>WEIGHT_GRADS<DD>If set to true, the derivatives of weights of the integration
+grid will be considered in the calculation of the energy gradients
+with respect to nuclear displacements. The agreement between total
+energy and gradients will be increased by this option. As a price the
+CPU time consumption is rising. Attention: This switch affects the
+orientation and the construction of the POST_HOC and the SCF grid (no
+rotational invariannce, no BECKE scaling). If you are calculating
+binding energies, in all inputs WEIGHT_GRADS should be set uniformly
+to true (or false), also if you are not calculating GRADIENTS or the
+POST_HOC part. Note that you may set this switch here or in
+<A HREF="#namelist_GRID_PH">namelist GRID_PH</A> but it will always affect
+both grid parts.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_GRIDATOM"></A>
+<B><FONT SIZE=4>GRIDATOM</FONT></B>
+</H3>
+<P>
+This optional namelists specifies the grid for one unique atom used in the SCF part.
+If no Post Hoc grid is specified, the SCF grid is used in the Post Hoc Part as well.
+</P>
+<P>
+This optional namelist may only appear after the number of unique atoms was
+specified in <A HREF="#namelist_UNIQUE_ATOM_NUMBER">namelists UNIQUE_ATOM_NUMBER</A>
+and appear <A HREF="#namelist_UNIQUE_ATOM_NUMBER">N_UNIQUE_ATOMS</A> times in direct
+consecution. In case the optional <A HREF="#namelist_GRID">namelist GRID</A> appears,
+it must directly precede this namelist since the grid must be specified together in one block.
+</P>
+<P>
+Though there are default settings and grid specification is optional, it is highly
+recommended to do so.
+</P>
+<PRE>
+ &GRIDATOM # unique atom   1
+    NRAD    =         30 # (the default)
+    NANG    =        131 # (the default)
+    NPART   =          1 # (the default)
+    RADIUS  = 0.00000000 # (the default)
+    RSLATER =      TRUE # (the default)
+    RPOPLE  =      FALSE # (the default)
+    RIONIC  =      FALSE # (the default)
+ /GRIDATOM
+</PRE>
+<DL>
+<DT>NRAD<DD>NRAD determines the number of shells of the integration
+grid. A larger number leads to a better grid. The minimal value is
+10. You are on the save side, if you choose 50 as a standard value
+and 70 for hydrogen and heavy elements (Au,...). 
+<DT>NANG<DD>NANG determines the number of grid points per shell. Valid
+values are 31,51,71,91,111,131,151,171,191,231 and 291. A higher value
+leads to a better grid. A good choice is 171 for all atoms.
+<DT>NPART<DD>It is possible to use different NANG values in dependence
+from the distance to the nucleus. NPART is the number of domains and
+must be 1 or 5. As a result near the nucleus the grid will be
+rather sparse but in the outer regions very good.
+<DT>RADIUS<DD>Radius of the atom (in au), which will be used for the
+generation of the grid. Usually it has not to be specified.
+<DT>RSLATER<DD>If true (the default), atomic radii from Slater will be
+used for the generation of the grid.
+<DT>RPOPLE<DD>If true, atomic radii from POPLE will be
+used for the generation of the grid.
+<DT>RIONIC<DD>If true, iionic radii will be
+used for the generation of the grid. This can be used, if one wants to
+calculate very ionic systems. But be carefull: The NRAD parameter has
+to be increased to keep the total number of shells constant.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_GRID_PH"></A>
+<B><FONT SIZE=4>GRID_PH</FONT></B>
+</H3>
+<P>
+This optional namelists starts the specification of the grid used in the Post Hoc part.
+If no Post Hoc grid is specified, the SCF grid is used in the Post Hoc
+Part as well. If you are calculating energy gradients, it is strongly
+recommended to use in the Post Hoc part the same grid as in the SCF part. 
+</P>
+<P>
+This namelist may only appear after the number of unique atoms was specified in
+<A HREF="#namelist_UNIQUE_ATOM_NUMBER">namelists UNIQUE_ATOM_NUMBER</A>.
+The grid must be specified together in one block.
+In case the optional <A HREF="#namelist_GRIDATOM_PH">namelist GRIDATOM_PH</A> appears, it must
+directly follow this namelist <A HREF="#namelist_UNIQUE_ATOM_NUMBER">N_UNIQUE_ATOMS</A> times.
+Namelist GRID_PH may also be omitted and grid specification be started with
+<A HREF="#namelist_GRIDATOM_PH">namelist GRIDATOM_PH</A>.
+</P>
+<PRE>
+ &GRID_PH
+    SYM_REDUCE   = FALSE # (the default)
+    WEIGHT_GRADS = FALSE # (the default)
+ /GRID_PH
+</PRE>
+<P>
+See <A HREF="#namelist_GRID">namelist GRID</A> for a description of these switches..
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_GRIDATOM_PH"></A>
+<B><FONT SIZE=4>GRIDATOM_PH</FONT></B>
+</H3>
+<P>
+This optional namelists specifies the grid for one unique atom used in the Post Hoc part.
+If no Post Hoc grid is specified, the SCF grid is used in the Post Hoc Part as well.
+</P>
+<P>
+This optional namelist may only appear after the number of unique atoms was specified in
+<A HREF="#namelist_UNIQUE_ATOM_NUMBER">namelists UNIQUE_ATOM_NUMBER</A>
+and appear <A HREF="#namelist_UNIQUE_ATOM_NUMBER">N_UNIQUE_ATOMS</A> times in direct consecution.
+In case the optional <A HREF="#namelist_GRID_PH">namelist GRID_PH</A> appears, it must directly
+precede this namelist since the grid must be specified together in one block.
+</P>
+<PRE>
+ &GRIDATOM_PH # unique atom   1
+    NRAD    =         30 # (the default)
+    NANG    =        131 # (the default)
+    NPART   =          1 # (the default)
+    RADIUS  = 0.00000000 # (the default)
+    RSLATER =      FALSE # (the default)
+    RPOPLE  =      FALSE # (the default)
+    RIONIC  =      FALSE # (the default)
+ /GRIDATOM_PH
+</PRE>
+<P>
+The meaning of the keywords is the same as in the 
+<A HREF="#namelist_GRIDATOM">namelist GRIDATOM</A>
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_INTEGRALPAR"></A>
+<B><FONT SIZE=4>INTEGRALPAR</FONT></B>
+</H3>
+<P>
+Outdated. Allowed for compatibility but ignored.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_INTEGRALQUADRUPEL"></A>
+<B><FONT SIZE=4>INTEGRALQUADRUPEL</FONT></B>
+</H3>
+<P>
+outdated. Allowed for compatibility but ignored.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_IRREP"></A>
+<B><FONT SIZE=4>IRREP</FONT></B>
+</H3>
+<P>
+Outdated.
+This namelist may only be used if new symmetry part is not used
+(See <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>).
+It must be directly preceded by <A HREF="#namelist_SYMMETRY_DATA">namelist SYMMETRY_DATA</A>
+and appear <A HREF="#namelist_SYMMETRY_DATA">N_IRREP</A> times.
+It describes the properties of one irreducible representation.
+</P>
+<PRE>
+ &IRREP
+    NAME       = "E" # (no default) Must be quoted
+    N_PARTNERS =   1 # (no default)
+ /IRREP
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_MACHINEPARAMETERS"></A>
+<B><FONT SIZE=4>MACHINEPARAMETERS</FONT></B>
+</H3>
+<P>
+This namelists allows to control the vector length used when doing numerical
+calculations on grids. This parameter is critical for speed and memory requirements.
+The default setting is 2048 for the VPP and 128 otherwise.
+The other option are for debug purpose only.
+</P>
+<PRE>
+ &MACHINEPARAMETERS
+    MACHINEPARAMETERS_VECLEN     =      128 # (the default)
+    MACHINEPARAMETERS_PH_VECLEN  =      128 # (the default)
+    MACHINEPARAMETERS_DIMCHECK   =     TRUE # (the default)
+    MACHINEPARAMETERS_CHECKPRECI = 1.00E-06 # (the default)
+ /MACHINEPARAMETERS (namelist may be dropped)
+</PRE>
+<DL>
+<DT>MACHINEPARAMETERS_VECLEN<DD>vector length used when doing numerical calculations on grids
+<DT>MACHINEPARAMETERS_PH_VECLEN<DD>vector length used in the post hoc part.
+ Default is to use MACHINEPARAMETERS_VECLEN.
+ Memory requirements are especially high in the post hoc part if you
+ are calculatin gradients.
+ Thus it may be necessary to choose a smaller vector length.
+<DT>MACHINEPARAMETERS_DIMCHECK<DD>Perform certain dimension checks in SCF part.
+<DT>MACHINEPARAMETERS_CHECKPRECI<DD>Precision used to compare numbers when running in debug mode.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_MAIN_OPTIONS"></A>
+<B><FONT SIZE=4>MAIN_OPTIONS</FONT></B>
+</H3>
+<P>
+Various important options.
+</P>
+<PRE>
+ &MAIN_OPTIONS
+    NUMERIC_EXCH        =      TRUE # (the default)
+    SPIN_RESTRICTED     =      TRUE # (the default)
+    RELATIVISTIC        =     FALSE # (the default)
+    <span class="so">SPIN_ORBIT          =     FALSE # (the default) /* Version > 2.1g */</span>
+    INTEGRALS_ON_FILE   =      TRUE # (the default)
+    USE_MODEL_DENSITY   =     FALSE # (the default)
+    ENERGIES_ALWAYS     =     FALSE # (the default)
+    DIRECT_ENERGY_CALC  =     FALSE # (the default)
+    PERTURBATION_THEORY =      TRUE # (the default)
+    INTEGRAL_EXPMAX     = 5.000E+01 # (the default)
+    # the remaining options are outdated but kept for compatibility
+    SAVE_XCKS_MATRIX    =     FALSE # (the default)
+    READ_XCKS_MATRIX    =     FALSE # (the default)
+    SAVE_XCKS_NBR       =        10 # (the default)
+    READ_DENSMAT        =     FALSE # (the default)
+    MAX_GEO_ITERATION   =         1 # (the default)
+ /MAIN_OPTIONS
+</PRE>
+<DL>
+<DT>NUMERIC_EXCH<DD>The exchange potential will be calculated numerically on a grid.
+Otherwise fit functions are used.
+<DT>SPIN_RESTRICTED<DD>This is an closed shell calculation.
+<DT><tt>RELATIVISTIC</tt>
+ <DD>Apply scalar relativistics.
+<div class="so">
+<DT><tt>SPIN_ORBIT</tt>
+ <DD>Initaite spin-orbit run.  See <a href="#Spin_Orbit">Spin-Orbit</a> section.
+</div>
+<DT>INTEGRALS_ON_FILE<DD>Write Integrals to file.
+Keeping integrals in memory gives some speed up but is only possible for very small problems
+or if you have extraordinary huge memory.
+Default is to keep integrals in memory on VPP and write them to file on all other platforms.
+<DT>USE_MODEL_DENSITY<DD>Use model density. This option is not working up to now.
+<DT>ENERGIES_ALWAYS<DD>Calculate all contributions to energy separately, but pay the price of
+extra PVM communication and slower performance.
+<DT>DIRECT_ENERGY_CALC<DD>Apply a new algorithm that allows to calculate all contributions to
+energy separately without extra cost.
+<DT>PERTURBATION_THEORY<DD>Apply perturbation theory to speed up SCF convergence.
+<DT>INTEGRAL_EXPMAX<DD>Cut off criterion used to neglect the calculation of small integrals.
+<DT>SAVE_XCKS_MATRIX<DD>Outdated. Equivalent to SAVE_SCFSTATE in
+<A HREF="#namelist_RECOVER_OPTIONS">RECOVER_OPTIONS</A>.
+<DT>READ_XCKS_MATRIX<DD>Outdated. Equivalent to READ_SCFSTATE in
+<A HREF="#namelist_RECOVER_OPTIONS">RECOVER_OPTIONS</A>.
+<DT>SAVE_XCKS_NBR<DD>Outdated. Equivalent to SAVE_INTERVAL in
+<A HREF="#namelist_RECOVER_OPTIONS">RECOVER_OPTIONS</A>.
+<DT>READ_DENSMAT<DD>Outdated. Equivalent to READ_OLDLCGTO in
+<A HREF="#namelist_RECOVER_OPTIONS">RECOVER_OPTIONS</A>.
+<DT>MAX_GEO_ITERATION<DD>Outdated. Equivalent to MAX_GEO_ITERATION in 
+<A HREF="#namelist_CONVERGENCE_LIST">CONVERGENCE_LIST</A>.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_MDA_OPTIONS"></A>
+<B><FONT SIZE=4>MDA_OPTIONS</FONT></B>
+</H3>
+<P>
+This namelist contains options to control model density approach calculations. (not yet working)
+</P>
+<PRE>
+ &MDA_OPTIONS
+    CONSTRAIN_RHOSPIN =      TRUE # (the default)
+    RHO_EXACT         =     FALSE # (the default)
+    RHO_SHAPE_EPS     = 1.000E-12 # (the default)
+    ATOMIC_RADIUS     = 0.000E+00 # (the default)
+ /MDA_OPTIONS (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_MIXING"></A>
+<B><FONT SIZE=4>MIXING</FONT></B>
+</H3>
+<P>
+This namelist controls the mixing procedure used in the SCF cycles to promote convergence.
+In the first START_AFTER_CYCLE SCF-cycles a mixing with the fixed coefficients given here
+is used. After that, dynamic mixing is used, i.e. the coefficients are calculated.
+</P>
+<PRE>
+ &MIXING
+    CHMIX             = 0.3000 # (the default)
+    SPMIX             = 0.3000 # (the default)
+    XCMIX             = 0.3000 # (the default)
+    START_AFTER_CYCLE =     10 # (the default)
+    DISCARD_INIT      =  FALSE # (the default)
+    SPIN_SEPARATE     =  FALSE # (the default)
+    GLOBAL_MIXING     =  FALSE # (the default)
+ /MIXING (namelist may be dropped
+</PRE>
+<DL>
+<DT>CHMIX<DD>Start mixing coefficients for charge fit function coefficients.
+<DT>SPMIX<DD>Start mixing coefficients for spin.
+<DT>XCMIX<DD>Start mixing coefficients for exchange fit function coefficients
+<DT>START_AFTER_CYCLE<DD>start dynamic mixing after this SCF cycle.
+Setting a number bigger then <A HREF="#namelist_CONVERGENCE_LIST">MAX_ITERATION</A>
+will switch off dynamic mixing.
+<DT>DISCARD_INIT<DD>
+<DT>SPIN_SEPARATE<DD>
+<DT>GLOBAL_MIXING<DD>use alternative new mixing algorithm.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OCCUPATION"></A>
+<B><FONT SIZE=4>OCCUPATION</FONT></B>
+</H3>
+<P>
+This namelist controls the reoccupation of orbitals during the SCF procedure
+</P>
+<PRE>
+ &OCCUPATION
+    CHARGE         =   0.000000 # (the default)
+    MAGN_MOMENT    =   0.000000 # (the default)
+    MIN_SPIN_DIFF  =  1.000E-03 # (the default)
+    DIAG_OFFSET_EV =   1.000000 # (the default)
+    FIXED          =      FALSE # (the default)
+ /OCCUPATION (namelist may be dropped)
+</PRE>
+<DL>
+<DT>CHARGE<DD>This switch can be used to assign a charge to the entire molecule. [au]
+<DT>MAGN_MOMENT<DD>
+<DT>MIN_SPIN_DIFF<DD>
+<DT>DIAG_OFFSET_EV<DD>
+<DT>FIXED<DD>
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OPERATIONS"></A>
+<B><FONT SIZE=4>OPERATIONS</FONT></B>
+</H3>
+<P>
+This namelist is replaced by <A HREF="#namelist_TASKS">namelist TASKS</A> and just
+kept for compatibility. Its use is no longer recommended.
+</P>
+<P>
+Various combinations of operations are not allowed and will produce error messages
+when reading input.
+</P>
+<P>
+The following debug switches kept for backward compatibility must be set to FALSE:
+<UL>
+<LI>OPERATIONS_DEBUG_ORBITALS
+<LI>OPERATIONS_DEBUG_GRID
+<LI>OPERATIONS_INTEGRALTEST
+<LI>OPERATIONS_QUADRUPEL_OB
+<LI>OPERATIONS_QUADRUPEL_FF
+</UL>
+</P>
+<P>
+Default is to perform Single Point Calculation and Calculate Gradients.
+</P>
+<PRE>
+ &OPERATIONS
+    OPERATIONS_SYMM              =  TRUE # (the default)
+    OPERATIONS_SCF               =  TRUE # (the default)
+    OPERATIONS_INTEGRAL          =  TRUE # (the default)
+    OPERATIONS_WRITE_INPUT       =  TRUE # (the default)
+    OPERATIONS_WRITE_FULL_INPUT  = FALSE # (the default)
+    OPERATIONS_WRITE_SHORT_INPUT = FALSE # (the default)
+    OPERATIONS_WRITE_INPUT_SLAVE = FALSE # (the default)
+    OPERATIONS_POST_HOC          =  TRUE # (the default)
+    OPERATIONS_GRADIENTS         =  TRUE # (the default)
+    OPERATIONS_GEO_OPT           = FALSE # (the default)
+    OPERATIONS_MAKE_GX           = FALSE # (the default)
+    OPERATIONS_READ_GX           = FALSE # (the default)
+    OPERATIONS_DIPOLE            = FALSE # (the default)
+    OPERATIONS_OLD_INPUT         = FALSE # (the default)
+    OPERATIONS_GX_HIGHPREC       = FALSE # (the default)
+    OPERATIONS_PROPERTIES        = FALSE # (the default)
+    OPERATIONS_RESPONSE          = FALSE # (the default)
+    OPERATIONS_DEBUG_ORBITALS    = FALSE # (the default)
+    OPERATIONS_DEBUG_GRID        = FALSE # (the default)
+    OPERATIONS_INTEGRALTEST      = FALSE # (the default)
+    OPERATIONS_QUADRUPEL_OB      = FALSE # (the default)
+    OPERATIONS_QUADRUPEL_FF      = FALSE # (the default)
+ /OPERATIONS (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+
+
+<H3>
+<A NAME="namelist_ORBITAL_LIST"></A>
+<B><FONT SIZE=4>ORBITAL_LIST</FONT></B>
+</H3>
+<P>
+Must directly follow namelist
+<A HREF="#namelist_ORBITAL_PLOT">ORBITAL_PLOT</A>
+<A HREF="#namelist_ORBITAL_PLOT">N_INPUT_LINES</A>
+times. Describes orbitals to be plotted.
+</P>
+<PRE>
+ &ORBITAL_LIST
+    IRREP = 1
+    SPIN  = 1
+    N_ORB = 5
+    RANGE =.false.
+    SPLIT_MODE = .false.
+    N_SPLIT_ATOMS = 0
+ /ORBITAL_LIST
+</PRE>
+<DL>
+<DT>IRREP<DD>Irrep of the orbitals to be plotted.
+<DT>SPIN<DD>Spin of the orbitals to be plotted.
+<DT>N_ORB<DD>Total number of orbitals. The orbitals have to be enumerated in the
+line immedeately after this namelist. The number in this list refers
+to the number within the IRREP and SPIN. 
+<DT>RANGE<DD>If set to true, in the next line not all orbitals have to
+be enumerated, but the lowest and the highest orbital of a coherent
+list of orbitals have to be given.
+<DT>SPLIT_MODE<DD>If set to true, the orbitals will be splitted into
+its atomic and angular components. This may be helpfull for a orbital analysis.
+<DT>N_SPLIT_ATOMS<DD>Only meaningfull, if SPLIT_MODE is set to
+true. To limit the amount of output, the N_SPLIT_ATOMS atoms, for which
+contributions to the orbitals should be plotted, can be enumerated in
+free integer format directly in the line after the list of orbitals. 
+</DL>
+<P>
+If N_SPLIT_ATOMS is greater zero a line containg the N_SPLIT_ATOMS
+indices in free integer format must follow directly. 
+The indices enumerate the atoms for which contributions to the orbitals should be plotted.
+<BR>
+<BR>
+
+
+
+<H3>
+<A NAME="namelist_ORBITAL_PLOT"></A>
+<B><FONT SIZE=4>ORBITAL_PLOT</FONT></B>
+</H3>
+<P>
+This is the central namelist for plotting orbitals and densities with
+the ParaGauss program. In order to activate these features the
+PROPERTIES part must be run and ORBITAL_PLOT must be set to true in
+the <A HREF="#namelist_PROPERTIES">namelist PROPERTIES</A>.
+<P>
+Orbitals or densities will be evaluated on a special two dimensional
+user defined grid. The data are written to the file plot.dat in the
+output directory. This file has to be passed to the <a
+href="/home/ttfs/DOCUMENTATION/DOK/paraplot.dvi">paraplot</a>
+program. 
+<P>
+</P>
+<PRE>
+ &ORBITAL_PLOT
+    N_INPUT_LINES   =          0 # (the default)
+    DENSITY_PLOT    =      FALSE # (the default)
+    SPIN_DIFFERENCE =      FALSE # (the default)
+    STEP_X          =  1.000E-01 # (the default)
+    STEP_Y          =  1.000E-01 # (the default)
+    LENGTH_X        =  1.000E+01 # (the default)
+    LENGTH_Y        =  1.000E+01 # (the default)
+ /ORBITAL_PLOT
+</PRE>
+<DL>
+<DT>N_INPUT_LINES<DD>Number of namelists ORBITAL_LIST, which will
+follow after this namelist, to define orbitals. If DENSITY_PLOT is set
+to false, then for every orbital a record will be written to
+plot.dat. This record can be extracted later on by paraplot. But be
+carefull: Plotting to much orbitals will result in a huge amount of
+output. 
+<DT>DENSITY_PLOT<DD>If set to true, a density, defined by the orbitals
+specified in the namelists ORBITAL_LIST will be written to
+plot.dat. For the generation of the density the occupation numbers are taken into account. 
+<DT>SPIN_DIFFERENCE<DD>This switch can be used to generate spin
+differences. If set to true, the spin up (spin=2) density will be multiplied by -1.
+<DT>STEP_X<DD>Distance (in au) between the gridpoints in direction1.
+<DT>STEP_Y<DD>Distance (in au) between the gridpoints in direction2.
+<DT>LENGTH_X<DD>Range of the grid (in au) between the gridpoints
+in direction 1.
+<DT>LENGTH_Y<DD>Range of the grid (in au) between the gridpoints in
+direction 2.
+</DL>
+<P>
+Immedeately after the namelist three lines, with 3 real numbers in each
+line, have to follow.
+</P>
+<DL>
+<DT>First line<DD>Lower left corner of the 2D grid.
+<DT>Second line<DD>Unity vector pointing in the first direction of the
+grid.
+<DT>Third line<DD>Unity vector pointing in the second direction of the
+grid.
+</DL>
+<P>Now N_INPUT_LINES namelists 
+<A HREF="#namelist_ORBITAL_LIST">ORBITAL_LIST</A>
+are required to follow directly.</P>
+<BR>
+<BR>
+
+
+
+<H3>
+<A NAME="namelist_OUTPUT"></A>
+<B><FONT SIZE=4>OUTPUT</FONT></B>
+</H3>
+<P>
+This namelist controls the overall amount of output written to file.
+</P>
+<P>
+For normal calculations, it is highly recommended to use the default setting and drop
+the namelist.
+</P>
+The namelist may be followed by namelists OUTPUT_??? to set separate switches that control
+the output of various entities (see below).
+<P>
+</P>
+<PRE>
+ &OUTPUT
+    OUTPUT_LEVEL =  1 # (the default)
+    # legal values are: 0, 1, 5, 10
+ /OUTPUT (namelist may be dropped)
+</PRE>
+<DL>
+<DT>OUTPUT_LEVEL<DD>The higher the value, the more output.
+<DL>
+<DT>0<DD>Absolute minimum of output only.
+<DT>1<DD>Output suitable for normal calculations
+<DT>5<DD>Debug output still suitable for larger calculations
+<DT>10<DD>Highest level of debug output only suitable for very small calculations: H2 ...
+</DL>
+</DL>
+<BR>
+<BR>
+
+<H3>
+<A NAME="namelist_OUTPUT"></A>
+<B><FONT SIZE=4>OUTPUT</FONT></B>
+</H3>
+<P>
+This namelist controls the overall amount of output written to file.
+</P>
+<P>
+For normal calculations, it is highly recommended to use the default setting and drop
+the namelist.
+</P>
+The namelist may be followed by namelists OUTPUT_??? to set separate switches that control
+the output of various entities (see below).
+<P>
+</P>
+<PRE>
+ &OUTPUT
+    OUTPUT_LEVEL =  1 # (the default)
+    # legal values are: 0, 1, 5, 10
+ /OUTPUT (namelist may be dropped)
+</PRE>
+<DL>
+<DT>OUTPUT_LEVEL<DD>The higher the value, the more output.
+<DL>
+<DT>0<DD>Absolute minimum of output only.
+<DT>1<DD>Output suitable for normal calculations
+<DT>5<DD>Debug output still suitable for larger calculations
+<DT>10<DD>Highest level of debug output only suitable for very small calculations: H2 ...
+</DL>
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_CONFIG"></A>
+<B><FONT SIZE=4>OUTPUT_CONFIG</FONT></B>
+</H3>
+<PRE>
+ &OUTPUT_CONFIG
+    OUTPUT_PVMCONFIG  =  TRUE # (the default)
+    OUTPUT_OPERATIONS =  TRUE # (the default)
+ /OUTPUT_CONFIG (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_DIPOLE"></A>
+<B><FONT SIZE=4>OUTPUT_DIPOLE</FONT></B>
+</H3>
+<P>
+This namelist controls amount of output of Dipole part.
+</P>
+<P>
+Dipole calculation must be switched on in namelist <A HREF="#namelist_TASKS">TASKS</A>
+ or <A HREF="#namelist_OPERATIONS">OPERATIONS</A>.
+</P>
+<PRE>
+ &OUTPUT_DIPOLE
+    OUTPUT_DIPOLE_DETAILED       =  TRUE # (the default)
+    OUTPUT_DIPOLE_TRANSITIONM_F  = FALSE # (the default)
+    OUTPUT_DIPOLE_TRANSITIONM_UF = FALSE # (the default)
+    OUTPUT_DIPOLE_SIMOL          = FALSE # (the default)
+ /OUTPUT_DIPOLE (namelist may be dropped)
+</PRE>
+<DL>
+<DT>OUTPUT_DIPOLE_DETAILED<DD>output of dipole moments of single orbitals
+<DT>OUTPUT_DIPOLE_TRANSITIONM_F<DD>formatted output of dipole transition moments.
+Dipole Transition moments are selected with.
+<A HREF="#namelist_DIPOLE_TRANSITIONMOMENTS">namelistDIPOLE_TRANSITIONMOMENTS</A>.
+<DT>OUTPUT_DIPOLE_TRANSITIONM_UF<DD>unformatted output of dipole transition moments
+in separate file suitable for response calculations.
+<DT>OUTPUT_DIPOLE_SIMOL<DD>output of total dipole moment in a.u. to file
+"dipmon.sav" used by simol for frequency calculations.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_INTEGRAL"></A>
+<B><FONT SIZE=4>OUTPUT_INTEGRAL</FONT></B>
+</H3>
+<PRE>
+ &OUTPUT_INTEGRAL
+    OUTPUT_INT_FITCONTRACT      = FALSE # (the default)
+    OUTPUT_INT_2C_FIT           = FALSE # (the default)
+    OUTPUT_INT_SOLHRULES        = FALSE # (the default)
+    OUTPUT_INT_PARAMETERS       =  TRUE # (the default)
+    OUTPUT_INT_PROGRESS         = FALSE # (the default)
+    OUTPUT_INT_DETAILEDPROGRESS = FALSE # (the default)
+    OUTPUT_INT_TASKDISTRIBUTION = FALSE # (the default)
+    OUTPUT_INT_QUADRUPELSTORE   = FALSE # (the default)
+    OUTPUT_INT_LOOPS            = FALSE # (the default)
+    OUTPUT_INT_DEEPLOOPS        = FALSE # (the default)
+    OUTPUT_INT_DATA             = FALSE # (the default)
+ /OUTPUT_INTEGRAL (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_IOUNITADMIN"></A>
+<B><FONT SIZE=4>OUTPUT_IOUNITADMIN</FONT></B>
+</H3>
+<P>
+This namelists determines which files should be used for output. File "output" is always used.
+</P>
+<PRE>
+ &OUTPUT_IOUNITADMIN
+    IOUNITADMIN_USE_STDOUT =  TRUE # (the default)
+    IOUNITADMIN_USE_DEBUG  = FALSE # (the default)
+    IOUNITADMIN_USE_BUGGY  = FALSE # (the default)
+ /OUTPUT_IOUNITADMIN
+</PRE>
+<DL>
+<DT>IOUNITADMIN_USE_STDOUT<DD>output to standard output channel, i.e. screen or
+output file of queue system.
+<DT>IOUNITADMIN_USE_DEBUG<DD>output to file "debug_output".
+<DT>IOUNITADMIN_USE_BUGGY<DD>output to file "buggy_log". This file is well suited for
+finding the exact location of a program crash since it is always opened and closed.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_POST_HOC"></A>
+<B><FONT SIZE=4>OUTPUT_POST_HOC</FONT></B>
+</H3>
+<PRE>
+ &OUTPUT_POST_HOC
+    OUTPUT_POST_HOC_MAIN = FALSE # (the default)
+    OUTPUT_MAIN_GRADIENT = FALSE # (the default)
+ /OUTPUT_POST_HOC (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_SCF"></A>
+<B><FONT SIZE=4>OUTPUT_SCF</FONT></B>
+</H3>
+<PRE>
+ &OUTPUT_SCF
+    OUTPUT_SCFLOOPS       =  TRUE # (the default)
+    OUTPUT_REOCCUP        = FALSE # (the default)
+    OUTPUT_FERMI          =  TRUE # (the default)
+    OUTPUT_CHARGEFIT      = FALSE # (the default)
+    OUTPUT_CONDITION      =  TRUE # (the default)
+    OUTPUT_HAMILTONIAN    = FALSE # (the default)
+    OUTPUT_EIGENDATA      = FALSE # (the default)
+    OUTPUT_EIGEN_STRATEGY = FALSE # (the default)
+    OUTPUT_DENSMAT        = FALSE # (the default)
+    OUTPUT_GRID           =  TRUE # (the default)
+    OUTPUT_OCCLEVELS      = FALSE # (the default)
+    OUTPUT_OVERLAP        = FALSE # (the default)
+    OUTPUT_DATA_SAVED     = FALSE # (the default)
+    OUTPUT_DATA_READ      = FALSE # (the default)
+    OUTPUT_N_DENSITY_DEV  =     5 # (the default)
+    OUTPUT_N_COEFF_DEV    =     5 # (the default)
+ /OUTPUT_SCF (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_SYM"></A>
+<B><FONT SIZE=4>OUTPUT_SYM</FONT></B>
+</H3>
+<PRE>
+ &OUTPUT_SYM
+    OUTPUT_SYMMETRY        =  TRUE # (the default)
+    OUTPUT_NONSYMEQUIVVECS = FALSE # (the default)
+ /OUTPUT_SYM (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_TIMING"></A>
+<B><FONT SIZE=4>OUTPUT_TIMING</FONT></B>
+</H3>
+<PRE>
+ &OUTPUT_TIMING
+    OUTPUT_TIMING_SUMMARY           =  TRUE # (the default)
+    OUTPUT_TIMING_DETAILEDSUMMARY   = FALSE # (the default)
+    OUTPUT_TIMING_INTEGRALS         =  TRUE # (the default)
+    OUTPUT_TIMING_DETAILEDINTEGRALS = FALSE # (the default)
+    OUTPUT_TIMING_SCFLOOPS          = FALSE # (the default)
+    OUTPUT_TIMING_SCF               =  TRUE # (the default)
+    OUTPUT_TIMING_DETAILEDSCF       = FALSE # (the default)
+    OUTPUT_TIMING_POSTHOC           =  TRUE # (the default)
+    OUTPUT_TIMING_DETAILEDPOSTHOC   = FALSE # (the default)
+    OUTPUT_TIMING_SLAVES            = FALSE # (the default)
+    OUTPUT_TIMING_INTERRUPTS        = FALSE # (the default)
+ /OUTPUT_TIMING (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_TRACE"></A>
+<B><FONT SIZE=4>OUTPUT_TRACE</FONT></B>
+</H3>
+<P>
+Debug trace information about progress of execution of various important subroutines.
+</P>
+<P>
+Beware of setting OUTPUT_PVM_MSGTAGS to TRUE. This will produce a huge protocol of
+all PVM communications.
+</P>
+<PRE>
+ &OUTPUT_TRACE
+    OUTPUT_SLAVEOPERATIONS = FALSE # (the default)
+    OUTPUT_MAIN_MASTER     = FALSE # (the default)
+    OUTPUT_MAIN_SYMM       = FALSE # (the default)
+    OUTPUT_MAIN_SCF        = FALSE # (the default)
+    OUTPUT_READ_INPUT      = FALSE # (the default)
+    OUTPUT_WRITE_INPUT     = FALSE # (the default)
+    OUTPUT_PVM_MSGTAGS     = FALSE # (the default)
+    OUTPUT_MAIN_DIPOLE     = FALSE # (the default)
+    OUTPUT_EFIELD_CALC     = FALSE # (the default)
+ /OUTPUT_TRACE (namelist may be dropped)
+</PRE>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_OUTPUT_UNIQUE_ATOMS"></A>
+<B><FONT SIZE=4>OUTPUT_UNIQUE_ATOMS</FONT></B>
+</H3>
+<PRE>
+ &OUTPUT_UNIQUE_ATOMS
+    OUTPUT_ATOMS              =  TRUE # (the default)
+    OUTPUT_SYMADAPT           = FALSE # (the default)
+    OUTPUT_RENORM             = FALSE # (the default)
+    OUTPUT_ORBITALPROJECTIONS = FALSE # (the default)
+ /OUTPUT_UNIQUE_ATOMS (namelist may be dropped)
+</PRE>
+<DL>
+<DT>OUTPUT_ATOMS<DD>Names and Coordinates of Atoms
+<DT>OUTPUT_SYMADAPT<DD>Symmetry adaptation coefficients. Beware: this is a lot of debug output.
+<DT>OUTPUT_RENORM<DD>Renormalization coefficients. Beware: this is a lot of debug output.
+<DT>OUTPUT_ORBITALPROJECTION<DD>Debug only: Information about projection of
+orbital indices to SCF Metaindex. 
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_PHXC_CONTROL"></A>
+<B><FONT SIZE=4>PHXC_CONTROL</FONT></B>
+</H3>
+<P>
+Selects the exchange correlation potential used in the Post Hoc part.
+Default is to copy the settings from SCF part
+(see <A HREF="#namelist_XC_CONTROL">namelist XC_CONTROL</A>).
+</P>
+<PRE>
+ &PHXC_CONTROL
+    <span class="so"><a href="#namelist_PHXC_CONTROL-XC">XC</a> = "undef"</span>
+    XALPHA_PH      =  TRUE # (the default)
+    VWN_PH         =  TRUE # (the default)
+    PWLDAc_PH      = FALSE # (the default) /* version >= V20_delta */
+    PERDEW_PH      = FALSE # (the default)
+    BECKE88_PH     = FALSE # (the default)
+    PERDEWWANG91C  = FALSE # (the default)
+    PERDEWWANG91X  = FALSE # (the default)
+    PBEx_PH        = FALSE # (the default) /* version >= V20_delta */
+    PBEc_PH        = FALSE # (the default) /* version >= V20_delta */
+    revPBEx_PH     = FALSE # (the default) /* version >= V20_delta */
+    PBENx_PH       = FALSE # (the default) /* version >= V20_delta */
+    revPW91c_PH    = FALSE # (the default) /* version >= V20_delta */
+ /PHXC_CONTROL
+</PRE>
+<p>
+See <A HREF="#namelist_XC_CONTROL">namelist XC_CONTROL</A>
+for a explanation of the keywords and further remarks.
+<div class="so">
+<p>
+<a name="namelist_PHXC_CONTROL-XC"> </a>
+<dl>
+<dt> eg. <strong><tt>XC = "vwn,gga:all"</tt></strong>
+<dd>
+it makes sense to use this clause only to calculate
+all (available) post-hoc energies at once
+(a good old feature of <tt>lcgto</tt>).
+Note that there is a difference beetween, say, <tt>PBE/VWN</tt>
+and <tt>PBE/PWLDA</tt>. I guess <tt>"gga:all"</tt> is the default in case
+you do not provide no options at all. Tested mainly with <a href="#Spin_Orbit">SO</a>.
+
+</dl>
+<!--
+-->
+</div>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_POINTCHARGE"></A>
+<B><FONT SIZE=4>POINTCHARGE</FONT></B>
+</H3>
+<P>
+This namelists describes the type and position of one
+<A HREF="#Unique_atoms">unique point charge</A>. It must be directly preceded
+by <A HREF="#namelist_POINTCHARGE_NUMBER">namelists POINTCHARGE_NUMBER</A>
+and appear <A HREF="#namelist_POINTCHARGE_NUMBER">POINTCHARGE_N </A> times.
+See chapter <A HREF="#Describing_the_Geometry">Describing the Geometry</A>
+for understanding the concept. 
+</P>
+<PRE>
+ &POINTCHARGE
+    NAME            = "left"
+    Z               = 1.000
+    N_EQUAL_CHARGES = 1
+ /POINTCHARGE # obligatory, there are no defaults
+    0.0E0  0.0E0   0.0E0
+</PRE>
+<DL>
+<DT>NAME<DD>arbitrary name for point charge. Must be quoted
+<DT>Z<DD>nuclear charge
+<DT>N_EQUAL_CHARGES<DD>number of
+<A HREF="#Symmetry_equivalent_atoms">symmetry equivalent charges</A>.
+This is cross-checked by the symmetry part.
+</DL>
+<P>
+This namelist must be directly followed by one line containing the
+cartesian coordinate of one charge in atomic units (free format).
+The coordinates of the other
+<A HREF="#Symmetry_equivalent_atoms">symmetry equivalent charges</A>
+are calculated automatically.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_POINTCHARGE_NUMBER"></A>
+<B><FONT SIZE=4>POINTCHARGE_NUMBER</FONT></B>
+</H3>
+<P>
+This namelists gives the number of <A HREF="#Unique_atoms">unique point charges</A> of
+the problem. It starts the description of the point charges involved.
+Point charges are centers that carry a nuclear charge but no orbital basis functions.
+</P>
+<P>
+Do not confuse the number of unique point charges with the total number of point charges
+since there might be <A HREF="#Symmetry_equivalent_atoms">symmetry equivalent point charges</A>.
+</P>
+<PRE>
+ &POINTCHARGE_NUMBER
+    POINTCHARGE_N = 0 # (the default)
+ /POINTCHARGE_NUMBER  (namelist may be dropped)
+</PRE>
+<P>
+This namelist must be directly be followed by POINTCHARGE_N
+<A HREF="#namelist_POINTCHARGE">namelists POINTCHARGE</A>.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_POPCOLUM"></A>
+<B><FONT SIZE=4>POPCOLUM</FONT></B>
+</H3>
+<P>
+must appear N_COLUMNS times directly after
+<A HREF="#namelist_POPULATION">namelist POPULATION</A>.
+</P>
+<PRE>
+ &POPCOLUM
+     N_CONTRIB = 3
+ /POPCOLUM
+ 1  2   3   1   4  0
+</PRE>
+<P>
+In the next line a list of N_CONTRIB contributions in integer format
+is recommended. Every contribution consists of two numbers, the number
+of the atom and the angular momentum (s=0,p=1,d=2,...). Example:
+<PRE>
+ 1  2   3   1   4  0
+</PRE>
+means, that the d population of atom 1, the p population of atom 3 and
+the s population of atom 4 will be summed up.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_POPULATION"></A>
+<B><FONT SIZE=4>POPULATION</FONT></B>
+</H3>
+<P>
+This namelist controls the population analysis output.
+</P>
+<PRE>
+ &POPULATION
+    POPULATION_LEVEL =  2  # (the default)
+    # allowed values are 0, 1, 2
+    N_COLUMNS =  0 # (the default)
+    DOS_PLOT         = FALSE # (the default)
+    IRREP            =  0 # (the default)
+    SPIN             =  0 # (the default)
+    OCCUPATION       = FALSE # (the default)
+    EIG_MIN          = -1.000E+02 # (the default)
+    EIG_MAX          =  1.000E+01 # (the default)
+ /POPULATION  (namelist may be dropped)
+</PRE>
+<DL>
+<DT>POPULATION_LEVEL<DD>Defines the amount of output.
+<DT>N_COLUMNS<DD>&gt; 0: Start a user defined population analysis. For
+every N_COLUMNS column one additional 
+<A NAME="namelist_POPCOLUM">namelist POPCOLUM</A>
+must directly follow this namelist.
+<DT>DOS_PLOT<DD>If .true.: generate output, which subsequently can be
+used for generating density of state plots. The output will be written
+to file "dos.dat" in the output-directory and consists of at least two
+columns. The first column is the orbital energy in au.
+If N_COLUMNS &gt 0 the number of additional columns is N_COLUMNS;
+the columns will contain the degeneracy times
+the populations defined by POPCOLUMN
+times the occupation (if occupation=true).
+If N_COLUMNS = 0, one column follows that contains the degeneracy
+times the occupation (if occupation is true).
+<DT>IRREP<DD>number of irrep, for which state will be written to
+dos.dat.If =0, all irreps will be considered.
+<DT>SPIN<DD>number of spin, for which state will be written to
+dos.dat.If =0, all spins will be considered.
+<DT>OCCUPATION<DD>If .true., use occupation for generation of DOS.
+<DT>EIG_MIN<DD>Minimal eigenvalue (in eV), which will be considered in
+the DOS.
+<DT>EIG_MAX<DD>Maximal eigenvalue (see above). 
+</DL>
+<BR>
+<BR>
+
+
+
+
+
+<H3>
+<A NAME="namelist_PROPERTIES"></A>
+<B><FONT SIZE=4>PROPERTIES</FONT></B>
+</H3>
+<P>
+Main namelist for properties part. In order to do the properties,
+either OPERATIONS_PROPERTIES (see <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>)must be set to true, or TASK must be set
+to "PROPERTIES"(see <A HREF="#namelist_TASKS">namelist TASKS</A>).
+If you calculate properties without scf and integral
+part ( what will be the usual case and is exactly what happens, if you
+set TASK to "PROPERTIES"), the following requirements have to be
+fulfilled:
+</P>
+<UL>
+<LI>READ_EIGENVEC=true in <A HREF="#namelist_RECOVER_OPTIONS">namelist RECOVER_OPTIONS</A>.
+<LI>The file saved_eigenvec.dat must be in the input
+directory. Attention: It must have been generated previously with the
+option SAVE_EIGENVEC_ALL=.true. in
+<A HREF="#namelist_RECOVER_OPTIONS">namelist RECOVER_OPTIONS</A>.  
+</UL>
+<PRE>
+ &PROPERTIES
+    MULLIKEN          =     FALSE # (the default)
+    PLOT_ORBITALS     =     FALSE # (the default)
+    FRAG_ORB_ANALYSIS =     FALSE # (the default)
+    DIPOLE            =     FALSE # (the default)
+ /PROPERTIES (namelist may be dropped)
+</PRE>
+<DL>
+<DT>MULLIKEN<DD>If true, a Mulliken population analysis (see
+<A HREF="#namelist_POPULATION">namelist POPULATION</A>) will be performed.
+<DT>PLOT_ORBITALS<DD>If true, generate a interface file for plotting
+orbitals or densities (see <A HREF="#namelist_ORBITAL_PLOT">namelist ORBITAL_PLOT</A>). 
+<DT>FRAG_ORB_ANALYSIS<DD>If true, perform a fragment orbital analysis
+(see <A HREF="#namelist_FRAG_ORB_ANALYSIS">namelist FRAG_ORB_ANALYSIS</A>).
+<DT>DIPOLE<DD>If true, calculate dipole moments and dipole transition
+moments (see namelist
+<A HREF="#namelist_DIPOLE_TRANSITIONMOMENTS">DIPOLE_TRANSITIONMOMENTS</A>).
+This only works if TASK = "Response" was selected in
+<A HREF="#namelist_TASKS">namelist TASKS</A>). Otherwise you can switch on dipole
+calculation in this namelist.
+</DL>
+<BR>
+<BR>
+
+
+
+
+<H3>
+<A NAME="namelist_PVMOPTIONS"></A>
+<B><FONT SIZE=4>PVMOPTIONS</FONT></B>
+</H3>
+<P>
+This namelist controls parallel execution of program.
+</P>
+<PRE>
+ &PVMOPTIONS
+    N_PROCS                  =      1 # This setting is always required
+    MASTER_WORK              =   TRUE # (the default)
+    PVM_TIMEOUT              =    900 # (the default)
+    PVM_TIMESTEP             =     10 # (the default)
+    CATCH_SLAVEOUT           =  FALSE # (the default)
+    PVM_MASTER_INTERRUPT_NBR =      1 # (the default)
+    PVM_SLAVE_INTERRUPT_NBR  =      5 # (the default)
+ /PVMOPTIONS
+</PRE>
+<DL>
+<DT>N_PROCS<DD>Number of processors used. Take care to set the same number
+for the queue system.
+<DT>MASTER_WORK<DD>Master should handle a part of the fitfunction integrals.
+<DT>PVM_TIMEOUT<DD>[sec] If a host is idle and does not receive any messages
+for longer period, it will stop the calculation.
+<DT>PVM_TIMESTEP<DD>[sec] When trying to receive, check if all host are alive all
+PVM_TIMESTEP seconds.
+<DT>CATCH_SLAVEOUT<DD>Redirect output of slaves to standard output, i.e. screen
+or queue system output file. Does not work on all platforms.
+<DT>PVM_MASTER_INTERRUPT_NBR<DD>A performance parameter to the integral part.
+The master will really execute the interrupt function during calculation each
+PVM_MASTER_INTERRUPT_NBR time it is called.
+<DT>PVM_SLAVE_INTERRUPT_NBR<DD>A performance parameter to the integral part.
+The slave will really execute the interrupt function during calculation each
+PVM_SLAVE_INTERRUPT_NBR time it is called.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_RECOVER_OPTIONS"></A>
+<B><FONT SIZE=4>RECOVER_OPTIONS</FONT></B>
+</H3>
+<P>
+During SCF Iterations, it is possible to save and recover the state of the calculation at
+various points of the SCF loop. This Options are both useful for recovering crashed
+calculations and to save computing time by starting the SCF part with a good approximation
+of the orbitals when performing <A HREF="#Geometry_Optimization">geometry optimization</A>.
+</P>
+<P>
+The corresponding files are stored by the <A HREF="#ttfs_script">ttfs script</A> in
+compressed form (gzip) but are also accepted uncompressed for input.
+</P>
+<P>
+When performing <A HREF="#Geometry_Optimization">geometry optimization</A>,
+it is allowed to demand recovering even if the corresponding files do not yet exist.
+Otherwise, this will result in an error.
+</P>
+<P>
+Mixing coefficients, energy and SCF cycle are always stored.
+If you want to recover but reset SCF cycle counting use switch RESET_SCFCYCLE.
+</P>
+<P>
+It is recommended to use switches SAVE_SCFSTATE and READ_SCFSTATE for normal save and recover.
+</P>
+<P>
+When using geometry optimization, the default for SAVE_SCFSTATE and READ_SCFSTATE and
+RESET_SCFCYCLE is switched to true.
+</P>
+<PRE>
+ &RECOVER_OPTIONS
+    SAVE_KSMATRIX      =     FALSE # (the default)
+    READ_KSMATRIX      =     FALSE # (the default)
+    SAVE_EIGENVEC      =     FALSE # (the default)
+    SAVE_EIGENVEC_ALL  =     FALSE # (the default)
+    SAVE_AS_FRAGMENT   =     FALSE # (the default)    
+    READ_EIGENVEC      =     FALSE # (the default)
+    SAVE_SCFSTATE      =     FALSE # (the default)
+    READ_SCFSTATE      =     FALSE # (the default)
+    SAVE_FITCOEFF      =     FALSE # (the default)
+    READ_FITCOEFF      =     FALSE # (the default)
+    SAVE_INTERVAL      =         0 # (the default)
+    READ_OLDLCGTO      =     FALSE # (the default)
+    RESET_SCFCYCLE     =     FALSE # (the default)
+ /RECOVER_OPTIONS (namelist may be dropped)
+</PRE>
+<DL>
+<DT>SAVE_KSMATRIX<DD>Store hamiltonian in file "saved_ksmatrix.dat"
+<DT>READ_KSMATRIX<DD>Recover hamiltonian from file "saved_ksmatrix.dat"
+<DT>SAVE_EIGENVEC<DD>Store eigenvectors (and occupation numbers,...) in file "saved_eigenvec.dat"
+<DT>SAVE_EIGENVEC_ALL<DD>Store not only the occupied and some of the
+lowest virtual orbitals, but all of them. This option must be used, if
+subsequently a PROPERTIES run should be performed.
+<DT>SAVE_AS_FRAGMENT<DD>A file saved_fragment.dat will be created in
+your output directory, which subsequently can be used for a fragment
+orbital analysis (<A HREF="#namelist_FRAG_ORB_ANALYSIS">namelist FRAG_ORB_ANALYSIS</A>).
+<DT>READ_EIGENVEC<DD>Recover eigenvectors from file "saved_eigenvec.dat"
+<DT>SAVE_SCFSTATE<DD>Store charge fit coefficients and exchange part of hamiltonian
+in file "saved_scfstate.dat"
+<DT>READ_SCFSTATE<DD>Recover charge fit coefficients and exchange part of hamiltonian
+from file "saved_scfstate.dat"
+<DT>SAVE_FITCOEFF<DD>Store fit coefficients in file "saved_fitcoeff.dat"
+<DT>READ_FITCOEFF<DD>Recover fit coefficients from file "saved_fitcoeff.dat"
+<DT>SAVE_INTERVAL<DD>Store every SAVE_INTERVAL SCF cycles. If 0 is chosen, store is
+only done at end of SCF cycles.
+<DT>READ_OLDLCGTO<DD>Outdated. Read in files "eigenvectors.dat" and "occ_num.dat" 
+produced by old lcgto. These file may not be compressed.
+This is only done if integrals are taken from old lcgto as well.
+<DT>RESET_SCFCYCLE<DD>Reset SCF cycle counting when recovering.
+</DL>
+<BR>
+<BR>
+
+<div class="so">
+<a name="namelist_SPIN_ORBIT"><h3>SPIN_ORBIT</h3></a>
+<pre>
+ &SPIN_ORBIT
+    LEVEL = "none" # (the default)
+ /SPIN_ORBIT
+</pre>
+<p> This namelist defines what type of SO calculations
+    you really need.
+    <br>Possible choices are (always quoted!):
+    <dl>
+    <dt><tt>LEVEL="SpinOrbit"</tt>
+     <dd> for "plain" spin-orbit (transformation in nuclear field only)
+    <dt><tt>LEVEL="SpinOrbit,NoPVxP"</tt>
+     <dd> Add this item only if you want to do an SR calculation in
+          a very expensive way - this eliminates spin-orbit coupling
+          due to nuclear field.
+    <dt><tt>LEVEL="SpinOrbit,Polarized"</tt>
+     <dd> Add this clause to do a <strong>polarized spin-orbit</strong>
+          calculation.
+    <dt><tt>LEVEL="SpinOrbit,EIS=LAPACK"</tt>
+     <dd> add this if you want <tt>LAPACK</tt> eigensolver to be used
+          instead of <tt>EISPACK</tt>.
+          <br><em><tt>EISPACK</tt> does not
+          have a procedure for generalized eigenvalue problem and 
+          additionla required step is necessary - orthogonalization
+          of overlap matrix. That is done by <strong>additional</strong>
+          diagonalization. Ok, here I wanted to say that
+          <tt>LAPACK</tt> is simply faster :-).</em>
+    <dt><tt>LEVEL="SpinOrbit,BackTrafo,FitTrafo:DKH(1)"</tt>
+     <dd> for spin-orbit with first order DK transformation
+          of the coulomb term.
+    <dt><tt>LEVEL="SpinOrbit,BackTrafo,FitTrafo:hDKH(2)"</tt> or
+        <tt>LEVEL="SpinOrbit,BackTrafo,FitTrafo:oDKH(2)"</tt> 
+     <dd> for second order DK transformation of the coulomb term.
+          <tt>hDKH(2)</tt> and <tt>oDKH(2)</tt> are two flavors
+          of the <tt>DKH(2)</tt> transformation. <tt>"o"</tt> stays
+          for <em>operator</em>, <tt>"h"</tt> stays for <em>hamiltonian</em>.
+          Short hand notation <tt>FitTrafo:DKH(2)</tt> is defaulted
+          to <tt>oDKH(2)</tt>.
+    </dl>
+<p> Refer to <a href="#Spin_Orbit">Spin Orbit</a> section
+    for more information on spin-orbit.
+</div>
+
+<H3>
+<A NAME="namelist_SYMMETRY_DATA"></A>
+<B><FONT SIZE=4>SYMMETRY_DATA</FONT></B>
+</H3>
+<P>
+Outdated. This namelist may only be used if new symmetry part is not used
+(See <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>).
+Otherwise use <A HREF="#namelist_SYMMETRY_GROUP">namelist SYMMETRY_GROUP</A>.
+It describes the symmetry of the problem.
+</P>
+<PRE>
+ &SYMMETRY_DATA
+    POINT_GROUP = "C1" # (the default)
+    N_IRREP     = 1    # (no default)
+ /SYMMETRY_DATA
+</PRE>
+<DL>
+<DT>POINT_GROUP<DD>Point Group of molecule calculated. Must be quoted.
+For legal values see <A HREF="#namelist_SYMMETRY_GROUP">namelist SYMMETRY_GROUP</A>.
+<DT>N_IRREP<DD>number of irreducible representations.
+</DL>
+<P>
+This namelist must be directly followed by N_IRREP
+<A HREF="#namelist_IRREP">namelists IRREP</A>.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_SYMMETRY_GROUP"></A>
+<B><FONT SIZE=4>SYMMETRY_GROUP</FONT></B>
+</H3>
+<P>
+This namelist determines the symmetry of the problem, i.e. the point group of molecule
+calculated.
+</P>
+<P>
+Using higher symmetry drastically reduces computational effort and helps in case of SCF
+convergence problems due to an over-complete basis set. The symmetry is also used to
+create symmetry equivalent atoms from only one specified atom of that type.
+</P>
+<P>
+For each point group, certain conventions exist concerning the direction and location of
+symmetry elements (See <A HREF="#Describing_the_Geometry">Geometry equivalent atoms</A>).
+</P>
+<P>
+This namelist may only be used if new symmetry part is used
+(See <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>).
+Otherwise use <A HREF="#namelist_SYMMETRY_DATA">namelist SYMMETRY_DATA</A>.
+</P>
+<PRE>
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C1" # (the default)
+ /SYMMETRY_GROUP (namelist may be dropped)
+</PRE>
+<DL>
+<DT>POINT_GROUP<DD>Point Group of molecule calculated. Must be quoted. Legal values are:
+<DL>
+<DT>"C1"<DD>no symmetry
+<DT>"CS"<DD>one plane of symmetry
+<DT>"Ci"<DD>one center of symmetry
+<DT>"C2" "C3" ... "C10"<DD>n-fold rotation axis
+<DT>"C2H" "C3H" ... "C10H"<DD>n-fold rotation axis plus a horizontal plane of symmetry
+<DT>"C2V" "C3V" ... "C10V"<DD>n-fold rotation axis plus n vertical planes of symmetry
+<DT>"Dinh"<DD>
+<DT>"D2" "D3" ... "D10"<DD>n-fold rotation axis plus n perpendicular twofold axes
+<DT>"D2H" "D3H" ... "D10H"<DD>n-fold rotation axis plus n perpendicular twofold axes
+in a horizontal plane of symmetry
+<DT>"D2V" "D3V" ... "D8V"<DD>n-fold rotation axis plus n perpendicular twofold axes
+plus n vertical planes of symmetry
+<DT>"S4" "S6" ... "S20"<DD>n-fold rotation reflection axis 
+<DT>"T"<DD>
+<DT>"TH"<DD>
+<DT>"TD"<DD>
+<DT>"O"<DD>
+<DT>"OH"<DD>
+<DT>"I"<DD>
+<DT>"IH"<DD>
+</DL>
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_TASKS"></A>
+<B><FONT SIZE=4>TASKS</FONT></B>
+</H3>
+<P>
+Either this namelist or the outdated <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>
+is required as first namelist.
+</P>
+<P>
+It determines which tasks should be performed by ParaGaus.
+</P>
+<PRE>
+ &TASKS
+    TASK              = "SinglePoint" # (obligatory, no default)
+    # Allowed values are:
+    # SinglePoint GeoOpt Gradients CheckInput MakeGX Properties Response
+    ECHO_INPUT_LEVEL  =  "default" # (the default)
+    # Allowed values are: default full short none
+    DIPOLE            =  FALSE     # (the default)
+    GX_HIGHPREC       =  FALSE     # (the default)
+    WRITE_INPUT_SLAVE =  FALSE     # (the default)
+    READ_GX           =  FALSE     # (the default)
+ /TASKS
+</PRE>
+<DL>
+<DT>TASK<DD>The task to be performed. Values must be included in quotes. Allowed values are:
+  <DL>
+  <DT>"SinglePoint"<DD>Perform Single Point Calculation
+  <DT>"GeoOpt"<DD>Run Geometry Optimization
+  <DT>"Gradients"<DD>Calculate Gradients, but do not run geometry optimizer
+  <DT>"CheckInput"<DD>Read input and run symmetry part to check consistency of input
+  <DT>"MakeGX"<DD>Read input and run symmetry part to produce an input
+  <A HREF="#gx_file">gx file</A> for geometry optimizer.
+  This file still requires additional editing.
+  <DT>"Properties"<DD>Do a special properties run. Only a very short
+  integral part will be performed (to calculate the overlap
+  matrix). The properties are controlled by 
+  <A HREF="#namelist_PROPERTIES">namelist PROPERTIES</A>.
+  <DT>"Response"<DD>Start Response calculation
+  </DL>
+<DT>ECHO_INPUT_LEVEL<DD>Amount of information written to file input.out.
+Values must be included in quotes. Allowed values are:
+  <DL>
+  <DT>"default"<DD>Show all settings, and indicate if they are identical to the default
+  <DT>"full"<DD>Show all settings
+  <DT>"short"<DD>Show only settings that differ from the defaults
+  <DT>"none"<DD>Do not produce file input.out
+  </DL>
+<DT>DIPOLE<DD>Calculate Dipole Moments. Output is controlled by namelists
+<A HREF="#namelist_DIPOLE_TRANSITIONMOMENTS">DIPOLE_TRANSITIONMOMENTS</A>
+and <A HREF="#namelist_OUTPUT_DIPOLE">OUTPUT_DIPOLE</A>. Calculating Dipols
+Is possible for tasks "SinglePoint", "GeoOpt", and "Gradients". For task
+task "Properties" dipol calculation is not activated here but in
+<A HREF="#namelist_PROPERTIES">namelist PROPERTIES</A>.
+<DT>GX_HIGHPREC<DD>Write a high precision version of <A HREF="#gx_file">gx file</A>.
+This requires a special version of <A HREF="#simol_program">simol program</A> to be given
+as argument to <A HREF="#ttfs_script">ttfs script</A>
+<DT>WRITE_INPUT_SLAVE<DD>Make slaves write file input.out for debug purpose as well.
+This requires flag -keep_slave_output of <A HREF="#ttfs_script">ttfs script</A>
+<DT>READ_GX<DD>Read in atomic coordinates from <A HREF="#gx_file">gx file</A> without
+performing geometry optimization.
+</DL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_UNIQUE_ATOM"></A>
+<B><FONT SIZE=4>UNIQUE_ATOM</FONT></B>
+</H3>
+<P>
+This obligatory namelists describes of the type and position of one
+<A HREF="#Unique_atoms">unique atom</A>.
+It must be directly preceded by
+<A HREF="#namelist_UNIQUE_ATOM_NUMBER">namelists UNIQUE_ATOM_NUMBER</A>
+and appear <A HREF="#namelist_UNIQUE_ATOM_NUMBER">N_UNIQUE_ATOMS</A> times.
+See chapter <A HREF="#Describing_the_Geometry">Describing the Geometry</A>
+for understanding the concept. 
+</P>
+<PRE>
+ &UNIQUE_ATOM
+    NAME          = "C"
+    Z             = 6.000
+    N_EQUAL_ATOMS = 1
+ /UNIQUE_ATOM # obligatory, there are no defaults
+    0.0E0  0.0E0   0.0E0
+</PRE>
+<DL>
+<DT>NAME<DD>arbitrary name for atom. Must be quoted
+<DT>Z<DD>nuclear charge
+<DT>N_EQUAL_ATOMS<DD>number of
+<A HREF="#Symmetry_equivalent_atoms">symmetry equivalent atoms</A>.
+This is cross-checked by the symmetry part.
+</DL>
+<P>
+This namelist must be directly followed by one line containing the cartesian coordinate
+of one atom in atomic units (free format).
+The coordinates of the other <A HREF="#Symmetry_equivalent_atoms">symmetry equivalent atoms</A>
+are calculated automatically.
+In the outdated case that the new symmetry part is not used
+(See <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>),
+the namelist must be followed by N_EQUAL_ATOMS lines with the cartesian coordinate
+of all equal atoms in atomic units instead.
+</P>
+<P>
+In case of a <A HREF="#Geometry_Optimization">geometry optimization</A> the coordinates
+given here are ignored and the coordinates are taken from the <A HREF="#gx_file">gx_file</A>
+instead.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_UNIQUE_ATOM_BASIS"></A>
+<B><FONT SIZE=4>UNIQUE_ATOM_BASIS</FONT></B>
+</H3>
+<P>
+This namelist is part of the orbital or charge or exchange fit function basis set
+specification of one unique atom. It describes the basis functions of one angular
+momentum or, in case of fitfunctions, also the r<SUP>2</SUP>- type basis.
+</P>
+<P>
+The namelist may only appear within the basis set specification block started with
+<A HREF="#namelist_UNIQUE_ATOM_BASISSET">namelist UNIQUE_ATOM_BASISSET</A>.
+The syntax of this block is described there.
+</P>
+<PRE>
+ &UNIQUE_ATOM_BASIS
+    N_EXPONENTS         =    5
+    N_UNCONTRACTED_FCTS =    0 # (the default)
+    N_CONTRACTED_FCTS   =    3
+ /UNIQUE_ATOM_BASIS
+  # Exponents
+    2.000000000000000E-01    5.000000000000000E-01    1.250000000000000E+00  %
+    3.125000000000000E+00    7.812500000000000E+00
+  # Contraction   1
+    1.000000000000000E+00    5.000000000000000E-01    2.000000000000000E-01  %
+    1.000000000000000E-01    5.000000000000000E-02
+  # Contraction   2
+    1.000000000000000E-01    5.000000000000000E-01    1.000000000000000E+00  %
+    5.000000000000000E-01    1.000000000000000E-01
+  # Contraction   3
+    5.000000000000000E-02    1.000000000000000E-01    2.000000000000000E-01  %
+    5.000000000000000E-01    1.000000000000000E+00
+</PRE>
+<DL>
+<DT>N_EXPONENTS<DD>Total number of exponents of primitive basis functions
+of the particular angular momentum and type (orbital, charge fit basis, exchange fit basis).
+<DT>N_UNCONTRACTED_FCTS<DD>Number of those exponents used without being contracted.
+The first N_UNCONTRACTED_FCTS exponents will be used.
+<DT>N_CONTRACTED_FCTS<DD>Number of contracted basis functions
+of the particular angular momentum and type (orbital, charge fit basis, exchange fit basis).
+In the case of charge and exchange fit functions so called
+<A HREF="#namelist_UNIQUE_ATOM_GLOB_CON">"global contractions"</A> exist as well.
+However, if global contractions are used for one unique atom
+(i.e. <A HREF="#namelist_UNIQUE_ATOM_GLOB_CON">N_GLOB_CONS_CH / N_GLOB_CONS_XC</A> is not zero)
+the use of the "local contractions" described here is forbidden (.i.e. N_CONTRACTED_FCTS
+must be zero).
+</DL>
+<P>
+The namelist must directly followed by:
+<UL>
+<LI>one line containing N_EXPONENTS exponents for the gauss functions of the primitive basis.
+<LI>N_CONTRACTED_FCTS lines containing N_EXPONENTS contraction coefficients.
+Each line describes how one contracted basis function is build as a linear combination
+of primitive basis functions with the given coefficients.
+</UL>
+In the example above, <A HREF="#Continuation_Line">continuation lines</A> were used.
+The <A HREF="#Number_Format">number format</A> is quite free.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_UNIQUE_ATOM_BASISSET"></A>
+<B><FONT SIZE=4>UNIQUE_ATOM_BASISSET</FONT></B>
+</H3>
+<P>
+This namelist starts the specification of the orbital and fit function basis sets of one
+unique atom. The basis for orbitals and charge and exchange fitfunction are independent
+of each other but are all specified here. It is obligatory to specify the basis sets for
+all unique atoms.
+</P>
+<P>
+The basis specification block may only appear after the number of unique atoms
+N_UNIQUE_ATOMS was specified in
+<A HREF="#namelist_UNIQUE_ATOM_NUMBER">namelists UNIQUE_ATOM_NUMBER</A>. 
+N_UNIQUE_ATOMS blocks starting with namelist UNIQUE_ATOM_BASISSET must appear in
+direct consecution.
+</P>
+<P>
+It is recommended to use one <A HREF="#Include_File">include file</A> for the basis set block
+of each unique atom. The locations of basis set libraries on our platforms are:
+<UL>
+<LI>HPs: /users/hp4/ttfs/bases
+<LI>Power Challenge: /home/ttfs/bases
+<LI>SP2: /afs/lrz-muenchen.de/home/t/t3831ac/t3831ak/bases
+<LI>VPP: /home/t/t3831ak/bases
+</UL>
+</P>
+<PRE>
+ &UNIQUE_ATOM_BASISSET
+    LMAX_OB        =   2
+    LMAX_CH        =   2
+    LMAX_XC        =   2
+    N_GLOB_CONS_CH =   0 # (the default)
+    N_GLOB_CONS_XC =   0 # (the default)
+ /UNIQUE_ATOM_BASISSET
+</PRE>
+<DL>
+<DT>LMAX_OB<DD>The maximal angular momentum of orbital basis.
+<DT>LMAX_CH<DD>The maximal angular momentum of charge fit basis.
+<DT>LMAX_XC<DD>The maximal angular momentum of exchange fit basis.
+<DT>N_GLOB_CONS_CH<DD>The number of global contractions of charge fit basis.
+<DT>N_GLOB_CONS_XC<DD>The number of global contractions of exchange fit basis.
+</DL>
+<P>
+The basis set for each unique atom is specified in one block consisting of one
+namelist UNIQUE_ATOM_BASISSET followed in this order by:
+<UL>
+<LI>(LMAX_OB + 1) <A HREF="#namelist_UNIQUE_ATOM_BASIS">namelists UNIQUE_ATOM_BASIS</A>
+for the orbital basis for l=0,1,...
+<LI>(LMAX_CH + 2) <A HREF="#namelist_UNIQUE_ATOM_BASIS">namelists UNIQUE_ATOM_BASIS</A>
+for the charge fitfunction basis.
+The first namelist specifies the r<SUP>2</SUP> basis and the following ones the basis
+for l=0,1,... .
+<LI>(LMAX_XC + 2) <A HREF="#namelist_UNIQUE_ATOM_BASIS">namelists UNIQUE_ATOM_BASIS</A>
+for the exchange fitfunction basis.
+The first namelist specifies the r<SUP>2</SUP> basis and the following ones the basis
+for l=0,1,... . The exchange fit function basis is read in even if it is not used because
+the exchange potential is calculated numerically.
+<LI>N_GLOB_CONS_CH <A HREF="#namelist_UNIQUE_ATOM_GLOB_CON">namelists UNIQUE_ATOM_GLOB_CON</A>
+namelists describing the global contractions of the charge fitfunctions.
+<LI>N_GLOB_CONS_XC <A HREF="#namelist_UNIQUE_ATOM_GLOB_CON">namelists UNIQUE_ATOM_GLOB_CON</A>
+namelists describing the global contractions of the exchange fitfunctions.
+</UL>
+Each of the namelists <A HREF="#namelist_UNIQUE_ATOM_BASIS">UNIQUE_ATOM_BASIS</A> and
+<A HREF="#namelist_UNIQUE_ATOM_GLOB_CON">UNIQUE_ATOM_GLOB_CON</A> is directly followed by lines
+containing coefficients as described with these namelists.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_UNIQUE_ATOM_GLOB_CON"></A>
+<B><FONT SIZE=4>UNIQUE_ATOM_GLOB_CON</FONT></B>
+</H3>
+<P>
+This namelist is part of the charge or exchange fit function basis set
+specification of one unique atom. It describes one global contraction of either
+charge or exchange fitfunctions of one unique atom.
+</P>
+<P>
+Global contractions are linear combinations of primitive basis functions of several
+different angular momenta. In the normal case you want linear combinations within one
+angular moment only, it is recommended to use local contractions described in
+<A HREF="#namelist_UNIQUE_ATOM_BASIS">namelist UNIQUE_ATOM_BASIS</A> instead for the
+sake of better performance and clarity. Within one unique atom, it is not allowed to mix
+local and global contractions of either charge or exchange fitfunctions.
+</P>
+<P>
+The namelist may only appear within the basis set specification block started with
+<A HREF="#namelist_UNIQUE_ATOM_BASISSET">namelist UNIQUE_ATOM_BASISSET</A>.
+The syntax of this block is described there.
+</P>
+<PRE>
+ &UNIQUE_ATOM_GLOB_CON
+    N_CONTRIBUTING_FCTS = 2
+ /UNIQUE_ATOM_GLOB_CON
+ # l  if  exp  coef
+   1  1   1    0.5E0
+   1  1   2    0.5E0
+</PRE>
+<DL>
+<DT>N_CONTRIBUTING_FCTS<DD>number of primitive basis functions contributing to the contraction
+</DL>
+<P>
+The namelist must directly be followed by N_CONTRIBUTING_FCTS lines each describing one
+contributing primitive basis function. Each line must contain the following in this order:
+<UL>
+<LI>Index of angular momentum. Note that -1 means l=0, 0 means r<SUP>2</SUP>-function
+<LI>Index of independent function of same IRREP, partner and angular momentum
+<LI>Index of exponents contributing. This refers to exponents in corresponding 
+<A HREF="#namelist_UNIQUE_ATOM_BASIS">namelist UNIQUE_ATOM_BASIS</A>.
+<LI>Coefficient to weight this primitive function with in the summation.
+</UL>
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_UNIQUE_ATOM_INDP_FCT"></A>
+<B><FONT SIZE=4>UNIQUE_ATOM_INDP_FCT</FONT></B>
+</H3>
+<P>
+This outdated namelist is part of the description of the symmetry adaption coefficients that
+is only necessary in case no symmetry part is run
+(See <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>).
+</P>
+<P>
+It specifies the number N_FCTS of independent functions of the same IRREP, unique atom,
+angular momentum and exponent / contraction.
+</P>
+<P>
+The symmetry adaption coefficients block may only appear after the number of unique atoms
+N_UNIQUE_ATOMS was specified in 
+<A HREF="#namelist_UNIQUE_ATOM_NUMBER">namelist UNIQUE_ATOM_NUMBER</A> and
+the basis set (See <A HREF="#namelist_UNIQUE_ATOM_BASISSET">namelists UNIQUE_ATOM_BASISSET</A>), 
+the symmetry group and Irreps (See <A HREF="#namelist_SYMMETRY_DATA">namelist SYMMETRY_DATA</A>)
+are known.
+</P>
+<P>
+This namelist is read in in a 3-fold loop running is the following order over:
+<UL>
+<LI> All <A HREF="#namelist_UNIQUE_ATOM_NUMBER">N_UNIQUE_ATOMS</A> unique atoms.
+<LI> All <A HREF="#namelist_SYMMETRY_DATA">N_IRREP</A> Irreps.
+<LI> All <A HREF="#namelist_UNIQUE_ATOM_BASISSET">Max(LMAX_OB,LMAX_CH,LMAX_XC)</A>
+angular momenta of the given unique atom.
+</UL>
+</P>
+<P>
+Each namelist UNIQUE_ATOM_INDP_FCT must directly be followed by N_FCTS
+<A HREF="#namelist_UNIQUE_ATOM_SYMADAPT">namelists UNIQUE_ATOM_SYMADAPT</A>.
+All the symmetry adaption description must be written together in one block.
+</P>
+<PRE>
+ &UNIQUE_ATOM_INDP_FCT
+    N_FCTS = 2
+ /UNIQUE_ATOM_INDP_FCT
+</PRE>
+<BR>
+<P>
+In case the integrals are not calculated
+(See <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>),
+a section describing the renormalization coefficients for the orbital and fit function basis
+directly follows:
+</P>
+<P>
+Lines of coefficients are read in in a 4-fold loop running is the following order over:
+<UL>
+<LI> All <A HREF="#namelist_UNIQUE_ATOM_NUMBER">N_UNIQUE_ATOMS</A> unique atoms.
+<LI> The type of basis: first orbitals, then charge fitfunctions and finally exchange
+fitfunctions.
+<LI> The angular momenta up to
+<A HREF="#namelist_UNIQUE_ATOM_BASISSET">LMAX_OB / LMAX_CH / LMAX_XC</A>.
+In case of fitfunctions the order is as follows: l=0, r<SUP>2</SUP>, l=1, ...
+<LI> All <A HREF="#namelist_SYMMETRY_DATA">N_IRREP</A> Irreps.
+</UL>
+</P>
+<P>
+Within this loop, two lines are read in if the number of floats contained is greater zero:
+<UL>
+<LI> The first line contains <A HREF="#namelist_UNIQUE_ATOM_BASIS">N_EXPONENTS</A>
+coefficients in case global contractions are used
+(i.e. <A HREF="#namelist_UNIQUE_ATOM_BASISSET">N_GLOB_CONS_??</A>
+greater zero) and <A HREF="#namelist_UNIQUE_ATOM_BASIS">N_UNCONTRACTED_FCTS</A>
+coefficients otherwise. These are renormalization coefficients for uncontracted basis functions.
+<LI> The second line contains <A HREF="#namelist_UNIQUE_ATOM_BASIS">N_CONTRACTED_FCTS</A>
+coefficients for the (locally) contracted basis functions.
+</UL>
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_UNIQUE_ATOM_NUMBER"></A>
+<B><FONT SIZE=4>UNIQUE_ATOM_NUMBER</FONT></B>
+</H3>
+<P>
+This obligatory namelists gives the number of <A HREF="#Unique_atoms">unique atoms</A>
+of the problem. It starts the description of the type and position of the atoms involved.
+See chapter <A HREF="#Describing_the_Geometry">Describing the Geometry</A> for
+understanding the concept. 
+</P>
+<P>
+Do not confuse the number of unique atoms with the total number of atoms since there might be
+ <A HREF="#Symmetry_equivalent_atoms">symmetry equivalent atoms</A>.
+</P>
+<PRE>
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS = 2 # (no default)
+ /UNIQUE_ATOM_NUMBER # this namelist is obligatory
+</PRE>
+<P>
+This namelist must be directly be followed by N_UNIQUE_ATOMS
+ <A HREF="#namelist_UNIQUE_ATOM">namelists UNIQUE_ATOM</A>.
+</P>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_UNIQUE_ATOM_SYMADAPT"></A>
+<B><FONT SIZE=4>UNIQUE_ATOM_SYMADAPT</FONT></B>
+</H3>
+<P>
+This outdated namelist is part of the description of the symmetry adaption coefficients that
+is only necessary in case no symmetry part is run
+(See <A HREF="#namelist_OPERATIONS">namelist OPERATIONS</A>).
+The syntax of this block is described in
+<A HREF="#namelist_UNIQUE_ATOM_INDP_FCT">namelists UNIQUE_ATOM_INDP_FCT</A>.
+</P>
+<P>
+It describes how the symmetry adapted basis functions of one particular IRREP, unique atom, 
+ngular momentum and <A HREF="#namelist_UNIQUE_ATOM_INDP_FCT">independent function</A>
+is constructed.
+</P>
+<P>
+This namelist must be directly preceded by
+<A HREF="#namelist_UNIQUE_ATOM_INDP_FCT">namelists UNIQUE_ATOM_INDP_FCT</A>
+and appear the number <A HREF="#namelist_UNIQUE_ATOM_INDP_FCT">N_FCTS</A>
+of independent function times in direct consecution.
+</P>
+<PRE>
+ &UNIQUE_ATOM_SYMADAPT
+    N_FCTS = 2
+ /UNIQUE_ATOM_SYMADAPT
+ # equal_atom, m, coef
+    1          1   0.5
+    2          1   0.5
+</PRE>
+<P>
+This namelist must be directly followed by N_FCTS lines each describing one contributing
+summand by the following numbers in this order:
+<UL>
+<LI>Index of equal atom
+<LI>magnetical quantum number
+<LI>coefficient
+</UL>
+<BR>
+<BR>
+
+
+<H3>
+<A NAME="namelist_XC_CONTROL"></A>
+<B><FONT SIZE=4>XC_CONTROL</FONT></B>
+</H3>
+<P>
+Selects the exchange correlation functional used in the SCF part.
+If not specified otherwise
+(see <A HREF="#namelist_PHXC_CONTROL">namelist PHXC_CONTROL</A>)
+the same potential is also used for the post hoc part.
+</P>
+<P>
+Note the philosophy of the namelist: To permit a maximum flexibility
+in the choice of the functionals, there are no predefined combinations
+of exchange correlation functionals. The user is responsible for the
+selection of a meaningfull combination. For example, to perform a
+"VWN" calculation VNW and XALPHA must be set to true, as VWN only
+contains the correlation and does not include the LDA exchange. If you
+want to use a GGA correction, also the LDA functionals have to be selected. 
+</P>
+<PRE>
+ &XC_CONTROL
+    <span class="so"><a href="#namelist_XC_CONTROL-XC">XC</a>             = "undef" # (the default)</span>
+    XALPHA         =  TRUE # (the default)
+    VWN            =  TRUE # (the default)
+    PWLDAc         = FALSE # (the default) /* version >= V20_delta */
+    PERDEW         = FALSE # (the default)
+    BECKE88        = FALSE # (the default)
+    PERDEWWANG91C  = FALSE # (the default)
+    PERDEWWANG91X  = FALSE # (the default)
+    BAERENDS94     = FALSE # (the default)
+    PBEx           = FALSE # (the default) /* version >= V20_delta */
+    PBEc           = FALSE # (the default) /* version >= V20_delta */
+    revPBEx        = FALSE # (the default) /* version >= V20_delta */
+    PBENx          = FALSE # (the default) /* version >= V20_delta */
+    revPW91c       = FALSE # (the default) /* version >= V20_delta */
+ /XC_CONTROL
+</PRE>
+<DL>
+<DT>XALPHA<DD>Usual LDA exchange. (Xalpha with alpha=2/3).
+<DT>VWN<DD>LDA correlation functional from Vosko, Wilk and
+Nussair. (Can. J. Phys. 58,1200(1980)).
+<DT>PWLDAc</DT>
+<DD>
+Another parameterization of LSD correlation. Very similar to the VWN. <BR>
+Is a base for PW91 and PBE correlation functionals. <BR>
+(J. P. Perdew and Y. Wang, Phys. R ev. B <B>45</B>, 13244 (1992)).
+</DD>
+<DT>PERDEW<DD>GGA correlation functional (Phys. Rev. B 34 7046 (1986)).
+<DT>BECKE88<DD>GGA exchange functional (Phys. Rev. A 38 3098 1988).
+<BR>Normally PERDEW and BECKE88 are
+used together as a choice of a GGA Potential.
+<DT>PERDEWWANG91C, revPW91c</DT>
+<DD>
+GGA correlation functional. When revPW91c is also set 
+additional 'zeta' term is used (PW91 IIA). <BR>
+(Phys. Rev. B 46,6671(1992)). 
+</DD>
+<DT>PERDEWWANG91X<DD>GGA exchange functional (Phys. Rev. B
+46,6671(1992)).<BR>Normally PERDEWWANG91C and PERDEWWANG91C are
+used together as a choice of a GGA Potential.
+<DT>BAERENDS94<DD>GGA exchange potiential (Phys. Rev. A 49 (2421)
+1994). Note: There is no energy expression to this functional. Thus it
+can not be used in the Post Hoc part. This functional is supposed to
+improve the energetic position of the Kohn-Sham eigenvalues. 
+<DT>PBEx, PBEc</DT>
+<DD>
+Gradient corrections to the exchange and correlation functionals due to Perdew, Burke and Ernzerhof. <BR>
+Correlation can be used with an alternative exchange, see below. <BR>
+(J. P. Perdew, K. Burke, and M. Ernzerhof, Phys. Rev. Lett. <B>77</B>, 3865 (1996)).
+</DD>
+<DT>revPBEx</DT>
+<DD>
+Gradient correction to the exchange functional due to Zhang and Yang. <BR>
+Revision of PBEx. To be used with PBEc. <BR>
+(Y. Zhang and W. Yang, Phys. Rev. Lett. <B>80</B>, 890 (1998)). 
+</DD>
+<DT>PBENx</DT>
+<DD>
+Gradient correction to the exchange functional due to Hammer, Hansen and N&oslash;rskov. <BR>
+To be used with PBEc. <BR>
+(B. Hammer, L. B. Hansen, and J. K. N&oslash;rskov, to be published). 
+</DD>
+<div class="so">
+<dt><a name="namelist_XC_CONTROL-XC"><tt>XC</tt></a>
+ <dd> This is an alternative way of defining XC functional.
+      Use it only if you know what you are doing. All other
+      switches will be ignored - so there is no need to specify them:
+      <br><tt>&amp;XC_CONTROL</tt>
+      <br><tt>&nbsp;&nbsp;&nbsp;XC="vwn"</tt>
+      <br><tt>/XC_CONTROL</tt>
+      <br> Could be an example.
+      Possible choices are (always with quotes!):
+      <dl>
+       <dt> <tt>XC="undef"</tt> or skipped at all
+        <dd> you select the old-fashioned input
+       <dt> <tt>XC="VWN"</tt> or
+            <tt>BP</tt>,
+            <tt>PW91</tt>,
+            <tt>PBE</tt>,
+            <tt>PBEN</tt>,
+            <tt>revPBE</tt>
+        <dd> are self-explanatory and are really what they say
+       <dt> <tt>XC="PWLDA"</tt> or
+            <tt>PW-LDA</tt>,
+            <tt>PWLSD</tt>,
+            <tt>PW-LSD</tt>
+        <dd> all stay for same local exchange-correlation
+             functional due to Perdew and Wang (see above).
+       <dt> <tt>XC="off"</tt>
+        <dd> turns XC off, use with care
+       <dt> <tt>XC="VWN,spatial"</tt> and like
+        <dd> is usefull for spin-orbit and says to evaluate XC
+             in orbital (as opposed to spinor) space which must
+             be much faster.
+       <dt> <tt>XC="VWN,spatial,orb-&gt;sporb"</tt> and like
+        <dd> use spatial orbitals to compute spinors as opposed
+             to independent evaluation of both.
+      </dl>
+      Note that all keys are <strong>case insensitive</strong>.
+      This switch is mainly used together with
+      <a href="#Spin_Orbit">spin-orbit</a>.
+</div>
+</DL>
+<BR>
+<BR>
+
+
+
+
+
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+
+<H2>
+<A NAME="Sample_Input"></A>
+<B><FONT SIZE=5>Sample Input</FONT></B>
+</H2>
+
+<PRE>
+<A HREF="#Comments"># CO example input file V19alpha
+# TB 12.1.97</A>
+
+ &<A HREF="#namelist_TASKS">TASKS</A>
+    TASK = "SinglePoint"
+    # Allowed values are: SinglePoint GeoOpt Gradients CheckInput MakeGX
+ /TASKS
+ 
+ &<A HREF="#namelist_SYMMETRY_GROUP">SYMMETRY_GROUP</A>
+    POINT_GROUP = "C4V"
+ /SYMMETRY_GROUP
+
+ &<A HREF="#namelist_UNIQUE_ATOM_NUMBER">UNIQUE_ATOM_NUMBER</A>
+    N_UNIQUE_ATOMS =    2
+ /UNIQUE_ATOM_NUMBER
+
+ &<A HREF="#namelist_UNIQUE_ATOM">UNIQUE_ATOM</A> # unique atom   1
+    NAME          = "C"
+    Z             = 6.000
+    N_equal_atoms = 1
+ /UNIQUE_ATOM
+    0.000000   0.000000   1.065799
+
+ &<A HREF="#namelist_UNIQUE_ATOM">UNIQUE_ATOM</A> # unique atom   2
+    NAME          = "O"
+    Z             = 8.000
+    N_equal_atoms = 1
+ /UNIQUE_ATOM
+    0.000000    0.000000  -1.065799
+
+ &<A HREF="#namelist_PVMOPTIONS">PVMOPTIONS</A>
+    N_PROCS  =  4
+ /PVMOPTIONS
+
+ &<A HREF="#namelist_MAIN_OPTIONS">MAIN_OPTIONS</A>
+    SPIN_RESTRICTED   = FALSE
+    RELATIVISTIC      = FALSE
+ /MAIN_OPTIONS
+
+ &<A HREF="#namelist_RECOVER_OPTIONS">RECOVER_OPTIONS</A>
+    SAVE_SCFSTATE = TRUE
+    READ_SCFSTATE = TRUE
+    SAVE_INTERVAL = 0
+ /RECOVER_OPTIONS
+
+ &<A HREF="#namelist_CONVERGENCE_LIST">CONVERGENCE_LIST</A>
+    ENERGY_CRITERION      = 1.000E-08
+    STOP_IF_NOT_CONVERGED = TRUE
+ /CONVERGENCE_LIST
+
+ &<A HREF="#namelist_XC_CONTROL">XC_CONTROL</A> # Becke-Perdew GGA Exchange Potential
+    XALPHA  =  TRUE
+    VWN     =  TRUE
+    PERDEW  =  TRUE
+    BECKE88 =  TRUE
+ /XC_CONTROL
+
+ &<A HREF="#namelist_GRIDATOM">GRIDATOM</A> # unique atom   1
+    NRAD    =         20
+    NANG    =         71
+ /GRIDATOM
+
+ &<A HREF="#namelist_GRIDATOM">GRIDATOM</A> # unique atom   2
+    NRAD    =         20
+    NANG    =         71
+ /GRIDATOM
+
+ # <A HREF="#namelist_UNIQUE_ATOM_BASISSET">Basis Sets</A>
+ # use <A HREF="#Include_File">include files</A> to include bases from our library
+ # location:
+ # HPs:             /users/hp4/ttfs/bases
+ # Power Challenge: /home/ttfs/bases
+ # SP2:             /afs/lrz-muenchen.de/home/t/t3831ac/t3831ak/bases
+ # VPP:             /home/t/t3831ak/bases
+
+~/users/hp4/ttfs/bases/C_9.5.1_5.4.1
+~/users/hp4/ttfs/bases/O_9.5.1_5.4.1
+
+</PRE>
+
+
+
+
+
+<BR><BR><HR SIZE=2 NOSHADE><BR><BR>
+
+
+<H2>
+<A NAME="Describing_the_Geometry"></A>
+<B><FONT SIZE=5>Describing the Geometry</FONT></B>
+</H2>
+
+<P>
+ParaGaus allows to use the known natural symmetry of the molecule in order to
+reduce the computational effort. In case of SCF convergence problems
+due to an over-complete basis set the use of symmetry may also help.
+</P>
+<P>
+The symmetry is also used in the input geometry description of atoms and point charges.
+</P>
+<P>
+The atoms or charges are grouped together as so-called
+<A NAME="Unique_atoms"></A><B>unique atoms / charges</B>
+that share the same name, nuclear charge and (for atoms) basis set and numerical grid.
+Moreover, all of the atoms or charges within this group must be symmetry-equivalent, 
+i.e. they must be the complete set of centers that
+can be obtained from one center within this group using the 
+<A HREF="#symmetry transformations">symmetry transformations</A> of the
+<A HREF="#namelist_SYMMETRY_GROUP">chosen symmetry group</A>.
+The atoms / charges within one unique atom / charge group are called
+<A NAME="Symmetry_equivalent_atoms"></A><B>symmetry equivalent atoms / charges</B>.
+</P>
+<P>
+This is used in the input. The number of unique 
+<A HREF="#namelist_UNIQUE_ATOM_NUMBER">atoms</A> / 
+<A HREF="#namelist_POINTCHARGE_NUMBER">charges</A> must be specified.
+Then for each unique atom / charge a namelist
+<A HREF="#namelist_UNIQUE_ATOM">UNIQUE_ATOM</A> /
+<A HREF="#namelist_POINTCHARGE">POINTCHARGE</A>
+is used to specify the name, nuclear charge and number of equal charges and the
+coordinate of one equal atom / charge. The coordinates of the remaining equal
+atoms / charges are automatically calculated using the 
+<A HREF="#symmetry transformations">symmetry transformations</A> of the
+<A HREF="#namelist_SYMMETRY_GROUP">chosen symmetry group</A>.
+The specified number of equals is used for a cross-check only.
+For each unique atom, an own <A HREF="#namelist_UNIQUE_ATOM_BASISSET">basis set</A>
+and <A HREF="#namelist_GRIDATOM">numerical grid</A> must also be given.
+</P>
+<P>
+<A NAME="symmetry transformations"></A>The set of <B>symmetry transformations</B> within
+one symmetry group are not completely defined by the symmetry group alone. The location and
+orientation of the rotation axis, planes and centers of symmetry is still open.
+Therefore conventions are introduced for each symmetry group:
+</P>
+<table border=4>
+      <tr>
+        <th>symmetry group
+        <th>n-fold rotation axis
+        <th>planes of symmetry
+        <th>twofold rotation axis
+        <th>rotation reflection axis
+        <th>center of symmetry
+      </tr>
+      <tr>
+        <td>CS
+        <td>&#160;</td>
+        <td>xy-plane
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>&#160;</td>
+      </tr>
+      <tr>
+        <td>Ci
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>origin
+      </tr>
+      <tr>
+        <td>"C2" "C3" ... "C10"
+        <td>z-axis
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>&#160;</td>
+      </tr>
+      <tr>
+        <td>"C2H" "C3H" ... "C10H"
+        <td>z-axis
+        <td>xy-plane
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>&#160;</td>
+      </tr>
+      <tr>
+        <td>"C2V" "C3V" ... "C10V"
+        <td>z-axis
+        <td>xz-plane n-fold rotated around z-axis
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>&#160;</td>
+      </tr>
+      <tr>
+        <td>"D2" "D3" ... "D10"
+        <td>z-axis
+        <td>&#160;</td>
+        <td>x-axis n-fold rotated around z-axis
+        <td>&#160;</td>
+        <td>&#160;</td>
+      </tr>
+      <tr>
+        <td>"D2H" "D3H" ... "D10H"
+        <td>z-axis
+        <td>xy-plane
+        <td>x-axis n-fold rotated around z-axis
+        <td>&#160;</td>
+        <td>&#160;</td>
+      </tr>
+      <tr>
+        <td>"D2V" "D3V" ... "D10V"
+        <td>z-axis
+        <td>xz-plane n-fold rotated around z-axis
+        <td>x-axis n-fold rotated around z-axis
+        <td>&#160;</td>
+        <td>&#160;</td>
+      </tr>
+      <tr>
+        <td>"S4" "S6" ... "S20"
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>&#160;</td>
+        <td>z-axis
+        <td>&#160;</td>
+      </tr>
+</table>
+<DL>
+<DT>"C1"<DD>no symmetry
+<DT>"Dinh"<DD>
+<DT>"T"<DD>
+<DT>"TH"<DD>
+<DT>"TD"<DD>
+<DT>"O"<DD>
+<DT>"OH"<DD>
+<DT>"I"<DD>
+<DT>"IH"<DD>
+</DL>
+<P>
+<B>Warning:</B> In the case of <A HREF="#Geometry_Optimization">Geometry Optimization</A>
+the coordinates specified in the input file are ignored and the real coordinates are taken
+from the <A HREF="#gx_file">gx file</A>.
+</P>
+
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="Helper_Programs"></A>
+<B><FONT SIZE=7>Helper Programs</FONT></B>
+</H1>
+
+
+<P>
+The <a href="/home/ttfs/DOCUMENTATION/DOK/paraplot.dvi">paraplot</a>
+program that plots orbitals or densities in a two dimensional way
+is described seperately.
+<P>
+
+
+</FONT>
+</BODY>
+
+</HTML>

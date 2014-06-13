@@ -1,0 +1,115 @@
+#!/bin/csh
+setenv machine dec
+#setenv local /TMP/epe.$$
+setenv local /scratch/epe.$$
+mkdir $local
+if ( $1 == "" ) then
+ echo Parameter must be specified
+ exit
+endif
+
+ set epe=/home/exe/epe_3
+ set epe="$epe".exe
+
+setenv base  `pwd`
+setenv TTFSINPUTDIR $base
+set infile = $1
+
+cp    $epe $local/epe.exe
+cd $local
+setenv TTFSDATADIR $local
+
+cp $base/$infile.epe $local
+
+if (-e $base/gx.c.$infile) then
+echo gxcell
+cp $base/gx.c.$infile $local/gxcell
+endif
+
+if (-e $base/$infile.epe) then
+cp $base/$infile.epe $local/epe.input
+endif
+if (-e $base/gx.$infile) then
+echo "cp $base/gx.$infile $local/hdsdvm.buf"
+cp $base/gx.$infile $local/hdsdvm.buf
+endif
+
+#	file  with regular  positions of PG atoms
+if(-e $base/epe.r) then
+cp $base/epe.r $local/epe.r
+endif
+
+if (-e $base/reg_reference) then
+echo "cp $base/reg_reference  $local/reg_reference"
+cp $base/reg_reference  $local/reg_reference
+endif
+
+if (-e $base/epe_reference) then
+echo "cp $base/epe_reference  $local/epe_reference"
+ cp $base/epe_reference  $local/epe_reference
+endif
+
+if (-e $base/pgepe_reference) then
+echo "cp $base/pgepe_reference  $local/pgepe_reference"
+ cp $base/pgepe_reference  $local/pgepe_reference
+endif
+
+if (-e $base/epein) then
+cp $base/epein $local/hdsin.buf
+endif
+
+#	file of PG field gradients
+if (-e $base/$infile.hdscom) then
+cp $base/$infile.hdscom $local/hdscom
+endif
+
+############################################
+#$local/epe.exe >& epe.out
+$local/epe.exe 
+############################################
+
+if(-e $local/epe.out)	then
+cat $local/epe.out >> $base/epe.$infile
+endif	
+
+if (-e $local/epe_reference) then
+echo "mv  $local/epe_reference $base/epe_reference"
+mv  $local/epe_reference $base/epe_reference
+endif
+
+if (-e $local/reg_reference) then
+echo "mv  $local/reg_reference $base/reg_reference"
+mv  $local/reg_reference $base/reg_reference
+endif
+
+if (-e $local/epe.pcs) then
+echo "mv  $local/epe.pcs $base/epe.pcs"
+mv  $local/epe.pcs $base/epe.pcs
+endif
+if (-e $local/epe.pcc) then
+mv  $local/epe.pcc $base/epe.pcc
+endif
+if (-e $local/epe.pcr) then
+mv  $local/epe.pcr $base/epe.pcr
+endif
+if (-e $local/hdsdvm.buf) then
+cp  $local/hdsdvm.buf $base/gx.$infile
+endif
+if (-e $local/hdsout.buf)  then
+mv $local/hdsout.buf $base/epeout
+endif
+
+if (-e $local/hds.list)  then
+mv $local/hds.list $base/epe.$infile
+endif
+
+if (-e $local/hdsdvm.opt)  then
+mv $local/hdsdvm.opt $base/opt.$infile
+endif
+
+if (-e $local/gxcell) then
+mv $local/gxcell $base/gx.c.$infile 
+endif
+
+rm -r $local
+

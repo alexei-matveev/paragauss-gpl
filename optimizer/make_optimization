@@ -1,0 +1,16 @@
+perl -p -e 's/optimization\s*=\s*(false|f)/optimization=t/i; \
+            s/calc_hessian\s*=\s*(true|t)/calc_hessian=f/i; \
+            s/calc_epeff_hessian\s*=\s*(t|true)/calc_epeff_hessian=f/i; \
+            s/epe_forces\s*=\s*(f|false)/epe_forces=t/i; \
+            s/calc_hessian\s*=\s*(t|true)/calc_hessian = f/i; \
+            s/frequency_calculation\s*=\s*(t|true)/frequency_calculation = f/i;
+            s/estimate_hessian\s*=\s*(t|true)/estimate_hessian=f/i; \
+            s/epeparameters\s*=\s*(f|false)/epeparameters = t/i; \
+	    s/epe_interfaced_mode\s*=\s*(f|false)/epe_interfaced_mode=t/i; \
+            s/save_epe_r\s*=\s*(t|true)/save_epe_r=f/i;' optimizer.input>optimizer.inputT
+mv optimizer.inputT optimizer.input
+perl -p -e 's/OPERATIONS_OPTIMIZER_ONLY\s*=\s*(t|true)/OPERATIONS_OPTIMIZER_ONLY=f/i; input>inputT
+mv inputT input
+
+
+

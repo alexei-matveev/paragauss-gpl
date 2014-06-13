@@ -1,0 +1,5 @@
+perl -p -e 's/n_procs\s*=\s*\d*/n_procs=1/i' input>inputT
+mv inputT input
+perl -p -e 's/tpe\s+\d+/tpe 1/i' $1 >sT
+mv sT $1
+

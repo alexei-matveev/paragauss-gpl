@@ -1,0 +1,234 @@
+####################################################
+### ATTENTION: MACHINE INDEPENDENT META-MAKEFILE ###
+####################################################
+
+### To obtain working Makefile, type: mpp <machine>; makedependent -d
+
+#### Version of Executables ####
+#MPP:IBM:IBM_PVM# VERS =	v20b
+#MPP:HP:SGI# VERS =	V20_beta
+
+### Machine Keyword for fpp
+#MPP:IBM# MACH =	IBM
+#MPP:IBM_PVM# MACH =	IBM_PVM
+#MPP:HP#  MACH =	HP
+#MPP:SGI#  MACH =	SGI
+
+### Home #######
+#MPP:IBM:IBM_PVM# HOME =	/afs/lrz-muenchen.de/home/t/t3831ak
+#MPP:HP#  HOME =	/users/hp4/ttfs
+#MPP:VPP#  HOME =	/home/t/t3831ak
+#MPP:SGI#  HOME = /home/ttfs/
+
+### Directory where Sources are stored ####
+#MPP:IBM:IBM_PVM# BASEDIR =	/usr/mnt/theochem/
+#MPP:SGI:HP# BASEDIR =	/vobs/ttfs
+#MPP:VPP# BASEDIR =	/home/t/t3831ak/mnthp4
+
+#### Directory where executables are installed #####
+#MPP:HP#INSTALLDIR	= /users/hp4/ttfs/bin
+#MPP:SGI#INSTALLDIR	= /home/ttfs/bin.sgi
+#MPP:IBM:IBM_PVM#INSTALLDIR	= $(HOME)/bin
+
+
+#### Directory where Scripts are stored #####
+BINDIR =	$(BASEDIR)/bin
+
+#### NAME OF EXECUTABLE ####
+EXE	= $(INSTALLDIR)/plot_$(VERS).exe
+SCRIPT_PLOT = $(INSTALLDIR)/paraplot_$(VERS)
+BIMMEL_PLOT = $(INSTALLDIR)/paragrafik_$(VERS)
+
+
+ ALL_EXE = $(EXE) $(SCRIPT_PLOT) $(BIMMEL_PLOT)
+
+## Compiler
+#MPP:HP:SGI# FC	= f90
+
+#MPP:HP# F90BASEFLAGS = -ccarg +DS735 -ccarg +DA735 
+#MPP:HP# FBASEFLAGS = -ccarg +DS735 -ccarg +DA735
+#MPP:HP#F90FLAGS	= -gline -C=all
+#MPP:HP#F90ALTFLAGS	= -gline -C=all
+
+#MPP:SGI## -O3 aggressive optimization that might affect floating point results.
+#MPP:SGI## -O2 (-O) turns on global optimizations. This is the default
+#MPP:SGI## -64 Compiles the source code to 64-bit mode (the default is -mips4)
+#MPP:SGI## -r10000 take R10000 Processor as target for optimization
+#MPP:SGI## -fullwarn Checks code and produces additional warnings that are  normally suppressed.
+#MPP:SGI## -nocpp no cpp praeprozessor
+#MPP:SGI## -extend_source fixed form source format with extended line length
+#MPP:SGI## -freeform free form source format
+#MPP:SGI## -DEBUG:subscript_check
+#MPP:SGI## -g2 debuger infos
+#MPP:SGI## -OPT:Olimit=0 no memory limits for compilation
+#MPP:SGI## F90FLAGS = -64 -g2 -r10000 -fullwarn -freeform -nocpp -DEBUG:subscript_check
+#MPP:SGI## FFLAGS = -64  -g2 -r10000  -fullwarn -extend_source -DEBUG:subscript_check
+#MPP:SGI## F90ALTFLAGS = -64 -g2 -r10000  -fullwarn -freeform -DEBUG:subscript_check
+#MPP:SGI## FALTFLAGS = -64  -g2 -r10000  -fullwarn -extend_source -DEBUG:subscript_check
+#MPP:SGI## LINKFLAGS = -64  -g2 -r10000 -fullwarn -nocpp
+#MPP:SGI# F90BASEFLAGS = -64 -r10000 -fullwarn -freeform -nocpp
+#MPP:SGI# FBASEFLAGS = -64 -r10000  -fullwarn -extend_source -nocpp
+#MPP:SGI# F90FLAGS = -O3 -OPT:Olimit=0
+#MPP:SGI# F90ALTFLAGS = -O3 -OPT:Olimit=0
+#MPP:SGI# LINKFLAGS = -64 -r10000 -fullwarn
+
+
+#MPP:IBM:IBM_PVM## -O3 Optimization -qstrict no numerically dangerous code rearangement
+#MPP:IBM:IBM_PVM## -g for linker checking of formal parameters, must be used together with
+#MPP:IBM:IBM_PVM##      LINKEROUT = -bloadmap:$(BASEDIR)/linkeroutput
+#MPP:IBM:IBM_PVM## -qcheck -qextchk run time checking for debugging
+#MPP:IBM:IBM_PVM## -qfixed=132 fixed form sources with 132 character lines
+#MPP:IBM:IBM_PVM## -qfree=f90 free form source
+#MPP:IBM:IBM_PVM## -qarch=pwr2 -qtune=pwr2 for thick node architecture
+#MPP:IBM:IBM_PVM## -qarch=pwr2 -qtune=pwr2s for thin node architecture
+#MPP:IBM:IBM_PVM# F90BASEFLAGS = -qarch=pwr2 -qtune=pwr2s -qfree=f90
+#MPP:IBM:IBM_PVM# FBASEFLAGS = -qarch=pwr2 -qtune=pwr2s -qfixed=132
+#MPP:IBM:IBM_PVM## F90FLAGS = -qcheck -qextchk -g
+#MPP:IBM:IBM_PVM## F90ALTFLAGS = -qcheck -qextchk -g
+#MPP:IBM:IBM_PVM## LINKEROUT = -bloadmap:$(BASEDIR)/linkeroutput
+#MPP:IBM:IBM_PVM# F90FLAGS = -O3 -qstrict
+#MPP:IBM:IBM_PVM# F90ALTFLAGS = -O2
+#MPP:IBM:IBM_PVM# LINKEROUT = 
+
+#### LDFLAGS, LIBRARY-PATH ####
+#MPP:HP#INCLUDE		= -I$(BASEDIR)/modules
+#MPP:SGI#INCLUDE	= -I$(BASEDIR)/modules 
+#MPP:SGI#LIBS	= -L/soft/irix6/lib -lgraphf
+#MPP:IBM:IBM_PVM# INCLUDE	= -I$(BASEDIR)/modules
+
+# for makedependent: OBJS MODOBJS WRAPOBJS
+
+OBJS =		plot_main.o \
+		error_handler.o
+
+MODOBJS = 	../modules/type_module.o \
+		../modules/readwriteblocked_module.o \
+		../modules/iounitadmin_module.o
+
+WRAPOBJS =	sheet_f90.o \
+		frame_f90.o \
+		window_f90.o \
+		bicub_f90.o \
+		bicont_f90.o 
+
+
+.SUFFIXES:	.f .fp .f90 .f90p  .o .mod .c .doc
+#### implicit rules ####
+
+#MPP:HP:SGI#.f90.o:
+#MPP:HP:SGI#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP:HP:SGI#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:HP:SGI#.f90.mod:
+#MPP:HP:SGI#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP:HP:SGI#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:HP:SGI#.f90p.o:
+#MPP:HP:SGI#	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(<F)$(MACH) \
+#MPP:HP:SGI#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:HP:SGI#.f90p.mod:
+#MPP:HP:SGI#	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(<F) $(MACH) \
+#MPP:HP:SGI#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:IBM:IBM_PVM#.f90.o:
+#MPP:IBM:IBM_PVM#	$(BINDIR)/compile -cp $(*F).f $(@D) $(<F) $(MACH) \
+#MPP:IBM:IBM_PVM#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:IBM:IBM_PVM#.f90.mod:
+#MPP:IBM:IBM_PVM#	$(BINDIR)/compile -cp $(*F).f $(@D) $(<F) $(MACH) \
+#MPP:IBM:IBM_PVM#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:IBM:IBM_PVM#.f90p.o:
+#MPP:IBM:IBM_PVM#	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+#MPP:IBM:IBM_PVM#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:IBM:IBM_PVM#.f90p.mod:
+#MPP:IBM:IBM_PVM#	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+#MPP:IBM:IBM_PVM#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:VPP#.f90.o:
+#MPP:VPP#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP:VPP#	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:VPP#.f90.mod:
+#MPP:VPP#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP:VPP#	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:VPP#.f90p.o:
+#MPP:VPP#	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(<F) $(MACH) \
+#MPP:VPP#	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:VPP#.f90p.mod:
+#MPP:VPP#	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(<F) $(MACH) \
+#MPP:VPP#	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP NOT:VPP#.f.o:
+#MPP NOT:VPP#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP NOT:VPP#	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP NOT:VPP#.fp.o:
+#MPP NOT:VPP#	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+#MPP NOT:VPP#	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP NOT:VPP#.f.mod:
+#MPP NOT:VPP#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP NOT:VPP#	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP NOT:VPP#.fp.mod:
+#MPP NOT:VPP#	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+#MPP NOT:VPP#	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:VPP#.f.o:
+#MPP:VPP#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP:VPP#	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:VPP#.fp.o:
+#MPP:VPP#	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+#MPP:VPP#	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:VPP#.f.mod:
+#MPP:VPP#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP:VPP#	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:VPP#.fp.mod:
+#MPP:VPP#	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+#MPP:VPP#	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+# end of implicit rules
+
+
+all:	$(ALL_EXE)
+
+$(EXE):	$(OBJS) $(OWNLIBS)
+	$(FC) $(LINKFLAGS) -o $(EXE) $(OBJS) $(MODOBJS) $(OWNLIBS) $(LIBS)
+	chmod 755 $(EXE)
+$(SCRIPT_PLOT): paraplot
+	sed 's/<VERS>/$(VERS)/' paraplot > $(SCRIPT_PLOT)
+	chmod 755 $(SCRIPT_PLOT)
+$(BIMMEL_PLOT): parabimmel
+	cp parabimmel $(BIMMEL_PLOT)
+	chmod 755 $(BIMMEL_PLOT)
+
+##### DEPENDENCIES #####
+
+# makedependent start insert
+# makedependent end insert
+
+
+
+##### SPECIAL COMMANDS #####
+
+clean:
+	rm -f $(OBJS) *.mod
+
+backupclean:
+	rm -f *.f90~
+
+
+#
+# end
+#
+
+
+

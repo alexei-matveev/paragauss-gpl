@@ -1,0 +1,24 @@
+perl -p -e 's/operations_make_reg_reference\s*=\s*(false|f)/OPERATIONS_MAKE_REG_REFERENCE = TRUE/i; \
+            s/n_centres_of_generation\s*=\s*\d+/N_CENTRES_OF_GENERATION = 0/i; \
+            s/periodic_optimization\s*=\s*(true|t)/PERIODIC_OPTIMIZATION = FALSE/i; \
+            s/n_iterations\s*=\s*\d+/N_ITERATIONS = 99/i; \
+            s/qm_interfaced_mode\s*=\s*(true|t)/QM_INTERFACED_MODE = FALSE/i; \
+            s/basic_action\s*=\s*0/BASIC_ACTION = 1/i; \
+            s/make_epe_reference\s*=\s*(true|t)/MAKE_EPE_REFERENCE = FALSE/i; \
+            s/use_epe_reference\s*=\s*(true|t)/USE_EPE_REFERENCE = FALSE/i; \
+            s/use_pgdata\s*=\s*(true|t)/USE_PGDATA = FALSE/i; \
+            s/option_c3_symm\s*=\s*(true|t)/OPTION_C3_SYMM = FALSE/i; \
+            s/gx_highprec\s*=\s*(false|f)/GX_HIGHPREC = TRUE/i' $1.epe > epe_temp_input
+sed '/xyz_center_gener/d' epe_temp_input \
+|sed '/vacancy_impurity/a\
+ &centres_of_generation xyz_center_gener= 0.00000   0.00000   0.00000   \/end' > epe.input
+rm -i epeinout epe.pcr epe_temp_input
+perl -p -e 's/operations_epe_lattice\s*=\s*(false|f)/OPERATIONS_EPE_LATTICE = TRUE/i; \
+            s/#&tasks\s*task\s*=\s*"Epe_lattice"/&tasks task="Epe_lattice"/i; \
+            s/max_geo_iteration\s*=\s*\d+/MAX_GEO_ITERATION = 1/i' input > temp_input
+mv temp_input input
+cp gx.cv.$1 cellvec
+cp gx.c.$1 gxcfile
+cp gx.$1 gxfile
+touch make_reg_reference\ script\ executed
+

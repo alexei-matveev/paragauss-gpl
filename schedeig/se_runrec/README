@@ -1,0 +1,71 @@
+============================
+SCHEDEIG::RUNREC Readme File
+============================
+
+Author: Martin Roderus, roderus@in.tum.de
+Date: 17.08.2010
+
+
+The first time ParaGauss is installed on a new system, a benchmark run has to be performed in order to generate a cost function for the eigenvalue scheduler. To do this, please follow these steps:
+
+ 1. Check if the entries in "machine.inc" are correct.
+
+ 2. Compile the benchmark executable.
+
+ 3. Run the benchmark and generate the cost function.
+
+ 4. Make a symbolic link to the generated fortran time function file.
+
+ 5. Compile ParaGauss.
+
+
+
+Explanations:
+=============
+
+1.Check if the entries in "machine.inc" are correct:
+
+There should be a file "machine.inc" in the root directory of ParaGauss, which is usually a symbolic link from a machine specific include file (*.inc) in the directory "make". In this file, the *linker parameters* for the LAPACK, BLACS and ScaLAPACK libraries are specified in the following variables:
+
+ * LAPACK:    $LAPACKLIBS
+ * BLACS:     $BLCSLIB
+ * ScaLAPACK: $SCLALIB
+
+Please make sure that these variables contains the correct flags, so that the linker can link the three required libraries to the executable.
+
+
+
+2. Compile the benchmark executable:
+
+Type "make".
+
+
+
+3. Run the benchmark and generate the cost function:
+
+3.1 Edit "run.sh" and change the variables in the beginning of the file. See explanations there.
+
+3.2 Make the following files executable by using "chmod u+x ...":
+     
+     * run.sh
+     * bin/curvefit.pl
+     * bin/log2stat.pl
+
+3.3 Run "run.sh". Depending on the parameters in the beginning of the script and your machine, this process can last several hours. Please make sure that you have exclusive rights for the used nodes on your machine!
+
+
+
+4. Make a symbolic link to the generated fortran time function file:
+
+The script "run.sh" generated the files "run.f90" and "run.coeff". The first one contains a Fortran 90 module with the generated coefficients. The second file contains the same coefficients, stored in a format readable by the module. Please rename both files so that you can recognise them when you come back at a later time, e.g.: 
+
+ $ mv run.f90 se_timefunction_module_lrz_hlrb2_MKL_ScaLAPACK1.8_10-08-17.f90
+ $ mv run.coeff se_timefunction_module_lrz_hlrb2_MKL_ScaLAPACK1.8_10-08-17.coeff
+
+Then, make a symbolic link called "se_timefunction_module.f90" from the .f90-file in the directory "schedeig", e.g.:
+
+ $ ln -s se_runrec/se_timefunction_module_lrz_hlrb2_MKL_ScaLAPACK1.8.f90 se_timefunction_module.f90
+
+
+
+5. Compile ParaGauss.

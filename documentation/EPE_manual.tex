@@ -1,0 +1,782 @@
+%% LyX 1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+%\documentclass[12pt,american]{article}
+\documentclass[american]{article}
+\usepackage[T1]{fontenc}
+\usepackage[iso88595]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=2cm,bmargin=1.5cm,lmargin=2cm,rmargin=1.5cm}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{setspace}
+\usepackage{amssymb}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\newcommand{\noun}[1]{\textsc{#1}}
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{array}
+
+\usepackage{babel}
+\makeatother
+\begin{document}
+
+\title{New variant of EPE/covEPE calculations with \noun{ParaGauss}\\
+(user manual)}
+
+
+\author{Shor A. M.}
+
+\maketitle
+
+\section{Introduction}
+
+{\large The current document describes the new user interface designed
+to simplify performing EPE and covEPE tasks. That is not the first
+attempt to make EPE/covEPE calculations more attractive for users,
+especially for those of them who has no experience with this not trivial
+process, but as we believe the successful one. Just one parameter
+handles now all steps of EPE task. Number of EPE steps were reduced.
+Input files looks much simple. Lot of diagnostic messages were added
+in program source code to help user clarify his errors and problems.
+But even now, users are not saved from to get knowledge on theory
+of EPE method\cite{Nasluzov2001,Nasluzov2003} and crystallography
+or to exploit additional programs and utilities which are not part
+of EPE method. }{\large \par}
+
+
+\section{\label{Prog}Programs and utilities}
+
+\begin{singlespace}
+\textbf{\noun{\large ParaGauss}} {\large - the main used program.
+Applied to perform hybrid QM/MM EPE/covEPE calculations with help
+of} \textbf{\large EPE} {\large module . It cannot be ignored.}\\
+\textbf{\large MolMech} {\large - module of} \textbf{\noun{\large ParaGauss}}\noun{\large .}
+{\large It can be used to perform initial periodic optimization of
+3D or 2D (slab) unit cells of solid systems chosen as support of adsorbed
+molecules. This step is very desirable but not essential. Anyone can
+start EPE/covEPE task using experimental unit cell geometry. }\\
+\textbf{\large Gulp \cite{Gale2003}} {\large - external program used
+for the same goal as} \textbf{\large MolMech}{\large . The main} \textbf{\large Gulp}
+{\large advantage is to keep symmetry of an unit cell during geometry
+optimization. If saving symmetry is not important using} \textbf{\large MolMech}
+{\large module is more preferable. As external program} \textbf{\large Gulp}
+{\large has to be modified to save optimized unit cell in format recognizable
+by} \textbf{\large EPE} {\large module of} \textbf{\noun{\large ParaGauss}}{\large .
+Ask responsible person to provide you a suitable} \textbf{\large Gulp}
+{\large version.}\\
+\textbf{\large ewald\_new} {\large - the utility applied to generate
+the array of point charges (PC) modeling periodic electrostatic field
+of a support acting on the embedded quantum mechanical (QM) cluster.}\textbf{\large }\\
+\textbf{\large genlat} {\large - generates super-cells from the unit
+cell.}\\
+\textbf{\large xyz2gx} {\large - converts XYZ file of atomic coordinates
+to GX file.}\\
+\textbf{\large gx2xyz} {\large and} \textbf{\large gx2xyz\_a} {\large -
+converts GX file to XYZ format.}\\
+\textbf{\large epe2xyz} {\large - converts coordinates of EPE to XYZ
+format.}\\
+\textbf{\large get\_epe\_r} {\large - converts GX file to epe.r file.}{\large \par}
+\end{singlespace}
+
+
+\section{Files used in EPE/covEPE calculations}
+
+
+\subsection{Input files}
+
+\textbf{\large input (\ref{input0})} {\large - the standard} \textbf{\noun{\large ParaGauss}}
+{\large input file. Defines all QM and EPE tasks.}\\
+\textbf{\large gx.file (\ref{gx0})} {\large - the famous} \textbf{\noun{\large ParaGauss}}
+{\large GX file slightly modified to correspond EPE format. Keeps
+current geometry of QM cluster.}\\
+\textbf{\large epe.input} {\large (\ref{epe0},\ref{epe1})- the input
+file used by} \textbf{\large EPE} {\large module and} \textbf{\large ewald\_new}{\large .
+Defines parameters of the molecular mechanics environment (EPE) and
+the PC array.}{\large \par}
+
+
+\subsection{Output files}
+
+\textbf{\large output} {\large - the} \textbf{\noun{\large ParaGauss}}
+{\large output file. Contains only QM data.}\\
+\textbf{\large trace\_output} {\large - as usual demonstrates QM SCF
+convergence and also EPE relaxation (optimization) process. }\\
+\textbf{\large epe.out} {\large - output of} \textbf{\large EPE} {\large module.
+Contains huge number of data.}\\
+\textbf{\large ewald.output} {\large - output of} \textbf{\large ewald\_new}
+{\large utility.}\\
+\textbf{\large cell.xyz}{\large ,} \textbf{\large Ewald\_PC.xyz}{\large ,}
+\textbf{\large ew\_pc.xyz} {\large and} \textbf{\large screep.xyz}
+{\large - output files of} \textbf{\large ewald\_new} {\large utility.
+The unit cell and the PC array coordinates in XYZ format.}{\large \par}
+
+
+\subsection{\label{add_files}Working files}
+
+\textbf{\large cellvec} {\large - the optimized unit cell vectors
+and atomic coordinates (core and shell\cite{Dick1958}) in \AA. Currently
+this file can be generated by} \textbf{\large MolMech} {\large module
+or} \textbf{\large Gulp} {\large and is used by} \textbf{\large EPE}
+{\large module and} \textbf{\large ewald\_new}{\large . The three
+first lines are coordinates of optimized unit cell vectors. The rest
+are atomic Cartesian coordinates. To provide compatibility between
+different description of atoms in} \textbf{\large EPE} {\large module
+and programs exploited to optimize the unit cell,} \textbf{\large cellvec}
+{\large file contains not atomic names but rather atomic types (the
+first column).} \texttt{\large N.00} {\large corresponds the core
+positions and} \texttt{\large N.01} {\large describes the shell coordinates.}\\
+\textbf{\large epe.r} {\large - contains regular positions of QM cluster
+(in a.u.) It is generated automatically during the first EPE task
+or can be prepared by hand from initial GX file with help of} \textbf{\large get\_epe\_r}
+{\large utility. It is used in QM calculations and EPE relaxations}\\
+\textbf{\large epe.pcr} {\large - contains the total charges and the
+regular positions of atoms in the EPE IIa region (in a.u.). It is
+used in QM calculations and appeared after the first EPE task.}\\
+\textbf{\large epe.pcc} {\large - contains the core charges and the
+current coordinates of atomic cores in the EPE IIa region (in a.u.).}\\
+\textbf{\large epe.pcs} {\large - contains the shell charges and the
+current coordinates of atomic shells in the EPE IIa region (in a.u.).
+Both files} \textbf{\large epe.pcc} {\large and} \textbf{\large epe.pcs}
+{\large initially are generated after the first EPE task and altered
+after each EPE relaxation task. They are applied in QM calculations.}\\
+\textbf{\large epeinout} {\large -} \textbf{\large }{\large binary
+file containing the core and shell coordinates of atoms within the
+EPE IIa region and used in calculations of an EPE relaxation (altered
+after each EPE relaxation task).}\\
+\textbf{\large reg\_reference} {\large \={ } contains the regular
+EPE positions (cores and shells) of active centers (in a.u.). The
+file is appeared after the first EPE task and essential for EPE relaxation
+task. }\\
+\textbf{\large epe\_reference} {\large - contains the optimized QM
+positions of active centers (in a.u.).}\\
+\textbf{\large pgepe\_reference} {\large - binary file containing
+the information for calculating the electrostatic field of regular
+QM cluster (without defect or adsorbed molecule) acting on the EPE
+IIa region.} \textbf{\large epe\_reference} {\large and} \textbf{\large pgepe\_reference}
+{\large are appeared after the second EPE task and essential to calculate
+EPE relaxation.}\\
+\textbf{\large ewald.pcr} {\large - the file is generated by} \textbf{\large ewald\_new}
+{\large utility and contains the charges and positions (in a.u.) of
+PC array mimicking periodic electrostatic field acting on the QM cluster
+(essential for QM calculations).}\\
+{\large All files described has to be located in the working directory.}{\large \par}
+
+
+\section{Description of input files}
+
+
+\subsection{\label{input0}input}
+
+\begin{singlespace}
+\textbf{\noun{\large ParaGauss}} \textbf{\large input} {\large file
+serves as usual to perform QM tasks and also handles different EPE
+tasks. To perform any EPE tasks you need to define as TRUE either}
+\texttt{\large operations\_qm\_epe} {\large (in the namelist} \texttt{\large {}``OPERATIONS'')}{\large \par}
+\end{singlespace}
+
+\begin{flushleft}\texttt{\&operations}~\\
+\texttt{.......}~\\
+\texttt{~~operations\_qm\_epe = t}~\\
+\texttt{.......}~\\
+\texttt{/operations}\end{flushleft}
+
+\begin{flushleft}{\large or} \texttt{\large qm\_epe} {\large (if you
+prefer the namelist} \texttt{\large {}``TASKS'')} {\large parameters }\end{flushleft}{\large \par}
+
+\begin{flushleft}\texttt{\&tasks }~\\
+\texttt{.......}~\\
+\texttt{~~qm\_epe = t}~\\
+\texttt{.......}~\\
+\texttt{/tasks }\end{flushleft}
+
+\begin{flushleft}{\large and add in any appropriated place the namelist}
+\texttt{\large {}``EPE\_DATA''}{\large .}\end{flushleft}{\large \par}
+
+\begin{flushleft}\texttt{\&epe\_data}~\\
+\texttt{~~epe\_task = {}``epe task''}~\\
+\texttt{/epe\_data}\end{flushleft}
+
+\begin{flushleft}{\large As there is no default EPE task, the namelist}
+\texttt{\large {}``EPE\_DATA''} {\large cannot be dropped. All EPE
+tasks are defined by means keywords presented in Table \ref{T1}}%
+\begin{table}
+
+\caption{\label{T1}Description of EPE tasks}
+
+\begin{center}\begin{tabular}{|c|c|>{\raggedright}p{7cm}|}
+\hline 
+EPE task&
+keywords&
+Description\tabularnewline
+\hline
+\hline 
+1&
+\texttt{{}``get\_epe\_ref''}&
+EPE relaxation without QM cluster, generation of \textbf{epe.r}, \textbf{epe.pcr},
+\textbf{epe.pcc}, \textbf{epe.pcs} and \textbf{reg\_reference} files\tabularnewline
+\hline 
+2&
+\texttt{{}``get\_qm\_ref''}&
+Optimization of the reference QM cluster and as result generation
+of \textbf{epe\_reference} and \textbf{pgepe\_reference} files\tabularnewline
+\hline 
+3&
+\texttt{{}``qm\_cluster\_opt''}&
+Optimization of QM cluster containing defect or adsorbed molecule\tabularnewline
+\hline 
+4&
+\texttt{{}``epe\_relax''}&
+EPE relaxation around QM cluster\tabularnewline
+\hline 
+5&
+\texttt{{}``qm\_cluster\_opt epe\_relax''}&
+Combination of tasks 3 and 4\tabularnewline
+\hline
+\end{tabular}\end{center}
+\end{table}
+{\large .}\end{flushleft}{\large \par}
+
+
+\subsection{\label{gx0}gx.file}
+
+{\large For EPE calculations GX file is very important. It not only
+contains current atomic Cartesian coordinates and system of internal
+coordinates but also defines atoms belonged to the reference system
+and additional short-range interactions between QM cluster and EPE
+and even between cluster atoms. The format of GX file used in EPE
+calculations is slightly different from what is used in regular QM
+calculations. To carry out EPE tasks additional column has to be included
+in GX file from the right side. This additional column defines which
+atoms belong to the reference system. Such atoms are marked by} \texttt{\large -1}{\large .
+Other atoms (dummy and adsorbed) are designated by} \texttt{\large 0}{\large .
+Initial GX file used in the EPE tasks 1 and 2 (Table \ref{T1}) has
+to contains only atoms belonged to the reference system and dummy
+atoms (if necessary). The first column usually contains atomic numbers
+but for EPE calculations atoms that experience additional short-range
+interactions has to be designated by the correct name defined in the
+used file of force field parameters (\ref{List}). Below you can see
+the example of GX file valid for EPE calculations.}{\large \par}
+
+\begin{flushleft}\texttt{99.00 30.678210315263 18.336280866326 23.085034496964
+~0 ~1 0 0 0 ~0 ~0 ~0 ~0 }~\\
+\texttt{99.00 30.678210315263 18.336280866326 22.085034496964 ~0
+~2 1 0 0 ~0 ~0 ~0 ~0 }~\\
+\texttt{99.00 30.678210315263 17.336280866326 22.085034496964 ~0
+~3 2 1 0 ~0 ~0 ~0 ~0 }~\\
+\texttt{~8.03 29.678210315263 17.336280866326 22.085034496964 ~1
+~4 3 2 1 ~1 16 31 -1 }~\\
+\texttt{14.03 28.008861496248 19.728041090221 23.058341159952 ~2
+~5 3 2 1 ~2 17 32 -1 }~\\
+\texttt{14.03 30.914861001140 14.694702339671 23.058341348925 ~3
+~6 3 2 1 ~3 18 33 -1 }~\\
+\texttt{~8.11 28.495257541428 22.192646694773 21.288174845090 ~4
+~7 3 2 1 ~4 19 34 -1 }~\\
+\texttt{~8.11 25.054639184999 18.884831351325 23.066151968056 ~5
+~8 3 2 1 ~5 20 35 -1 }~\\
+\texttt{~8.11 28.756422520253 20.426215803030 25.966651800815 ~6
+~9 3 2 1 ~6 21 36 -1 }~\\
+\texttt{~8.11 33.292470194283 13.883630807839 21.288175034062 ~7
+10 3 2 1 ~7 22 37 -1 }~\\
+\texttt{~8.11 28.707508829749 12.557875531249 23.066151968056 ~8
+11 3 2 1 ~8 23 38 -1 }~\\
+\texttt{~8.11 31.893278430468 14.993021805558 25.966651800815 ~9
+12 3 2 1 ~9 24 39 -1 }~\\
+\texttt{14.11 28.004590713504 25.221359582899 21.113545184315 10 13
+3 2 1 10 25 40 -1 }~\\
+\texttt{14.11 22.100416873749 19.728041090221 23.058342104816 11 14
+3 2 1 11 26 41 -1 }~\\
+\texttt{14.11 30.958813402699 21.431196688443 27.875592438825 12 15
+3 2 1 12 27 42 -1 }~\\
+\texttt{14.11 35.670079009481 11.944344330914 21.113545373287 13 16
+3 2 1 13 28 43 -1 }~\\
+\texttt{14.11 27.960638500917 ~9.577839172904 23.058342293788 14
+17 3 2 1 14 29 44 -1 }~\\
+\texttt{14.11 33.864812718618 16.397857748920 27.875592438825 15 18
+3 2 1 15 30 45 -1 }~\\
+\texttt{-1.00 ~0.000000000000 ~0.000000000000 ~0.000000000000 ~0
+~0 0 0 0 ~0 ~0 ~0 ~0}\end{flushleft}
+
+
+\subsection{\label{epe0}epe.input for EPE module}
+
+{\large New input file for} \textbf{\large EPE} {\large module} \textbf{\large epe.input}
+{\large is completely different from previous versions. The new variant
+of} \textbf{\large epe.input} {\large file does not handle any EPE
+tasks that now are defined in} \textbf{\large ParaGauss} {\large }\textbf{\large input}
+{\large (\ref{input0}) and serves to define EPE parameters and structure.
+Also a internal structure of new} \textbf{\large epe.input} {\large was
+revised. Previous input procedures were based mainly on standard Fortran
+namelists operetors. For new} \textbf{\large epe.input} {\large special
+input procedure were designed which (as we hope) make EPE input file
+more flexible and transparent, allow arbitrary order of input data
+and definition comments and empty lines in any suitable place. }\\
+{\large Main elements of} \textbf{\large epe.input} {\large are so-called
+blocks of data that contain definite set of parameters:}{\large \par}
+
+\begin{flushleft}\texttt{\&block\_name}~\\
+\texttt{~~....... }~\\
+\texttt{~~....... }~\\
+\texttt{~~.......}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent {\large All parameters within blocks can be separated in
+two groups having or not predefined (default) data. The last ones
+can be skipped in input file if you prefer to use default data. If
+all parameters within block of data have been skipped such block also
+can be skipped. An order of block of data within} \textbf{\large epe.input}
+{\large is absolutely arbitrary but we recommend you to organize input
+file more or less logically. }{\large \par}
+
+\noindent {\large Bellow we present description of all block of data
+and parameters. Keywords and data in brackets (}\texttt{\large {[}
+{]}}{\large ) can be skipped. The slash (}\texttt{\large /}{\large )
+defines that only one a keyword from a list can be specified. Underlined
+keywords and data are default. }{\large \par}
+
+
+\subsubsection{{\large Unit cell definition }}
+
+\begin{flushleft}\texttt{\&cell\_vectors}~\\
+\texttt{~~x1 y1 z1}~\\
+\texttt{~~x2 y2 x2}~\\
+\texttt{~~x3 y3 z3}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent \texttt{\large Cell\_vectors} {\large block contains coordinates
+of vectors defining the unit cell of system used. Here and hereinafter
+all geometrical parameters are in \AA.}{\large \par}
+
+\begin{flushleft}\texttt{\&coordinates}~\\
+\texttt{~~n\_atoms N {[}}\texttt{\underbar{new}}\texttt{/old{]}}~\\
+\texttt{~~name1 x1 y1 z1 {[}}\texttt{\underbar{f}}\texttt{/t{]}}~\\
+\texttt{~~......}~\\
+\texttt{~~......}~\\
+\texttt{~~nameN xN yN zN {[}}\texttt{\underbar{f}}\texttt{/t{]}}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent \texttt{\large Coordinates} {\large block defines number
+and Cartesian coordinates of atoms in the unit cell. (}\textbf{\large Important}{\large :
+EPE model is based on core-shell atomic model\cite{Dick1958}, but
+in} \texttt{\large Coordinates} {\large block an user has to define
+only {}``natural'' atomic coordinates which coincide with either
+experimental data or positions of cores) }\\
+{\large The first line within} \texttt{\large coordinates} {\large block
+has to define number of atoms} \texttt{\large N} {\large in the unit
+cell (keyword} \texttt{\large n\_atoms}{\large ). Keywords} \texttt{\large new}
+{\large and} \texttt{\large old} {\large are used to define a rule
+of calculation of the regular atomic positions. Keyword} \texttt{\large old}
+{\large has to be specified if used EPE working files were generated
+by previous EPE versions. Next} \texttt{\large N}{\large th lines
+present atomic names and coordinates and keywords} \texttt{\large t}
+{\large or} \texttt{\large f}{\large . User is not free to define
+atomic names. They has to be taken from force field parameters file
+used (\ref{List}). Keywords} \texttt{\large t} {\large and} \texttt{\large f}
+{\large help user to fix (}\texttt{\large t}{\large ) or not (}\texttt{\large f}{\large )
+positions of some atoms during relaxation of EPE.}\\
+{\large As mentioned above it is strong recommended for EPE calculations
+to use fully optimized unit cell saved in} \textbf{\large cellvec}
+{\large file (\ref{add_files}). In this case all data defined by}
+\texttt{\large cell\_vector} {\large and} \texttt{\large coordinates}
+{\large blocks will be replaced by those taken from} \textbf{\large cellvec}
+{\large located in the working directory. User has to remember that
+the order of atomic types defined in} \texttt{\large coordinates}
+{\large block and} \textbf{\large cellvec} {\large file has to coincide
+with each other.}\\
+{\large We can suggest variant which significantly simplifies structure
+and size of} \textbf{\large epe.input} {\large file. If} \textbf{\large cellvec}
+{\large file is intended to be used, instead of two blocks described
+above one small block} \texttt{\large atom\_names} {\large can be
+applied.}{\large \par}
+
+\begin{flushleft}\texttt{\&atom\_names}~\\
+\texttt{~~n\_atoms N {[}}\texttt{\underbar{new}}\texttt{/old{]}}~\\
+\texttt{~~n\_atom\_types N1}~\\
+\texttt{~~name1}~\\
+\texttt{~~......}~\\
+\texttt{~~nameN1}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent {\large As in case of} \texttt{\large coordinates} {\large block
+the order of lines in the block} \texttt{\large atom\_names} {\large is
+not free. The first line is analogous to the first line in} \texttt{\large coordinates}
+{\large block and defines number of atoms} \texttt{\large N} {\large in
+the unit cell. The second line (keyword} \texttt{\large n\_atom\_types}{\large )
+defines number of different atomic types} \texttt{\large N1} {\large which
+can be taken from} \textbf{\large cellvec} {\large file. Next} \texttt{\large N1}{\large th
+lines has to contain names of atomic types valid for a chosen force
+field parameters file (\ref{List}). }\\
+{\large Only the case when} \texttt{\large atom\_names} {\large block
+cannot be used is if user need to fix positions of some EPE atoms. }{\large \par}
+
+
+\subsubsection{{\large Definition of force field acting within EPE region}}
+
+{\large In new variant of EPE input file user is saved from defining
+parameters of molecular mechanics (MM) force field acting between
+atoms in EPE by hand. Now all force field parameters acting in MM
+part and between QM cluster and EPE are saved in public available
+files. Only action that user has to do is to define name of force
+field file in block} \texttt{\large force\_field}{\large .}{\large \par}
+
+\begin{flushleft}\texttt{\&force\_field}~\\
+\texttt{~~file\_name}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent {\large Currently three MM force fields were implemented
+for EPE calculations. They can be used to model different silicates
+and zeolites \cite{Nasluzov2003,Ivanova2005} aluminium and magnesium
+oxides. }{\large \par}
+
+\noindent {\large If user want to extend the set of public force field
+parameters, he should have his personal copy of a force field file
+to modify it. To use personal copy of a force field parameters file
+user has to define its location by means global variable} \texttt{\large TTFSLIBS}{\large .}{\large \par}
+
+
+\subsubsection{{\large Parameters of EPE regions}}
+
+\begin{flushleft}\texttt{\&epe\_parameters }~\\
+\texttt{~~{[}radius\_2a\_region} \texttt{\underbar{10.0}}\texttt{{]}
+}~\\
+\texttt{~~{[}radius\_2b\_region} \texttt{\underbar{22.0}}\texttt{{]}
+}~\\
+\texttt{~~{[}}\texttt{\underbar{no\_c3\_symm}}\texttt{/c3\_symm{]}
+}~\\
+\texttt{~~{[}n\_gen\_ions} \texttt{\underbar{6000}}\texttt{{]} }~\\
+\texttt{~~{[}n\_primitive\_cell\_trans} \texttt{\underbar{5}} \texttt{}\texttt{\underbar{5}}
+\texttt{}\texttt{\underbar{5}}\texttt{{]} }~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent \texttt{\large Epe\_parameters} {\large block defines a
+size of generated EPE regions\cite{Nasluzov2001}. The most of keywords
+used are self explained. Here} \texttt{\large radius\_2a\_region}
+{\large defines radius of IIa region. IIb region is defined by keyword}
+\texttt{\large radius\_2b\_region}{\large . The maximal number of
+generated ions (atoms) is set by} \texttt{\large n\_gen\_ions} {\large keyword.
+To generate EPE regions the unit cell has to be multiplied along three
+unit cell vectors (two vectors for slab). The keyword} \texttt{\large n\_primitive\_cell\_trans}
+{\large is responsible for unit cell multiplication. If the EPE posses
+$C_{3}$symmetry (or similar one) keyword} \texttt{\large c3\_symm}
+{\large can be specified.}{\large \par}
+
+
+\subsubsection{{\large Parameters of EPE relaxation (optimization)}}
+
+\begin{flushleft}\texttt{\&optimization }~\\
+\texttt{~~{[}iterations} \texttt{\underbar{100}}\texttt{{]} }~\\
+\texttt{~~{[}max\_grad} \texttt{\underbar{0.0001}}\texttt{{]} }~\\
+\texttt{~~{[}hess\_update} \texttt{\underbar{10}}\texttt{{]} }~\\
+\texttt{~~{[}hess\_weight} \texttt{\underbar{1.0}}\texttt{{]}}~\\
+\texttt{~~{[}}\texttt{\underbar{no\_print\_grads}}\texttt{/print\_grads{]}
+}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent {\large The main aim of EPE module is optimization of EPE
+around QM cluster. This task is handled by} \texttt{\large optimization}
+{\large blocks. Keyword} \texttt{\large iterations} {\large defines
+maximal number of geometry iterations.} \texttt{\large Max\_grad}
+{\large sets the main characteristic of convergence \={ } maximal
+absolute component of energy gradients. Keyword} \texttt{\large hess\_update}
+{\large defines maximum number of iteration between hessian updates. Initial Hessian
+(the unit matrix) can be weighted by number that is specified by keyword}
+\texttt{\large hess\_weight}{\large . To output final gradients an
+user can apply keyword} \texttt{\large print\_grads}{\large .}{\large \par}
+
+
+\subsubsection{{\large Output of EPE region}}
+
+\begin{flushleft}\texttt{\&xyz\_output}~\\
+\texttt{~~{[}}\texttt{\underbar{no\_output\_IIa}}\texttt{/output\_IIa{]}}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent {\large Block} \texttt{\large xyz\_output} {\large serves
+only to save in XYZ format regular positions of ions (atoms) of IIa
+region (keyword} \texttt{\large output\_IIa}{\large ).}{\large \par}
+
+
+\subsection{\label{epe1}epe.input for ewald\_new}
+
+\textbf{\large ewald\_new (\ref{Prog})} {\large routine generates}
+\textbf{\large ewald.pcr (\ref{add_files})} {\large file which is
+very important to correctly estimate electrostatic effect of EPE on
+embedded QM cluster. That is why the same unit cell has to be used
+for both programs} \textbf{\large EPE} {\large module and} \textbf{\large ewald\_new}{\large .
+To guaranty the last condition and make user work easier in the current
+EPE user interface} \textbf{\large ewald\_new} {\large utility exploits
+the same EPE input file} \textbf{\large epe.input} {\large (\ref{epe0}).
+For} \textbf{\large ewald\_new} {\large only the blocks of data} \texttt{\large cell\_vectors}{\large ,}
+\texttt{\large coordinates}{\large ,} \texttt{\large atom\_names}
+{\large (replacing two first) and} \texttt{\large force\_field} {\large are
+important. Other EPE specific blocks are ignored. Also there are two
+blocks of data that has to be included in} \textbf{\large epe.input}
+{\large to provide a correct work of} \textbf{\large ewald\_new}{\large .}{\large \par}
+
+\begin{flushleft}\texttt{\&pc\_array}~\\
+\texttt{~~{[}radius} \texttt{\underbar{15.0}}\texttt{{]}}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent {\large The block} \texttt{\large pc\_array} {\large has
+only keyword} \texttt{\large radius} {\large that sets radius of}
+\textbf{\large ewald.pcr} {\large array of point charges. Its value
+affects the total number of PC.}{\large \par}
+
+\begin{flushleft}\texttt{\&screep\_data}~\\
+\texttt{~~{[}center} \texttt{\underbar{0.0}} \texttt{}\texttt{\underbar{0.0}}
+\texttt{}\texttt{\underbar{0.0}}\texttt{{]}}~\\
+\texttt{~~{[}radius} \texttt{\underbar{5.0}}\texttt{{]}}~\\
+\texttt{~~{[}screep\_points} \texttt{\underbar{128}}\texttt{{]}}~\\
+\texttt{~~{[}}\texttt{\underbar{c3}}\texttt{/c3v/c4{]}}~\\
+\texttt{~~{[}direction} \texttt{\underbar{0.0}} \texttt{}\texttt{\underbar{0.0}}
+\texttt{}\texttt{\underbar{0.1}}\texttt{{]}}~\\
+\texttt{\&end}\end{flushleft}
+
+\noindent \texttt{\large Screep\_data} {\large block specifies parameters
+responsible for generation of SCREEP sphere\cite{Stefanovich1998}.
+Here keyword} \texttt{\large center} {\large defines the center of
+SCREEP sphere and the whole array of PC that should be located near
+the center of QM cluster. Keyword} \texttt{\large radius} {\large sets
+the radius of SCREEP sphere. (}\textbf{\large Important}{\large :
+the value of radius has to guaranty that QM cluster completely located
+within SCREEP sphere) The quality of electrostatic field acting on
+QM cluster depends on number of PC in regular cell positions and also
+on number of PC distributed on SCREEP sphere surface. The last number
+is defined by keyword} \texttt{\large screep\_points}{\large . Valid
+values are 128, 512, 2048 and so on. SCREEP sphere can be oriented
+accordingly tree types of symmetry ($C_{3}$, $C_{3v}$ and $C_{4}$)
+and an direction of the main axes of symmetry is specified by keyword}
+\texttt{\large direction}{\large .}\\
+{\large As} \textbf{\large ewald\_new} {\large utility is independent
+on} \textbf{\noun{\large ParaGauss}} {\large program it cannot use
+global variables defined in} \textbf{\large ttfs} {\large script.
+Therefore to help} \textbf{\large ewald\_new} {\large to find location
+of the force field parameters file user has to define variables} \texttt{\large TTFSLIBS}
+{\large by hand.}\\
+{\large To estimate quality of work of} \textbf{\large ewald\_new}
+{\large utility user should look in the bottom of} \textbf{\large epe.output}
+{\large file. There values of exact and approximated periodic electrostatic
+potential calculates at positions of QM cluster atoms (}\textbf{\large gx.file}{\large )
+can be found. If no} \textbf{\large gx.file} {\large was found electrostatic
+potential is calculated at the center of SCREEP sphere.}{\large \par}
+
+
+\section{EPE calculation. The order of steps}
+
+
+\subsection{\label{tp}Preliminary tasks}
+
+\begin{enumerate}
+\item {\large Optimization of the unit cell, generation of} \textbf{\large cellvec
+(\ref{add_files})} {\large file (}\textbf{\large MolMech} {\large module
+or} \textbf{\large Gulp}{\large );}{\large \par}
+\item {\large Generation of} \textbf{\large gx.file (\ref{add_files})}
+{\large - initial GX file of QM cluster without defect or adsorbed
+molecules (}\textbf{\large xyz2gx} {\large or by hand);}{\large \par}
+\item {\large Preparation} \textbf{\large input} {\large and} \textbf{\large epe.input}
+{\large files (\ref{add_files});}{\large \par}
+\item {\large Generation of} \textbf{\large ewald.pcr (\ref{add_files})}
+{\large file by means} \textbf{\large ewald\_new} {\large utility
+(\ref{Prog}).}{\large \par}
+\end{enumerate}
+
+\subsection{\label{t1}The first EPE task - optimization of EPE without QM cluster }
+
+{\large To carry out the first task the working directory has to contain
+files :}{\large \par}
+
+\begin{enumerate}
+\item \textbf{\large input}{\large ,}{\large \par}
+\item \textbf{\large epe.input}{\large ,}{\large \par}
+\item \textbf{\large gx.file}{\large \par}
+\end{enumerate}
+{\large In} \textbf{\large input} {\large file: epe\_task=}\texttt{\large ''get\_epe\_ref''}
+{\large .}\\
+{\large As result files (\ref{add_files})}{\large \par}
+
+\begin{enumerate}
+\item \textbf{\large epe.r}{\large ,}{\large \par}
+\item \textbf{\large epe.pcr}{\large ,} \textbf{\large epe.pcs}{\large ,}
+\textbf{\large epe.pcc}{\large ,}{\large \par}
+\item \textbf{\large reg\_reference} {\large (\ref{add_files})}{\large \par}
+\item \textbf{\large epeinout}{\large \par}
+\end{enumerate}
+{\large are appeared in the working directory.}{\large \par}
+
+
+\subsection{\label{t2}The second EPE task - optimization of initial QM cluster}
+
+{\large The working directory has to contain the files}{\large \par}
+
+\begin{enumerate}
+\item \textbf{\large input}{\large ,} \textbf{\large epe.input}{\large ,}
+\textbf{\large gx.file,} \textbf{\large ewald.pcr} {\large ,}{\large \par}
+\item \textbf{\large epe.r}{\large ,} \textbf{\large epe.pcr}{\large ,}
+\textbf{\large epe.pcs}{\large ,} \textbf{\large epe.pcc,}{\large \par}
+\item \textbf{\large reg\_reference} {\large (\ref{add_files}),}{\large \par}
+\item \textbf{\large epeinout}{\large .}{\large \par}
+\end{enumerate}
+{\large In} \textbf{\large input} {\large file: epe\_task=}\texttt{\large \char`\"{}get\_qm\_ref\char`\"{}}
+{\large .}\\
+{\large The result of calculation}{\large \par}
+
+\begin{enumerate}
+\item {\large The new optimized} \textbf{\large gx.file}{\large . }{\large \par}
+\item \textbf{\large epe\_reference}{\large ,} \textbf{\large pgepe\_reference}
+{\large (\ref{add_files}).}{\large \par}
+\end{enumerate}
+
+\subsection{\label{t3}The third EPE task - optimization of QM cluster with defect}
+
+{\large The files}{\large \par}
+
+\begin{enumerate}
+\item \textbf{\large input}{\large ,} \textbf{\large epe.input}{\large ,}
+\textbf{\large gx.file,} \textbf{\large ewald.pcr}{\large ,}{\large \par}
+\item \textbf{\large epe.r}{\large ,} \textbf{\large epe.pcr}{\large ,}
+\textbf{\large epe.pcs, epe.pcc}{\large ,}{\large \par}
+\item \textbf{\large reg\_reference,} {\large }\textbf{\large epe\_reference}{\large ,}
+\textbf{\large pgepe\_reference}{\large \par}
+\item \textbf{\large epeinout}{\large \par}
+\end{enumerate}
+{\large has to exist in the working directory before performing the
+third EPE task.}\\
+{\large In} \textbf{\large input} {\large file: epe\_task=}\texttt{\large \char`\"{}qm\_cluster\_opt\char`\"{}}
+{\large .}\\
+{\large The result is the new} \textbf{\large gx.file.}{\large \par}
+
+
+\subsection{\label{t4}The fourth EPE task - EPE relaxation}
+
+{\large The working directory contains the files}{\large \par}
+
+\begin{enumerate}
+\item \textbf{\large input}{\large ,} \textbf{\large epe.input}{\large ,}
+\textbf{\large gx.file,} \textbf{\large ewald.pcr}{\large ,}{\large \par}
+\item \textbf{\large epe.r}{\large ,} \textbf{\large epe.pcr}{\large ,}
+\textbf{\large epe.pcs, epe.pcc}{\large ,}{\large \par}
+\item \textbf{\large reg\_reference,} {\large }\textbf{\large epe\_reference}{\large ,}
+\textbf{\large pgepe\_reference}{\large \par}
+\item \textbf{\large epeinout}{\large \par}
+\end{enumerate}
+{\large In} \textbf{\large input} {\large file: epe\_task=}\texttt{\large \char`\"{}epe\_relax\char`\"{}}~\\
+{\large This task results new} \textbf{\large epe.pcs, epe.pcc} {\large and}
+\textbf{\large epeinout} {\large files.}\\
+{\large Tasks 3 (\ref{t3}) and 4 (\ref{t4}) should be repeated to
+reach geometry convergence QM cluster and EPE.}{\large \par}
+
+
+\subsection{\label{t5}The fifths EPE task - combination of two previous tasks}
+
+{\large The working directory contains the files}{\large \par}
+
+\begin{enumerate}
+\item \textbf{\large input}{\large ,} \textbf{\large epe.input}{\large ,}
+\textbf{\large gx.file,} \textbf{\large ewald.pcr}{\large ,}{\large \par}
+\item \textbf{\large epe.r}{\large ,} \textbf{\large epe.pcr}{\large ,}
+\textbf{\large epe.pcs, epe.pcc}{\large ,}{\large \par}
+\item \textbf{\large reg\_reference,} {\large }\textbf{\large epe\_reference}{\large ,}
+\textbf{\large pgepe\_reference}{\large \par}
+\item \textbf{\large epeinout}{\large \par}
+\end{enumerate}
+{\large In} \textbf{\large input} {\large file: epe\_task=}\texttt{\large \char`\"{}qm\_cluster\_opt
+epe\_relax\char`\"{}}{\large }\\
+{\large To perform tasks 2-5 (\ref{t2}-\ref{t5}) users has not to
+forget to define the rest of parameters within} \textbf{\large input}
+{\large file as for geometry optimization task.}{\large \par}
+
+
+\section{\label{List}List of valid atomic names that has to be used in epe.input
+and gx.file}
+
+
+\subsection{Alumosilicate force field \texttt{(AlumoSilicate-FF.epe)}}
+
+{\large The names of atoms applied in} \textbf{\large epe.input} {\large file:}{\large \par}
+
+\noindent \texttt{\large O1(8.12)} {\large - common oxygen located
+between two} \texttt{\large Si1} {\large atoms (}\texttt{\large Si1-O1-Si1}{\large )
+,}\\
+\texttt{\large O2(8.22)} {\large - oxygen located between} \texttt{\large Si1}
+{\large and} \texttt{\large Al1} {\large (}\texttt{\large Si1-O2-Al1}{\large ),
+}\\
+\texttt{\large O3(8.32)} {\large - oxygen forming bridging OH group
+(}\texttt{\large Si2-O3H1-Al1}{\large ), }\\
+\texttt{\large O4(8.42)} {\large - oxygen located between common}
+\texttt{\large Si1} {\large atom and} \texttt{\large Si2} {\large having
+bond with} \texttt{\large O3} {\large (}\texttt{\large Si2-O4-Si1}{\large ),
+}\\
+\texttt{\large O5(8.52)} {\large - oxygen forming terminal OH group
+(}\texttt{\large Si1-O5-H2}{\large ), }\\
+\texttt{\large O6(8.62)} {\large - special oxygen located between
+two layers of SiO (}\texttt{\large Si1-O6-Si1}{\large ), MCM-41 and
+Edingtonite case, }\\
+\texttt{\large Si1(14.12)} {\large - common silicon surrounded by}
+\texttt{\large O1}{\large ,} \texttt{\large O4,} {\large }\texttt{\large O5}
+{\large and} \texttt{\large O6} {\large oxygens, }\\
+\texttt{\large Si2(14.22)} {\large - silicon having bond with} \texttt{\large O3}
+{\large oxygen, }\\
+\texttt{\large Al1(13.12)} {\large - aluminum atom forming T group}
+\texttt{\large Al1(O2)$_{3}$O3}{\large , }\\
+\texttt{\large H1(1.12)} {\large - hydrogen of bridging OH group,
+}\\
+\texttt{\large H2(1.22)} {\large - hydrogen of terminal SiOH group.
+}\\
+{\large The number in parenthesis are reserved atomic names exploited
+in QM calculations of EPE tasks. User cannot uses these names to specified
+atoms in} \textbf{\large gx.file}{\large .}\\
+{\large The next two names has to be used to mark in} \textbf{\large gx.file}
+{\large oxygen and silicon pseudoatoms forming boundary between QM
+cluster and EPE.}{\large \par}
+
+\noindent \texttt{\large 8.11} {\large - O{*},}\\
+\texttt{\large 14.11} {\large - Si{*}.}{\large \par}
+
+
+\subsection{Alumina force field \texttt{(Al2O3-FF.epe)}}
+
+{\large The names of atoms used in} \textbf{\large epe.input} {\large file:}{\large \par}
+
+\noindent \texttt{\large O1 (8.12)} {\large - MM oxygen atom,}\\
+\texttt{\large Al1 (13.12)} {\large - MM aluminium atom.}{\large \par}
+
+\noindent {\large The names of atoms used in} \textbf{\large gx.file}{\large :}\\
+\texttt{\large 8.11} {\large \={ } QM oxygen atom,}\\
+\texttt{\large 13.11} {\large - QM aluminium atom,}\\
+\texttt{\large 13.21} {\large - TIMP aluminium atom.}{\large \par}
+
+
+\subsection{Magnesia force field \texttt{(MgO-FF.epe)}}
+
+{\large The names of atoms used in} \textbf{\large epe.input} {\large file:}{\large \par}
+
+\noindent \texttt{\large O1 (8.12)} {\large - MM oxygen atom,}\\
+\texttt{\large Mg1 (12.12)} {\large - MM magnesium atom.}{\large \par}
+
+\noindent {\large The names of atoms used in} \textbf{\large gx.file}{\large :}\\
+\texttt{\large 8.11} {\large \={ } QM oxygen atom,}\\
+\texttt{\large 12.11} {\large - QM madnesium atom,}\\
+\texttt{\large 12.21} {\large - TIMP magnesium atom.}{\large \par}
+
+\begin{thebibliography}{1}
+\bibitem{Nasluzov2001}Nasluzov, V. A.; Rivanenkov, V. V.; Gordienko, A. B.; Neyman, K. M.;
+Birkenheuer, U.; R\"{o}sch, N. \emph{J. Chem. Phys}. \textbf{2001},
+\emph{115}, 8157.
+\bibitem{Nasluzov2003}Nasluzov, V. A.; Ivanova, E. A.; Shor, A. M.; Vayssilov, G. N.; Birkenheuer,
+U.; R\"{o}sch, N. \emph{J. Phys. Chem. B} \textbf{2003}, \emph{107},
+2228.
+\bibitem{Gale2003}Gale, J. D.; Rohl, A. L. \emph{Mol. Simul.} \textbf{2003}, \emph{29},
+291.
+\bibitem{Dick1958}Dick, B. G.; Overhauser, A. W. \emph{Phys. Rev.} \textbf{1958}, \emph{112},
+90.
+\bibitem{Ivanova2005}Ivanova-Shor, E. A.; Shor, A. M.; Nasluzov, V. A.;Vayssilov, G. N.;
+R\"{o}sch, N. \emph{J. Chem. Theory Comp}. \textbf{2005}, \emph{1},
+459.
+\bibitem{Stefanovich1998}Stefanovich, E. V.; Truong, T. N. \emph{J. Phys. Chem. B} \textbf{1998},
+\emph{102}, 3018.
+\end{thebibliography}
+
+\end{document}

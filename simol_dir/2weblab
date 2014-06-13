@@ -1,0 +1,1 @@
+sed 's/AL/Al/g' $1 |sed 's/PT/Pt/g'|sed 's/SI/Si/g'|sed 's/PD/Pd/g'

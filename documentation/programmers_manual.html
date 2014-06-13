@@ -1,0 +1,2322 @@
+<HTML>
+
+<HEAD>
+<TITLE>ParaGauss Programmer's Manual</TITLE>
+</HEAD>
+
+
+
+<BODY BGCOLOR="#ffffff">
+<FONT SIZE=3>
+
+
+<B><FONT SIZE=8>
+<P ALIGN="CENTER">
+ParaGauss Programmer's Manual
+</P>
+</FONT></B>
+<BR>
+<FONT SIZE=4><I>
+<P ALIGN="CENTER">
+Th Belling, U Birkenheuer, S Kr&uuml;ger, M Mayer, F N&ouml;rtemann,
+M Staufer, N R&ouml;sch
+</P>
+<BR>
+<P ALIGN="CENTER">
+ParaGauss Version V19
+</P>
+<BR>
+<P ALIGN="CENTER">
+Version 1, 26/02/1998
+</P>
+</FONT></I>
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="Contents"></A>
+<B><FONT SIZE=7>Contents</FONT></B>
+</H1>
+
+
+<OL type="A"><FONT SIZE=4>
+<LI></A><A HREF="#Concepts">Concepts used inside the Program</A>
+  <OL type="I"><FONT SIZE=3>
+  <LI><A HREF="#Modular_Design">Modular Design</A>
+  <LI><A HREF="#Parallelisation">Parallelisation</A>
+  <LI><A HREF="#Reading_Input">Reading Input</A>
+  <LI><A HREF="#IO_units">IO units</A>
+  <LI><A HREF="#Output_Files">Output Files and Directories</A>
+  <LI><A HREF="#High_Performance_IO">High Performance IO</A>
+  <LI><A HREF="#Variable_Kinds">Variable Kinds</A>
+  <LI><A HREF="#Error_Handling">Error Handling</A>
+  <LI><A HREF="#Timing">Timing</A>
+  <LI><A HREF="#Memory">Memory</A>
+  <LI><A HREF="#Platform_Dependent_Code">Platform Dependent Code</A>
+  <LI><A HREF="#Semi-Automatic_Documentation">Semi-Automatic Documentation Generation</A>
+  </FONT></OL>
+<BR>
+<LI></A><A HREF="#Conventions">Conventions</A>
+  <OL type="I"><FONT SIZE=3>
+  <LI><A HREF="#Directories">Directories</A>
+  <LI><A HREF="#Filename_Extensions">Filename Extensions</A>
+  <LI><A HREF="#Names_inside_Modules">Names inside Modules</A>
+  <LI><A HREF="#Standard_Module_File">Standard Form of Module File</A>
+  <LI><A HREF="#Standard_Subroutine_File">Standard Form of Subroutine File</A>
+  </FONT></OL>
+<BR>
+<LI></A><A HREF="#Make_Process">The Make Process</A>
+  <OL type="I"><FONT SIZE=3>
+  <LI><A HREF="#make_Concept">Concepts</A>
+    <OL><FONT SIZE=2>
+    <LI><A HREF="#Meta_Makefile">Machine independent Meta-Makefile</A>
+    <LI><A HREF="#automatic_dependency">Automatic Generation of Dependency Descriptions</A>
+    <LI><A HREF="#Avoiding_compilation">Avoiding unnecessary compilation</A>
+    <LI><A HREF="#different_compilerflags">Handling different Compiler-flags</A>
+    </FONT></OL>
+  <LI><A HREF="#make_Commands">Commands</A>
+  </FONT></OL>
+<BR>
+<LI></A><A HREF="#Helper_Programs">Helper Programs</A>
+  <OL type="I"><FONT SIZE=3>
+  <LI><A HREF="#Preprocessors">Preprocessors</A>
+    <OL><FONT SIZE=2>
+    <LI><A HREF="#mpp">mpp</A>
+    <LI><A HREF="#f90pp">f90pp</A>
+    <LI><A HREF="#fpp">fpp</A>
+    </FONT></OL>
+  <LI><A HREF="#makedependent">makedependent</A>
+  <LI><A HREF="#makemake">makemake</A>
+  <LI><A HREF="#compile">compile</A>
+  <LI><A HREF="#make_html_reference">make_html_reference</A>
+  <LI><A HREF="#collect_interfaces">collect_interfaces</A>
+  <LI><A HREF="#make_interface">make_interface</A>
+  <LI><A HREF="#new_module">new_module</A>
+  <LI><A HREF="#new_subroutine">new_subroutine</A>
+  </FONT></OL>
+<BR>
+<LI></A><A HREF="#Porting">Hints for Porting</A>
+<BR>
+<BR>
+<LI></A><A HREF="#Program_Hirachie">Overview of the Program Hirachie</A>
+  <OL type="I"><FONT SIZE=3>
+  <LI><A HREF="#PROGRAM_MAIN">PROGRAM MAIN</A>
+  <LI><A HREF="#SUBROUTINE_MAIN_SLAVE">SUBROUTINE MAIN_SLAVE</A>
+  <LI><A HREF="#SUBROUTINE_MAIN_MASTER">SUBROUTINE MAIN_MASTER</A>
+  <LI><A HREF="#SUBROUTINE_main_integral">SUBROUTINE main_integral</A>
+  <LI><A HREF="#SUBROUTINE_integral_main_2cff">SUBROUTINE integral_main_2cff</A>
+  <LI><A HREF="#SUBROUTINE_integral_main_2cob3c">SUBROUTINE integral_main_2cob3c</A>
+  <LI><A HREF="#SUBROUTINE_main_scf">SUBROUTINE main_scf</A>
+  <LI><A HREF="#SUBROUTINE_post_hoc_main">SUBROUTINE post_hoc_main</A>
+  <LI><A HREF="#SUBROUTINE_main_gradient">SUBROUTINE main_gradient</A>
+  </FONT></OL>
+</FONT></OL>
+
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="Concepts"></A>
+<B><FONT SIZE=7>Concepts used inside the Program</FONT></B>
+</H1>
+
+<P>
+Modules or subroutines are only briefly mentioned here without any attempt to
+describe their usage. Please refer to the 
+<A HREF="#Semi-Automatic_Documentation">programmer's reference manual</A>
+for that purpose.
+</P>
+
+
+
+<BR>
+<H2>
+<A NAME="Modular_Design"></A>
+<B><FONT SIZE=5>Modular Design</FONT></B>
+</H2>
+
+<P>
+ParaGauss is intended to be designed in a modular way where possible and sensible.
+A module should contain data and methods to perform a more or less separate task.
+A user should be able to use the module from the outside using a 
+<A HREF="#Semi-Automatic_Documentation">well defined interface</A>
+without bothering with the details of implementation within the module.
+<P>
+Modules can also be used to include type and interface declarations and variables
+and parameters used in several different parts of the program.
+<P>
+Fortran 90 allows to pass arrays in a new and preferable manner to subroutines:
+Not only the data are passed but also informations about the dimensions of the array.
+However, it is also still possible to pass arrays in the old Fortran 77 manner.
+In case the new way is used the calling program part needs a declaration of the
+subroutine or function it calls. This can either be done by describing the
+subroutine with an interface statement or by including the subroutine in a module
+that is used by the calling routine. An declaration is also necessary in case you
+want to pass self-defined data types and has the extra advantage that the compiler
+is able to detect a wrong calling syntax that used to result in run-time-errors.
+ParaGauss tries to include all subroutines with formal parameters in modules.
+<P>
+On the other hand, an exaggerated use of modules
+<A HREF="#make_Concept">makes compilation lengthy</A> and bears the risk of forbidden
+circular dependencies between modules. Thus it is sensible to use separate subroutines
+without parameters for the upper levels in the calling tree of the program but to
+include lower level subroutines and data within modules. A (not yet used) way to
+make dependencies between modules less complicated is to separate declaration
+(with an interface statement inside a module) and implementation (in a separate file)
+of subroutines and functions.
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Parallelisation"></A>
+<B><FONT SIZE=5>Parallelisation</FONT></B>
+</H2>
+
+<P>
+ParaGauss encapsulates call to the PVM library in the "<CODE>pvm_module</CODE>"
+and the "<CODE>pvmpack_module</CODE>". This encapsulation shall be used in the future
+to replace PVM with other parallel libraries. So do not use PVM subroutines directly.
+<P>
+The slave nodes are steered by the master node via the messages send from master
+to slave. The slaves wait in an infinite loop inside the subroutine "<CODE>main_slave</CODE>"
+for messages send from the master. Each kind of message is identified by a unique number
+called the "message tag". These message tags are defined as parameters inside
+"<CODE>pvm_module</CODE>". Depending on the "message tag" of the message it receives
+"<CODE>main_slave</CODE>" decides which routine to call for unpacking and processing the message,
+i.e. performing the next step of the calculation. This simplifies the steering of the program
+since a more complicated steering logic is only necessary on the master.
+<P>
+As long as data are not storage intensive they should be duplicated on all hosts
+to avoid confusion about which data are really defined. Data are send from master to
+slave at the beginning of the calculation with subroutines "<CODE>send_initialization</CODE>"
+and "<CODE>receive_initialization</CODE>". In case data are not resident on all host
+this should be well documented when the variables are declared
+(though this is not yet done everywhere).
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Reading_Input"></A>
+<B><FONT SIZE=5>Reading Input</FONT></B>
+</H2>
+
+<P>
+The input has got a special format as described in the ParaGauss user's manual.
+All the input is read in together before the calculation start in order to
+detect errors as soon as possible. This is done in the subroutine "<CODE>read_input</CODE>".
+This subroutine calls read routines from various modules that read in their relevant part
+of the input.
+<P>
+These read routines all call routines from "<CODE>input_module</CODE>" that
+reads the input file line by line and does some preprocessing like eliminating comments,
+handling include files (both demanded by include directives in the input file or
+opened by calls to a module subroutine of "<CODE>input_module</CODE>" that could be used to
+include automatically selected basis sets from a not yet existing library), counting lines
+for error messages and detection of namelist names.
+The "<CODE>input_module</CODE>" writes one line of preprocessed input to an intermediate file
+that is read in by read statements of the calling modules. In case of input errors theses read
+routines will call an error handling routine from input module that displays an error message
+and gives filename and line where the error occured and aborts the calculation.
+<P>
+The main building blocks of the input are Fortran 90 namelists that allow specify selected variables
+in an intuitive notation while leaving other variables untouched with their default values.
+To allow these namelists to appear in an arbitrary order the subroutine "<CODE>read_input</CODE>"
+asks "<CODE>input_module</CODE>" for the name of the next namelist and then calls the appropriate
+read routines in an loop running until all the input is read.
+<P>
+The input is echoed in a separate file that shows the setting of all switches, also those
+ones implied by defaults, in a legal input format. The file can be used to exactly
+reproduce the calculation. This file is written by routine "<CODE>write_input</CODE>"
+that calls write routines from the different modules. These write routines use
+"<CODE>echo_input_module</CODE>" to format their output.
+</P>
+
+
+<BR>
+<H2>
+<A NAME="IO_units"></A>
+<B><FONT SIZE=5>IO units</FONT></B>
+</H2>
+
+<P>
+Fortran only allows a limited number of open files (typically 100).
+Moreover, each open file must be assigned an IO-unit. To make the
+best out of these limitations the IO-units are administered by
+a special module, the "<CODE>iounitadmin_module</CODE>". Before opening
+a file, the user must request a unit from the module and must 
+return the unit after closing the file.
+Each file must be assigned a filename, i.e. opening files that
+are assigned automatic names made from their unit numbers are not allowed.
+See file "modules/iounitadmin_module.doc".
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Output_Files"></A>
+<B><FONT SIZE=5>Output Files and Directories</FONT></B>
+</H2>
+
+<P>
+The ParaGauss input and output files are located in the following locations
+(names are variables in "<CODE>filename_module</CODE>")
+when the main executable is started (they are prepared in these locations
+by the ttfs driver script):
+<UL>
+<LI>"<CODE>start_dir</CODE>"
+holds input files. Separate for the different nodes.
+<LI>"<CODE>output_dir</CODE>"
+holds output files that will be copied to ttfs output dir.
+Separate for the different nodes.
+<LI>"<CODE>tmp_dir</CODE>"
+holds intermediate files.  Separate for the different nodes.
+<LI>"<CODE>data_dir</CODE>"
+is the data directory of the ttfs script. Only accessible from the master node.
+It is used to store intermediate files, for instance the gxfile of the
+geometry optimizer and can be preserved after the end of the calculation.
+<LI>"<CODE>input_dir</CODE>"
+is the input directory of the ttfs script. Only accessible from the master node.
+<LI>"<CODE>finaloutput_dir</CODE>"
+is the output directory of the ttfs script. Only accessible from the master node.
+</UL>
+The names of these directories are set by the ttfs driver script and are exported
+to the main executable via environment variables.
+</P>
+
+<P>
+ParaGauss uses a number of reserved units defined as variables 
+in "<CODE>iounitadmin_module</CODE>" for special output files.
+Routines to write to these files are also included in the module.
+<UL>
+<LI>"<CODE>output_unit</CODE>" used to write to main output file. Always open.
+<LI>"<CODE>debug_unit</CODE>" used to write to debug output file. Always open if demanded in input file.
+<LI>"<CODE>trace_unit</CODE>" used to write to trace output file that can be used to monitor the
+progress of the calculation. This file is closed or flushed after each output. Do not write directly
+to this unit but use routine "<CODE>write_to_trace_unit</CODE>".
+<LI>"<CODE>buggy_unit</CODE>" used to write to special debug output file that can be used to find
+exact location of program crashes. This file is closed or flushed after each output. Do not write directly
+to this unit but use routine "<CODE>buggy</CODE>".
+<LI>"<CODE>stdout_unit</CODE>" This is the standard output unit connected to screen of queue system
+output file.
+</UL>
+</P>
+
+<BR>
+<H2>
+<A NAME="High_Performance_IO"></A>
+<B><FONT SIZE=5>High Performance IO</FONT></B>
+</H2>
+
+<P>
+ParaGauss uses the module "<CODE>readwriteblocked_module</CODE>" to perform high
+performance input and output of floating point numbers to unformatted intermediate files.
+This module buffers numbers to be written or read and writes them with high performance
+in large blocks.
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Variable_Kinds"></A>
+<B><FONT SIZE=5>Variable Kinds</FONT></B>
+</H2>
+
+<P>
+Fortran 90 uses platform-dependent kind numbers to specify what type of
+real, integer or complex a variable, parameter or constant should have,
+i.e. which storage size, precision, and value range. The kind numbers
+used inside the program are defined in "<CODE>type_module</CODE>".
+Specify the kind in each declaration statement. Use "<CODE>r8_kind</CODE>"
+(8 bytes) as a default for floats and "<CODE>i4_kind</CODE>" (4 bytes) for integers.
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Error_Handling"></A>
+<B><FONT SIZE=5>Error Handling</FONT></B>
+</H2>
+
+<P>
+ParaGauss uses the subroutine "<CODE>error_handler</CODE>" to abort the
+calculation in case of errors. This subroutine displays the error message
+it obtains as an argument, holds the other host participating in the calculation
+and does clean up work defined in the subroutine  "<CODE>last_will</CODE>"
+before aborting the calculation. Do not use stop statements directly.
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Timing"></A>
+<B><FONT SIZE=5>Timing</FONT></B>
+</H2>
+
+<P>
+ParaGauss uses so-called "timers" defined in "<CODE>time_module</CODE>"
+for timings. These timers are variables of a special type that are passed
+as arguments to routines in this module that initialize, print, start
+and stop the timer. The timer stores the real user and system times between
+the start and stop, the number of times it was activated, and the overall and
+average times it was running. Several timers may coexist without interfering
+with each other. Timers are stored in "<CODE>timer_module</CODE>".
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Memory"></A>
+<B><FONT SIZE=5>Memory</FONT></B>
+</H2>
+
+<P>
+ParaGauss includes a debug tool that allows to monitor the amount of memory allocated
+by the operating system for the program. Note that the operating system never frees
+memory once claimed by the program even if the memory was deallocated from inside the program.
+In this case only the internal Fortran 90 memory management will reuse the memory.
+Use the subroutine "<CODE>memstat</CODE>" to print out the actual amount of memory allocated.
+</P>
+
+<BR>
+<H2>
+<A NAME="Platform_Dependent_Code"></A>
+<B><FONT SIZE=5>Platform Dependent Code</FONT></B>
+</H2>
+
+<P>
+Though the need for platform dependent code is drastically
+reduced in  Fortran 90 compared to Fortran 77,
+there are still some occasions when it is necessary,
+for instance: timing, system calls, optimized algorithms.
+The Makefile will contain platform dependent lines as well,
+for instance: compiler flags, directories. libraries.
+</P>
+
+<P>
+To satisfy those demands, a own family of
+<A HREF="#Preprocessors">preprocessors</A> is used.
+In the <A HREF="#make_Concept">Makefile</A> a special
+machine code "<CODE><I>MACH</I></CODE>" is defined.
+The preprocessors uncomment lines that are commented
+in a special way that indicates that they belong to
+the platform "<CODE><I>MACH</I></CODE>". The code
+of other platforms is left in commented form in the source files.
+This preserves the line numbers in source files and helps
+to locate compiler messages. All source files that need to be
+preprocessed have to be assigned the special
+<A HREF="#Filename_Extensions">filename extensions</A>
+"<CODE>.f90p</CODE>" or "<CODE>.fp</CODE>".
+The preprocessors are invoked automatically in the
+<A HREF="#make_Concept">make process</A>
+and the preprocessed files are automatically removed
+directly after their compilation.
+</P>
+
+<UL>
+<LI>
+In free form Fortran 90 file ("<CODE>.f90p</CODE>") the preprocessor
+"<A HREF="#f90pp">f90pp</A>" recognizes the following syntax
+(must stand at beginning of lines to be uncommented):
+<DL>
+<DT><CODE>!FPP:<I>MACH1</I>[:<I>MACH2</I>]...!</CODE>
+<DD>To indicate that this line should be enabled for platforms 
+<CODE><I>MACH1</I></CODE>, <CODE><I>MACH2</I></CODE> ... .
+<DT><CODE>!FPP NOT:<I>MACH1</I>[:<I>MACH2</I>]...!</CODE>
+<DD>To indicate that this line should be enabled for all platforms
+except for <CODE><I>MACH1</I></CODE>, <CODE><I>MACH2</I></CODE> ... .
+</DL>
+<LI>
+In fixed form Fortran 90  ("<CODE>.fp</CODE>") file the preprocessor
+"<A HREF="#fpp">fpp</A>" recognizes the following syntax
+(must stand at beginning of lines to be uncommented):
+<DL>
+<DT><CODE>CFPP:<I>MACH1</I>[:<I>MACH2</I>]...!</CODE>
+<DD>To indicate that this line should be enabled for platforms 
+<CODE><I>MACH1</I></CODE>, <CODE><I>MACH2</I></CODE> ... .
+<DT><CODE>CFPP NOT:<I>MACH1</I>[:<I>MACH2</I>]...!</CODE>
+<DD>To indicate that this line should be enabled for all platforms
+except for <CODE><I>MACH1</I></CODE>, <CODE><I>MACH2</I></CODE> ... .
+</DL>
+<LI>
+In Makefiles and shell scripts the preprocessor
+"<A HREF="#mpp">mpp</A>" recognizes the following syntax
+(must stand at beginning of lines to be uncommented):
+<DL>
+<DT><CODE>#MPP:<I>MACH1</I>[:<I>MACH2</I>]...#</CODE>
+<DD>To indicate that this line should be enabled for platforms 
+<CODE><I>MACH1</I></CODE>, <CODE><I>MACH2</I></CODE> ... .
+<DT><CODE>#MPP NOT:<I>MACH1</I>[:<I>MACH2</I>]...#</CODE>
+<DD>To indicate that this line should be enabled for all platforms
+except for <CODE><I>MACH1</I></CODE>, <CODE><I>MACH2</I></CODE> ... .
+</DL>
+</UL>
+
+<P>
+Values of <CODE><I>MACH</I></CODE> presently defined are:
+<UL>
+<LI><CODE>HP</CODE> for our HP cluster.
+<LI><CODE>SGI</CODE> for theo1.
+<LI><CODE>IBM</CODE> for SP2 using PVMe.
+<LI><CODE>IBM_PVM</CODE> for SP2 using public domain PVM.
+<LI><CODE>VPP</CODE> for VPP.
+</UL>
+</P>
+
+
+<P>
+Shell scripts used when compiling and running ParaGauss also
+may include machine dependent code that the resolve at runtime
+with the help of "<CODE>if</CODE>" or "<CODE>switch</CODE>" statements
+and the environment variable "<CODE>$machine</CODE>" that must be set
+before compiling and executing ParaGauss (It is recommended to do so in
+file "<CODE>~/.cshrc</CODE>".).
+Values of <CODE>$machine</CODE> presently defined are:
+<UL>
+<LI><CODE>hp</CODE> for our HP cluster.
+<LI><CODE>sgi</CODE> for theo1.
+<LI><CODE>sp2</CODE> for SP2.
+<LI><CODE>vpp</CODE> for VPP.
+</UL>
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Semi-Automatic_Documentation"></A>
+<B><FONT SIZE=5>Semi-Automatic Documentation Generation</FONT></B>
+</H2>
+
+<P>
+One of the concepts of modular programming is that the outside user of
+a module does not need to bother about the details of implementation of
+a module or subroutine as long as he knows how to use it from the
+outside, i.e. the interface of the module and its purpose are documented.
+<P>
+<P>
+Such an interface documentation should include the description of the purpose
+of the module or subroutine and a list of everything that can be used from outside:
+<UL>
+<LI>variable declarations
+<LI>parameter declarations
+<LI>type declarations
+<LI>interface declarations
+<LI>subroutine or function declarations including a short description
+and the declaration of their formal parameters
+</UL>
+<P>
+Unfortunately, Fortran 90 does not collect all this information but leaves
+it distributed in the source files. ParaGauss uses some conventions
+about the format of <A HREF="#Standard_Module_File">modules</A> and
+<A HREF="#Standard_Subroutine_File">subroutines</A> to allow the automatic
+extraction and collection of these informations with the help of the
+commands <A HREF="#make_interface">make_interface</A>,
+<A HREF="#collect_interfaces">collect_interfaces</A> and 
+<A HREF="#make_html_reference">make_html_reference</A>. The generation of
+documentation is steered by the <A HREF="#make_Commands">Makefile</A>.
+<P>
+The following files will be generated
+<DL>
+<DT><CODE><I>filename</I>.doc</CODE>
+<DD>a file containing the interface documentation of the corresponding source file
+<CODE><I>filename</I>.f90</CODE>.
+<DT><CODE>documentation/interfaces</CODE>
+<DD>an ASCII file containing the interfaces of all files in alphabetical order
+<DT><CODE>documentation/reference.html</CODE>
+<DD>an HTML file containing the interfaces of all files in alphabetical order
+plus an index of all public names (variables, subroutines, types, ...)
+</DL>
+</P>
+
+
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="Conventions"></A>
+<B><FONT SIZE=7>Conventions</FONT></B>
+</H1>
+
+
+<BR>
+<H2>
+<A NAME="Directories"></A>
+<B><FONT SIZE=5></FONT>Directories</B>
+</H2>
+
+<P>
+The main source directory contains the following subdirectories:
+<UL>
+<LI><CODE><B>.</B></CODE><BR>
+contains all subroutine files.
+<LI><CODE><B>bin</B></CODE><BR>
+contains helper programs needed for the make process and programming.
+<LI><CODE><B>documentation</B></CODE><BR>
+contains manuals, automatically generated reference and prototype
+subroutine and module file.
+<LI><CODE><B>eis</B></CODE><BR>
+contains used routines from the mathematical eispack library.
+<LI><CODE><B>integral</B></CODE><BR>
+conttains the ttfs driver script and related helper programs.
+<LI><CODE><B>lapack</B></CODE><BR>
+contains used routines from the mathematical lapack library.
+<LI><CODE><B>linsolve</B></CODE><BR>
+contains used routines from the mathematical libraries used for the
+solution of a system of linear equations.
+<LI><CODE><B>modules</B></CODE><BR>
+contains all module files.
+<LI><CODE><B>optimizer</B></CODE><BR>
+contains sources of the new geometry optimizer program.
+<LI><CODE><B>plot</B></CODE><BR>
+contains sources of the plot program.
+<LI><CODE><B>pvmlib</B></CODE><BR>
+contains c-wrapper files for pvm pack and unpack commands
+necessary because of the strict type checking of Fortran90.
+</UL>
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Filename_Extensions"></A>
+<B><FONT SIZE=5></FONT>Filename Extensions</B>
+</H2>
+
+<P>
+Files with following extensions may appear in context with with source files:
+<UL>
+<LI><CODE><B>.f90</B></CODE><BR>
+free format Fortran90 source file that does not need to be preprocessed by
+<A HREF="#f90pp">f90pp</A>.
+<LI><CODE><B>.f90p</B></CODE><BR>
+free format Fortran90 source file that needs to be preprocessed by
+<A HREF="#f90pp">f90pp</A>.
+<LI><CODE><B>.f</B></CODE><BR>
+fixed format Fortran90 source file that does not need to be preprocessed by
+<A HREF="#f90pp">fpp</A>.
+<LI><CODE><B>.fp</B></CODE><BR>
+fixed format Fortran90 source file that needs to be preprocessed by
+<A HREF="#f90pp">fpp</A>.
+<LI><CODE><B>.o</B></CODE><BR>
+automatically generated object file.
+<LI><CODE><B>.doc</B></CODE><BR>
+automatically generated documentation file that contains a description
+of the parts of the module / subroutine that need to be known from the
+outside. See
+<A HREF="#Semi-Automatic_Documentation">Semi-Automatic Documentation Generation</A>.
+<LI><CODE><B>.list</B></CODE><BR>
+On VPP only. Automatically generated compiler output file containing a listing
+of the source files with additional information about optimization and
+vectorization plus compiler warnings and error messages.
+<LI><CODE><B>.mod</B></CODE><BR>
+automatically generated machine readable file describing the interface of a module.
+is generated and used by the compiler.
+<LI><CODE><B>.dep</B></CODE><BR>
+automatically generated file listing the <CODE><B>.mod</B></CODE> files a
+source file depends upon. Generated by command
+<A HREF="#makedependent">makedependent</A> and used by command
+<A HREF="#compile">compile</A> during the <A HREF="#make_Concept">make process</A>.
+<LI><CODE><B>.flags</B></CODE><BR>
+This file can be used to specify special compiler flags used on the specified
+platforms for the corresponding source file.
+<LI><CODE><B>.ppbatch</B></CODE><BR>
+This executable file can be used to specify special preprocessing for source files
+and is automatically invoked by <A HREF="#f90pp">f90pp</A> or <A HREF="#f90pp">fpp</A>
+if existent. It may or may not be automatically created in the make process.
+</UL>
+</P>
+
+<BR>
+<H2>
+<A NAME="Names_inside_Modules"></A>
+<B><FONT SIZE=5>Names inside Modules</FONT></B>
+</H2>
+
+<P>
+It is recommended (though not done everywhere) to use a naming convention
+for all public names in modules (i.e. the names of all subroutines,
+functions, variables, types and interfaces included in the module that
+can be used from outside):<BR>
+The module should be termed "<CODE><I>name</I>_module</CODE>" and
+should be contained in the source file "<CODE><I>name</I>_module.f90</CODE>"
+in the "<CODE>modules</CODE>" directory. All public names should commence with
+"<CODE><I>name</I>_</CODE>" to indicate their origin, for instance:
+"<CODE><I>name</I>_<I>varname</I></CODE>".
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Standard_Module_File"></A>
+<B><FONT SIZE=5>Standard Form of Module File</FONT></B>
+</H2>
+
+<P>
+Each module <B>must</B> be contained in an own source file bearing its name
+due to the <A HREF="#Make_Process">make process</A> that is used.
+For instance:  The module termed "<CODE><I>name</I>_module</CODE>"
+must be contained in the source file "<CODE><I>name</I>_module.f90</CODE>"
+in the "<CODE>modules</CODE>" directory.
+</P>
+
+<P>
+A new standard-conforming prototype module file <I>name</I>_module.f90
+can automatically be generated with the command
+<CODE><A HREF="#new_module">new_module</A> <I>name</I></CODE>.
+</P>
+
+<PRE>
+!===============================================================
+! Public interface of module
+!===============================================================
+module <I>name</I>_module
+  !---------------------------------------------------------------
+  !
+  !  Purpose: ...
+  !
+  !
+  !  Module called by: ...
+  !
+  !
+  !  References: ...
+  ! 
+  !
+  !  Author: ...
+  !  Date: ...
+  !
+  !
+  !----------------------------------------------------------------
+  !== Interrupt of public interface of module =====================
+  !----------------------------------------------------------------
+  ! Modifications
+  !----------------------------------------------------------------
+  !
+  ! Modification (Please copy before editing)
+  ! Author: ...
+  ! Date:   ...
+  ! Description: ...
+  !
+  !----------------------------------------------------------------
+
+  use type_module ! type specification parameters
+  implicit none
+  save            ! save all variables defined in this module
+  private         ! by default, all names are private
+  !== Interrupt end of public interface of module =================
+
+
+  !------------ Declaration of types ------------------------------
+  type, public ::  <I>name</I>_<I>typename</I>
+  end type <I>name</I>_<I>typename</I>
+
+  !------------ Declaration of constants and variables ------------
+  integer(kind=i4_kind), parameter, public  :: <I>name</I>_<I>constname</I>
+  real(kind=r8_kind),    parameter, public  :: <I>name</I>_<I>constname</I>
+  logical,               parameter, public  :: <I>name</I>_<I>constname</I>
+  character,             parameter, public  :: <I>name</I>_<I>constname</I>
+  integer(kind=i4_kind),            public  :: <I>name</I>_<I>varname</I>
+  real(kind=r8_kind),               public  :: <I>name</I>_<I>varname</I>
+  logical,                          public  :: <I>name</I>_<I>varname</I>
+  character,                        public  :: <I>name</I>_<I>varname</I>
+
+
+  !------------ Interface statements ------------------------------
+  interface <I>name</I>_<I>interfacename</I>
+  end interface<I>name</I>_<I>interfacename</I>
+  public <I>name</I>_<I>interfacename</I>
+
+  !------------ public functions and subroutines ------------------
+  public <I>name</I>_<I>subname</I>
+
+  !================================================================
+  ! End of public interface of module
+  !================================================================
+
+
+  !------------ Declaration of types ------------------------------
+  type <I>privatetype</I>
+  end type <I>privatetype</I>
+
+  !------------ Declaration of constants and variables ----
+  integer(kind=i4_kind), parameter :: <I>privateconst</I>
+  real(kind=r8_kind),    parameter :: <I>privateconst</I>
+  logical,               parameter :: <I>privateconst</I>
+  character,             parameter :: <I>privateconst</I>
+  integer(kind=i4_kind),           :: <I>privatevar</I>
+  real(kind=r8_kind),              :: <I>privatevar</I>
+  logical,                         :: <I>privatevar</I>
+  character,                       :: <I>privatevar</I>
+
+
+
+  !----------------------------------------------------------------
+  !------------ Subroutines ---------------------------------------
+contains
+
+
+  !*************************************************************
+  subroutine <I>name</I>_<I>subname</I> ( <I>formal_parameter, ...</I> )
+    !  Purpose: ..
+    !------------ Modules used ------------------- ---------------
+    use 
+    implicit none
+    !------------ Declaration of formal parameters ---------------
+    integer(kind=i4_kind), intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+    real(kind=r8_kind),    intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+    logical,               intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+    character,             intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+    !** End of interface *****************************************
+    !------------ Declaration of local variables -----------------
+    integer(kind=i4_kind)                :: <I>local_variable</I>
+    real(kind=r8_kind)                   :: <I>local_variable</I>
+    logical                              :: <I>local_variable</I>
+    character                            :: <I>local_variable</I>
+    !------------ Executable code --------------------------------
+
+
+  end subroutine <I>name</I>_<I>subname</I>
+  !*************************************************************
+
+
+  !--------------- End of module ----------------------------------
+end module <I>name</I>_module
+</PRE>
+
+<P>
+The following lines are used for
+<A HREF="#Semi-Automatic_Documentation">semi-automatic documentation generation</A>
+and must be included in this form:
+<UL>
+<LI>
+<CODE>
+! Public interface of module
+</CODE><BR>
+Starts the visible header section of the module that should describe the
+module and its interface visible to the outside. This header
+should contain a description of the purpose of the module,
+the date of creation and author, the declaration of all
+public constants, variables, types, interfaces and a list
+of all public subroutines and functions.
+<LI>
+<CODE>
+! End of public interface of module
+</CODE><BR>
+Ends the visible header section
+<LI>
+<CODE>
+!== Interrupt of public interface of module =====================
+</CODE><BR>
+Start a hidden region within the header section
+<LI>
+<CODE>
+!== Interrupt end of public interface of module =================
+</CODE><BR>
+Ends a hidden region within the header section
+<LI>
+<CODE>
+!------------ public functions and subroutines ------------------<BR>
+public <I>name</I>_<I>sub1name</I>, <I>name</I>_<I>sub2name</I> <I>, ...</I>
+</CODE><BR>
+lists all the public subroutines and functions contained in the module.
+Their heads will be included in the module description.
+<LI>
+<CODE>
+!** End of interface *****************************************
+</CODE><BR>
+Ends the head of a public subroutine and function. The head should
+contain all formal parameters and a short description of the purpose
+of the subroutine.
+</UL>
+</P>
+
+
+<BR>
+<H2>
+<A NAME="Standard_Subroutine_File"></A>
+<B><FONT SIZE=5>Standard Form of Subroutine File</FONT></B>
+</H2>
+
+<P>
+Each subroutine should be contained in an own source file bearing its name.
+</P>
+
+<P>
+A new standard-conforming prototype subroutine file <I>name</I>.f90
+can automatically be generated with the command
+<CODE><A HREF="#new_subroutine">new_subroutine</A> <I>name</I></CODE>.
+</P>
+
+<PRE>
+!===============================================================
+! Public interface of module
+!===============================================================
+subroutine <I>name</I> ( <I>formal_parameter, ...</I> )
+  !----------------------------------------------------------------
+  !
+  !  Purpose: ...
+  !
+  !
+  !  Subroutine called by: ...
+  !
+  !
+  !  References: ...
+  ! 
+  !
+  !  Author: ...
+  !  Date: ...
+  !
+  !
+  !----------------------------------------------------------------
+  !== Interrupt of public interface of module =====================
+  !----------------------------------------------------------------
+  ! Modifications
+  !----------------------------------------------------------------
+  !
+  ! Modification (Please copy before editing)
+  ! Author: ...
+  ! Date:   ...
+  ! Description: ...
+  !
+  !----------------------------------------------------------------
+
+  !------------ Modules used --------------------------------------
+  use type_module ! type specification parameters
+
+  implicit none
+
+  !== Interrupt end of public interface of module =================
+  !------------ Declaration of formal parameters ------------------
+  integer(kind=i4_kind), intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+  real(kind=r8_kind),    intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+  logical,               intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+  character,             intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+  !================================================================
+  ! End of public interface of module
+  !================================================================
+
+  !------------ Declaration of subroutines ------------------------
+  external
+  intrinsic
+
+  !------------ Declaration of local constants --------------------
+  integer(kind=i4_kind),     parameter :: <I>constant</I>
+  real(kind=r8_kind),        parameter :: <I>constant</I>
+  logical,                   parameter :: <I>constant</I>
+  character,                 parameter :: <I>constant</I>
+
+  !------------ Declaration of local variables --------------------
+  integer(kind=i4_kind)                :: <I>variable</I>
+  real(kind=real8)                     :: <I>variable</I>
+  logical                              :: <I>variable</I>
+  character                            :: <I>variable</I>
+
+
+  !----------------------------------------------------------------
+  !------------ Executable code -----------------------------------
+
+
+
+  <I>executable code</I>
+
+
+
+  !----------------------------------------------------------------
+  !----------------------------------------------------------------
+  !------------ Private Subroutines -------------------------------
+contains
+
+
+  !*************************************************************
+  subroutine <I>subname</I> ( <I>formal_parameter, ...</I> )
+    !  Purpose: ..
+    !------------ Declaration of formal parameters ---------------
+    integer(kind=i4_kind), intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+    real(kind=r8_kind),    intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+    logical,               intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+    character,             intent(<I>in/out/inout</I>) :: <I>formal_parameter</I>
+    !------------ Declaration of local variables -----------------
+    integer(kind=i4_kind)             :: <I>variable</I>
+    real(kind=r8_kind)                :: <I>variable</I>
+    logical                           :: <I>variable</I>
+    character                         :: <I>variable</I>
+    !------------ Executable code --------------------------------
+
+    <I>executable instuctions</I>
+
+  end subroutine <I>subname</I>
+  !*************************************************************
+
+
+end subroutine <I>name</I>
+</PRE>
+
+
+<P>
+The following lines are used for
+<A HREF="#Semi-Automatic_Documentation">semi-automatic documentation generation</A>
+and must be included in this form:
+<UL>
+<LI>
+<CODE>
+! Public interface of module
+</CODE><BR>
+Starts the header of the module that should describe the
+module and its interface visible to the outside. This header
+should contain a description of the purpose of the subroutine,
+the date of creation and author, and the declaration of all
+public constants, variables, types, interfaces and a list
+formal parameters.
+<LI>
+<CODE>
+! End of public interface of module
+</CODE><BR>
+Ends the visible header section
+<LI>
+<CODE>
+!== Interrupt of public interface of module =====================
+</CODE><BR>
+Start a hidden region within the header section
+<LI>
+<CODE>
+!== Interrupt end of public interface of module =================
+</CODE><BR>
+Ends a hidden region within the header section
+</UL>
+</P>
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<BR>
+<H1>
+<A NAME="Make_Process"></A>
+<B><FONT SIZE=7>The Make Process</FONT></B>
+</H1>
+
+
+<BR>
+<H2>
+<A NAME="make_Concept"></A>
+<B><FONT SIZE=5>Concepts</FONT></B>
+</H2>
+
+
+<BR>
+<H3>
+<A NAME="Meta_Makefile"></A>
+<B><FONT SIZE=4></FONT>Machine independent Meta-Makefile</B>
+</H3>
+
+<P>
+All edits should be done in the machine independent Meta-Makefile
+"<CODE>Makefile.mpp</CODE>". The real makefile "<CODE>Makefile</CODE>"
+used for compilation is generated from the Meta-Makefile with the 
+help of the preprocessor "<CODE><A HREF="#mpp">mpp</A> <I>MACH</I></CODE>"
+that uncomments machine dependent sections in the Makefile.mpp and the
+command "<CODE><A HREF="#makedependent">makedependent</A></CODE>" that
+inserts dependency descriptions between the modules into the Makefile
+(<A HREF="#automatic_dependency">see below</A>). Both commands are
+executed together by the alias "<CODE>makemake</CODE>".
+<P>
+In Makefiles and shell scripts the preprocessor
+"<A HREF="#mpp">mpp</A>" recognizes the following syntax
+(must stand at beginning of lines to be uncommented):
+<DL>
+<DT><CODE>#MPP:<I>MACH1</I>[:<I>MACH2</I>]...#</CODE>
+<DD>To indicate that this line should be enabled for platforms 
+<CODE><I>MACH1</I></CODE>, <CODE><I>MACH2</I></CODE> ... .
+<DT><CODE>#MPP NOT:<I>MACH1</I>[:<I>MACH2</I>]...#</CODE>
+<DD>To indicate that this line should be enabled for all platforms
+except for <CODE><I>MACH1</I></CODE>, <CODE><I>MACH2</I></CODE> ... .
+</DL>
+<P>
+Values of <CODE><I>MACH</I></CODE> presently defined are:
+<UL>
+<LI><CODE>HP</CODE> for our HP cluster.
+<LI><CODE>SGI</CODE> for theo1.
+<LI><CODE>IBM</CODE> for SP2 using PVMe.
+<LI><CODE>IBM_PVM</CODE> for SP2 using public domain PVM.
+<LI><CODE>VPP</CODE> for VPP.
+</UL>
+</P>
+
+
+<BR>
+<H3>
+<A NAME="automatic_dependency"></A>
+<B><FONT SIZE=4>Automatic Generation of Dependency Descriptions</FONT></B>
+</H3>
+
+<P>
+Compiling a Fortran 90 file that "uses" an other Fortran 90 module requires
+this module to be compiled before since an interface description file
+"<CODE><I>modulefilename</I>.mod</CODE>" is automatically generated when
+compiling the module and read in when compiling the using source file.
+The Makefile must describe these dependencies in order to ensure
+compilation of the source files in the proper order. This quite complicated
+description is inserted into the "<CODE>Makefile</CODE>" with the
+command "<CODE><A HREF="#makedependent">makedependent</A></CODE>".
+</P>
+
+
+<BR>
+<H3>
+<A NAME="Avoiding_compilation"></A>
+<B><FONT SIZE=4>Avoiding unnecessary compilation</FONT></B>
+</H3>
+
+<P>
+The module dependencies described <A HREF="#automatic_dependency">above</A>
+imply that a substantial parts of the source files will appear to need
+recompilation if a module file lying low in the module hirachie was altered.
+However, in most cases the interface file <CODE><I>modulefilename</I>.mod</CODE>
+was not really altered since the outside interface of the module remains
+unchanged. The command <A HREF="#compile">compile</A> executed during the
+make process tries to avoid unnecessary recompilations by checking if
+<CODE><I>modulefilename</I>.mod</CODE> was really altered by the recompilation
+of <CODE><I>modulefilename</I>.f90</CODE>. In case a using file that
+only depends upon unaltered module files appears to need recompilation
+it is only touched. The command <A HREF="#compile">compile</A> uses files
+<CODE><I>modulefilename</I>.dep</CODE> and <CODE><I>modulefilename</I>.newmod</CODE>
+that are automatically generated and removed and should not be manually altered.
+</P>
+
+
+<BR>
+<H3>
+<A NAME="different_compilerflags"></A>
+<B><FONT SIZE=4>Handling different Compilerflags</FONT></B>
+</H3>
+
+<P>
+Different source files often require compilation with different
+compiler flags, for instance for optimization. On the other hand,
+compiler flags should normally be defined in one place to allow
+easy adoptions.
+<P>
+To cope with these demands the following mechanism is used:
+<UL TYPE="SQUARE">
+<LI>Flags defined in the Makefile Macros <CODE>F90BASEFLAGS</CODE>
+(for free format source files) or <CODE>FBASEFLAGS</CODE>
+(for fixed format source files) are always used. These basis flags
+could be used to set stuff like the format of the source file.
+<LI>To these flags flags from one of the following sources
+will be added (the source listed first has the highest priority):
+<UL TYPE="SQUARE">
+<LI>If a file <CODE><I>filename</I>.mod</CODE> exists and it contains
+a line beginning with <CODE><I>MACH</I></CODE> the rest of the line
+will be used as compiler flags. <CODE><I>MACH</I></CODE> is described
+<A HREF="#Platform_Dependent_Code">above</A>. This mechanism should
+only be used exceptionally.
+<LI>In case <CODE><I>filename</I>.altflags</CODE> is included in the
+Makefile Macro <CODE>ALTFLAGS</CODE> flags defined in the
+Makefile Macro <CODE>F90ALTFLAGS</CODE>.
+<LI>Otherwise flags defined in the
+Makefile Macro <CODE>F90FLAGS</CODE>
+</UL>
+Those flags are typically optimization flags.
+</UL>
+</P>
+
+
+<BR>
+<H2>
+<A NAME="make_Commands"></A>
+<B><FONT SIZE=5>Commands</FONT></B>
+</H2>
+
+<DL>
+<DT><CODE>make</CODE>
+<DD>Produces the main executable.
+On SP2, an executable using Internet Protocol PVMe suitable for interactive
+execution is produced.
+<DT><CODE>make us</CODE>
+<DD>On SP2 only. An executable using User Space PVMe suitable for
+execution on reserved nodes by LoadLeveler is produced.
+<DT><CODE>make doku</CODE>
+<DD>The file "<CODE>documentation/interfaces</CODE>" is produced. See chapter
+<A HREF="#Semi-Automatic_Documentation">Semi-Automatic Documentation Generation</A>
+<DT><CODE>make reference</CODE>
+<DD>The file "<CODE>documentation/reference.html</CODE>" is produced. See chapter
+<A HREF="#Semi-Automatic_Documentation">Semi-Automatic Documentation Generation</A>
+<DT><CODE>make clean</CODE>
+<DD>remove all "<CODE>.o</CODE>", "<CODE>.mod</CODE>" and "<CODE>.list</CODE>" files
+<DT><CODE>make docclean</CODE>
+<DD>remove all "<CODE>.doc</CODE>" files
+<DT><CODE>make backupclean</CODE>
+<DD>remove backup files automatically created by emacs, ClearCase merges
+and <A HREF="#makedependent">makedependent</A>.
+<DT><CODE>make depclean</CODE>
+<DD>remove all "<CODE>.dep</CODE>" files
+<DT><CODE>make realclean</CODE>
+<DD>execute all the removes listed above leaving only the source files.
+</DL>
+
+<P>
+The installation of the ttfs driver script and related helper programs is handled
+by a separate Makefile located in the "<CODE>integral</CODE>" directory. This
+Makefile recognizes the following commands:
+</P>
+
+<DL>
+<DT><CODE>make</CODE>
+<DD>Install ttfs script and all helpers
+<DT><CODE>make clean</CODE>
+<DD>remove all "<CODE>.o</CODE>", "<CODE>.mod</CODE>" and "<CODE>.list</CODE>" files
+<DT><CODE>make backupclean</CODE>
+<DD>remove backup files automatically created by emacs, ClearCase merges
+and <A HREF="#makedependent">makedependent</A>.
+<DT><CODE>make depclean</CODE>
+<DD>remove all "<CODE>.dep</CODE>" files
+<DT><CODE>make realclean</CODE>
+<DD>execute all the removes listed above leaving only the source files.
+<DT><CODE>make uninstall</CODE>
+<DD>remove ttfs script and all helpers
+</DL>
+
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="Helper_Programs"></A>
+<B><FONT SIZE=7>Helper Programs</FONT></B>
+</H1>
+
+<P>
+
+</P>
+
+<BR>
+<H2>
+<A NAME="Preprocessors"></A>
+<B><FONT SIZE=5>Preprocessors</FONT></B>
+</H2>
+
+
+<BR>
+<H3>
+<A NAME="mpp"></A>
+<B><FONT SIZE=4>mpp</FONT></B>
+</H3>
+
+<P>
+Used to produce the Makefile from the
+<A HREF="#Meta_Makefile">machine independent Meta-Makefile</A>
+</P>
+
+<PRE>
+mpp TB 2/96
+
+makefile and shell script preprocessor
+removes comments to enable machine dependent sections
+
+required syntax of comments
+(must stand before lines to be uncommented):
+to enable mach1,mach2, ... :
+#MPP:<CODE><I>mach1</I></CODE>[:<CODE><I>mach2</I></CODE>]...#
+to enable all but mach1,mach2, ... :
+#MPP NOT:<CODE><I>mach1</I></CODE>[:<CODE><I>mach2</I></CODE>]...#
+
+usage: mpp <CODE><I>mach</I></CODE> [<CODE><I>inputfile</I></CODE>] [<CODE><I>outputfile</I></CODE>]
+defaults: <CODE><I>inputfile</I></CODE>: Makefile.mpp
+          <CODE><I>outputfile</I></CODE>: <CODE><I>inputfile without ending (after .)</I></CODE>
+
+for pipe mode:
+usage: mpp -pipe <CODE><I>mach</I></CODE>
+</PRE>
+
+
+<BR>
+<H3>
+<A NAME="f90pp"></A>
+<B><FONT SIZE=4>f90pp</FONT></B>
+</H3>
+
+<P>
+Automatically called in the make process to handle
+<A HREF="#Platform_Dependent_Code">Platform Dependent Code</A>
+</P>
+
+<PRE>
+f90pp TB 2/96
+
+Fortran 90 preprocessor
+removes comments to enable machine dependent sections
+
+required syntax of comments
+(must stand at beginning of lines to be uncommented):
+to enable mach1,mach2, ... :
+!FPP:<CODE><I>mach1</I></CODE>[:<CODE><I>mach2</I></CODE>]...!
+to enable all but mach1,mach2, ... :
+!FPP NOT:<CODE><I>mach1</I></CODE>[:<CODE><I>mach2</I></CODE>]...!
+
+usage: f90pp <CODE><I>mach</I></CODE> [ <CODE><I>inputfile</I></CODE> [<CODE><I>outputfile</I></CODE>] ]
+defaults: <CODE><I>outputfile</I></CODE>: <CODE><I>inputfile with ending .f90</I></CODE>
+if neither input nor outputfile are given, pipe mode is invoked:
+ take input from stdin and send to stdout
+</PRE>
+
+
+<BR>
+<H3>
+<A NAME="fpp"></A>
+<B><FONT SIZE=4>fpp</FONT></B>
+</H3>
+
+<P>
+Automatically called in the make process to handle
+<A HREF="#Platform_Dependent_Code">Platform Dependent Code</A>
+</P>
+
+<PRE>
+fpp TB 2/96
+
+Fortran 77 preprocessor
+removes comments to enable machine dependent sections
+
+required syntax of comments
+(must stand at beginning of lines to be uncommented):
+to enable mach1,mach2, ... :
+CFPP:<CODE><I>mach1</I></CODE>[:<CODE><I>mach2</I></CODE>]...!
+to enable all but mach1,mach2, ... :
+CFPP NOT:<CODE><I>mach1</I></CODE>[:<CODE><I>mach2</I></CODE>]...!
+
+
+usage: f90pp <CODE><I>mach</I></CODE> [ <CODE><I>inputfile</I></CODE> [<CODE><I>outputfile</I></CODE>] ]
+defaults: <CODE><I>outputfile</I></CODE>: <CODE><I>inputfile with ending .f90</I></CODE>
+if neither input nor output-file are given, pipe mode is invoked:
+ take input from stdin and send to stdout
+</PRE>
+
+
+<BR>
+<H2>
+<A NAME="makedependent"></A>
+<B><FONT SIZE=5>makedependent</FONT></B>
+</H2>
+
+<P>
+Used for the 
+<A HREF="#automatic_dependency">Automatic Generation of Dependency Descriptions</A>
+that are inserted into the Makefile.
+</P>
+
+<PRE>
+makedependent TB 10/95
+
+usage :
+
+help:           makedependent -h
+makefile mode:  makedependent [-d|-n] [<CODE><I>filename</I></CODE>]
+listfile mode:  makedependent [-d|-n] -l [<CODE><I>filename</I></CODE>]
+
+
+Produces description of Fortran 90 file dependencies
+in makefile format.
+Sorts the object files according to their dependencies: 
+  files depending on others are put before them.
+Detects cross-dependencies between modules.
+Looks in the corresponding Fortran 90 source files
+for use statements and determines dependencies between
+the files in this way.
+
+It is assumed that the modules are located in source files
+named according to the module names with minor letters only.
+
+The flag -d makes makedependent write a file *.dep listing the
+dependencies *.mod for each object file *.o that can be used
+by during the make procedure to minimize necessary work
+
+The flag -n suppresses writing of dependencies in
+Makefile Format. Only check for cross-dependencies is performed
+and *.dep files are generated if Flag -d is given as well.
+
+
+
+Two modes of operation exist:
+
+Listfile mode:
+Invoke with
+"makedependent -l" or "makedependent -l <CODE><I>filename</I></CODE>".
+Reads in file "objlist.makedependent" or <CODE><I>filename</I></CODE>
+that should contain  the name of one object file in each line.
+Prints out the object files and their dependencies to STDOUT.
+
+Makefile mode:
+Invoke with
+"makedependent" or "makedependent <CODE><I>filename</I></CODE>".
+Edits file "Makefile" or <CODE><I>filename</I></CODE> and saves
+original file in <CODE><I>filename</I></CODE>.old.
+The file must include the following three lines (beginning with #) :
+  # for makedependent: <CODE><I>objectmakroname</I></CODE> [ <CODE><I>objectmakroname</I></CODE> ... ]
+  # makedependent start insert
+  # makedependent end insert
+Makedependent reads the object files to process from
+the objectmakro definitions and inserts the necessary
+dependency descriptions between the start and end line,
+removing anything old between these lines.
+
+to obtain help statement, type "makedependent -h".
+</PRE>
+
+
+<BR>
+<H2>
+<A NAME="makemake"></A>
+<B><FONT SIZE=5>makemake</FONT></B>
+</H2>
+
+<P>
+Used to produce the Makefile from the
+<A HREF="#Meta_Makefile">machine independent Meta-Makefile</A>
+and for the
+<A HREF="#automatic_dependency">Automatic Generation of Dependency Descriptions</A>
+that are inserted into the Makefile.
+</P>
+
+<P>
+aliased to "<CODE><A HREF="#mpp">mpp</A> <I>MACH</I>; <A HREF="#makedependent">makedependent</A></CODE>"
+</P>
+
+
+<BR>
+<H2>
+<A NAME="compile"></A>
+<B><FONT SIZE=5>compile</FONT></B>
+</H2>
+
+<P>
+Automatically called in the make process. The script is the
+core of the concepts that help to
+<A HREF="#Avoiding_compilation">avoid unnecessary compilation</A>
+and to <A HREF="#different_compilerflags">handle different Compilerflags</A>
+</P>
+
+<PRE>
+compile TB 11/96
+
+usage:
+compile [ -pp <CODE><I>Praeprocessor</I></CODE> <CODE><I>PP-Arguments</I></CODE> <CODE><I>PP-Target</I></CODE> |
+         | -cp <CODE><I>cp-Target</I></CODE> ] <CODE><I>dir</I></CODE> <CODE><I>file</I></CODE> <CODE><I>mach</I></CODE> \
+ <CODE><I>fc</I></CODE> <CODE><I>fc_base_flags</I></CODE> <CODE><I>fc_flags</I></CODE> <CODE><I>fc_alternate_flags</I></CODE> <CODE><I>include</I></CODE>
+
+returns 0 if successful and 1 otherwise
+
+Intended for automatic use in make process
+</PRE>
+
+
+<BR>
+<H2>
+<A NAME="make_html_reference"></A>
+<B><FONT SIZE=5>make_html_reference</FONT></B>
+</H2>
+
+<P>
+Automatically called when saying "<CODE>make reference</CODE>".
+The script is used for
+<A HREF="#Semi-Automatic_Documentation">Semi-Automatic Documentation Generation</A>
+</P>
+
+<PRE>
+make_html_reference TB 1/98
+
+usage :
+help:
+  make_html_reference
+argument mode: 
+  make_html_reference [-o <CODE><I>outputfile</I></CODE>] [-v <CODE><I>version</I></CODE>] <CODE><I>filename</I></CODE> [<CODE><I>filename</I></CODE> ...]
+makefile mode:
+  make_html_reference [-o <CODE><I>outputfile</I></CODE>] [-v <CODE><I>version</I></CODE>] -m [<CODE><I>filename</I></CODE>]
+listfile mode:
+  make_html_reference [-o <CODE><I>outputfile</I></CODE>] [-v <CODE><I>version</I></CODE>] -l [<CODE><I>filename</I></CODE>]
+
+Collects the public interfaces of f90 source files
+and writes them to "docomentation/html"
+or any specified <CODE><I>outputfile</I></CODE>.
+The public interfaces must be extracted and
+stored in .doc files before
+with the help of program make_interface.
+
+It is allowed to pass filenames
+ending with ".o" as arguments. In this case, 
+the program looks for the corresponding
+source files ending with ".f90" or ".f".
+
+The switch [-o <CODE><I>outputfile</I></CODE>] allows to specify the output file.
+The switch [-v <CODE><I>version</I></CODE>] allows to specify a Program Version
+written to header of output.
+
+
+Three modes of selecting the files to collect
+the interface from exist:
+
+Argument mode:
+Takes the files given as command line arguments.
+
+Listfile mode:
+Reads in file "listfile.make_html_reference"
+or <CODE><I>filename</I></CODE> that should contain 
+the name of one fortran file in each line.
+
+Makefile mode:
+The file "Makefile" or <CODE><I>filename</I></CODE>
+must include the following line (beginning with #) :
+  # for make_html_reference: <CODE><I>objectmakroname</I></CODE> [ <CODE><I>objectmakroname</I></CODE> ... ]
+make_html_reference reads the files to process
+from the objectmakro definitions.
+</PRE>
+
+
+<BR>
+<H2>
+<A NAME="collect_interfaces"></A>
+<B><FONT SIZE=5>collect_interfaces</FONT></B>
+</H2>
+
+<P>
+Automatically called when saying "<CODE>make doku</CODE>".
+The script is used for
+<A HREF="#Semi-Automatic_Documentation">Semi-Automatic Documentation Generation</A>
+</P>
+
+<PRE>
+collect_interfaces TB 10/95
+
+usage :
+help: 
+  collect_interfaces
+argument mode:
+  collect_interfaces [-o <CODE><I>outputfile</I></CODE>] <CODE><I>filename</I></CODE> [<CODE><I>filename</I></CODE> ...]
+makefile mode:
+  collect_interfaces [-o <CODE><I>outputfile</I></CODE>] -m [<CODE><I>filename</I></CODE>]
+listfile mode:
+  collect_interfaces [-o <CODE><I>outputfile</I></CODE>] -l [<CODE><I>filename</I></CODE>]
+
+Collects the public interfaces of f90 source files
+and writes them to "documentation/interfaces"
+or any specified <CODE><I>outputfile</I></CODE>.
+The public interfaces must be extracted
+and stored in .doc files before
+with the help of program make_interface.
+
+
+
+It is allowed to pass filenames
+ending with ".o" as arguments. In this case, 
+the program looks for the corresponding
+source files ending with ".f90" or ".f".
+
+
+Three modes of selecting the files to collect
+the interface from exist:
+
+Argument mode:
+Takes the files given as command line arguments.
+
+Listfile mode:
+Reads in file "listfile.collect_interfaces"
+or <CODE><I>filename</I></CODE> that should contain 
+the name of one fortran file in each line.
+
+Makefile mode:
+The file "Makefile" or <CODE><I>filename</I></CODE>
+must include the following line (beginning with #) :
+  # for collect_interfaces: <CODE><I>objectmakroname</I></CODE> [ <CODE><I>objectmakroname</I></CODE> ... ]
+collect_interfaces reads the files to process
+from the objectmakro definitions.
+</PRE>
+
+
+<BR>
+<H2>
+<A NAME="make_interface"></A>
+<B><FONT SIZE=5>make_interface</FONT></B>
+</H2>
+
+<P>
+Automatically called when saying "<CODE>make doku</CODE>" or "<CODE>make reference</CODE>".
+The script is used for
+<A HREF="#SemiAutomatic_Documentation">Semi-Automatic Documentation Generation</A>
+</P>
+
+<PRE>
+make_interface TB 5/97
+
+usage :
+  make_interface <CODE><I>filename</I></CODE> [<CODE><I>filename</I></CODE> ... ]
+for this help message: make_interface
+
+Cuts interface information from Fortran source file
+in the form of  "documentation/standard_module.f90"
+or "documentation/standard_subroutine.f90".
+
+The f90 source files must contain comment lines
+indicating start and end
+of interface (beginning with !):
+   ! Public interface of module
+   ! End of public interface of module
+It can additionally contain pairs of lines
+indicating an interrupt in the
+public interface that will not be printed
+(lines beginning with !):
+   !== Interrupt of public interface of module =========
+   !== Interrupt end of public interface of module =====
+For fixed form sources, the "!" must be replaced by "C".
+ 
+In case the Fortran file contains a module
+with public subroutines or functions,
+the file must include the following lines
+(beginning with !) :
+   !------------ public functions and subroutines ----------
+make_interface reads the names of the
+public subroutines from the  "public" statement
+following this line.
+
+Each of the subroutine declarations must include a line 
+   !** End of interface *****************************************
+The subroutine heads are read in from the subroutine or function
+statement up to this line.
+ 
+The following lines are removed from f90 sources:
+  implicit none
+  !------------ Modules used ------------
+ 
+It is allowed to pass filenames ending 
+with ".o" as arguments. In this case, 
+the program looks for the corresponding
+source files ending with ".f90" or ".f".
+</PRE>
+
+
+<BR>
+<H2>
+<A NAME="new_module"></A>
+<B><FONT SIZE=5>new_module</FONT></B>
+</H2>
+
+<P>
+Used to produce a new
+<A HREF="#Standard_Module_File">standard conforming module file</A>
+that can be used as a start point to edit when writing a new module.
+</P>
+
+<PRE>
+usage: new_module <CODE><I>name</I></CODE> [<CODE><I>name</I></CODE> ...]
+
+New module files in the standard format
+termed <CODE><I>name</I></CODE>_module.f90 will be generated.
+The module will also be termed <CODE><I>name</I></CODE>_module.
+</PRE>
+
+
+<H2>
+<BR>
+<A NAME=new_subroutine""></A>
+<B><FONT SIZE=5>new_subroutine</FONT></B>
+</H2>
+
+<P>
+Used to produce a new
+<A HREF="#Standard_Subroutine_File">standard conforming subroutine file</A>
+that can be used as a start point to edit when writing a new subroutine.
+</P>
+
+<PRE>
+usage: new_subroutine <CODE><I>name</I></CODE> [<CODE><I>name</I></CODE> ...]
+
+New subroutine files in the standard format
+termed <CODE><I>name</I></CODE>.f90 will be generated.
+The <CODE><I>name</I></CODE> given is also the name of the subroutine.
+</PRE>
+
+
+
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="Porting"></A>
+<B><FONT SIZE=7>Hints for Porting</FONT></B>
+</H1>
+
+
+<P>
+Unfortunately, there can hardly be a standard procedure that works
+whenever porting. However, here are some hints on what you
+will need to care about:
+</P>
+
+<UL>
+<LI>
+ParaGauss requires a <B>PVM</B> library to be installed. This is so even if
+you intend to perform serial runs only.
+<LI>
+It is recommended to install <B>perl</B> that is available 
+as public domain software on the WWW. Otherwise 
+<A HREF="#makedependent">makedependent</A> will not work
+and the Makefile has to be prepared on an other platform
+before porting. Moreover,
+<A HREF="#Semi-Automatic_Documentation">Semi-Automatic Documentation Generation</A>
+will not work. All this is acceptable as long as you do not intend to do
+any programming.
+<LI>
+On some platform the version of <B>sed</B> that is included in the operating
+system does not work when called by the <A HREF="#Preprocessors">Preprocessors</A>
+used during compilation. In this case installing GNU sed that is available 
+as public domain software on the WWW will help.
+<LI>
+You will need the <B>simol</B> geometry optimizer as well to perform geometry
+optimizations as long as our new ParaGauss Geometry optimizer is not yet
+completed.
+<LI>
+In case you want to transform old lcgto inputs you will need need a special
+vercion of the old <B>lcgto</B> program. Most probably, this will not be
+the case.
+<LI>
+You need to set the environment variable "<B><CODE>$machine</CODE></B>"
+to some new unique value indicating your platform. You should
+set this variable in your login files (e.g. ".cshrc").
+You must also invent a new value indicating your platform
+for the <A HREF="#Preprocessors">preprocessor directives</A> in 
+<A HREF="#Platform_Dependent_Code">Platform Dependent Code</A> in the
+Makefile and source files.
+<LI>
+"<CODE><B>Makefile.mpp</B></CODE>" and "<CODE><B>integral/Makefile.mpp</B></CODE>"
+will require editing. You have to set the location of your sources, the
+appropriate compiler, <A HREF="#different_compilerflags">compilerflags</A>,
+libraries, and Suffix rules for file generation. Since different compilers
+expect different file suffixes it might be necessary to copy the source files
+to appropriate names. This will be done automatically during compile time
+by the <A HREF="#compile">compile</A> script but the suffix rules that
+call this script in the appropriate way need to be selected.
+<LI>
+The files with <A HREF="#Platform_Dependent_Code">Platform Dependent Code</A>
+end with "<CODE><B>.f90p</B></CODE>" or "<CODE><B>.fp</B></CODE>" those files
+will need editing. In most cases it will be sufficient to select one of the
+existing alternatives and simply add your new "<CODE><I>MACH</I></CODE>"
+sign to the <A HREF="#f90pp">f90pp</A> or <A HREF="#fpp">fpp</A> directives.
+<LI>
+The <B><A HREF="#compile">compile</A></B> script will need to be adjusted.
+It uses "<CODE>$machine</CODE>" to select the appropriate method to compare
+"<CODE>.mod</CODE>" since their contents are compiler specific.
+<LI>
+It might happen the that the module description files
+("<B><CODE>.mod</CODE></B> files") that are automatically generated and read
+by the compiler are termed in some other way. In this case the <A HREF="#compile">compile</A>
+script should touch a dummy file in accordance with the our "<CODE>.mod</CODE> files"
+naming convention and use the real file for comparison.
+<LI>
+The "<B><CODE>ttfs</CODE></B>" driver script will need adoption. It uses the "<CODE>$machine</CODE>"
+environment variable to select machine specific code at run time. The script
+tries to abstract machine specifica by describing them with shell variables
+that are all set in on clearly indicated location at the beginning of the script.
+If you are lucky adjusting those variables is enough.
+</UL>
+
+
+
+
+
+
+
+
+<BR><BR><HR SIZE=4 NOSHADE><BR><BR>
+
+
+<H1>
+<A NAME="Program_Hirachie"></A>
+<B><FONT SIZE=7>Overview of the Program Hirachie</FONT></B>
+</H1>
+
+
+<PRE>
+<A NAME="PROGRAM_MAIN"></A>
++------------------------+
+| <B>PROGRAM MAIN</B>           |
++------------------------+
+| timer_setup            |  initializes the timing utilities
+| time_setup             |
+|                        |
+| pvm_enroll             |  starts the parallel processing facilities
+|                        |
+| IF (i_am_master) THEN  |
+|    main_master         |  the code running on the 'master' processor
+| ELSE                   |
+|    main_slave          |  the code running on each 'slave' processor
+| ENDIF                  |
+|                        |
+| pvm_end                |  stops the parallel processing facilities
+|                        |
+| last_will              |  final cleaning up
++------------------------+
+
+<A NAME="SUBROUTINE_MAIN_SLAVE"></A>
+  +--------------------------------------+
+  | <B>SUBROUTINE MAIN_SLAVE</B>                |
+  +--------------------------------------+
+  | DO                                   |  infinite loop waiting for tasks
+  |                                      |
+  |   "receive_message_tags"             |  waiting for any message tag
+  |                                      |
+  |   SELECT CASE (message_tag_received) |  task selection
+  |   CASE (message_tag_<I>name1</I>)           |
+  |      CALL <I>prog1</I>                      |  task 1
+  |   CASE (message_tag_<I>name2</I>)           |
+  |      CALL <I>prog2</I>                      |  task 2
+  |   ...                                |
+  |   CASE (message_tag_finito)          |
+  |      RETURN                          |  the terminating task
+  |   END SELECT                         |
+  |                                      |
+  | END DO                               |
+  +--------------------------------------+
+
+     <B>LIST OF TASKS PERFORMED BY THE SLAVES</B>
+     -------------------------------------------------------------
+     message tag           calling sequence
+     -------------------------------------------------------------
+     ## initialization ##
+     init                  receive_initialisation
+                           initialize_slave
+     filenames             filename_unpack
+     openspecialunits      open_special_units
+     occ_levels            receive_eigvec_occ(eigval_also=.false.)
+     occ_levels_eigval     receive_eigvec_occ(eigval_also=.true.)
+     vir_levels            receive_eigvec_vir
+     rot_levels            receive_eigvec_rot
+     bounds                bounds_receive
+     pvmdata               pvm_unpack_data
+     gr_send               grid_receive(post_hoc=.false.)
+     grph_send             grid_receive(post_hoc=.true.)
+     xc_setup              xc_setup
+     xcfit_setup           xcfit_setup
+     xcmda_setup           xcmda_setup
+     pre_dens_slave        alloc_densmat
+     int_setup             integralpar_unpack
+                           integral_setup
+     int_2cff_setup        integral_setup_2cff
+     int_2cob3c_setup      integral_setup_2cob3c
+     int_rel_setup         integral_setup_rel
+     int_2cff_norm         integral_unpack_norm_2cff
+     rel_send_overlap      rel_trafo_receive_overlap
+     fit_coeff_send        fit_coeff_receive
+
+     ## computational tasks ##
+     h3z                   cascadic_ham_calc
+     eigensolve            eigensolve_slave
+     dens                  gendensmat_occ
+     corr                  pcalc_pert_coeff
+     build_xc              build_xc
+     build_xcfit           build_xcfit
+     build_xcmda           build_xcmda
+     debugorbitals         orbital_test
+     send_slavetiming      timer_send_slavetiming
+     post_hoc              post_hoc_main
+     int_2cff_do           quadrupel_unpack(quadrupel_ff)
+                           integral_calc_quad_2cff
+     rel_momspace          relativistic_trafo_momspace
+     rel_trafomat          relativistic_trafo_trafomat
+     main_gradient         main_gradient
+     rel_gradient_trafo    relativistic_gradient_calc
+
+     ## cleaning up ##
+     eigvec_occ_dealloc    eigvec_occ_dealloc(eigval_also=.false.)
+     eigvec_occ_dealloc_e  eigvec_occ_dealloc(eigval_also=.true.)
+     eigvec_vir_dealloc    eigvec_vir_dealloc
+     grid_close            grid_close(post_hoc=.false.)
+     gridph_close          grid_close(post_hoc=.true.)
+     int_shutdown          integral_shutdown
+     int_2cff_shutdown     integral_shutdown_2cff
+     int_rel_shutdown      integral_shutdown_rel
+     gradient_send_3c      gradient_send_3c
+     gradient_send_fit_ch  gradient_send_fit_ch
+     fit_coeff_shutdown    fit_coeff_shutdown
+     xc_close              xc_close
+     xcfit_close           xcfit_close
+     xcmda_close           xcdma_close
+     gradinfo_dealloc      unique_atom_gradinfo_dealloc
+     grad_datashutdown     gradient_data_shutdown
+     ua_close              unique_atom_close
+     op_dealloc            orbitalprojection_dealloc
+     intstore_dealloc      integralstore_deallocate
+
+<A NAME="SUBROUTINE_MAIN_MASTER"></A>
+  +------------------------------+
+  | <B>SUBROUTINE MAIN_MASTER</B>       |
+  +------------------------------+
+  | pvm_read(n_procs)            |  reads parallel options from input file
+  | pvm_init_slaves              |  and activates the slaves
+  |                              |
+  | file_name_pack               |  send file names to each slave
+  | send_msgtg(filenames)        |
+  |                              |
+  | open_special_units           |  open interface files on the
+  | send_msgtg(openspecialunits) |  master and on each slave
+  |                              |
+  | converged = .FALSE.          |
+  | geo_loop = 0                 |
+  | DO UNTIL (converged)         |  geometry optimization loop
+  |    geo_loop = geo_loop + 1   |
+  |                              |
+  |    read_input(max_geo_loop)  |  reads the input file
+  |                              |
+  |    "electronic_structure"    |  does the electronic structure calculation
+  |                              |
+  |    optimizer(converged)      |  calls an external geometry optimizer
+  |                              |
+  | END DO                       |
+  |                              |
+  | timer_get_slavetiming        |  gets the timing reports of each slaves
+  | pvm_stop_slaves              |  and terminates all slaves
+  |                              |
+  | timer_print_summary          |  generates the final timing report
+  | timer_print_slavetiming      |
+  +------------------------------+
+
+    +---------------------------------------------+
+    | <B>SUBROUTINE optimizer [MAIN_MASTER]</B>          |
+    +---------------------------------------------+
+    | getenv($script,$version)                    |  find external optimizer
+    |                                             |
+    | SYSTEM("$script setup")                     |  prepare optimizer and
+    | close_special_units                         |  close interface files
+    |                                             |
+    | SYSTEM("$script $input $geo_loop $version") |  run external optimizer
+    | INQUIRE(EXIST=converged,FILE=<I>conv_file</I>)     |  and check convergence
+    |                                             |
+    | open_special_units                          |  re-open interface files
+    | SYSTEM("$script shutdown")                  |  and finish optimizer
+    +---------------------------------------------+
+
+    +-------------------------------+
+    | <B>BLOCK electronic_structure</B>    | (not considering debug features)
+    +-------------------------------+
+    | main_symm                     |  performs the symmetry analysis
+    |                               |
+    | unique_atom_make_gx           |  generates gx-file for optimizer
+    |                               |
+    | initialize_master             |  ??
+    | send_initialisation           |  send input information to each slave
+    |                               |
+    | write_input                   |  echos the input file
+    |                               |
+    | integralpar_set_scf           |  set integral parameters for SCF part
+    | main_integral                 |  and computes the required integrals
+    |                               |
+    | main_scf                      |  performs the SCF procedure
+    |                               |
+    | post_hoc_main                 |  re-compoutes total energies
+    | write_energy(post_hoc=.true.) |  with a separate numerical grid
+    |                               |
+    | main_gradient                 |  computes the total energy derivates
+    |                               |
+    | occupation_shutdown           |  cleaning up
+    | fit_coeff_shutdown            |
+    | free_eigen                    |
+    +-------------------------------+
+
+      <B>LIST OF OPERATION SWITCHES ON THE MASTER</B>
+
+      switch          action
+      -------------------------------------------------
+      ## main tasks ##
+      symm            main_symm
+      make_gx         unique_atom_make_gx
+      write_input     write_input
+      integral        integralpar_set_scf
+                      main_integral
+                      fit_coeff_shutdown
+      scf             main_scf
+                      occupation_shutdown
+                      fit_coeff_shutdown
+                      free_eigen
+      post_hoc        post_hoc_main
+                      write_energy(...,post_hoc=.true.)
+      gradients       main_gradient
+      geo_opt         optimizer
+
+      ## debugging tasks ##
+      debug_grid      grid_main
+                      grid_send
+                      xc_setup_main
+                      build_xc_main
+      debug_orbitals  orbital_test
+      quadrupel_ob    integral_setup
+                      integral_setup_2cob3c
+                      integral_calc_quad_2cob3c
+                      integral_shutdown_2cob3c
+                      integral_shutdown
+      quadrupel_ff    integral_setup
+                      integral_setup_2cff
+                      integral_calc_quad_2cff
+                      integral_shutdown_2cff
+                      integral_shutdown
+      integraltest    main_integral
+
+<A NAME="SUBROUTINE_main_integral"></A>
+    +--------------------------------+
+    | <B>SUBROUTINE main_integral</B>       | 
+    +--------------------------------+
+    | integralpar_pack               | sends integral parameters to each slave
+    | send_msgtag(int_setup)         | calls integral_unpack/setup on each slave
+    | integral_setup                 | initializes the integral evaluation
+    |                                |
+    | integral_main_2cff             | does the 2-center fit fct. integrals
+    |                                |
+    | fit_coeff_calc_chargefitnorm   | does the 1-center fit fct. integrals
+    |                                |
+    | integral_main_2cob3c           | does the orbital basis depend. integr.
+    |                                |
+    | send_msgtag(int_shutdown)      | call integral_shutdown on each slave
+    | integral_shutdown              | closes the integral evaluation
+    |                                |
+    | integral_main_rel              | calculates relativistic SCF integrals
+    |                                |
+    | timer_receive_slave_int_timing | gets timing report from each slave
+    | timer_print_integral           | prints timing summary of integral part
+    +--------------------------------+
+
+      <B>LIST OF INTEGRAL PARAMETERS</B> 
+
+      parameter     default  SCF   PH GRAD  REL   meaning
+      --------------------------------------------------------------------------
+      2cob_kin            T    T    F    F    F   2-cent. orb. int. of kin. ener
+      2cob_nuc            T    T    F    F    F   2-cent. orb. int. of nuc. attr
+      2cob_pvsp           F  rel    F    F    F   2-cent. orb. int. of pvsp,
+      2cob_ol             T    T    F    F    F   2-cent. orb. int. of overlap
+      2cob_dipol          F    F    T    F    F   2-cent. orb. int. of dipol op.
+      2cch_no             T    T    F    T    T   2-cent. ch. fit int. for Coul.
+      2cxc_no             F  fit    F    F    F   2-cent. exch. fit int.
+      1cch_no             T    T    F    F    F   1-cent. ch. fit int. for N_el
+      3c_xc               T  fit    F    F    F   3-cent. exchange integrals
+      3c_co               T    T    F    F    F   3-cent. coulomb integrals
+      relativistic        F  rel    F    F    T   perform rel. transformations
+      renorm_ob           T    T    F    F    F   calc. orb. basis fct. norm
+      renorm_ch           T    T    F    F    F   calc. ch. fit. fct. norm
+      renorm_xc           F  fit    F    F    F   calc. exch. fit fct. norm
+      i_int_part          1    1    2    3    3   number of current int part
+      2cff *              T    T    F    T    T   do any 2-cent. fit fct. int.
+      2cob3c *            T    T    T    T    T   do any 2- or 3-cent. orb. int.
+      totalsymmetric *    T    T    F    T    T   calc. int. totalsymmeteric
+      gradients           F    F    F    T    T   calc. grad. of matrix elem.
+      2cob_ol_grad        F    F    F    T    T   calc. grad. of overlap matrix
+      3cob_grad           F    F    F    T    T   calc. grad. of 3-cent. mat. el
+      send_3c             T    T    F    F    T   send 3-cent. int. via pvm
+      send_2c             T    T    F    F    F   send 2-cent. int. via pvm
+      rel_gradients       F    F    F    F    T   calc. of relativistic grad.
+      2cob_nuc_grad       F    F    F    F    T   rel. grad. of nuclear attr.
+      2cob_pvsp_grad      F    F    F    F    T   rel. grad. of pvsp int.
+      2cob_kin_grad       F    F    F    F    T   rel. grad. of kinetic ener
+      2cob_ol_rel_grad    F    F    F    F    T   rel. grad. of overlap matrix
+      --------------------------------------------------------------------------
+      *   : variables automatically set by subroutine integralpar_setup
+      rel : options_relativistic
+      fit : options_xcmode() == xcmode_exchange_fit
+
+<A NAME="SUBROUTINE_integral_main_2cff"></A>
+      +--------------------------------------+
+      | <B>SUBROUTINE integral_main_2cff</B>        | 
+      +--------------------------------------+
+      | int_distribute_setup(is_2cff=.true.) | loads the integral tasks
+      |                                      |
+      | IF (integralpar_send_2c) THEN        |
+      |    int_send_2cff_setup               | sets up sending of integrals
+      | END IF                               |
+      |                                      |
+      | send_msgtag(int_2cff_setup)          | envokes "setup" on each slave
+      | integral_setup_2cff                  | sets up evaluation of integrals
+      |                                      |
+      | int_distribute_start                 | initialize integral evaluation
+      |                                      |
+      | DO WHILE (int_distribute_workleft)   | loops over all integral tasks
+      |    IF (serial_run) THEN              |
+      |       int_distribute_mastertask      | gets a new integral task
+      |       integral_calc_quad_2cff        | evaluates a bunch of integrals
+      |       int_distribute_newtask         | asks for the next integral task
+      |    ELSE                              |
+      |       SELECT CASE (msgtag_received)  | catches the slave interrupts
+      |       CASE (int_2cff_done)           |
+      |          int_distribute_newtask      | sends new task to the slave
+      |       CASE (int_2cff_norm)           |
+      |          integral_unpack_norm_2cff   | receives charge fit norms
+      |       CASE (int_2cff_result)         |
+      |          int_send_2cff_receive       | receives the evaluated integrals
+      |       END SELECT                     |
+      |    END IF                            |
+      | END DO                               |
+      |                                      |
+      | send_msgtag(int_2cff_shutdown)       | envokes "shutdown" on each slave
+      | integral_shutdown_2cff               | cleans up integral evaluation
+      |                                      |
+      | int_distribute_shutdown              | cleans up integral task buffers
+      |                                      |
+      | IF (integralpar_send_2c) THEN        |
+      |    int_send_2cff_shutdown            | cleans up sending of integrals
+      | END IF                               |
+      +--------------------------------------+
+
+        +------------------------------------+
+        | <B>SUBROUTINE integral_calc_quad_2cff</B> | 
+        +------------------------------------+
+        | start_timer                        |
+        | setup                              |
+        |                                    |
+        | IF (integralpar_gradients) THEN    |
+        |    charge_overlap_grad             |
+        | ELSE IF (need_ch) THEN             |
+        |    IF (.NOT.diagonal) THEN         |
+        |       waiting_for_missing_ch_norms |
+        |    END IF                          |
+        |    charge_overlap                  |
+        | END IF                             |
+        |                                    |
+        | IF (need_xc) THEN                  |
+        |    IF (.NOT.diagonal) THEN         |
+        |       waiting_for_missing_xc_norms |
+        |    END IF                          |
+        |    xc_overlap                      |
+        | END IF                             |
+        |                                    |
+        | switch_timer                       |
+        | report_back                        |
+        |                                    |
+        | IF (diagonal) THEN                 |
+        |    send_renorm                     |
+        | END IF                             |
+        |                                    |
+        | IF (integralpar_send_2c)           |
+        |    int_send_2cff_send              |
+        | END IF                             |
+        |                                    |
+        | stop_timer                         |
+        | shutdown                           |
+        +------------------------------------+
+
+<A NAME="SUBROUTINE_integral_main_2cob3c"></A>
+      +---------------------------------------+
+      | <B>SUBROUTINE integral_main_2cob3c</B>       |
+      +---------------------------------------+
+      | int_distribute_setup(is_2cff=.false.) | loads the integral tasks
+      |                                       |
+      | send_msgtag(int_2cob3c_setup)         | envokes "setup" on each slave
+      | integral_setup_2cob3c                 | sets up evaluation of integrals
+      |                                       |
+      | int_distribute_start                  | initialize integral evaluation
+      |                                       |
+      | DO WHILE (int_distribute_workleft)    | loops over all integral tasks
+      |    IF(int_distribute_mastertask)THEN  |
+      |       int_distribute_mastertask       | gets a new integral task
+      |       integral_calc_quad_2cob3c       | evaluates a bunch of integrals
+      |       int_distribute_newtask          | asks for the next integral task
+      |    ELSE                               |
+      |       integral_interrupt_2cob3c       | handles the slave interrupts
+      |    END IF                             |
+      | END DO                                |
+      |                                       |
+      | send_msgtag(int_2cob3c_shutdown)      | envokes "shutdown" on each slave
+      | integral_shutdown_2cob3c              | cleans up integral evaluation
+      |                                       |
+      | int_distribute_shutdown               | cleans up integral task buffers
+      +---------------------------------------+
+ 
+        +--------------------------------------+
+        | <B>SUBROUTINE integral_interrupt_2cob3c</B> |
+        +--------------------------------------+
+        | receive(msgtag)                      | catches the slave interrupts
+        | IF (integralpar_send_3c) THEN        |
+        |    CASE (int_2cob3c_done)            |
+        |       int_distribute_newtask         | sends new task to the slave
+        |    CASE (int_2cob_norm)              |
+        |       quadrupel_unpack               | receives quadrupel
+        |       unique_atom_renorm_unpack_ua_l | receives orbital norm
+        |    CASE (int_2cob3c_result)          |
+        |       int_send_2cob3c_receive        | receives the eval. integrals
+        |    CASE (finito)                     |
+        |       last_will                      | terminates the execution
+        |       pvm_end                        | entirely
+        |    END SELECT                        |
+        | END IF                               |
+        +--------------------------------------+
+
+        +---------------------------------------+
+        | <B>SUBROUTINE integral_calc_quad_2cob3c</B>  |
+        +---------------------------------------+
+        | setup                                 |
+        |                                       |
+        | IF (integralpar_totalsymmetric) THEN  |
+        |                                       |
+        |    DO i_symequiv = 1, ...             | loop over all non-equavalent
+        |                                       | pairs of equal atoms
+        |                                       |
+        |       calc_primitives_and_contract    |  <<<< !!!!
+        |                                       |
+        |       IF (integralpar_gradients) THEN |
+        |          symadapt_add_totalsym_grad   |
+        |       ELSE                            |
+        |          symadapt_add_totalsym        |
+        |       END IF                          |
+        |                                       |
+        |       deallocate_contracted           |
+        |                                       |
+        |    DONE                               |
+        |                                       |
+        |    pseudo_irrep_adaptation            | 
+        |                                       |
+        | ELSE                                  |
+        |                                       |
+        |    DO i_ea1 = 1 , ...                 | loop over all pairs
+        |       DO i_ea2 = 1 , ...              | of equal atoms
+        |                                       |
+        |          calc_primitives_and_contract |
+        |                                       |
+        |          symadapt_add_nottotalsym     |
+        |                                       |
+        |          deallocate_contracted        |
+        |                                       |
+        |       DONE                            |
+        |    DONE                               |
+        |                                       |
+        | END IF                                |
+        |                                       |
+        | IF (diagonal) THEN                    |
+        |    IF (integralpar_renorm_ob) THEN    |
+        |       calc_renorm                     |
+        |       send_renorm                     |
+        |    END IF                             |
+        | ELSE                                  |
+        |    waiting_for_missing_orb_norms      |
+        | END IF                                |
+        |                                       |
+        | renorm                                |
+        |                                       |
+        | IF (integralpar_gradients) THEN       |
+        |    sum_up_gradient                    |
+        | END IF                                |
+        |                                       |
+        | report_back                           |
+        |                                       |
+        | IF (integralpar_send_3c) THEN         |
+        |    int_send_2cob3c_send               |
+        | END IF                                |
+        |                                       |
+        | shutdown                              |
+        +---------------------------------------+
+ 
+<A NAME="SUBROUTINE_main_scf"></A>
+    +-------------------------------+
+    | <B>SUBROUTINE main_scf</B>           | 
+    +-------------------------------+
+    |                               |
+    |                               |
+    +-------------------------------+
+
+<A NAME="SUBROUTINE_post_hoc_main"></A>
+    +---------------------------------+
+    | <B>SUBROUTINE post_hoc_main</B>        | 
+    +---------------------------------+
+    | IF (operations_gradients) THEN  |
+    |    unique_atom_grad_information | allocate unique atom dependent arrays
+    | END IF                          | and load required symmetry information
+    |                                 |
+    | send_fit_coeff/send_eigvec_occ  | send fit coefficients/eigen states 
+    |                                 |
+    | grid_main(post_hoc=.true.)      | set up the post hoc grid and
+    | grid_send(post_hoc=.true.)      | distribute it among the slaves
+    | send_msgtag(post_hoc)           | start post_hoc part on the slaves
+    |                                 |
+    | [fitted_]density_calc_setup     | setup density evaluation
+    | orbital_setup                   | setup orbital evaluation
+    | orbital_allocate                | allocate orbital dependent arrays
+    |                                 |
+    | IF (operations_gardients) THEN  |
+    |    post_hoc_calc_xc_en_and_gr   | coupute post hoc energy and num. XC
+    |    post_hoc_average_gradient    | contribution to the forces
+    | ELSE                            |
+    |    post_hoc_calc_xc[mda]_energy | compute the post hoc energy only
+    | END IF                          |
+    | post_hoc_write_results          | ???
+    |                                 |
+    | grid_close(post_hoc=.true.)     | shut down the post hoc grids
+    |                                 |
+    | orbital_free                    | deallocate orbital dependent arrays
+    | orbital_shutdown                | close orbital evaluation
+    | [fitted_]density_calc_close     | close density evaluation
+    +---------------------------------+
+
+<A NAME="SUBROUTINE_main_gradient"></A>
+    +------------------------------------+
+    | <B>SUBROUTINE main_gradient</B>           | 
+    +------------------------------------+
+    |                                    |
+    | gradient_data_setup                | allocates necessary gradient arrays
+    |                                    |
+    | IF (i_am_master) THEN              |
+    |   send_msgtag(main_gradient)       | start main_gradient on each slave
+    |   send_eigvec_occ(eigval_also)     | send neccessary occupied eigenstates 
+    |   fit_coeff_send(coeff_xcmda_also) | send neccessary fit coefficients
+    |                                    |
+    |   integralpar_set_[rel_]gradient   | set integral parameter for gradients
+    |   main_integral                    | and compute the required integrals
+    |                                    |
+    |   gradient_receive_fit_ch          | gradients contributions involving
+    |                                    | the 2-center charge fit integrals
+    |                                    |
+    |   add_fit_ch_grads                 |
+    |                                    |
+    |   core_gradient_calc               |
+    |                                    |
+    |  [send_msgtg(rel_gradient_trafo)]  |
+    |  [relativistic_gradient_calc]      |
+    |                                    |
+    |   gradient_receive_3c              |
+    |                                    |
+    |   transform_to_cart_grads          |
+    |                                    |
+    |   add_xc_grads                     |
+    |                                    |
+    |   post_hoc_deallocate_grad_xc      |
+    |                                    |
+    |   gradient_data_write_cartesians   |
+    |   gradient_data_write_gxfile       |
+    |                                    |
+    |   unique_atom_close                |
+    |   unique_atom_gradinfo_dealloc     |
+    |                                    |
+    |   eigvec_occ_dealloc(eigval_also)  |
+    |   gradient_data_shutdown           |
+    |                                    |
+    | END IF                             | 
+    +------------------------------------+
+</PRE>
+
+
+
+</FONT>
+</BODY>
+
+</HTML>

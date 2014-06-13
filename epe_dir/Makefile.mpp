@@ -1,0 +1,202 @@
+#
+# ParaGauss, a program package for high-performance computations
+# of molecular systems
+# Copyright (C) 2014
+# T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+# M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+# A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+# T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+# M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+# M. Roderus, N. Rösch
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as published
+# by the Free Software Foundation [1].
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Please see the accompanying LICENSE file for further information.
+#
+### To obtain working Makefile, type: mpp <machine>; makedependent -d
+#### Directory for PVM Executable ####
+
+#IPP:DEC# HOME = /home1
+#IPP:LINUX_THEO# HOME = /users/ttfs
+#IPP:LINUX_KRSK# HOME = /home
+#IPP:SGI_THEO# HOME = /home/ttfs
+
+#IPP:SGI_THEO#BIN = $(HOME)/bin.sgi
+#IPP:LINUX_THEO#BIN = $(HOME)/bin
+#IPP:VPP_LRZ#BIN = $(HOME)/bin
+TMP = /scratch
+#IPP:VPP_LRZ#TMP = $(HOME)/tmp
+
+#MPP:SGI#  PVMBIN =     /soft/pvm3/bin/SGIMP64
+#MPP:DEC_SER# VERS = V2.0vn1_ser
+#MPP:DEC_SER:DEC_PVM:DEC_MPI# MACH = DEC
+#MPP:SGI:SGI_SER:SGI_MPI#  MACH =       SGI
+#### NAME OF EXECUTABLE ####
+#MPP:DEC_SER:DEC_PVM:DEC_MPI#EXE	=	/home/exe/epe_3.exe
+#MPP:SGI:SGI_SER#EXE	=	$(PVMBIN)/epe_3.exe
+
+#### COMPILER ####
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI# FC =        f90
+#MPP:DEC_SER:DEC_PVM:DEC_MPI# FC = f95
+
+#### COMPILER FLAGS ####
+## F90BASEFLAGS free  form Fortran 90 flags (always used)
+## FBASEFLAGS   fixed form Fortran 90 flags (always used)
+## F90FLAGS    additonal Fortran 90 flags
+## F90ALTFLAGS additonal Fortran 90 alternate flags (see makro ALTFLAGS below to see for which files)
+## Additional flags can also be included in a file termed <sourcefile>.flags .
+## In this case, neither F90FLAGS nor F90ALTFLAGS are used.
+## CCFLAGS  C compiler flags
+## F77FLAGS Fortran 77
+#MPP:DEC_SER:DEC_PVM:DEC_MPI# F90BASEFLAGS = -arch host -O4 -tune host
+#MPP:DEC_SER:DEC_PVM:DEC_MPI# F90ALTFLAGS = -arch host -O0 -tune host
+#MPP:DEC_SER:DEC_PVM:DEC_MPI# F90FLAGS = -O4
+#MPP:SGI:SGI_SER:SGI_MPI## -O3 aggressive optimization that might affect floating point results.
+#MPP:SGI:SGI_SER:SGI_MPI## -O2 (-O) turns on global optimizations. This is the default
+#MPP:SGI:SGI_SER:SGI_MPI## --fullwarn -extend_source -nocpp
+#MPP:SGI:SGI_SER:SGI_MPI## F90FLAGS = -g2 -DEBUG:subscript_check
+#MPP:SGI:SGI_SER:SGI_MPI## F90ALTFLAGS = -g2 -DEBUG:subscript_check
+#MPP:SGI:SGI_SER:SGI_MPI## LINKFLAGS = -64  -g2 -r10000 -fullwarn -nocpp
+#MPP:SGI:SGI_SER:SGI_MPI# F90FLAGS = -O2 -OPT:Olimit=0
+#MPP:SGI:SGI_SER:SGI_MPI# F90ALTFLAGS = -O3 -OPT:Olimit=0
+#MPP:SGI:SGI_SER:SGI_MPI# LINKFLAGS = -64 -r10000 -fullwarn
+#MPP:SGI:SGI_SER:SGI_MPI# CCFLAGS = -64 -r10000
+
+#### LDFLAGS, LIBRARY-PATH ####
+#MPP:SGI#LIBS    = -L/soft/pvm3/lib -L/soft/pvm3/lib/SGIMP64 -lfpvm3 -lpvm3 -lcomplib.sgimath -lblas
+#MPP:SGI#INCLUDE        = -I$(BASEDIR)/modules -I$(BASEDIR)/comm/pvm_dir -I/soft/pvm3/include
+
+#MPP:SGI_SER#LIBS    = -lcomplib.sgimath -lblas
+#MPP:SGI_SER#INCLUDE    = -I$(BASEDIR)/modules -I$(BASEDIR)/comm/serial_dir
+
+#MPP:SGI_MPI#LIBS    = -L/soft/mpi/mpich2/mpich/lib/IRIX64/ch_shmem -lmpich -lfmpich -lcomplib.sgimath -lblas
+#MPP:SGI_MPI#INCLUDE    = -I$(BASEDIR)/modules -I/soft/mpi/mpich2/mpich/include -I$(BASEDIR)/comm/mpi_dir -I$(BASEDIR)/comm/mpi_dir/vpp
+
+#### Directory where Scripts are stored #####
+BINDIR =        $(BASEDIR)/bin
+
+#MPP:DEC_SER:DEC_PVM:DEC_MPI# BASEDIR = /vobs/ttfs
+#MPP:SGI:SGI_SER:SGI_SER#  BASEDIR =    /vobs/ttfs
+
+#### LDFLAGS, LIBRARY-PATH #####
+#MPP:DEC_SER:DEC_MPI#LIBS    =
+#MPP:DEC_SER:DEC_MPI#INCLUDE    = -I$(BASEDIR)/modules -I$(BASEDIR)/comm/serial_dir  -I$(BASEDIR)/epe_dir
+###INCLUDE	= -I/vobs/ttfs/modules -I/vobs/ttfs/comm/serial_dir -I/vobs/ttfs
+
+# for makedependent:    MODOBJS OBJS
+
+OBJS =  ../epe_dir/main.o	 read_epe_input.o
+
+MODOBJS = ../modules/type_module.o  ../modules/datatype.o  \
+	../modules/filename_module.o ../modules/iounitadmin_module.o epecom_module.o culon_module.o	\
+	mol_module.o	\
+	str_module.o	\
+	epe_pg_module.o atoms_parameters_module.o	\
+	main_epe_module.o   \
+	minepe_module.o  \
+	../comm/serial_dir/commpack_module.o 
+
+
+
+.SUFFIXES: .f90  .f90p  .o .mod
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#.f90.o:
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#	$(BINDIR)/compile $(@D) $(<F)  $(MACH) \
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#.f90.mod:
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+#.f90p.o:
+#	/vobs/ttfs/bin/compile -pp /vobs/ttfs/bin/f90pp  DEC_SER $(*F).f90 $(@D) $(<F) DEC_SER \
+#	$(FC) '$(F90FLAGS)' '$(F90FLAGS)' '$(F90FLAGS)' '$(INCLUDE)'
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#.f90p.o:
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(<F) $(MACH) \
+#MPP:HP:HP_SER:SGI:SGI_SER:SGI_MPI:DEC_SER:DEC_PVM:DEC_MPI#	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+$(EXE):	$(MODOBJS) $(OBJS)
+	$(FC)  -o	$(EXE)	$(MODOBJS) $(OBJS) 
+	chmod 777 $(EXE)
+# end of implicit rules
+
+
+# makedependent start insert
+# makedependent end insert
+
+#####f SPECIAL COMMANDS #####
+epe_scripts = make_periodic_optimization make_epe_reference make_epe_relaxation use_epe_reference \
+                   no_epe_relaxation make_reg_reference no_geo_optimization no_recover_opt \
+                   save_gx_reg save_reg_reference
+allepe:
+	mkdir $(TMP)/bin
+	cp $(epe_scripts) $(TMP)/bin
+	chmod  ugo+wrx $(TMP)/bin/*
+	cp -p $(TMP)/bin/* $(BIN) 
+	rm -rf $(TMP)/bin
+
+all_epe: make_epe_ref make_epe_rel no_epe_rel use_epe_ref make_reg_ref \
+ save_reg_ref no_geo_opt no_recover make_periodic_opt 
+make_periodic_opt:
+	cp make_periodic_optimization /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/make_periodic_optimization
+	chmod +x /$(HOME)/bin/make_periodic_optimization
+make_epe_ref: 
+	cp make_epe_reference /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/make_epe_reference
+	chmod +x /$(HOME)/bin/make_epe_reference
+make_epe_rel:
+	cp make_epe_relaxation /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/make_epe_relaxation
+	chmod +x /$(HOME)/bin/make_epe_relaxation
+use_epe_ref:
+	cp use_epe_reference /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/use_epe_reference
+	chmod +x  /$(HOME)/bin/use_epe_reference
+no_epe_rel:
+	cp  no_epe_relaxation /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/no_epe_relaxation
+	chmod +x  /$(HOME)/bin/no_epe_relaxation
+make_reg_ref:
+	cp  make_reg_reference /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/make_reg_reference
+	chmod +x  /$(HOME)/bin/make_reg_reference
+save_reg_ref:
+	cp  save_reg_reference /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/save_reg_reference
+	chmod +x  /$(HOME)/bin/save_reg_reference
+no_geo_opt:
+	cp  no_geo_optimization /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/no_geo_optimization
+	chmod +x /$(HOME)/bin/no_geo_optimization
+no_recover:
+	cp  no_recover_opt /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/no_recover_opt
+	chmod +x /$(HOME)/bin/no_recover_opt
+gx_reg:
+	cp save_gx_reg /$(HOME)/bin
+	chmod 644 /$(HOME)/bin/save_gx_reg
+	chmod +x /$(HOME)/bin/save_gx_reg
+	
+
+realclean:      clean depclean
+clean:          modclean  #rm all objects
+	rm -f $(OBJS)
+	rm -f $(MODOBJS)
+depclean:       #rm all .dep files that contain dependencies of files
+	rm -f $(OBJS:.o=.dep)
+	rm -f $(MODOBJS:.o=.dep)
+
+modclean:
+	rm -f $(MODOBJS:.o=.mod)
+
+backupclean: #rm backup files automatically created by emacs, merges, makedependent
+	rm -f *~ */*~ *.contrib* */*.contrib* *.merge* */*.merge* *.old */*.old findmerge.* *.oldmod */*.oldmod
+

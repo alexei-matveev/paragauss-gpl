@@ -1,0 +1,291 @@
+# &tasks task="Epe_lattice" /
+ &OPERATIONS 
+	OPERATIONS_Epe_lattice=f
+                                              OPERATIONS_make_gx = f
+                                              OPERATIONS_READ_GX = t
+                                  OPERATIONS_SYMM = t  
+                              OPERATIONS_INTEGRAL = t  
+                                   OPERATIONS_SCF = t 
+                               OPERATIONS_GEO_OPT = f  
+                               OPERATIONS_POST_HOC = f 
+                              OPERATIONS_GRADIENTS = f                  
+	OPERATIONS_QM_EPE=t
+	OPERATIONS_gx_EPEFORMAT=t
+ OPERATIONS_DIPOLE=t
+ OPERATIONS_POTENTIAL=t
+/
+ &recover_options save_densmatrix=t 
+  save_scfstate=f read_scfstate=f read_eigenvec=t save_eigenvec=t reset_scfcycle=t
+   /                   
+
+ &OUTPUT OUTPUT_LEVEL = 1 /
+ &PVMOPTIONS N_PROCS = 2  /
+
+ &MAIN_OPTIONS 
+                                                     NUMERIC_EXCH = t
+                                          integrals_on_file = t
+                                         direct_energy_calc = t 
+                      SPIN_RESTRICTED = f,
+			relativistic=t
+ MAX_GEO_ITERATION = 25
+ /
+
+ &SYMMETRY_GROUP POINT_GROUP = 'C1'         /
+
+ # unique atoms
+
+ &UNIQUE_ATOM_NUMBER N_UNIQUE_ATOMS =28/
+
+ # unique atom  1
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+   0.000000000000000E+000   0.000000000000000E+000  0.00000000000E+000
+
+ # unique atom  2
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  -1.48468282E+000  -2.641498020E+000  -0.47600330000E+000
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  -1.48468282E+000  -2.641498020E+000  -0.47600330000E+000
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  -1.48468282E+000  -2.641498020E+000  -0.47600330000E+000
+
+
+ # unique atom  3
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4992238     -2.5995367     -1.8449403 
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4992238     -2.5995367     -1.8449403
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4992238     -2.5995367     -1.8449403
+
+
+ # unique atom  4
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.5008976      2.5966737     -2.5111068
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.5008976      2.5966737     -2.5111068
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.5008976      2.5966737     -2.5111068
+
+
+ # unique atom  5
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  3.0147090      5.1536056     -0.5368935                  
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  3.0147090      5.1536056     -0.5368935
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  3.0147090      5.1536056     -0.5368935
+
+
+ # unique atom  6
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  3.0147090      5.1536056     -0.5368935
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  3.0147090      5.1536056     -0.5368935
+ &UNIQUE_ATOM Z =   8.0000000, n_equal_atoms=1,NAME ="O"             /
+  3.0147090      5.1536056     -0.5368935
+
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+ &UNIQUE_ATOM Z =  13.0000000000000000, n_equal_atoms=1, NAME ="Al"    /
+ 4.4975499      7.7900211      0.0086653
+
+ # unique atom  7
+ &UNIQUE_ATOM Z =   78.0000000, n_equal_atoms=1,NAME ="Pd"             /
+  0.000000000000000E+000   0.000000000000000E+000  4.15737556000E+000
+ &UNIQUE_ATOM Z =   78.0000000, n_equal_atoms=1,NAME ="Pd"             /
+  0.000000000000000E+000   0.000000000000000E+000  4.15737556000E+000
+ &UNIQUE_ATOM Z =   78.0000000, n_equal_atoms=1,NAME ="Pd"             /
+  0.000000000000000E+000   0.000000000000000E+000  4.15737556000E+000
+                                                                
+
+
+~/users/nasluzov/bases/Al_1292.55.642
+~/users/nasluzov/bases/O_952.55.542  
+~/users/nasluzov/bases/O_952.55.542  
+~/users/nasluzov/bases/O_952.55.542  
+
+~/users/nasluzov/bases/Al_1292.55.642
+~/users/nasluzov/bases/Al_1292.55.642
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Al_1292.55.642
+~/users/nasluzov/bases/Al_1292.55.642
+~/users/nasluzov/bases/Al_1292.55.642
+~/users/nasluzov/bases/O_952.55.542  
+~/users/nasluzov/bases/O_952.55.542  
+~/users/nasluzov/bases/O_952.55.542  
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/O_952.55.542  
+~/users/nasluzov/bases/O_952.55.542  
+~/users/nasluzov/bases/O_952.55.542  
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Al_PP_stutt-gorab_timp/Al_basis
+~/users/nasluzov/bases/Pt_21.17.12.7_9.8.5.2
+~/users/nasluzov/bases/Pt_21.17.12.7_9.8.5.2
+~/users/nasluzov/bases/Pt_21.17.12.7_9.8.5.2
+#~/users/nasluzov/bases/Pd_pseudo/lanl2dz/Pd_basis 
+#~/users/nasluzov/bases/Pd_pseudo/lanl2dz/Pd_basis 
+#~/users/nasluzov/bases/Pd_pseudo/lanl2dz/Pd_basis 
+#~/users/nasluzov/bases/Pt/lanl2dz/Pt_basis
+#~/users/nasluzov/bases/Pt/lanl2dz/Pt_basis
+#~/users/nasluzov/bases/Pt/lanl2dz/Pt_basis
+#~/users/nasluzov/nasluzov/bases/Pd_18.13.9_7.6.4_rel
+
+ &MIXING CHMIX =   0.5000000000000000, XCMIX =   0.300, IDYSTR = 5/
+ &CONVERGENCE_LIST 
+  ENERGY_CRITERION =   1.00003E-05, 
+  COEFF_CRITERION       = 1.000E-05
+  COULOMB_CRITERION     = 1.000E-05
+    DENSITY_CRITERION     = 1.000E-05
+
+  MAX_ITERATION = 71 /
+ 
+ &GRID 
+      SYM_REDUCE = t  
+        WEIGHT_GRADS = t /
+
+ &GRIDATOM NRAD =  30, NANG = 171 /Al
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  30, NANG = 171 /Al
+ &GRIDATOM NRAD =  30, NANG = 171 /Al
+ &GRIDATOM NRAD =  10, NANG = 71 /Al 
+ &GRIDATOM NRAD =  30, NANG = 171 /Al
+ &GRIDATOM NRAD =  30, NANG = 171 /Al
+ &GRIDATOM NRAD =  30, NANG = 171 /Al
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  10, NANG = 71 /Al 
+ &GRIDATOM NRAD =  10, NANG = 71 /Al 
+ &GRIDATOM NRAD =  10, NANG = 71 /Al 
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  30, NANG = 171 /O
+ &GRIDATOM NRAD =  10, NANG = 71 /Al
+ &GRIDATOM NRAD =  10, NANG = 71 /Al
+ &GRIDATOM NRAD =  10, NANG = 71 /Al
+ &GRIDATOM NRAD =  10, NANG = 71 /Al
+ &GRIDATOM NRAD =  10, NANG = 71 /Al
+ &GRIDATOM NRAD =  10, NANG = 71 /Al
+ &GRIDATOM NRAD =  50, NANG = 231 /
+ &GRIDATOM NRAD =  50, NANG = 231 /
+ &GRIDATOM NRAD =  50, NANG = 231 /
+
+ &GRID_PH 
+      SYM_REDUCE = t 
+        WEIGHT_GRADS = t /
+
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 10, NANG =71 / 
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 10, NANG =71 / 
+ &GRIDATOM_PH NRAD = 10, NANG =71 / 
+ &GRIDATOM_PH NRAD = 10, NANG =71 / 
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 30, NANG =171 /
+ &GRIDATOM_PH NRAD = 10, NANG =71 /
+ &GRIDATOM_PH NRAD = 10, NANG =71 /
+ &GRIDATOM_PH NRAD = 10, NANG =71 /
+ &GRIDATOM_PH NRAD = 10, NANG =71 /
+ &GRIDATOM_PH NRAD = 10, NANG =71 /
+ &GRIDATOM_PH NRAD = 10, NANG =71 /
+ &GRIDATOM_PH NRAD = 50, NANG =231 /
+ &GRIDATOM_PH NRAD = 50, NANG =231 /
+ &GRIDATOM_PH NRAD = 50, NANG =231 /
+
+ &XC_CONTROL  
+                                XALPHA = T  
+                                   VWN = T  
+           BECKE88 = t  
+            PERDEW = t  
+/
+ &PHXC_CONTROL 
+                             XALPHA_PH = t
+                                VWN_PH = t
+        BECKE88_PH = t 
+         PERDEW_PH = t  
+         /
+ &FERMI
+#    FERMI_GAUSS           =     t     # (the default)
+    FERMI_FERMI           =     FALSE # (the default)
+    FERMI_SINUS           =     FALSE # (the default)
+    FERMI_ENERGY_RANGE    =   0.30000 # (the default)
+    FERMI_SIGMA           =   0.00000 # (the default)
+    FERMI_CUTOFF          =   5.00000 # (the default)
+    FERMI_NEWTON_MAX      =       100 # (the default)
+    FERMI_ACCURACY        = 1.000E-10 # (the default)
+ /
+ &OCCUPATION
+    CHARGE             =  30.000000
+    FIXED_SPIN_DIFF    =      t     # (the default)
+    MAGN_MOMENT        =   2.000000 # (the default)
+    MIN_SPIN_DIFF      =  1.000E-03 # (the default)
+    DIAG_OFFSET_EV     =   1.000000 # (the default)
+    FIXED              =      FALSE # (the default)
+    N_NONEMPTY_IRREPS  =          0 # (the default)
+   HOLE_LOCALIZATION  =      t # (the default)
+    HOLE_UPDATE        =      FALSE # (the default)
+   N_HOLES            =          4 # (the default)
+ /
+192   1 1       0.0000         -4.505635
+191   1 1       1.0000         -4.646612
+190   1 1       1.0000         -4.834004
+189   1 1       1.0000         -4.935755
+
+#192   1 1       0.0000         -4.474749
+#191   1 1       1.0000         -4.662944
+#190   1 1       1.0000         -4.830765
+#189   1 1       1.0000         -4.951535
+
+
+
+
+                      &POPULATION POPULATION_LEVEL = 2  /
+ &POTENTIAL
+    POTENTIAL_TASK       =   "pdc       " # (the default)
+    USE_SAVED_DENSMATRIX =     f # (the default)
+    N_SHELLS             =          4 # (the default)
+    VDW_INCREMENTS       =     1.50000000,    1.70000000,    1.90000000,    2.10000000, # (the default)
+    PDC_CONSTRAINT       =       "charge" # (the default)
+    PDC_OUTPUT           =       "middle"
+#    n_fixed_atoms=12
+#    fixed_atoms=   1,   30,   31,   32,   33,   34,   35,   36,   37,   38,   39,   40,
+#    fixed_charges= 3.0, 3.0,  3.0,  3.0,  3.0,  3.0,  3.0,  3.0,  3.0,  3.0,  3.0,  3.0
+ /POTENTIAL
+ &epe_data EWALDPC = t EPE_EMBEDDING=t EPE_RELAXATION = FALSE /
+
+

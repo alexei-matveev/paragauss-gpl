@@ -1,0 +1,376 @@
+#!/bin/csh
+#
+# This script sets up the environment for the program 'optimizer.exe'
+# which is the new geometry optimizer
+# Calculations take place in the TTFSDATADIR.
+# FN,7/97
+#
+# There are currently THREE arguments for the optimizer-script:
+# 1 ($1):  'setup' OR 'shutdown', to make the script copy the necessary
+#          files into the right directories. For a  manual run, this is
+#          not required.
+# 2 ($2):  number of the geometry iteration (integer number). This is currently used
+#          to number the output file (which I find convenient in contrast to other
+#          people) 
+# 3 ($3):  version label of the optimizer program in the form
+#          optimizer_$3.
+
+set machine = linux
+set OPTBIN  = ~ttfs/bin
+
+set ECHO = /bin/true
+set PIPE = /bin/true
+
+set key  = $1
+set num  = $2
+set vers = $3
+
+if( ! $?machine )then
+	echo "$0 error: environment variable machine is not set"
+	exit 1
+endif
+
+switch ( $machine )
+ case vpp
+   set OPTBIN = ~t3831ak/bin/
+   breaksw
+ case hp
+   set OPTBIN = ~ttfs/bin
+   breaksw
+ case alpha
+   set OPTBIN = /home/bin
+   breaksw
+ case sgi
+   set OPTBIN = ~ttfs/bin.sgi
+   breaksw
+ case sp2
+   set OPTBIN = ~t3831ak/bin
+   breaksw
+ case linux
+   set OPTBIN = ~ttfs/bin
+   breaksw
+ default
+   echo " Sorry. No Optimizer on this platform yet"
+   exit
+endsw
+
+setenv OPTIMIZER $OPTBIN/optimizer_$vers.exe
+
+# if this is just a 'manual' call to optimizer,
+# a number of variables has to be set:
+
+if (! $?TTFSDATADIR ) then
+ setenv TTFSDATADIR `pwd`
+endif
+if (! $?TTFSOPTDIR ) then
+ setenv TTFSOPTDIR `pwd`
+endif
+if ( ! $?TTFSINPUTDIR ) then
+ setenv TTFSINPUTDIR `pwd`
+endif
+if ( ! $?TTFSINPUT ) then
+ setenv TTFSINPUT
+endif
+if ( ! $?TTFSOUTEXTENSION ) then
+ setenv TTFSOUTEXTENSION
+endif
+if ( ! $?GXFILE ) then
+ setenv GXFILE gxfile
+endif 
+
+if ( $key == "" ) then
+ echo "optimizer: Parameter must be specified"
+ exit
+endif
+
+set infile=$key
+if ( $key == "setup") then
+ goto opt_setup
+endif
+if ( $key == "shutdown") then
+ goto opt_shutdown
+endif
+
+if( ! -x $OPTIMIZER )then
+	echo "$0 error: $OPTIMIZER cannot be executed"
+	exit 1
+endif
+
+switch ( $machine )
+ case vpp
+  $ECHO "ttfs/optimizer : start of optimizer-script"
+  $ECHO "                 using executable $OPTIMIZER"
+  if ( ! -e $TTFSDATADIR/gxfile ) then	
+    $ECHO "optimizer: could not find $TTFSDATADIR/gxfile " >> trace_optimizer
+    ls -l $TTFSDATADIR >> trace_optimizer
+    exit
+  endif
+  breaksw
+ default
+  $ECHO "ttfs/optimizer : start of optimizer-script"
+  $ECHO "                 using executable $OPTIMIZER"
+  if ( ! -e $TTFSDATADIR/gxfile ) then	
+    echo "optimizer: could not find $TTFSDATADIR/gxfile"
+    ls -l $TTFSDATADIR
+    exit
+  endif
+endsw
+
+# This is the actual optimzer run ------------------------
+switch ( $machine )
+ case vpp
+   echo "ttfs/optimizer: cd to $TTFSDATADIR to run optimizer	" >> trace_optimizer
+   set actual_dir = `pwd`	
+   cd $TTFSDATADIR	
+   ls -l
+   echo "ttfs/optimizer: running $OPTIMIZER "	>> trace_optimizer
+   $OPTIMIZER >& flepo.stat
+   echo "ttfs/optimizer: $OPTIMIZER done" >> trace_optimizer
+   ls -l >> trace_optimizer
+   cat gxfile >>& flepo.stat
+   echo "ttfs/optimizer: cd back to actual directory"	>> trace_optimizer
+   cd $actual_dir
+   breaksw
+ default
+   $ECHO "ttfs/optimizer: cd to $TTFSDATADIR to run optimizer	"
+   set actual_dir = `pwd`	
+   cd $TTFSDATADIR	
+   ls -l | $PIPE
+   $ECHO "ttfs/optimizer: running $OPTIMIZER "	
+   ls -l $OPTIMIZER | $PIPE
+#  fx $OPTIMIZER
+   $OPTIMIZER >& flepo.stat
+   $ECHO "ttfs/optimizer: $OPTIMIZER done"
+   ls -l | $PIPE
+   cat gxfile >>& flepo.stat
+   $ECHO "ttfs/optimizer: cd back to actual directory"	
+   cd $actual_dir
+endsw
+# --------------------------------------------------------
+
+exit
+
+opt_setup:
+switch ( $machine )
+ case vpp
+  echo " ttfs / opt_setup : start" >> trace_optimizer 
+  ## Simol needs the gxfile in the TTFSOPTDIR  - this could be changed later ##
+  if ( -e $TTFSDATADIR/gxfile ) then
+    echo " copying $TTFSDATADIR/gxfile to  $TTFSOPTDIR/gx.in.$num " >> trace_optimizer
+    cp  $TTFSDATADIR/gxfile $TTFSOPTDIR/gx.in.$num
+    if ( $status != 0 ) then
+     echo " ttfs / opt_setup : ERROR occured" >> trace_optimizer
+    endif
+  else
+   echo " ttfs / opt_setup : error - no gxfile " >> trace_optimizer 
+  endif
+  foreach f (hesse.dat dipole.dat hesse_cartesian.dat line_search.dat delocalized.dat val_coor.dat )
+    if ( -e $TTFSINPUTDIR/$f$TTFSOUTEXTENSION ) then
+	echo " copying $TTFSINPUTDIR/$f$TTFSOUTEXTENSION to $TTFSDATADIR/$f" >> trace_optimizer
+	cp $TTFSINPUTDIR/$f$TTFSOUTEXTENSION $TTFSDATADIR/$f
+    else if ( -e $TTFSINPUTDIR/$f ) then
+	echo " copying $TTFSINPUTDIR/$f to $TTFSDATADIR/$f" >> trace_optimizer
+	cp $TTFSINPUTDIR/$f $TTFSDATADIR/$f
+    endif
+  end
+  breaksw
+ default
+  $ECHO " ttfs / opt_setup : start"
+  ## Simol needs the gxfile in the TTFSOPTDIR  - this could be changed later ##
+  if ( -e $TTFSDATADIR/gxfile ) then
+    $ECHO " copying $TTFSDATADIR/gxfile to  $TTFSOPTDIR/gx.in.$num "
+    cp  $TTFSDATADIR/gxfile $TTFSOPTDIR/gx.in.$num
+    if ( $status != 0 ) then
+     echo " ttfs / opt_setup : ERROR occured"
+    endif
+  else
+   echo " ttfs / opt_setup : error - no gxfile "
+  endif
+  foreach f (hesse.dat dipole.dat hesse_cartesian.dat line_search.dat delocalized.dat val_coor.dat epe.r epe.pcr epe_simol_parameters)
+    if ( -e $TTFSINPUTDIR/$f$TTFSOUTEXTENSION ) then
+	$ECHO " copying $TTFSINPUTDIR/$f$TTFSOUTEXTENSION to $TTFSDATADIR/$f"
+	cp $TTFSINPUTDIR/$f$TTFSOUTEXTENSION $TTFSDATADIR/$f
+    else if ( -e $TTFSINPUTDIR/$f ) then
+	$ECHO " copying $TTFSINPUTDIR/$f to $TTFSDATADIR/$f"
+	cp $TTFSINPUTDIR/$f $TTFSDATADIR/$f
+    endif
+  end
+ ####### EPE files ########
+   foreach f ( epe.r epe.pcr epe_simol_parameters epe.pcs)
+   if ( -e  $TTFSDATADIR/$f) then
+    echo " ttfs / opt_setup : file $TTFSDATADIR/$f exist"
+    else
+    if ( -e $TTFSINPUTDIR/$f ) then
+    echo " copying $TTFSINPUTDIR/$f to $TTFSDATADIR/$f"
+    cp $TTFSINPUTDIR/$f $TTFSDATADIR/$f
+    endif
+    endif
+    end
+endsw
+
+set time = `date`
+switch ( $machine )
+ case vpp
+  echo " Time before start of Optimizer: " >> trace_optimizer
+  echo $time  >> trace_optimizer
+  breaksw
+ default
+  $ECHO " Time before start of Optimizer: "
+  $ECHO $time
+endsw
+ $ECHO " Time before start of Optimizer: " >> $TTFSOUTPUTDIR/trace_output
+ $ECHO $time >> $TTFSOUTPUTDIR/trace_output
+ if (-d $TTFSTMP/outdir) then
+    $ECHO " Time before start of Optimizer: " >> $TTFSTMP/outdir/output
+    $ECHO $time >> $TTFSTMP/outdir/output
+ endif
+
+ exit
+
+opt_shutdown:
+# keep the actual gxfile in the TTFSOPTDIR with the actual loop number appended
+# to its name
+# the output of the optimizer is also kept in this directory
+switch ( $machine )
+ case vpp
+  echo " ttfs/opt_shutdown : start"	>> trace_optimizer
+  echo " ttfs/opt_shutdown: cp actual gxfile to $TTFSOPTDIR/gx.out.$num" >> trace_optimizer
+  cp $TTFSDATADIR/gxfile $TTFSOPTDIR/gx.out.$num
+  echo " ttfs/opt_shutdown: cp actual gxfile to $TTFSOPTDIR/$GXFILE" >> trace_optimizer
+  cp $TTFSDATADIR/gxfile $TTFSINPUTDIR/$GXFILE
+  if ( $status != 0 ) then	
+    echo " ttfs / opt_shutdown : ERROR when trying to copy the gxfile from DATADIR to OPTDIR" >> trace_optimizer
+  endif
+##############     COPY BACK     ##################  
+ foreach f (hesse hesse_cartesian dipole line_search val_coor delocalized )
+  if ( -e $TTFSDATADIR/$f.dat ) then
+   echo " ttfs / opt_shutdown : copy $TTFSDATADIR/$f.dat to $TTFSOPTDIR/$f.$num " >> trace_optimizer
+   cp $TTFSDATADIR/$f.dat $TTFSOPTDIR/$f.$num
+   if ( $status != 0 ) then
+       echo " ttfs / opt_shutdown : ERROR when trying to copy $f.dat from DATADIR to OPTDIR" >> trace_optimizer
+   endif
+   echo " ttfs / opt_shutdown : copy $TTFSDATADIR/$f.dat to $TTFSINPUTDIR/$f.dat$TTFSOUTEXTENSION " >> trace_optimizer
+   cp $TTFSDATADIR/$f.dat $TTFSINPUTDIR/$f.dat$TTFSOUTEXTENSION
+   if ( $status != 0 ) then
+      echo " ttfs / opt_shutdown : ERROR when trying to copy $f.dat from DATADIR to INPUTDIR" >> trace_optimizer
+   endif
+  else
+   echo " ttfs / opt_shutdown : ATTENTION - there is no file $TTFSDATADIR/$f.dat" >> trace_optimizer
+  endif
+ end
+###################################################
+  mv $TTFSDATADIR/flepo.stat $TTFSOPTDIR/flepo.$num
+  if ( $status != 0 ) then
+    echo " ttfs / opt_shutdown : ERROR when trying to move flepo.stat from DATADIR to OPTDIR" >> trace_optimizer
+  endif
+  if ( -e $TTFSDATADIR/xmol_start.xyz ) then
+   echo " ttfs / opt_shutdown : copy $TTFSDATADIR/xmol_start.xyz to $TTFSOPTDIR/xmol_start.xyz.$num"  >> trace_optimizer
+   cp $TTFSDATADIR/xmol_start.xyz $TTFSOPTDIR/xmol_start.xyz.$num
+  else	
+   echo " ttfs / opt_shutdown : ATTENTION - there is no file $TTFSDATADIR/xmol_start.xyz" >> trace_optimizer
+  endif
+  if ( -e $TTFSDATADIR/xmol_update.xyz ) then
+   echo " ttfs / opt_shutdown : copy $TTFSDATADIR/xmol_update.xyz to $TTFSOPTDIR/xmol_update.xyz.$num" >> trace_optimizer
+   cp $TTFSDATADIR/xmol_update.xyz $TTFSOPTDIR/xmol_update.xyz.$num
+  else	
+   echo " ttfs / opt_shutdown : ATTENTION - there is no file $TTFSDATADIR/xmol_update.xyz" >> trace_optimizer
+  endif
+ breaksw
+ default
+  $ECHO " ttfs/opt_shutdown : start"	
+############ COPY GXFILE ########################
+  $ECHO " ttfs/opt_shutdown: cp actual gxfile to $TTFSOPTDIR/gx.out.$num"
+  cp $TTFSDATADIR/gxfile $TTFSOPTDIR/gx.out.$num
+  $ECHO " ttfs/opt_shutdown: cp actual gxfile to $TTFSOPTDIR/$GXFILE"
+  cp $TTFSDATADIR/gxfile $TTFSINPUTDIR/$GXFILE
+  if ( $status != 0 ) then	
+    echo " ttfs / opt_shutdown : ERROR when trying to copy the gxfile from DATADIR to OPTDIR"
+  endif
+##############     COPY BACK     ##################  
+  foreach f (hesse hesse_cartesian dipole line_search val_coor delocalized )
+   if ( -e $TTFSDATADIR/$f.dat ) then
+    $ECHO " ttfs / opt_shutdown : copy $TTFSDATADIR/$f.dat to $TTFSOPTDIR/$f.$num "
+    cp $TTFSDATADIR/$f.dat $TTFSOPTDIR/$f.$num
+    if ( $status != 0 ) then
+        echo " ttfs / opt_shutdown : ERROR when trying to copy $f.dat from DATADIR to OPTDIR" 
+    endif
+    $ECHO " ttfs / opt_shutdown : copy $TTFSDATADIR/$f.dat to $TTFSINPUTDIR/$f.dat$TTFSOUTEXTENSION "
+    cp $TTFSDATADIR/$f.dat $TTFSINPUTDIR/$f.dat$TTFSOUTEXTENSION
+    if ( $status != 0 ) then
+       echo " ttfs / opt_shutdown : ERROR when trying to copy $f.dat from DATADIR to INPUTDIR" 
+    endif
+   else
+    $ECHO " ttfs / opt_shutdown : ATTENTION - there is no file $TTFSDATADIR/$f.dat" 
+   endif
+  end
+############# EPE FILES ###############
+  foreach f (epe.r epe_simol_parameters)
+  if ( -e  $TTFSINPUTDIR/$f) then
+  echo " ttfs / opt_shutdown : file $TTFSINPUTDIR/$f alredy exists "
+  else
+  if ( -e $TTFSDATADIR/$f) then
+  echo " ttfs / opt_shutdown : copy $TTFSDATADIR/$f to $TTFSINPUTDIR/$f"
+   cp $TTFSDATADIR/$f to $TTFSINPUTDIR/$f" 
+   if ( $status != 0 ) then
+   echo " ttfs / opt_shutdown : ERROR when trying to copy $f from DATADIR to INPUTDIR"
+    endif
+    else
+    echo " ttfs / opt_shutdown : ATTENTION - there is no file $TTFSDATADIR/$f"
+    endif
+  endif
+   end
+############# FLEPO.STAT  #################
+  mv $TTFSDATADIR/flepo.stat $TTFSOPTDIR/flepo.$num
+  if ( $status != 0 ) then
+    echo " ttfs / opt_shutdown : ERROR when trying to move flepo.stat from DATADIR to OPTDIR
+  endif
+  if ( -e $TTFSDATADIR/xmol_start.xyz ) then
+   $ECHO " ttfs / opt_shutdown : copy $TTFSDATADIR/xmol_start.xyz to $TTFSOPTDIR/xmol_start.xyz.$num" 
+   cp $TTFSDATADIR/xmol_start.xyz $TTFSOPTDIR/xmol_start.xyz.$num
+  else	
+   $ECHO " ttfs / opt_shutdown : ATTENTION - there is no file $TTFSDATADIR/xmol_start.xyz"
+  endif
+  if ( -e $TTFSDATADIR/xmol_update.xyz ) then
+   $ECHO " ttfs / opt_shutdown : copy $TTFSDATADIR/xmol_update.xyz to $TTFSOPTDIR/xmol_update.xyz.$num" 
+   cp $TTFSDATADIR/xmol_update.xyz $TTFSOPTDIR/xmol_update.xyz.$num
+  else	
+   $ECHO " ttfs / opt_shutdown : ATTENTION - there is no file $TTFSDATADIR/xmol_update.xyz"
+  endif
+#
+# XMOL_MODE files
+# add this to ClearCase controlled version:
+#
+  if( -e $TTFSDATADIR/xmol_mode.1 ) then
+    foreach file ( $TTFSDATADIR/xmol_mode.* )
+      set tofile = `basename $file`
+      set tofile = $TTFSOPTDIR/$tofile
+      $ECHO " ttfs / opt_shutdown : copy $file to $tofile"
+      cp $file $tofile
+    end
+  endif
+endsw
+
+set time = `date`
+switch ( $machine )
+case vpp
+ echo " Time after completion of Optimizer: " >> trace_optimizer
+ echo $time  >> trace_optimizer
+ breaksw
+default
+ $ECHO " Time after completion of Optimizer: "
+ $ECHO $time
+endsw
+ $ECHO " Time after completion of Optimizer: " >> $TTFSOUTPUTDIR/trace_output
+ $ECHO $time >> $TTFSOUTPUTDIR/trace_output
+ if (-d $TTFSTMP/outdir) then
+    $ECHO " Time after completion of Optimizer: " >> $TTFSTMP/outdir/output
+    $ECHO $time >> $TTFSTMP/outdir/output
+ endif
+
+ exit
+
+#
+#end
+#
+
+

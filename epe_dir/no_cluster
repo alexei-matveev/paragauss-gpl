@@ -1,0 +1,45 @@
+cp input input.old
+sed 's/ 13.00/  0.00/g' input \
+|sed 's/ 8.00/ 0.00/g' \
+|sed '/ CHARGE/c\
+ CHARGE = 0.0 ' \
+|sed 's/Al_PP_stutt-gorab_timp/Al_PP_stutt-gorab_timp-ps/g' \
+|sed 's/Al_PP_stuttgart/Al_PP_stuttgart-ps/g' \
+|sed 's/O_PP_stuttgart/O_PP_stuttgart-ps/g' \
+|sed '/GRIDATOM NRAD =  30, NANG = 171 \/O/c\
+&GRIDATOM rslater=f radius=1.14 NRAD =  30, NANG = 171 \/O'\
+|sed '/GRIDATOM NRAD =  10, NANG = 71/c\
+&GRIDATOM rslater=f radius=2.36 NRAD =  10, NANG = 71 \/'\
+|sed '/GRIDATOM NRAD =  30, NANG = 171 \/Al/c\
+&GRIDATOM rslater=f radius=2.36 NRAD =	30, NANG = 171 \/Al'\
+|sed '/GRIDATOM_PH NRAD =  30, NANG = 171 \/O/c\
+&GRIDATOM_PH rslater=f radius=1.14 NRAD = 30, NANG = 171 \/O'\
+|sed '/GRIDATOM_PH NRAD = 30, NANG =171 \/O/c\
+&GRIDATOM_PH rslater=f radius=1.14 NRAD = 30, NANG = 171 \/O'\
+|sed '/GRIDATOM_PH NRAD =  30, NANG = 171 \/Al/c\
+&GRIDATOM_PH rslater=f radius=2.36 NRAD =  30, NANG = 171 \/Al'\
+|sed '/GRIDATOM_PH NRAD = 30, NANG =171 \/Al/c\
+&GRIDATOM_PH rslater=f radius=2.36 NRAD =  30, NANG = 171 \/Al'\
+|sed '/GRIDATOM_PH NRAD =  10, NANG = 71 \/Al/c\
+&GRIDATOM_PH rslater=f radius=2.36 NRAD =  10, NANG = 71 \/Al'\
+|sed '/GRIDATOM_PH NRAD = 10, NANG =71 \/Al/c\
+&GRIDATOM_PH rslater=f radius=2.36 NRAD =  10, NANG = 71 \/Al'\
+|sed '/GRIDATOM NRAD =	30, NANG = 171 \/O/c\
+&GRIDATOM rslater=f radius=1.14 NRAD =	30, NANG = 171 \/O'\
+|sed '/GRIDATOM NRAD =	30, NANG = 171 \/Al/c\
+&GRIDATOM rslater=f radius=2.36 NRAD =	30, NANG = 171 \/Al'\
+|sed '/GRIDATOM NRAD =	10, NANG = 71 \/Al/c\
+&GRIDATOM rslater=f radius=2.36 NRAD =	10, NANG = 71 \/Al'\
+|perl -p -e 's/@GRIDATOM_PH\s*NRAD\s*=\s*10(,|\s)\s*NANG\s*=\s*71/\
+&GRIDATOM_PH rslater=f radius=2.36 NRAD =  10, NANG = 71/i;\
+             s/&GRIDATOM_PH\s*NRAD\s*=\s*30(,|\s)\s*NANG\s*=\s*131\s*\/Al/\
+&GRIDATOM_PH NRAD =  30 NANG =131 rslater=f radius=2.36\/Al/i;\
+             s/&GRIDATOM\s*NRAD\s*=\s*30(,|\s)\s*NANG\s*=\s*131\s*\/Al/\
+&GRIDATOM NRAD =  30 NANG =131 rslater=f radius=2.36\/Al/i;\
+             s/&GRIDATOM\s*NRAD\s*=\s*30(,|\s)\s*NANG\s*=\s*131\s*\/O/\
+&GRIDATOM NRAD =  30 NANG =131 rslater=f radius=1.14\/O/i;\
+             s/&GRIDATOM_PH\s*NRAD\s*=\s*30(,|\s)\s*NANG\s*=\s*131\s*\/O/\
+&GRIDATOM_PH NRAD =  30 NANG =131 rslater=f radius=1.14\/O/i;'\
+ >input.temp
+mv input.temp input
+

@@ -1,0 +1,28 @@
+perl -p -e 's/periodic_optimization\s*=\s*(true|t)/PERIODIC_OPTIMIZATION = FALSE/i; \
+            s/operations_make_reg_reference\s*=\s*(true|t)/OPERATIONS_MAKE_REG_REFERENCE = FALSE/i; \
+            s/qm_interfaced_mode\s*=\s*(false|f)/QM_INTERFACED_MODE = TRUE/i; \
+            s/basic_action\s*=\s*1/BASIC_ACTION = 0/i; \
+            s/make_epe_reference\s*=\s*(false|f)/MAKE_EPE_REFERENCE = TRUE/i; \
+            s/use_epe_reference\s*=\s*(false|f)/USE_EPE_REFERENCE = TRUE/i; \
+            s/use_pgdata\s*=\s*(false|f)/USE_PGDATA = TRUE/i' $1.epe > epe.input
+perl -p -e 's/epe_relaxation\s*=\s*(false|f)/EPE_RELAXATION = TRUE/i; \
+            s/OPERATIONS_QM_EPE\s*=\s*(false|f)/OPERATIONS_QM_EPE=t/i;\
+            s/operations_epe_lattice\s*=\s*(true|t)/OPERATIONS_EPE_LATTICE = FALSE/i; \
+            s/operations_geo_opt\s*=\s*(false|f)/OPERATIONS_GEO_OPT = TRUE/i; \
+            s/operations_post_hoc\s*=\s*(false|f)/OPERATIONS_POST_HOC = TRUE/i; \
+            s/operations_gradients\s*=\s*(false|f)/OPERATIONS_GRADIENTS = TRUE/i; \
+            s/max_geo_iteration\s*=\s*\d+/MAX_GEO_ITERATION = 1/i' input > temp_input
+mv temp_input input
+rm pgepe_reference epe_reference
+cp gx.cv.$1 cellvec
+cp gx.c.$1 gxcfile
+perl -p -e 's/optimization\s*=\s*(true|t)/OPTIMIZATION = FALSE/i; \
+            s/epe_interfaced_mode\s*=\s*(false|f)/EPE_INTERFACED_MODE = TRUE/i; \
+            s/epe_forces\s*=\s*(false|f)/EPE_FORCES = TRUE/i; \
+            s/epeparameters\s*=\s*(false|f)/EPEPARAMETERS = TRUE/i; \
+            s/save_epe_r\s*=\s*(true|t)/SAVE_EPE_R = FALSE/i' optimizer.input > optimizer.inputT
+mv optimizer.inputT optimizer.input
+echo 'Now provide recover files, check inputs and submit PG job'
+echo 'MIND that for this calculations one needs epe_simol_parameters filled in properly'
+cp trace_output trace_output_before_make_epe_ref
+touch make_epe_reference\ step\ executed

@@ -1,0 +1,243 @@
+#!/usr/bin/perl -w
+#
+# ParaGauss, a program package for high-performance computations
+# of molecular systems
+# Copyright (C) 2014
+# T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+# M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+# A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+# T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+# M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+# M. Roderus, N. Rösch
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as published
+# by the Free Software Foundation [1].
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Please see the accompanying LICENSE file for further information.
+#
+#
+# byproduct_build.perl
+#
+# This script runs a build command that produces output files which may
+# remain unchanged as a result of the command.
+#
+# Byproduct files that are not changed will retain their original timestamps.
+#
+# Standard usage assumes that the first provided file is an object file
+# that shouldn't be diff'ed.
+#
+# To diff all output files, use the -noprimary option.
+#
+# Run without arguments for Usage guide.
+#
+$debug=0;
+$noprimary=0;
+$quiet=0;
+
+#******************************************************************************
+# command line parsing
+#
+$argerr=0;
+$argerr=1 if ($#ARGV+1==0);
+
+while (@ARGV) {
+    $arg=shift;
+    for ($arg) {
+        /^-cmp/       && do {$cmpcmd=shift;   last; };
+        /^-bld/       && do {$bldcmd=shift;   last; };
+        /^-provides/  && do {$provides=shift; last; };
+        /^-noprimary/ && do {$noprimary=1;    last; };
+        /^-debug/     && do {$debug=1;        last; };
+	/^-quiet/     && do {$quiet=1;        last; };
+        warn "Error : unexpected argument $arg\n";
+        $argerr=1;
+    }
+}
+defined $cmpcmd || do {$argerr=1; warn "Error : -cmp flag not supplied.\n"};
+defined $bldcmd || do {$argerr=1; warn "Error : -bld flag not supplied.\n"};
+defined $provides || do {$argerr=1; warn "Error : -provides flag not supplied.\n"};
+
+if ($argerr==1) {
+    die(
+        "\nUsage :\n",
+        "\t perl -w ./byproduct_build.perl -bld build_command -provides filenames \\\n",
+        "\t\t-cmp cmp_command [-noprimary]\n",
+        "\n",
+        "Where :\n",
+        "\t-bld build_command\t: \"build_command\" is the complete command\n",
+        "\t\t\t\t  to be run under a sub-shell (/bin/sh on Unix).\n",
+        "\t-provides filenames\t: \"filenames\" is the complete list of files\n",
+        "\t\t\t\t  produced by the build command.\n",
+        "\t-cmp cmp_command\t: \"cmp_command\" is the program used to\n",
+        "\t\t\t\t  compare binary files and return a non-zero\n",
+        "\t\t\t\t  error code if they differ; e.g., \"cmp -s\".\n",
+        "\t-noprimary\t\t: Treat all provided files as byproducts that\n",
+        "\t\t\t\t  might not change as a result of the build\n",
+        "\t\t\t\t  command; e.g., using fsplit or tangle.\n",
+        "\t-debug\t\t\t: Turn on diagnostic printing.\n",
+        "\n",
+        "Notes :\n",
+        "\tUse quotes to enclose multiple words as a single argument.\n",
+        "\n",
+        "Example : (f90 compilation)\n",
+        "\t perl -w ./byproduct_build.perl -bld \"f90 -c a.f90\" \\\n",
+        "\t\t-provides \"a.o a.mod b.mod\" \\\n",
+        "\t\t-cmp \"cmp -s\"\n",
+        "\n");
+}
+
+@provides = split / /,$provides;
+
+#******************************************************************************
+# The main part of the program.
+#
+$exit_val = &REAL_COMPILE;
+$exit_val == 0 || do {
+    &PrintDebug("$provides[0]: build failed, removing @provides");
+    unlink @provides;
+};
+exit $exit_val;
+
+#******************************************************************************
+# In REAL_COMPILE, execute the command and check for differences between
+# the new @provides files and those previously existing.
+#
+sub REAL_COMPILE {
+    my %cmpflag;
+    my @byprods;
+    my ($now, $timestamp, $item, $exit_value);
+
+    $#provides + $noprimary > 0 && do {
+
+        #initialize the byproduct array:
+	@byprods = @provides;
+	$noprimary == 0 && shift(@byprods);
+
+        &PrintDebug("$provides[0]: byproducts = @byprods");
+
+        # Check which byproducts don't exist.
+        # No need to do cmp test on them.
+        foreach $item (@byprods) {
+            if ( -e $item ) {
+                $cmpflag{$item} = &ModTime($item);
+            } else {
+                $cmpflag{$item} = 0;
+            }
+        }
+
+        # Where $cmpflag{$item} is non-zero, it contains the timestamp
+        # for all previously existing byproduct files.
+
+        # Backup any byproduct files
+        foreach $item (@byprods) {
+            ($timestamp = $cmpflag{$item}) == 0 || do {
+                system("cp $item $item\~");
+                utime $timestamp, $timestamp, "$item\~";
+            };
+        }
+    };
+
+    # now do the real compilation.
+    $exit_value = &ECHO_AND_RUN($bldcmd);
+    $exit_value == 0 || do {
+	@byprods && do {
+            foreach $item (@byprods) { # remove backups
+                $cmpflag{$item} == 0 || unlink "$item\~";
+            }
+        };
+        return $exit_value;
+    };
+
+
+    @byprods && do {
+
+        # --------------------------------------------------------------
+        # GNU Make optimization:
+        #
+        # It isn't necessary, but if all updated provided files have the
+        # same timestamp, you won't have to do unnecessary re-evaluation
+        # of "%.byproduct: %.primary" rules in subsequent builds.
+        #
+        # Extract the latest timestamp of all the output files:
+        $now = &MaxModTime(@provides);
+        # Update all provided files to the latest timestamp.
+        utime $now, $now, @provides;
+        # --------------------------------------------------------------
+
+        # For each byproduct file that was backed up, do the comparison.
+        # After each comparison, delete the corresponding backup file.
+        foreach $item (@byprods) {
+            ($timestamp = $cmpflag{$item}) == 0 || do {
+                # File was backed up earlier, so do a comparison.
+                system("$cmpcmd $item $item\~");
+                # If the comparison shows no difference,
+                # back-date the file with the old timestamp.
+                $? == 0 && do {
+                    &PrintDebug("Back-dating $item to old timestamp");
+                    utime $timestamp, $timestamp, $item;
+                };
+                unlink "$item\~";
+            };
+        }
+    };
+
+    return $exit_value;
+}
+
+#******************************************************************************
+# ECHO_AND_RUN prints out the command (to stderr) before executing it.
+# The return value of the routine is the exit value of the command.
+#
+sub ECHO_AND_RUN {
+    my ($mycommand, $exit_value);
+    $mycommand = join(' ',@_);
+    print STDERR "\n$mycommand\n" if ! $quiet;
+    system($mycommand);
+    ($exit_value = $? >> 8)==0 || &PrintDebug("Command failed with error $!");
+    return $exit_value;
+}
+
+#******************************************************************************
+# routine to return maximum ModTime of an array of files:
+sub MaxModTime {
+    my $modtime;
+    my $max = &ModTime(shift(@_));
+    print "max = $max\n" if $debug;
+    foreach $item (@_) {
+        $modtime = &ModTime($item);
+        print "modtime = $modtime\n" if $debug;
+        $max = $modtime if $max < $modtime;
+    }
+    return $max;
+}
+
+#******************************************************************************
+# Put file modification time check into a subroutine to make it easier to
+# change in the event of differences in later versions of Perl.
+sub ModTime {
+    my $ret;
+    my @stat = stat($_[0]);
+    print "stat ( $_[0] ) = @stat\n" if $debug;
+    if(!@stat){
+        $ret = 0;
+    }else{
+        $ret = $stat[9];
+    }
+    print "ret = $ret\n" if $debug;
+    return $ret;
+}
+
+#******************************************************************************
+# A routine to output debugging information if necessary.
+sub PrintDebug {
+    $debug == 1 &&
+        print STDERR "\n\tbyproduct_build.perl:\n\t@_\n";
+}

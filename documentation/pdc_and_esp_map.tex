@@ -1,0 +1,399 @@
+%% LyX 1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[american]{article}
+\usepackage[T1]{fontenc}
+%\usepackage[iso88595]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{array}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\newcommand{\noun}[1]{\textsc{#1}}
+%% Bold symbol macro for standard LaTeX users
+\providecommand{\boldsymbol}[1]{\mbox{\boldmath $#1$}}
+
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{array}
+
+\usepackage{babel}
+\makeatother
+\begin{document}
+
+\title{Potential Derived Charges (PDC) \\
+ and \\
+ ElectroStatic Potential (ESP) maps}
+
+
+\author{Shor A. M.}
+
+\maketitle
+
+\section{Introduction}
+
+{\large ~~~The electrostatic field produced by molecules, clusters
+and largest condense systems plays an important role in their interaction
+with the outside world. In such applications as the molecular simulation
+(MD), the energy minimization and the hybrid quantum mechanical -
+molecular mechanical (QM/MM) methods there is a crucial necessity
+to model the electrostatic interaction as most as accurately. In the
+most part of studies simple atom-centered monopole models are used.
+The straightforward way to compute the charges is to fit the QM molecular
+electrostatic potential calculated at points in space surrounding
+the molecule. It has been shown this approach yields potential derived
+atomic charges which reproduce such molecular properties as the dipole
+and quadrupole moments with reasonable accuracy. }{\large \par}
+
+{\large Some methods have been suggested in the past\cite{Singh,Chirlian,Breneman,Basler,Spackman}.
+The methods reported in all mantioned papers distinguish one from
+the others only in generating the space point grid. In \cite{Singh}
+and \cite{Basler} the molecular surface algorithm of Connolly\cite{Connolly}
+was used to build a set of points on several shells surrounding the
+molecule. The papers \cite{Chirlian,Spackman} describe the method
+based on atom-centered spheres. And at last in \cite{Breneman} the
+procedure which uses regular grids of point was offered (CHELP procedure).
+The methods developed in \cite{Singh,Chirlian,Breneman,Basler} are
+very close to each other and very often called as ESP method.}{\large \par}
+
+{\large Our implementation is based on atom-centered interlocking
+spheres and also can be referred to ESP methods \cite{Basler}. The
+space grid is calculated on the set of molecular surfaces formed by
+van der Waals overlaping spheres centered on each atoms in the molecule
+(cluster). The scheme of grid calculation is chosen to result in the
+same symmetry of space points as the molecule has itself. Values of
+point charges centered at atomic position in the molecule are computed
+to fit the QM electrostatic potential calculated on space grid. Two
+constraints can be applied. The standard constrain is the sum of calculated
+charges has to be equal the total charge of the molecule. The second
+additional constraint is the demand to reproduce the QM dipole moment
+of the considered molecule. The linear least squares fit procedure
+suggested in \cite{Chirlian} was used. The calculated ESP $\hat{V_{i}}$
+is given by \begin{equation}
+\hat{V_{i}}=\sum_{j}\frac{q_{j}}{r_{ij}}\label{eq:1}\end{equation}
+ so the function $\chi_{esp}^{2}$ to be minimized is defined as\begin{equation}
+\chi_{esp}^{2}=\sum_{i}\left(V_{i}-\hat{V}_{i}\right)^{2}\label{eq:2}\end{equation}
+ At the minimum\begin{equation}
+\frac{\partial\left(\chi_{esp}^{2}\right)}{\partial q_{j}}=0\label{eq:3}\end{equation}
+ where \begin{equation}
+\frac{\partial\left(\chi_{esp}^{2}\right)}{\partial q_{j}}=-2\sum_{i}\frac{V_{i}-\hat{V}_{i}}{r_{ij}}=0\label{eq:4}\end{equation}
+ forms a system of linear equations which can by solved in matrix
+form. Both constraints are imposed via Lagrange multipliers:\begin{equation}
+\sum_{i}q_{i}=Q_{total}\label{eq:5}\end{equation}
+ and\begin{equation}
+\sum_{i}q_{i}\cdot r_{i}=d_{total}\label{eq:6}\end{equation}
+} 
+
+{\large It is well known that in a standard ESP procedure where a
+quality of fit to the ESP is only criteria, the charges on atoms located
+in the molecule behind outer atoms ({}``buried'' or {}``hidden'')
+can deviate in wide range and even have unphysical values. This in
+general because space points at which the QM ESP is evaluated are
+relatively far away from and therefore weaker dependent on values
+of {}``hidden'' atomic charges. This feature of a standard ESP model
+results very often in poor transferability of derived charges between
+different conformers of the same chemical fragments. The most power
+and popular method that considerably reduces the problem of {}``hidden''
+atoms is the RESP method\cite{Bayly}. It bases on introducing restraints
+in form of a penalty function into the least-squares fitting procedure.
+With including a penalty function to the charge fitting procedure,
+an additional term has tobe added to $\chi_{esp}^{2}$function so
+the new function to be minimized is now\begin{equation}
+\chi^{2}=\chi_{esp}^{2}+\chi_{rstr}^{2}\label{eq:7}\end{equation}
+ and the least squares minimum is now defined as\begin{equation}
+\frac{\partial\left(\chi^{2}\right)}{\partial q_{j}}=\frac{\partial\left(\chi_{esp}^{2}\right)}{\partial q_{j}}+\frac{\partial\left(\chi_{rstr}^{2}\right)}{\partial q_{j}}=0\label{eq:8}\end{equation}
+} 
+
+{\large Different types of a penalty function can be chosen, but more
+stable results are produced in case of a hyperbolic form of penalty
+function:\begin{equation}
+\chi_{rstr}^{2}=a\sum_{j}\left(\left(q_{j}^{2}+b^{2}\right)^{1/2}-b\right)\label{eq:9}\end{equation}
+ where $a$is a scale factor which define the asymptotic limits of
+the strength of the restraint and $b$determines the {}``tightness''
+of the hyperbola around its minimum. Now the second term in equation
+\ref{eq:8} is \begin{equation}
+\frac{\partial\left(\chi_{rstr}^{2}\right)}{\partial q_{j}}=a\cdot q_{j}\left(q_{j}^{2}+b^{2}\right)^{-1/2}\label{eq:10}\end{equation}
+} 
+
+{\large Modification of the matrix equation\begin{equation}
+\mathbf{Aq=B}\label{eq:11}\end{equation}
+ which is formed from the system of equations \ref{eq:4} is straightforward.
+The off-diaganal elements of $\mathbf{A}$ are the same\begin{equation}
+A_{jk}=\sum_{i}\frac{1}{r_{ij}r_{ik}}\label{eq:12}\end{equation}
+ but the diagonal elements are now given by \begin{equation}
+A_{jj}=\sum_{i}\frac{1}{r_{ij}^{2}}+\frac{\partial\left(\chi_{rstr}^{2}\right)}{\partial q_{j}}\label{eq:13}\end{equation}
+} 
+
+
+\section{User guide}
+
+{\large ~~~The implemented procedure allows to perform calculations
+of potential derived charges (PDC) and electrostatic potential (ESP)
+2-D maps .\par{}}{\large \par}
+
+
+\subsection{Starting Electrostatic potential based tasks}
+
+{\large First of all to initiate the calculation of ESP anyone have
+to specify either TASK variable into namelist TASKS}{\large \par}
+
+\noindent \bigskip{} \texttt{\noun{\large \&TASK}}~\\
+ \texttt{\noun{\large TASK = ''POTENTIAL''}}~\\
+ \texttt{\noun{\large . . . . . .}}~\\
+ \texttt{\noun{\large /TASK}} \bigskip{}
+
+\noindent {\large or switch on OPERATIONS\_POTENTIAL parameter into
+OPERATIONS namelist}{\large \par}
+
+\noindent \bigskip{} \texttt{\large \&OPERATIONS}~\\
+ \texttt{\large . . . . . .}~\\
+ \texttt{\large OPERATIONS\_POTENTIAL = TRUE}~\\
+ \texttt{\large . . . . . .}~\\
+ \texttt{\large /OPERATIONS} \bigskip{}
+
+{\large ESP is calculated in {}``single point'' regime, but there
+is not necessity to do all required settings by hands. Everything
+will be done automatically.\par{}}{\large \par}
+
+
+\subsection{Namelist {}``POTENTIAL''}
+
+{\large The namelist which handles calculations of PDC and ESP 2-D
+map has name} \texttt{\textbf{\large POTENTIAL}}{\large . It can be
+dropped if anyone computes PDC with default options. But if it is
+necessary this namelist can be included in any place of} \noun{\large ParaGauss}
+{\large INPUT file after atomic coordinates specified. }{\large \par}
+
+{\large The main parameter of} \texttt{\textbf{\large POTENTIAL}}
+{\large namelist is} \texttt{\textbf{\large POTENTIAL\_TASK}}{\large .
+It defines the type of calculations. Currently it is allowed} \texttt{\textbf{\large POTENTIAL\_TASK}}
+{\large to have only two values {}``PDC'' or {}``ESP\_MAP''. Depending
+on the calculation type chosen the different set of namelist parameters
+has to be used.}{\large \par}
+
+\texttt{\textbf{\large USE\_SAVED\_DENSMATRIX}} {\large parameter
+allows to use the previously saved density matrix to calculate ESP.
+It can dramatically shorten the time of a job (the default value is
+FALSE). To save the density matrix anyone should specifies the parameter}
+\texttt{\textbf{\large SAVE\_DENSMATRIX}} {\large in namelist RECOVER\_OPTIONS} \bigskip{}
+
+\noindent \texttt{\large \&RECOVER\_OPTIONS}~\\
+ \texttt{\large . . . . . .}~\\
+ \texttt{\large SAVE\_DENSMATRIX = TRUE}~\\
+ \texttt{\large /RECOVER\_OPTIONS}{\large \par}
+
+
+\subsubsection{Calculation of Potential Derived Charges - Task {}``PDC'' }
+
+{\large To carry out PDC calculations the namelist POTENTIAL contains
+the following list of input parameters :}{\large \par}
+
+\noindent \bigskip{} \texttt{\large \&POTENTIAL}~\\
+ \texttt{\large POTENTIAL\_TASK = {}``PDC''}~\\
+ \texttt{\large N\_SHELLS = 4}~\\
+ \texttt{\large VDW\_INCREMENTS = 1.0, 1.2, 1.4, 1.6,}~\\
+ \texttt{\large N\_FIXED\_ATOMS = 0}~\\
+ \texttt{\large FIXED\_ATOMS = 0, 0, 0, ...}~\\
+ \texttt{\large FIXED\_CHARGES = 0.0, 0.0, ...}{\large \par}
+
+\noindent \texttt{\large PDC\_CONSTRAINT = {}``CHARGE''}~\\
+ \texttt{\large PDC\_RESTRAINT = {}``NO''}~\\
+ \texttt{\large RESP\_A = 0.0005}~\\
+ \texttt{\large RESP\_B = 0.1}~\\
+ \texttt{\large N\_SYMM\_GROUPS = 0}~\\
+ \texttt{\large N\_SYMM\_ATOMS = 0, 0, ...}~\\
+ \texttt{\large SYMM\_ATOMS = 0, 0, 0, ...}{\large \par}
+
+\noindent \texttt{\large PDC\_OUTPUT = {}``SHORT''}~\\
+ \texttt{\large USE\_SAVED\_DENSMATRIX = FALSE}~\\
+ \texttt{\large /POTENTIAL} \bigskip{}
+
+\texttt{\textbf{\large N\_SHELL}} {\large parameter defines the number
+of shells surrounding the molecule to calculate space grid (}\texttt{\textbf{\large 1}}{\large $\leq$}\texttt{\textbf{\large N\_SHELL}}{\large $\geq$}\texttt{\textbf{\large 8}}{\large ,
+the default value is} \texttt{\textbf{\large 4}}{\large ).}{\large \par}
+
+\texttt{\textbf{\large VDW\_INCREMENTS}} {\large specifies the multiplies
+of the atomic van der Waals radii for each molecular shell. The number
+of multiplies has to be equal} \texttt{\textbf{\large N\_SHELL}} {\large (
+the default values are} \texttt{\textbf{\large 1.0}}{\large ,} \texttt{\textbf{\large 1.2}}{\large ,}
+\texttt{\textbf{\large 1.4}} {\large and} \texttt{\textbf{\large 1.6}}{\large ).
+The current implementation of PDC bases on the van der Waals radii
+used in UFF force field\cite{Rappe} and derived for 103 first elements
+of the periodic table. }{\large \par}
+
+\texttt{\textbf{\large PDC\_CONSTRAINT}} {\large specifies the constraint
+imposed on calculation of PDC. This parameter has two keywords {}``CHARGE''
+(the default value) and {}``DIPOLE''. The first keyword means that
+the sum of charges calculated has to be equal total charge of molecule
+under study. The second one includes QM dipole moment to the fitting
+procedure. In this case} \noun{\large ParaGauss} {\large automatically
+compute molecular dipole moment. \par{}}{\large \par}
+
+{\large Three next options allow to exclude charges on certain atoms
+from fitting process by fixing their values. }{\large \par}
+
+\texttt{\textbf{\large N\_FIXED\_ATOMS}} {\large determines the total
+number of atoms carring the fixed charges (the default value is} \texttt{\textbf{\large 0}}{\large ). }{\large \par}
+
+\texttt{\textbf{\large FIXED\_ATOMS}} {\large contains the list of
+the unique (from INPUT file) numbers of {}``fixed'' atoms. }{\large \par}
+
+\texttt{\textbf{\large FIXED\_CHARGES}} {\large parameter defines
+the values of the fixed charges. The charges has to be specified in
+accordance with the order of atomic numbers in the} \texttt{\textbf{\large FIXED\_ATOMS}}
+{\large list. \par{}}{\large \par}
+
+{\large Besides two constraints also RESP restraint\cite{Bayly} can
+be applied. The restraint applied is a hyperbolic penalty function
+(see equation \ref{eq:9}). During restraint calculation forced charge
+symmetrization can be imposed on chosen chemically equivalent atoms. }{\large \par}
+
+\texttt{\textbf{\large PDC\_RESTRAINT}} {\large parameter is used
+to switch on restraint and symmetrization computing. It has three
+keywords : {}``NO'' (default value), {}``RESP'' (simple restraint
+conditions) and {}``RESP+SYMM'' (restraint and forced symmetrization). }{\large \par}
+
+{\large Two parameters} \texttt{\textbf{\large RESP\_A}} {\large and}
+\texttt{\textbf{\large RESP\_B}} {\large define the hyperbolic penalty
+function (}\emph{\large a} {\large and} \emph{\large b} {\large in
+equation \ref{eq:9}). The default values are 0.0005 ({}``weak restraint'')
+and 0.1 for} \texttt{\textbf{\large RESP\_A}} {\large and} \texttt{\textbf{\large RESP\_B}}
+{\large correspondingly. }{\large \par}
+
+{\large A forced symmetrization can by applied to different atomic
+group simultaneously. There are three parameters which determine equivalenced
+atoms. }{\large \par}
+
+\texttt{\textbf{\large N\_SYMM\_GROUPS}} {\large defines the number
+of different atomic equivalenced groups. }{\large \par}
+
+\texttt{\textbf{\large N\_SYMM\_ATOMS}} {\large contains the number
+of equivalenced atoms into each group. }{\large \par}
+
+\texttt{\textbf{\large SYMM\_ATOMS}} {\large defines the list of unique
+numbers of atoms to be equivalenced into each group.} \medskip{}
+
+\textit{\small Example of definition of forced symmetrization:}~\\
+ \texttt{\small \&POTENTIAL}~\\
+ \texttt{\small ... ... ... ...}~\\
+ \texttt{\small PDC\_RESTRAINT = {}``RESP+SYMM''}~\\
+ \texttt{\small N\_SYMM\_GROUP = 2~~~~~~~~~~~~~~~~~~~~~2
+atomic group to be equivalenced}~\\
+ \texttt{\small N\_SYMM\_ATOMS = 2,3~~~~~~~~~~~~~~~~~~~2
+atoms in the first group and 3 in the second one}~\\
+ \texttt{\small SYMM\_ATOMS = 3,4,7,8,9~~~~~~~~~~~~~~~atoms
+3 and 4 consist the first group, atoms 7, 8 and 9 are in the second
+one}~\\
+ \texttt{\small ... ... ... ...}~\\
+ \texttt{\small /POTENTIAL} \medskip{}
+
+{\large It is recomended to apply the two step procedure to equivalence
+atomic charges. The first step consists in week restraint procedure.
+The second one is the strong (}\texttt{\textbf{\large RESP\_A}} {\large =
+0.001) restraint and symmetrization procedure. On the second step
+some previously defined atoms carry fixed charges calculated during
+the first step (details can be found in \cite{Bayly}).}{\large \par}
+
+\texttt{\textbf{\large PDC\_OUTPUT}} {\large defines the of output
+information. Three keyword can be used :{}``SHORT'' (the default
+value), {}``MIDDLE'' and {}``LONG''.}{\large \par}
+
+
+\subsubsection{Calculation of 2-D Electrostatic potential map - Task {}``ESP\_MAP''}
+
+{\large The second task which can be done is a calculation of ESP
+map. In this case namelist POTENTIAL contains other list of parameters:} \bigskip{}
+
+\noindent \texttt{\large \&POTENTIAL}~\\
+ \texttt{\large POTENTIAL\_TASK = {}``ESP\_MAP''}~\\
+ \texttt{\large V\_ELECTRONIC = TRUE}~\\
+ \texttt{\large V\_NUCLEAR = TRUE}~\\
+ \texttt{\large V\_PC = FALSE}~\\
+ \texttt{\large FIRST\_POINT = 0.0, 0.0, 0.0}~\\
+ \texttt{\large SECOND\_POINT = 1.0, 0.0, 0.0}~\\
+ \texttt{\large THIRD\_POINT = 0.0, 1.0, 0.0}~\\
+ \texttt{\large XLIMITS = 0.0, 1.0}~\\
+ \texttt{\large YLIMITS = 0.0, 1.0}~\\
+ \texttt{\large XGRID = 20}~\\
+ \texttt{\large YGRID = 20}~\\
+ \texttt{\large OUTPUT\_UNITS = {}``a.u.''}~\\
+ \texttt{\large OUTPUT\_FORMAT = {}``GNUPLOT''}~\\
+ \texttt{\large USE\_SAVED\_DENSMATRIX = FALSE}~\\
+ \texttt{\large /POTENTIAL} \bigskip{}
+
+\texttt{\textbf{\large V\_ELECTRONIC}}{\large ,} \texttt{\textbf{\large V\_NUCLEAR}}
+{\large and} \texttt{\textbf{\large V\_PC}} {\large parameters define
+what part of ESP should be calculated. Here} \texttt{\textbf{\large V\_PC}}
+{\large option handles computing of ESP due to point charges, if specified. }{\large \par}
+
+\texttt{\textbf{\large FIRST\_POINT}}{\large ,} \texttt{\textbf{\large SECOND\_POINT}}
+{\large and} \texttt{\textbf{\large THIRD\_POINT}} {\large parameters
+are three space points defining the plane where ESP to be calculated.
+Simultaneously these points determine the 2-D Cartesian coordinate
+system connected on the plane.} \texttt{\textbf{\large FIRST\_POINT}}
+{\large is the center of coordinates, X axis is directed from} \texttt{\textbf{\large FIRST\_POINT}}
+{\large to} \texttt{\textbf{\large SECOND\_POINT}}{\large . Y axis
+is calculated automatically. }{\large \par}
+
+\texttt{\textbf{\large XLIMITS}} {\large and} \texttt{\textbf{\large YLIMITS}}
+{\large define the limits along X and Y axes correspondingly. }{\large \par}
+
+\texttt{\textbf{\large XGRID}} {\large and} \texttt{\textbf{\large YGRID}}
+{\large parameters define the point grid on the chosen chosen. The
+total number of points are equal} \texttt{\textbf{\large XGRID}}{\large $\times$}\texttt{\textbf{\large YGRID}}
+{\large (the default values is 50 for both parameters). A quality
+of ESP map directly depends on a grid magnitude. }{\large \par}
+
+\texttt{\textbf{\large OUTPUT\_UNITS}} {\large specified the units
+of ESP calculated and the plane coordinate system. There are two keywords
+{}``a.u.'' - atomic units (the default) and {}``eV-a'' (electron
+volt and angstrom). }{\large \par}
+
+{\large To visualize ESP map anyone needs to use graphical program.
+The parameter} \texttt{\textbf{\large OUTPUT\_FORMAT}} {\large allows
+to save final data in three formats:}{\large \par}
+
+\vspace{0.3cm}
+
+\begin{center}\begin{tabular}{|c|p{2cm}|p{3cm}|}
+\hline 
+{\large OUTPUT\_FORMAT}&
+ {\large output files}&
+ {\large graphical program}\tabularnewline
+\hline
+{\large {}``GNUPLOT'' (the default)}&
+ {\large V.gpl}&
+ {\large gnuplot}\tabularnewline
+\hline
+{\large {}``SCILAB''}&
+ {\large Vpoints\par{}}Xpoints Ypoints\par{}xygrid\par{}Cluster&
+scilab\tabularnewline
+\hline
+{}``WORKSHEET''&
+V.txt&
+any program under Windows \tabularnewline
+\hline
+\end{tabular}\end{center}
+
+\vspace{0.3cm}
+
+\begin{thebibliography}{1}
+\bibitem{Singh}U. C. Singh, P. A. Kollman, J. Comp. Chem., V.5, N.2, P.129-145, 1984 
+\bibitem{Chirlian}L. E. Chirlian, M. M. Francl, J. Comp. Chem., V.8, N.6, P.894-905,
+1987 
+\bibitem{Breneman}C. M. Breneman, K. B. Wiberg, J. Comp. Chem., V.11, N.3, P.361-373,
+1990 
+\bibitem{Basler}B. H. Besler, K. M. Merz, P. A. Kollman, J. Comp. Chem., V.11, N.4,
+P.431-439, 1990 
+\bibitem{Spackman}M. A. Spackman, J. Comp. Chem., V.17, N.1, P.1-18, 1996 
+\bibitem{Connolly}M. Connolly, QCPE Program 429, 1982 
+\bibitem{Rappe}A. K. Rappe, C. J. Casewit, K. S. Colwell, W. A. Goddard III, W. M.
+Skiff. J. Am. Chem. Soc., V.114, P.10024, 1992 
+\bibitem{Bayly}C. I. Bayly, P. Cieplak, W. D. Cornell, P. A. Kollman, J. Pys. Chem.,
+V.97, P. 10269, 1993
+\end{thebibliography}
+
+\end{document}

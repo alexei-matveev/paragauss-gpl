@@ -1,0 +1,5 @@
+sed '/&MIXING/a\
+    LVSHIFT_ENERGY    = 1.0' input>inputT
+mv inputT input
+touch level_shift_mix\ command\ executed 
+echo level_shift_mix will be statrted after idystr iterations

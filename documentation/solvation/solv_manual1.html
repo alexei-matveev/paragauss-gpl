@@ -1,0 +1,673 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; CHARSET=UTF-8">
+  <meta name="generator" content="Bluefish 2.0.3" >
+</head>
+<body>
+<div align="center"><font size="4"><b>ParaGauss User's Manual: Special
+Issue: Solvation Effects</b></font></div>
+<br>
+<div align="center"></div>
+<br>
+<div align="center"><font size="4"><i>A. Shor, M. Fuchs, N. Rösch</i></font></div>
+<br>
+<div align="center"></div>
+<br>
+<div align="center"><font size="4"><i>ParaGauss Version V3.0</i></font></div>
+<br>
+<div align="center"></div>
+<br>
+<div align="center"><font size="4"><i>Version 3, 07/06/2007</i></font></div>
+<br>
+<div align="center"></div>
+<br>
+<div align="center"></div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<hr noshade="noshade" size="4">
+&nbsp;
+<h1><font size="3">Solvation Effects</font></h1>
+
+<div style="text-align: justify;"><font size="3">Solvation effects can
+be switched on by adding in the TASK-namelist the line:
+</font></div>
+<font size="3">
+
+<pre>    SOLVATION                   = TRUE </pre>
+
+and respectively in the older fashion in the OPERATIONS-namelist:
+
+<pre>    OPERATIONS_SOLVATION_EFFECT = TRUE </pre>
+</font>
+
+<div style="text-align: justify;"><font size="3">
+To calculate a free
+energy of solvation one has to do both: The calculation in vacuum and
+the calculation in solvation (because the solvation induces of course
+also a change of the electronic charge distribution of the
+molecule). A useful restart (e.g. for optimization) is to
+use SAVE_KSMATRIX and READ_KSMATRIX in the RECOVER namelist or
+SAVE_EIGENVEC and READ_EIGENVEC, respectively. <br></div>
+
+<br>
+<font size="3">The actual script is: <i>ttfs_V3.0</i></font><br>
+<br>
+
+<div style="text-align: justify;"><font size="3">The defaults are
+chosen in a way each user simply can do a typical calculation for an
+molecule in water as solvent only putting the <tt>SOLVATION = TRUE</tt> in
+the Task-namelist.</font><br></div>
+
+<br>
+<font size="3">Different parameters for solvent, model, etc. can be set
+in the:</font><br><br>
+
+<h2><font size="3">Namelist SOLVATION</font></h2>
+<div style="text-align: justify;"><font size="3">Special parameters for
+the solvation model and the solvent can be given in a separate namelist
+SOLVATION (which must then be placed somewhere after the specification
+of atomic coordinates):</font></div>
+
+<pre><font size="2">&SOLVATION
+    SOLVATION_MODEL     = "COSMO"         # (the default)
+    CAVITATION_ENERGY   =    TRUE         # (the default)
+    DISP_REP_ENERGY     =    TRUE         # (the default)
+    ONLY_CAVITIES       =   FALSE         # (the default)
+    VIEW_CAVITY         =   FALSE         # (the default)
+    DIELECTRIC_CONSTANT =  78.400         # (the default)
+    ABS_TEMPERATURE     = 298.000         # (the default)
+    SMOOTHING           = "NO"            # (the default)
+    GEPOL               =      93         # (the default)
+    ATOMIC_RADII        = "BONDI"         # (the default)
+    SOLVENT_RADIUS      =   1.400         # (the default)
+    SOLVENT_VOLUME      =  18.070         # (the default)
+    SCALED_FACTOR       =   1.200         # (the default)
+    POINT_FACTOR        =       1         # (the default)
+    MAX_TES_AREA        =     0.5         # (the default)
+    GET_VDWR            =   FALSE         # (the default)
+    EXTERNAL_VDWR       =       0         # (the default)
+    NO_HYDROGEN_SPHERE  =   FALSE         # (the default)
+    HYDROGEN_NO_SCALE   =    TRUE         # (the default)
+    SOL_START_CYCLE     =       1         # (the default)
+    N_Q_UPDATE          =       1         # (the default)
+    CORRECTION_TYPE     = "Scal_El_Nuc"   # (the default)
+    CENT_TYPE           = "default"       # (the default)
+    WEIGHT_CENT         =   FALSE         # (the default)
+    FRADIO              =   0.700         # (the default)
+    OVERLAP_ANGLE       =  40.000         # (the default)
+    OVERLAP_FACTOR      =   0.770         # (the default)
+    RMIN_GEPOL          =   0.020         # (the default)
+    SPEC_POINT_GROUP    =    "C1"         # (the default)
+    FIX_NUMBER_ADD      =   FALSE         # (the default)
+    CAVITATION_ALL      =   FALSE         # (the default)
+    MIN_AREA            =   1.000e-07     # (the default)
+ /SOLVATION (namelist may be dropped)<br></font></pre>
+
+<h3><font size="3">Description of the options:</font><br></h3>
+
+<dl>
+  <font size="3">SOLVATION_MODEL</font><font size="3"><br>
+  </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">specifies the used solvent model. In the present
+implementation only "COSMO" is available.
+  </font>
+</dl>
+
+<dl>
+  <font size="3">CAVITATION_ENERGY
+  </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">Compute the cavitation (cavity building) part of
+solvation energy. The default is here true. About setting to false see
+description from DISP_REP_ENERGY. </font>
+</dl>
+
+<dl>
+  <font size="3">DISP_REP_ENERGY
+  </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">Compute dispersion and repulsion part of the solvation
+energy. The default is true. Setting to false may reduce the time of
+the initialization part of the program, especially if the solute
+consists of many different element types. For this part depends only on
+the cavity data (despite from the parameters), one may also skip this
+part, if one is only changeing features concerning the electrons from
+one run to another (e.g. basis set or grid). The dispersion and
+repulsion energies will remain the same in this case. The same is true
+for the cavitation part (although here only a single cavity is needed
+and the computing time is very low). If one wants to calculate an
+estimate of the solvation energy without the dispersion/repulsion part
+it is recommended also to skip the cavitation part, because these two
+contributions nearely cancel each other.</font><br>
+</dl>
+
+<dl>
+  <font size="3">CORRECTION_TYPE
+  </font>
+</dl>
+
+<dl style="margin-left: 40px;">
+  <font size="3">Type of the discretization error or tailing
+correction. Possible values are:</font><br>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">
+"Scal_El_Nuc": <br><br></font>
+<div style="margin-left: 40px; text-align: justify;"><font size="3">Scale
+electric and nuclear induced surface charges separately such that each
+fulfills the Gauss law assuming all molecule
+charge is inside the cavity.</font><br></div></div>
+
+<dl style="margin-left: 40px;">
+  <font size="3"> "Scale_Nuclear": <br>
+  </font>
+</dl>
+
+<dl style="margin-left: 80px; text-align: justify;">
+  <font size="3">Scale the electronic induced charges with the same
+scaling factor as the  nuclear induced (which is
+determined as above by the Gauss law). This option is for preparation 
+of an improvement of the correction when
+using gradients (see option "None") when
+using a coarse cavity surface grid. In the moment it is not important for 
+the user. </font><br>
+
+</dl>
+<dl style="margin-left: 40px;">
+  <font size="3">"None": <br>
+  </font>
+</dl>
+
+<dl style="margin-left: 80px; text-align: justify;">
+  <font size="3">Do no correction at all. This is to set (will
+automatically be reset) when calculating gradients
+(and making GeoOpt etc.), because the electronic correction is not 
+variational.</font><br>
+</dl>
+
+<dl style="margin-left: 40px;">
+  <font size="3"> "Charge_Inside":<br>
+  </font>
+</dl>
+
+<dl style="margin-left: 80px; text-align: justify;">
+  <font size="3">Compute the real charge inside the cavity and do the
+charge correction according to this (<a href="#4">4</a>) . This options
+should not be used in the COSMO model (see <a href="#5">5</a>)</font><br>
+</dl>
+
+<dl>
+  <font size="3">SOL_START_CYCLE
+  </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">Number of scf-cycle where the solvent is "switched on".
+(May be important for convergence, if no converged vacuum solution is
+read in in the start.</font><br>
+</dl>
+
+<dl>
+N_Q_UPDATE
+</dl>
+
+<div style="margin-left: 40px;">
+<div style="text-align: justify;">Number of SCF cycles during which
+solvation charges are kept fixed (Can improve SCF convergence).<br></div></div>
+
+<dl>
+ONLY_CAVITIES
+</dl>
+
+<div style="margin-left: 40px;">
+<div style="text-align: justify;">If TRUE running solvation task is
+canceled just after the cavities were built.<br></div></div>
+
+<dl>
+VIEW_CAVITY
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;">Save solvent
+excluded molecular surface in VRML format. File "cavity.wrl" is located
+in INPUT directoty. Using this file and any VRML&nbsp; viewer (there
+are many free viewers for Window and Linux) calculated solvent excluded
+molecular surface can be vizualized</div>
+
+<h4><font size="3">Parameters for cavity building</font></h4>
+
+<font size="3">The cavities consist of some overlapping spheres. They
+are centered around solute atoms and for the electrostatic part also
+additional spheres between atoms may occur (according to the GEPOL
+algorithm). The radii of the atomic spheres are taken to be scaled van
+der Waals radii for the cavity of the electrostatic part. For the
+cavitation energy the pure van der Waals cavity is used and for the
+dispersion repulsion part different solvent accessible surfaces.</font><br>
+
+<dl>
+  <font size="3">SMOOTHING</font><font size="3"><br>
+  </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">Instead of GEPOL algorithm switching function method are
+used that allows smooth appearing and disappearing of cavity surface
+elements. Provides more stable optimization process copmating to standard
+GEPOL approach. To activate : SMOOTHING='FIXPVA' (<a href="#8">8</a>)</font>
+</dl>
+
+<dl>
+  <font size="3">GEPOL
+  </font>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font
+size="3">use to choose between old Gepol87 (<a href="#6">6</a>) and
+new Gepol93 (<a href="#7">7</a>) algorithms building solvent excluded
+molecular surface. The Gepol93 algorithm is generally more
+effective. It uses much less additional spheres to approximate a
+solvent excluded surface and is recommended to be used as default
+method.<br> 
+Two values are possible:<br> 
+93: Gepol93 algorithm <br>
+87: Gepol87 algorithm </div>
+
+<dl>
+  <font size="3">ATOMIC_RADII </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">Allows choose between "Bondi" and "UFF" atomic radii</font>
+</dl>
+
+<dl>
+  <font size="3">SOLVENT_RADIUS </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">is an approximate radius (in Â) of the solvent
+molecules and is only needed to decide where and if additional spheres
+are created to exclude volume where solvent molecules can't get in.</font>
+</dl>
+
+<dl>
+  <font size="3">SCALED_FACTOR </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">is the scaling factor for to get the atomic sphere
+radii of the cavity from the van der Waals radii. It is an empirical
+factor and should not be changed when having no experience about this.
+(Enlarging will blow up the cavity and reduce the solvation effect)</font>
+</dl>
+
+<dl>
+  <font size="3">GET_VDWR </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">is a flag to write out the internal (default) van der
+Waals radii (Bondi)</font>
+</dl>
+
+<dl>
+  <font size="3">EXTERNAL_VDWR </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">number of non default van der Waals radia given in
+EXTERNAL_VDWR namelists </font><a href="#vdw"><font size="3"><u>VAN_DER_WAALS_RADIUS</u></font></a><font
+ size="3">&nbsp; following the SOLVATION namelist</font><br>
+</dl>
+
+<dl>
+  <font size="3">NO_HYDROGEN_SPHERE </font>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">use
+no sphere around hydrogen atoms because the hydrogen is mainly inside
+the spheres of the atoms they are bond to. (This is the default in the
+united atom hartree fock model UAHF used e.g. in Gaussian). The default
+will here change in the next version to false, because the default for 
+radii are the Bondi radii and together this will give a
+better correspondence to the using in Gaussian. </font><br></div>
+
+<dl>
+  <font size="3"> HYDROGEN_NO_SCALE </font>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">Do
+not scale the hydrogen van der Waals radius to get its atomic sphere
+for the (electrostatic part) cavity. (This is the default in Gaussian
+when using Bondi radii). If NO_HYDROGEN_SPHERE=TRUE this switch has no
+effect.</font><br></div>
+
+<dl>
+  <font size="3"> FRADIO </font>
+</dl>
+
+<div style="margin-left: 40px; text-align: justify;"><font size="3">
+controls choosing the pair of spheres between which new sphere should
+be created. The parameter is applied in Gepol87 algorithm. The spheres
+are chosen if a third sphere does not located between them. Permitted
+values for FRADIO located between 0 and 1. If FRADIO decreases number
+of considered pairs of spheres increase and number of additional
+spheres also can increase.</font><br></div>
+
+<dl>
+  <font size="3">OVERLAP_ANGLE</font>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">
+Angle overlapping&nbsp; in Gepol87 algorithm. Permitted values are from
+0 to 180 degree. It controls choosing the pair of spheres. If the
+spheres are overlapped too strong the pair are not considered. Reducing
+this parameter can increase number of considered pairs of spheres</font><br></div>
+
+<dl>
+  <font size="3">OVERLAP_FACTOR</font>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">
+Parameter overlapping applying in Gepol93 algorithm. It characterizes
+the distance between two spheres. Allowed values are between 0 and 1.
+If&nbsp; OVERLAP_FACTOR=0 the spheres should not be overlapped, if
+OVERLAP_FACTOR=1 the spheres are considered as "one inside the other".
+If the spheres are overlapped enough the new sphere are not built</font><br></div>
+
+<dl>
+<font size="3">RMIN_GEPOL</font>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">
+Define (in angstrom) the minimal radius of new sphere. If the new
+sphere has radius smaller than RMIN_GEPOL its creation is discarded</font><br></div>
+
+<dl>
+<font size="3">FIX_NUMBER_ADD</font>
+</dl>
+
+<div style="text-align: justify;"><font size="3"> Allows to keep the
+number of created spheres forming solvent excluded surface fixed. For
+optimization this parameter is always TRUE. </font><br></div>
+
+<h4><font size="3">Tessellation of the cavity surface</font></h4>
+
+<div style="text-align: justify;"><font size="3">The way how to divide
+the cavity surface in little pieces (tessellation) depends mainly on
+the chosen symmetry. There are two ways to choose a finer tessellation
+scheme: </font><br></div>
+
+<dl>
+  <font size="3">POINT_FACTOR </font>
+</dl>
+
+<dl style="margin-left: 40px;">
+  <font size="3">is the number of subdivision in four parts of each
+initial triangular tessera. </font><br></dl>
+
+<dl>
+  <font size="3">MAX_TES_AREA</font>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">is
+the maximum allowed (average) tessera area in A**2. For no subdivision
+or subdivision only according the POINT_FACTOR use e.g.
+MAX_TES_AREA=100.&nbsp; A reasonable value is about 1.0 down to 0.3. </font><br></div>
+
+<dl>
+<font size="3">MIN_AREA</font>
+</dl>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3"> is 
+the minimal permitted tessera area in A**2</font><br></div>
+
+<dl>
+CENT_TYPE
+</dl> 
+
+<div style="text-align: justify; margin-left: 40px;">
+   <font size="3">defines the type of surface tessera center (representative
+point) definition (new variant).<br>
+"Corners" :<br>
+"Sin" :<br>
+"Triangles" :<br>
+"Mass" :<br>
+"Default" : parameter is skipped</font><br></div>
+
+<dl>
+WEIGHT_CENT
+</dr>
+
+<div style="text-align: justify; margin-left: 40px;"> defines the type
+of surface tessera center (representative point) definition (old
+variant). The parameter is skipped if CENT_TYPE parameter is not equal
+"Default"</div>
+
+<h4><font size="3">Solvent Parameters:</font></h4>
+
+<font size="3">DIELECTRIC_CONSTANT</font>
+
+
+<dl style="text-align: justify; margin-left: 40px;">
+  <font size="3">is the static dielectric constant of the solvent
+(which strongly influences the electrostatic part of the solvation
+energy). Default is the value for water.<br></font>
+</dl>
+
+<font size="3">ABS_TEMPERATURE </font>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3">is the absolute temperature in K. It is only needed
+for the calculation of the cavitation (cavity building) energy. </font><br>
+</dl>
+
+<font size="3">SOLVENT_VOLUME </font>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">is
+the molar volume of the solvent in cm^(-3). It is used to calculate
+number densities for the cavitation energy, the dispersion energy and
+the repulsion energy. </font><br></div>
+
+<h3><font size="3"><a name="vdw"></a>Namelist&nbsp;VAN_DER_WAALS_RADIUS</font></h3>
+
+<font size="3">contains user defined van der Waals radii </font>
+
+<pre><font size="2"> &VAN_DER_WAALS_RADIUS
+    NUMBER_UNIQUE_ATOM =   1
+    VDW_RAD            =   1.590
+ /VAN_DER_WAALS_RADIUS</font></pre>
+
+<font size="3">where <br><br></font>
+
+<font size="3">NUMBER_UNIQUE_ATOM <br></font>
+
+<dl style="text-align: justify; margin-left: 40px;">
+  <font size="3">is the index of the unique atom (as defined in the
+input of&nbsp; molecule geometry)&nbsp; to which the van der Waals
+radius<br></font>
+</dl>
+
+<font size="3">VDW_RAD <br></font>
+
+<dl style="margin-left: 40px;">
+  <font size="3">in A is assigned. </font><br>
+</dl>
+
+<h3><font size="3">Namelist OUTPUT_SOLVATION</font></h3>
+
+<pre><font size="2"> &OUTPUT_SOLVATION
+    OUTPUT_CAVITY_DATA    = FALSE # (the default)
+    OUTPUT_CAVITY_LONG    = FALSE # (the default)
+    OUTPUT_SOLV_GRADS     = FALSE # (the default)
+ /OUTPUT_SOLVATION</font></pre>
+
+<font size="3">where <br></font>
+
+<font size="3">OUTPUT_CAVITY_DATA <br></font>
+
+<dl style="margin-left: 40px;">
+  <font size="3">causes the representative tessera points and the
+tessera areas to be printed out.</font><br>
+</dl>
+
+<font size="3">OUTPUT_CAVITY_LONG <br></font>
+
+<dl style="margin-left: 40px;">
+  <font size="3">defines quantity of information printed out (much more
+if TRUE)</font><br>
+</dl>
+
+<font size="3">OUTPUT_SOLV_GRADS </font>
+
+
+<dl style="margin-left: 40px;">
+  <font size="3">forces the output of the separate part of gradients
+caused by the solvation effects. </font>
+</dl>
+
+<h2><font size="3">Namelist DISPER_REPAL</font></h2>
+
+<font size="3">is for an input of external dispersion and repulsion
+parameters. </font>
+
+<pre><font size="2"> &DISPER_REPAL
+    N_DIFFER_SOLV_ATOM =0
+    N_EXTERNAL_POT_PAR =0
+    USE_RAPPE_DATA     = FALSE
+ /DISPER_REPAL<br></font></pre>
+
+<font size="3">N_DIFFER_SOLV_ATOM </font>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">number
+of different elements in the solvent molecule, for example, C6H6
+N_DIFFER_SOLV_ATOM = 2 (H and C). One has to include N_DIFFER_SOLV_ATOM
+namelists </font><a href="#sa"><font size="3"><u>SOLVENT_ATOM</u></font></a><a
+ href="#sa"><br></a></div>
+
+<font size="3">N_EXTERNAL_POT_PAR </font>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">number
+of user specified dispersion and repulsion parameter sets for solvent
+and solute. If N_EXTERNAL_POT_PAR=0, the default dispersion and
+repulsion parameters for H20 as solvent are used. (In this case the
+namelist can be dropped). Otherwise N_EXTERNAL_POT_PAR namelists<a
+ href="#pp"> </a></font><a href="#pp"><font size="3"><u>POTENTIAL_PARAM</u></font></a><font
+ size="3"> has to be included. </font><br></div>
+
+
+<font size="3">USE_RAPPE_DATA </font>
+
+<div style="text-align: justify; margin-left: 40px;"><font size="3">switches
+on the use of (<a href="#3">3</a>) </font><font size="3">data instead
+that one of (<a href="#2">2</a>)</font><font size="3"> (Gaussian
+default) for the dispersion/repulsion parameters. The Caillet data are
+incomplete and usually contributions from elements where no data are
+available are simply ignored. The data of Rappe are complete, but in
+general they give smaller dispersion/repulsion contributions. </font><br></div>
+
+<h3><font size="3"><a name="sa"></a>Namelist&nbsp;SOLVENT_ATOM</font></h3>
+
+<font size="3">This namelists contain the stoichiometry of the solvent
+molecules</font>
+
+<pre><font size="2"> &SOLVENT_ATOM
+    NAME_SOLV_ATOM   ="H "
+    N_SOLV_ATOM      = 2
+ /SOLVENT_ATOM<br></font></pre>
+
+<font size="3">NAME_SOLV_ATOM </font>
+
+<div style="margin-left: 40px;"><font size="3">
+<dl>
+name of solvent atom
+</dl>
+</font></div>
+<font size="3">
+<dl>
+N_SOLV_ATOM
+</dl>
+</font>
+<dl style="margin-left: 40px;">
+number of atoms of that element in the solvent molecule <br>
+</dl>
+<font size="3">The above example may be the first part for the
+description of H2O. For this solvent (if it were not used as default)
+an other namelist SOLVENT_ATOM had to occur with "O" and 1. <br>
+<br>
+
+<h3>&nbsp;<a name="pp"></a>Namelist&nbsp;POTENTIAL_PARAM</h3>
+
+specifies user defined dispersion and repulsion parameters neither the
+Caillet nor the Rappe data shall be used for all elements. (e.g. also
+if only the data set for one element shall be changed). The number of
+namelists of that kind has to be given in N_EXTERNAL_POT_PARAM (see
+above). <br>
+The distant dependent potentials are given in the parametrized form (</font><a
+ href="#1"><font size="3"><u>1</u></font></a><font size="3">): <br>
+E_dis(r)=-k_ij*A*Exp(-12.35*r/r_ij)* (r_ij/r)**6 <br>
+E_rep(r)=k_ij*C*Exp(-12.35*r/r_ij) <br>
+A=-0.214 kcal/mol <br>
+C=47000 kcal/mol </font>
+
+<pre><font size="2"> &POTENTIAL_PARAM
+    ATOM    =    "F "
+    K_ATOM  =     1.5
+    R0_ATOM =   1.452
+ /POTENTIAL_PARAM<br></font></pre>
+
+
+<font size="3">ATOM </font>
+
+<dl style="margin-left: 40px;">
+  <font size="3">is the name of the atom for the specified parameters</font><br>
+</dl>
+
+<font size="3">K_ATOM </font>
+
+<dl style="margin-left: 40px;">
+  <font size="3">gives the parameter k_ij by k_ij=K_ATOM_1*K_ATOM_2</font><br>
+</dl>
+
+<font size="3">R0_ATOM </font>
+
+<dl style="margin-left: 40px;">
+  <font size="3">gives the r_ij parameter by r_ij =
+2*sqrt(R0_ATOM_1*R0_ATOM_2). Parameter in Â. </font><br>
+</dl>
+<dl>
+  <font size="3"> &nbsp; </font>
+</dl>
+
+<h1><font size="3">References:</font></h1>
+<a name="1"></a>1. <font size="3">A.J. Pertsin and A. I.
+Kitaigorodosky:&nbsp;&nbsp; The atom-atom potential method, Springer
+1986, p 141 <br>
+<a name="2"></a>2. J. Caillet, P. Claverie and B. Pullman 1978, Acta
+Cryst., <b>B34</b>, 3266. <br>
+<a name="3"></a>3.&nbsp;A.K. Rappe, C.J. Casewit, K.S. Colwell, W.A.
+Goddard, W.M. Skiff 1992, J. Am. Chem. Soc. <b>114</b>, 10024 <br>
+<a name="4"></a>4.&nbsp;B. Mennucci and J. Tomasi 1997, J. Chem. Phys. <b>106</b>,
+5151 <br>
+<a name="5"></a>5. D.M. Chipman 1999, J. Chem. Phys. <b>110</b>,
+8012&nbsp; <br>
+<a name="6"></a>6. J.L. Pascual-Ahuir and E. Silla, 1990 J. Comput.
+Chem. <b>12</b>, 1047<br>
+<a name="7"></a>7.J.L. Pascual-Ahuir, E. Silla, I. Tunon, 1994 J.
+Comput. Chem. <b>15</b>, 1128</font><br>
+<a name="8"></a>8.P. Su, H. Li,  2009 J. Chem. Phys. <b>130</b>, 074109</font>
+</body>
+</html>

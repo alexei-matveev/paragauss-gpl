@@ -1,0 +1,91 @@
+!===============================================================
+! Public interface of module
+!===============================================================
+module se_timefunction_module
+  !---------------------------------------------------------------
+  !
+  !  Purpose: provides functions to read the coefficients of a polynomial
+  !           cost function from a standardized ASCII file.
+  !
+  !
+  !  Module called by: se_scheduling_module
+  !
+  !
+  !  Author: Martin Roderus
+  !  Date: 04/2010
+  !
+  !
+  !----------------------------------------------------------------
+  !== Interrupt of public interface of module =====================
+  !----------------------------------------------------------------
+  ! Modifications
+  !----------------------------------------------------------------
+  !
+  ! Modification (Please copy before editing)
+  ! Author: ...
+  ! Date:   ...
+  ! Description: ...
+  !
+  !----------------------------------------------------------------
+
+  use type_module ! type specification parameters
+  !use iounitadmin_module, only: openget_iounit, returnclose_iounit
+  implicit none
+  private         ! by default, all names are private
+  !== Interrupt end of public interface of module =================
+
+
+  !------------ Declaration of types ------------------------------
+  type, public :: se_timefunction_type
+    integer(kind=i4_kind)           :: procCount
+    real(kind=r8_kind), allocatable :: coefficients(:)
+    real(kind=r8_kind)              :: scaleFactor
+    integer(kind=i4_kind)           :: polyDegr
+    integer(kind=i4_kind)           :: minSize
+  end type se_timefunction_type
+
+
+
+  !------------ public functions and subroutines ------------------
+  public se_timefunction_init, se_timefunction_dealloc
+
+  !================================================================
+  ! End of public interface of module
+  !================================================================
+
+  !------------ Declaration of constants and variables ----
+  integer(kind=i4_kind), parameter :: fileUnit = 9898
+  integer(kind=i4_kind), parameter :: dummyLen = 200
+
+
+
+  !----------------------------------------------------------------
+  !------------ Subroutines ---------------------------------------
+contains
+
+  subroutine se_timefunction_init( timeFunctions, filename, iostatus )
+    !  Purpose: initialize 'timeFunctions' of type se_timefunction_type with
+    !  the coefficients of a cost function. In case a filename (with absolute
+    !  path) is given, the coefficients are read from an external ascii file
+    !  with defined syntax. Otherwise 'timeFunctions' is initialized with pre-
+    !  defined values.
+    implicit none
+    !------------ Declaration of formal parameters ---------------
+    type(se_timefunction_type), allocatable, intent(inout)         :: timeFunctions(:)
+    character(len=*),                        intent(in)            :: filename
+    integer,                                 intent(out), optional :: iostatus
+   !** End of interface *****************************************
+    !------------ Declaration of local variables -----------------
+    integer :: i, nFunctions, polyDegr, ios
+    !------------ Executable code --------------------------------
+
+
+    if( len(filename) .gt. 0 ) then
+      call getfunctioninfo( filename, nFunctions, polyDegr, ios )
+      if( ios .eq. 0 ) then
+        call timefunction_allocate( timeFunctions, nFunctions, polyDegr )
+        call readcoefficients( filename, timeFunctions, ios )
+      end if
+      if( present(iostatus) ) iostatus=ios
+    end if
+

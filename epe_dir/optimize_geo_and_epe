@@ -1,0 +1,24 @@
+perl -p -e 's/operations_make_reg_reference\s*=\s*(true|t)/operations_make_reg_reference=f/i; \
+            s/qm_interfaced_mode\s*=\s*(false|f)/qm_interfaced_mode=t/i; \
+            s/basic_action\s*=\s*0/basic_action=1/i; \
+            s/make_epe_reference\s*=\s*(true|t)/make_epe_reference=f/i; \
+            s/use_epe_reference\s*=\s*(false|f)/use_epe_reference=t/i; \
+            s/use_pgdata\s*=\s*(false|f)/use_pgdata=t/i' $1.epe > epe.input
+perl -p -e 's/epe_relaxation\s*=\s*(false|f)/epe_relaxation=t/i; \
+            s/operations_epe_lattice\s*=\s*(true|t)/operations_epe_lattice=f/i; \
+            s/operations_geo_opt\s*=\s*(false|f)/operations_geo_opt=t/i; \
+            s/operations_post_hoc\s*=\s*(false|f)/operations_post_hoc=t/i; \
+	    s/operations_qm_epe\s*=\s*(false|f)/operations_qm_epe=t/i; \
+            s/OPERATIONS_OPTIMIZER_ONLY\s*=\s*(true|t)/OPERATIONS_OPTIMIZER_ONLY=f/i; \
+            s/MAX_GEO_ITERATION\s*=\s*\d+/MAX_GEO_ITERATION=10/i; \
+            s/operations_gradients\s*=\s*(false|f)/operations_gradients=t/i' input > temp_input
+mv  temp_input input
+sed '/stop_after/d' optimizer.input | \
+sed '/&OPERATIONS/a\
+stop_after_epe_relaxation   =  f' | \
+perl -p -e 's/optimization\s*=\s*(false|f)/optimization=t/i; \
+ s/stop_after_epe_relaxation\s*=\s*(true|t)/stop_after_epe_relaxation=f/i;' \
+ >optimizer.inputT
+mv optimizer.inputT optimizer.input
+touch optimize_geo_and_epe\ script\ executed
+

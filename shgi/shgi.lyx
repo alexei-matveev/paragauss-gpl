@@ -1,0 +1,6186 @@
+#LyX 1.6.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\usepackage{a4wide}
+%usepackage{amsfonts}
+%\usepackage[lf]{MinionPro}
+\usepackage{palatino}
+\usepackage{mathpazo}
+\usepackage{graphicx}
+\usepackage{bm}
+\newcommand{\noun}[1]{\textsc{#1}}
+%\renewcommand{\vec}[1]{ \mbox {\boldmath$#1$}}
+\renewcommand{\vec}[1]{ \bm{#1}}
+%setcounter{secnumdepth}{-1}
+%let\tmplength\oddsidemargin
+%setlength{\oddsidemargin}{\evensidemargin}
+%setlength{\evensidemargin}{\tmplength}
+\end_preamble
+\options twoside
+\use_default_options false
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 2
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+SHGI: Integrals with Spherical Harmonics Gaussian
+\end_layout
+
+\begin_layout Author
+Alexei V.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+Matveev, Sergey I.
+ Bosko
+\end_layout
+
+\begin_layout Date
+11.05.05
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Analytic expressions for integrals 
+\begin_inset CommandInset label
+LatexCommand label
+name "ssec:Ints"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In LCAO approximation orbitals 
+\begin_inset Formula $\psi_{\epsilon}(\vec{r})$
+\end_inset
+
+ are linear combination of Gaussian-type orbitals (LCGTO): 
+\begin_inset Formula \begin{equation}
+\psi_{\epsilon}(\vec{r})=\sum_{lm\vec{a}\alpha}c_{\epsilon\, lm\vec{a}\alpha}\left|lm\vec{a}\alpha\right\rangle \end{equation}
+
+\end_inset
+
+ Here 
+\begin_inset Formula $\left|lm\vec{a}\alpha\right\rangle $
+\end_inset
+
+ is a Gaussian of exponent 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ centered at 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ with a real solid harmonic 
+\begin_inset Formula $C_{m}^{l}$
+\end_inset
+
+ describing the angular part 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "book:condon51"
+
+\end_inset
+
+: 
+\begin_inset Formula \begin{equation}
+\left|lm\vec{a}\alpha\right\rangle =[\vec{r}-\vec{a}]_{lm}\exp\left[-\alpha(\vec{r}-\vec{a})^{2}\right]\end{equation}
+
+\end_inset
+
+ A particular advantage of this type of basis functions derives from the
+ fact that functions of arbitrary angular momentum 
+\begin_inset Formula $lm$
+\end_inset
+
+ are related to 
+\emph on
+s
+\emph default
+-type functions (with 
+\begin_inset Formula $l=m=0$
+\end_inset
+
+) in a simple fashion 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dunlap82,dunlap05"
+
+\end_inset
+
+: 
+\begin_inset Formula \begin{equation}
+|lm\vec{a}\alpha\rangle=[\vec{\nabla}]_{lm}|\vec{a}\alpha\rangle=(-1)^{l}[\vec{\nabla}_{a}]_{lm}|\vec{a}\alpha\rangle,\end{equation}
+
+\end_inset
+
+ where we have used the short-hand notation 
+\begin_inset Formula $|\vec{a}\alpha\rangle=|00\vec{a}\alpha\rangle=\exp\left[-\alpha(\vec{r}-\vec{a})^{2}\right]$
+\end_inset
+
+ for an 
+\emph on
+s
+\emph default
+-type, simple Gaussian function.
+ One normally uses normalized (by square norm) Gaussians that differ by
+ a factor 
+\begin_inset Formula $(2\alpha/\pi)^{3/4}$
+\end_inset
+
+ in case of s-type Gaussian and additional factor 
+\begin_inset Formula $[\alpha^{l}(2l-1)!!]^{-1/2}$
+\end_inset
+
+ for nonzero 
+\begin_inset Formula $l$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Thus, one can obtain matrix elements of an operator 
+\begin_inset Formula $O$
+\end_inset
+
+ integrals over functions of arbitrary angular momentum Gaussian by parameter
+ differentiation:
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The short-hand notation 
+\begin_inset Formula $lm_{a}=(l_{a},m_{a})$
+\end_inset
+
+ or similarly 
+\begin_inset Formula $lm_{b}^{\prime}=(l_{b}^{\prime},m_{b}^{\prime})$
+\end_inset
+
+ will be used here and below.
+ It is in part inspired by the implementation that uses a single index 
+\begin_inset Formula $lm$
+\end_inset
+
+ for all spherical harmonics instead of two separate indices 
+\begin_inset Formula $l$
+\end_inset
+
+ and 
+\begin_inset Formula $m$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\begin{split}\langle lm_{a}\vec{a}\alpha|f|lm_{b}\vec{b}\beta\rangle= & (-1)^{l_{a}+l_{b}}[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}\langle\vec{a}\alpha|f|\vec{b}\beta\rangle.\end{split}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The overlap integral of the two 
+\emph on
+s
+\emph default
+-type Gaussian functions 
+\begin_inset Formula $|\vec{a}\alpha\rangle=\exp[-\alpha(\vec{r}-\vec{a})^{2}]$
+\end_inset
+
+ and 
+\begin_inset Formula $|\vec{b}\beta\rangle=\exp[-\beta(\vec{r}-\vec{b})^{2}]$
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+S_{ab}=\langle\vec{a}\alpha|\vec{b}\beta\rangle=\left(\frac{\pi}{\alpha+\beta}\right)^{3/2}\exp[-\zeta(\vec{a}-\vec{b})^{2}]\end{equation}
+
+\end_inset
+
+ with 
+\begin_inset Formula $\zeta=\alpha\beta/(\alpha+\beta)$
+\end_inset
+
+, will be factorized below from all other types of integrals.
+ Scaling 
+\begin_inset Formula $S_{ab}$
+\end_inset
+
+ by the factor 
+\begin_inset Formula $(2\alpha/\pi)^{-3/4}(2\beta/\pi)^{-3/4}$
+\end_inset
+
+, one obtains the overlap of two normalized Gaussians.
+ Kinetic energy matrix elements are given by 
+\begin_inset Formula \[
+K_{ab}=\langle\vec{a}\alpha|-\frac{1}{2}\nabla^{2}|\vec{b}\beta\rangle=\zeta[3-2\zeta(\vec{a}-\vec{b})^{2}]S_{ab}\]
+
+\end_inset
+
+which is also a pure function of 
+\begin_inset Formula $(\vec{a}-\vec{b})^{2}$
+\end_inset
+
+.
+ The matrix elements of the Coulomb potential of a point nucleus at the
+ origin are 
+\begin_inset Formula \begin{equation}
+N_{ab}=\langle\vec{a}\alpha|\frac{1}{r}|\vec{b}\beta\rangle=2\left(\frac{\alpha+\beta}{\pi}\right)^{1/2}I_{0}(\lambda\omega^{2})S_{ab}\label{eq:Nab}\end{equation}
+
+\end_inset
+
+ with 
+\begin_inset Formula $\lambda=\alpha+\beta$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{\omega}=w_{a}\vec{a}+w_{b}\vec{b}$
+\end_inset
+
+, 
+\begin_inset Formula $w_{a}+w_{b}=1$
+\end_inset
+
+, 
+\begin_inset Formula $w_{a}=\alpha/(\alpha+\beta)$
+\end_inset
+
+.
+ The function 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+ is closely related to the incomplete 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ function and the initial member of the series 
+\begin_inset Formula \begin{equation}
+I_{n}(x)=\int_{0}^{1}t^{2n}e^{-xt^{2}}dt,\quad n=0,1,2\ldots\label{eq:In-series}\end{equation}
+
+\end_inset
+
+ whose elements obey a simple relationship between derivatives and higher-rank
+ members: 
+\begin_inset Formula $I_{n}^{\prime}=-I_{n+1}$
+\end_inset
+
+.
+ Matrix elements of the more general Coulomb potential 
+\begin_inset Formula $V_{\gamma}(\vec{r})=\int\rho_{\gamma}(\vec{x})/|\vec{r}-\vec{x}|d^{3}x$
+\end_inset
+
+ with the Gaussian density distribution 
+\begin_inset Formula $\rho_{\gamma}(\vec{r})=\exp[-\gamma r^{2}]$
+\end_inset
+
+ have essentially the same form as 
+\begin_inset Formula $N_{ab}$
+\end_inset
+
+, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Nab"
+
+\end_inset
+
+): 
+\begin_inset Formula \begin{equation}
+C_{ab}=\langle\vec{a}\alpha|V_{\gamma}|\vec{b}\beta\rangle=\frac{2\pi}{\gamma}\eta^{1/2}I_{0}(\lambda\omega^{2})S_{ab}\label{eq:Cab}\end{equation}
+
+\end_inset
+
+ with 
+\begin_inset Formula $\eta=(\alpha+\beta)/(\alpha+\beta+\gamma)$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda=\eta\gamma$
+\end_inset
+
+.
+ By using 
+\begin_inset Formula $(\partial/\partial\gamma)\exp[-\gamma r^{2}]=-r^{2}\exp[-\gamma r^{2}]$
+\end_inset
+
+, the Coulomb integral of an 
+\begin_inset Formula $r^{2}$
+\end_inset
+
+-distribution is easily derived: 
+\begin_inset Formula \begin{equation}
+\begin{split}C_{ab}^{r2} & =-\frac{\partial}{\partial\gamma}C_{ab}=\frac{2\pi}{\gamma^{2}}\eta^{3/2}\left[\omega^{2}\lambda I_{1}+\left(1+\frac{3}{2}\frac{\gamma}{\alpha+\beta}\right)I_{0}\right]S_{ab}.\end{split}
+\label{eq:CR2ab}\end{equation}
+
+\end_inset
+
+All ss-type integrals so far have common structure
+\begin_inset Formula \[
+F_{ab}\sim F(\omega^{2}/2)S(d^{2}/2)\]
+
+\end_inset
+
+with 
+\begin_inset Formula $\vec{\omega}=w_{a}\vec{a}+w_{b}\vec{b}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{d}=\vec{a}-\vec{b}$
+\end_inset
+
+ and different radial functions 
+\begin_inset Formula $F$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray*}
+F_{NUC}\, & = & I_{0}(\lambda\omega^{2}),\quad\lambda=\alpha+\beta\\
+F_{SFIT} & = & I_{0}(\lambda\omega^{2}),\quad\lambda=\eta\gamma\\
+F_{RFIT} & = & \lambda\omega^{2}I_{1}(\lambda\omega^{2})+\left(1+\frac{3}{2}\frac{\gamma}{\alpha+\beta}\right)I_{0}(\lambda\omega^{2}),\quad\lambda=\eta\gamma\end{eqnarray*}
+
+\end_inset
+
+Apart from the factor 
+\begin_inset Formula $(-1)^{l_{a}+l_{b}}$
+\end_inset
+
+ integrals with the nonzero angular momentum functions are given by 
+\begin_inset Quotes eld
+\end_inset
+
+double product rule
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}(F\cdot S) & = & PR(lm_{a},lm_{a}^{\prime},lm_{a}^{\prime\prime})PR(lm_{b},lm_{b}^{\prime},lm_{b}^{\prime\prime})\\
+ & \cdot & ([\vec{\nabla}_{a}]_{lm_{a}^{\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime}}F)\cdot([\vec{\nabla}_{a}]_{lm_{a}^{\prime\prime}}[\vec{\nabla}_{b}]_{lm_{a}^{\prime\prime}}S)\end{eqnarray*}
+
+\end_inset
+
+Here the product rule 
+\begin_inset Quotes eld
+\end_inset
+
+macro
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $PR(lm,lm^{\prime},lm^{\prime\prime})$
+\end_inset
+
+ expands as a sum with coefficient over primed indices.
+ Anyway the double derivative of the product 
+\begin_inset Formula $F\cdot S$
+\end_inset
+
+ may be obtained as a 
+\begin_inset Quotes eld
+\end_inset
+
+product
+\begin_inset Quotes erd
+\end_inset
+
+ of double derivatives of 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $S$
+\end_inset
+
+ (in analogy to how the derivative of the product is obtained from the product
+ of different derivatives).
+ So, the next step should be to find a way to efficiently generate 
+\begin_inset Quotes eld
+\end_inset
+
+double derivatives
+\begin_inset Quotes erd
+\end_inset
+
+ of a function 
+\begin_inset Formula $[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}F$
+\end_inset
+
+.
+ First we note that for the 
+\begin_inset Quotes eld
+\end_inset
+
+pure
+\begin_inset Quotes erd
+\end_inset
+
+ functions of either 
+\begin_inset Formula $\vec{\omega}$
+\end_inset
+
+ or 
+\begin_inset Formula $\vec{d}$
+\end_inset
+
+ the identities hold:
+\begin_inset Formula \begin{eqnarray*}
+\vec{\nabla}_{a} & = & w_{a}\vec{\nabla}_{\omega}\\
+\vec{\nabla}_{b} & = & w_{b}\vec{\nabla}_{\omega}\\
+\vec{\nabla}_{a} & = & -\vec{\nabla}_{b}=\vec{\nabla}_{d}\end{eqnarray*}
+
+\end_inset
+
+when acting on the function of corresponding vector argument.
+ Thus, we may safely strip the center label from the derivatives for the
+ moment and investigate the somewhat more symmetric derivatives 
+\begin_inset Formula $[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Coupling of two angular momenta 
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Xllmalmb-coup"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+Sum-rule:
+\series default
+ For any 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ holds 
+\begin_inset Formula \[
+\sum_{m}^{2l+1}[\vec{a}]_{lm}^{\ast}[\vec{b}]_{lm}=(ab)^{l}P_{l}(\cos\vartheta_{ab}).\]
+
+\end_inset
+
+Therefore for 
+\begin_inset Formula $\vec{a}=\vec{b}=\vec{r}$
+\end_inset
+
+
+\begin_inset Formula \[
+\sum_{m}^{2l+1}[\vec{r}]_{lm}^{\ast}[\vec{r}]_{lm}=r^{2l},\]
+
+\end_inset
+
+and for 
+\begin_inset Formula $\vec{a}=\vec{b}=\vec{\nabla}$
+\end_inset
+
+:
+\begin_inset Formula \[
+\sum_{m}^{2l+1}[\vec{\nabla}]_{lm}^{\ast}[\vec{\nabla}]_{lm}=\Delta^{l}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The angular momentum theory must suggest for homogeneous polynomials
+\begin_inset Formula \[
+[\vec{\omega}]_{lm_{a}}[\vec{\omega}]_{lm_{b}}=\sum_{\Delta(l_{a}l_{b}L)}\sum_{M}^{2L+1}\left(\begin{array}{ccc}
+l_{a} & l_{b} & L\\
+m_{a} & m_{b} & M\end{array}\right)[\omega^{2}]^{(l_{a}+l_{b}-L)/2}[\vec{\omega}]_{LM}\]
+
+\end_inset
+
+with some kind of Clebsch-Gordan coefficients that satisfy the rule of triangle
+ 
+\begin_inset Formula \[
+|l_{a}-l_{b}|\le L\le l_{a}+l_{b},\]
+
+\end_inset
+
+ the parity rule 
+\begin_inset Formula \begin{eqnarray*}
+(l_{a}+l_{b}-L)\,\text{mod}\,2 & = & 0,\quad\text{i.e.}\\
+L\,\text{mod}\,2 & = & (l_{a}+l_{b})\,\text{mod}\,2\end{eqnarray*}
+
+\end_inset
+
+ that allows us to assume that 
+\begin_inset Formula \[
+[\omega^{2}]^{(l_{a}+l_{b}-L)/2}=\omega^{(l_{a}+l_{b}-L)}\]
+
+\end_inset
+
+is indeed an integer power of 
+\begin_inset Formula $\omega^{2}$
+\end_inset
+
+.
+ An example addition of two angular momenta: 
+\begin_inset Formula $l_{a}=l_{b}=1$
+\end_inset
+
+: the range for 
+\begin_inset Formula $L$
+\end_inset
+
+ is 
+\begin_inset Formula $0\le L\le2$
+\end_inset
+
+, and 
+\begin_inset Formula $L$
+\end_inset
+
+ must be even, so that 
+\begin_inset Formula $L=0,2$
+\end_inset
+
+ but not 
+\begin_inset Formula $1$
+\end_inset
+
+.
+ Since the (commutative) algebra of 
+\begin_inset Formula $\omega_{i}$
+\end_inset
+
+ is isomorphic to that of 
+\begin_inset Formula $\nabla_{i}$
+\end_inset
+
+ one might tend to invoke 
+\begin_inset Formula \begin{eqnarray}
+[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F & = & \sum_{\Delta(l_{a}l_{b}L)}\sum_{M}^{2L+1}\left(\begin{array}{ccc}
+l_{a} & l_{b} & L\\
+m_{a} & m_{b} & M\end{array}\right)[\vec{\nabla}]_{LM}[\nabla^{2}]^{(l_{a}+l_{b}-L)/2}F\label{eq:DDcoupled}\\
+ & = & \sum_{\Delta(l_{a}l_{b}L)}R_{l_{a}+l_{b}}^{(L)}(\omega^{2}/2)\sum_{M}^{2L+1}\left(\begin{array}{ccc}
+l_{a} & l_{b} & L\\
+m_{a} & m_{b} & M\end{array}\right)[\vec{\omega}]_{LM}\\
+ & =: & \sum_{\Delta(l_{a}l_{b}L)}R_{l_{a}+l_{b}}^{(L)}(\omega^{2}/2)A_{lm_{a}lm_{b}}^{(L)}(\vec{\omega})\label{eq:DDres}\end{eqnarray}
+
+\end_inset
+
+to evaluate derivatives 
+\begin_inset Formula $[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F$
+\end_inset
+
+.
+ Here the angular dependence is concentrated in 
+\begin_inset Formula $A_{lm_{a}lm_{b}}^{(L)}(\vec{\omega})$
+\end_inset
+
+ and the 
+\begin_inset Quotes eld
+\end_inset
+
+radial
+\begin_inset Quotes erd
+\end_inset
+
+ function 
+\begin_inset Formula $R_{m}^{(n)}(x)$
+\end_inset
+
+ is given by
+\begin_inset Formula \begin{eqnarray}
+R_{m}^{(n)}(x) & = & \frac{\partial^{n}}{\partial x^{n}}\left(2x\frac{\partial^{2}}{\partial x^{2}}+3\frac{\partial}{\partial x}\right)^{(m-n)/2}F(x)\nonumber \\
+ & = & \sum_{l=\frac{m+n}{2}}^{m}P_{l}^{mn}(x)F^{(l)}(x)\label{eq:Rmn}\end{eqnarray}
+
+\end_inset
+
+where 
+\begin_inset Formula $P_{l}^{mn}(x)$
+\end_inset
+
+ are some polynomials of 
+\begin_inset Formula $x$
+\end_inset
+
+ same for all 
+\begin_inset Formula $F$
+\end_inset
+
+.
+ Note that the angular part 
+\begin_inset Formula $A_{lm_{a}lm_{b}}^{(L)}(\vec{\omega})$
+\end_inset
+
+ is independent of particular choice of 
+\begin_inset Formula $F$
+\end_inset
+
+ and is applicable to all kinds of integrals.
+\end_layout
+
+\begin_layout Standard
+This 
+\begin_inset Quotes eld
+\end_inset
+
+coupled
+\begin_inset Quotes erd
+\end_inset
+
+ formalizm would thus lead to relatively high angular momenta used as 
+\emph on
+intermediate
+\emph default
+ quantities which is usually seen as a disadvantage.
+ So the 
+\emph on
+procedure
+\emph default
+ to compute the angular factor presented here might be suboptimal.
+ 
+\end_layout
+
+\begin_layout Standard
+Since polynomials 
+\begin_inset Formula $P_{l}^{mn}(x)$
+\end_inset
+
+ are independent of 
+\begin_inset Formula $F(x)$
+\end_inset
+
+ one may want to incorporate them into the angular factor as well: 
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F & = & \sum_{\Delta(l_{a}l_{b}L)}R_{l_{a}+l_{b}}^{(L)}(\omega^{2}/2)A_{lm_{a}lm_{b}}^{(L)}(\vec{\omega})\\
+ & = & \sum_{l=\max(l_{a}l_{b})}^{l_{a}+l_{b}}F^{(l)}(\omega^{2}/2)X_{lm_{a}lm_{b}}^{(l)}(\vec{\omega})\end{eqnarray*}
+
+\end_inset
+
+where we factored out the derivatives 
+\begin_inset Formula $F^{(l)}$
+\end_inset
+
+ and the rest assigned to the new 
+\begin_inset Quotes eld
+\end_inset
+
+angular
+\begin_inset Quotes erd
+\end_inset
+
+ factor 
+\begin_inset Formula $X_{lm_{a}lm_{b}}^{(l)}(\vec{\omega})$
+\end_inset
+
+.
+ Note that in this way we get the same number of 
+\begin_inset Quotes eld
+\end_inset
+
+independent
+\begin_inset Quotes erd
+\end_inset
+
+ angular parts as the ranges of summation over 
+\begin_inset Formula $l$
+\end_inset
+
+ and 
+\begin_inset Formula $L$
+\end_inset
+
+ suggest.
+ The range of 
+\begin_inset Formula $l$
+\end_inset
+
+ is 
+\begin_inset Formula $(\max(l_{a}l_{b}),\ldots,l_{a}+l_{b})$
+\end_inset
+
+ of the length 
+\begin_inset Formula $1+\min(l_{a}l_{b})$
+\end_inset
+
+.
+ The range of 
+\begin_inset Formula $L$
+\end_inset
+
+ from 
+\begin_inset Formula $|l_{a}-l_{b}|$
+\end_inset
+
+ to 
+\begin_inset Formula $l_{a}+l_{b}$
+\end_inset
+
+ is formally of the length 
+\begin_inset Formula $1+2\min(l_{a}l_{b})$
+\end_inset
+
+, however selecting only those equal 
+\emph on
+modulo
+\emph default
+ 2 to lower/upper limits gives exactly as many.
+\end_layout
+
+\begin_layout Subsection
+Look aside: discussion of 
+\begin_inset Quotes eld
+\end_inset
+
+selection rules
+\begin_inset Quotes erd
+\end_inset
+
+ for derivatives 
+\begin_inset Formula $F^{(l)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Derivatives of which order contribute to 
+\begin_inset Formula $[\vec{\nabla}]_{LM}[\nabla^{2}]^{(l_{a}+l_{b}-L)/2}F$
+\end_inset
+
+ and finally to 
+\begin_inset Formula $[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F$
+\end_inset
+
+? The Laplacian 
+\begin_inset Formula $\nabla^{2}$
+\end_inset
+
+ is a 
+\begin_inset Quotes eld
+\end_inset
+
+spherically symmetric
+\begin_inset Quotes erd
+\end_inset
+
+ that results in:
+\begin_inset Formula \[
+\nabla^{2}F(\omega^{2}/2)=\omega^{2}F^{(2)}(\omega^{2}/2)+3F^{(1)}(\omega^{2}/2)\]
+
+\end_inset
+
+ or with simplified arguments and in operator notation:
+\begin_inset Formula \[
+\nabla^{2}F=\left(2x\frac{\partial^{2}}{\partial x^{2}}+3\frac{\partial}{\partial x}\right)F(x)\quad x:=\omega^{2}/2\]
+
+\end_inset
+
+By induction one may show that is defined by derivative range:
+\begin_inset Formula \[
+[\nabla^{2}]^{n}F\leftarrow F^{(n)},\ldots,F^{(2n)}\]
+
+\end_inset
+
+By taking 
+\begin_inset Formula $n=(l_{a}+l_{b}-L)/2$
+\end_inset
+
+ and applying additional 
+\begin_inset Formula $[\vec{\nabla}]_{LM}$
+\end_inset
+
+ that rises the derivative order by 
+\begin_inset Formula $L$
+\end_inset
+
+ one obtains that 
+\begin_inset Formula \[
+[\vec{\nabla}]_{LM}[\nabla^{2}]^{(l_{a}+l_{b}-L)/2}F\leftarrow F^{(l_{a}+l_{b}+L)/2},\ldots,F^{(l_{a}+l_{b})}\]
+
+\end_inset
+
+The lower limit of 
+\begin_inset Formula $(l_{a}+l_{b}+L)/2$
+\end_inset
+
+ (after summation over 
+\begin_inset Formula $L$
+\end_inset
+
+) is 
+\begin_inset Formula $(l_{a}+l_{b}+|l_{a}-l_{b}|)/2$
+\end_inset
+
+; assuming for the moment that 
+\begin_inset Formula $l_{a}\ge l_{b}$
+\end_inset
+
+ we get the lower limit 
+\begin_inset Formula $l_{a}=\max(l_{a},l_{b})$
+\end_inset
+
+.
+ Thus:
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F\leftarrow F^{(\max(l_{a},l_{b}))},\ldots,F^{(l_{a}+l_{b})}\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Similarly starting from the expression 
+\begin_inset Formula $[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F$
+\end_inset
+
+, interchanging 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ so that the greater of 
+\begin_inset Formula $lm_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $lm_{b}$
+\end_inset
+
+ is applied first one deduces that expansion starts with 
+\begin_inset Formula $F^{(\max(l_{a}l_{b}))}$
+\end_inset
+
+ and ends with 
+\begin_inset Formula $F^{(l_{a}+l_{b})}$
+\end_inset
+
+.
+ This latter way of deriving 
+\begin_inset Quotes eld
+\end_inset
+
+selection rules
+\begin_inset Quotes erd
+\end_inset
+
+ is applicable to any number of derivatives, e.g.
+\begin_inset space ~
+\end_inset
+
+3 as in 
+\begin_inset Formula $[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}[\vec{\nabla}]_{lm_{c}}F$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+An uncoupled way to compute the angular factor 
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Xllmalmb-unc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A comparison of the 
+\begin_inset Quotes eld
+\end_inset
+
+decoupled
+\begin_inset Quotes erd
+\end_inset
+
+ form
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F=\sum_{l=\max(l_{a}l_{b})}^{l_{a}+l_{b}}F^{(l)}(\omega^{2}/2)X_{lm_{a}lm_{b}}^{(l)}(\vec{\omega})\]
+
+\end_inset
+
+ and a straitforward application of  two derivatives with the help of product
+ rule
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}F(\omega^{2}/2) & = & [\vec{\nabla}]_{lm_{a}}F^{(l_{b})}(\omega^{2}/2)[\vec{\omega}]_{lm_{b}}\\
+ & = & PR(lm_{a},lm^{\prime},lm^{\prime\prime})F^{(l_{b}+l^{\prime})}(\omega^{2}/2)[\vec{\omega}]_{lm^{\prime}}[\vec{\nabla}]_{lm^{\prime\prime}}[\vec{\omega}]_{lm_{b}}\end{eqnarray*}
+
+\end_inset
+
+gives us another expression for angular part
+\begin_inset Formula \[
+X_{lm_{a}lm_{b}}^{(l)}(\vec{\omega})=\sum_{m^{\prime}m^{\prime\prime}}\epsilon_{l-l_{b}m^{\prime}m^{\prime\prime}}^{l_{a}m_{a}}[\vec{\omega}]_{m^{\prime}}^{l-l_{b}}[\vec{\nabla}]_{m^{\prime\prime}}^{l_{a}+l_{b}-l}[\vec{\omega}]_{m_{b}}^{l_{b}},\quad\max(l_{a}l_{b})\le l\le l_{a}+l_{b}\]
+
+\end_inset
+
+Here the coefficients 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ are those of the product rule expansion
+\begin_inset Formula \[
+PR:\quad[\vec{\nabla}]_{lm}(f\cdot g)=\sum_{lm^{\prime},lm^{\prime\prime}}^{l^{\prime}+l^{\prime\prime}=l}\epsilon_{l^{\prime}m^{\prime}m^{\prime\prime}}^{lm}([\vec{\nabla}]_{lm^{\prime}}f)\cdot([\vec{\nabla}]_{lm^{\prime\prime}}g)\]
+
+\end_inset
+
+To actually evaluate the angular part this way one has to invoke also the
+ differential rule 
+\begin_inset Formula \[
+DR:\quad[\vec{\nabla}]_{lm^{\prime}}[\vec{\omega}]_{lm}=(2l^{\prime}-1)!!\sum_{lm^{\prime\prime}}^{l^{\prime}+l^{\prime\prime}=l}\epsilon_{l^{\prime}m^{\prime}m^{\prime\prime}}^{lm}[\vec{\nabla}]_{lm^{\prime\prime}}\]
+
+\end_inset
+
+The 
+\begin_inset Quotes eld
+\end_inset
+
+uncoupled
+\begin_inset Quotes erd
+\end_inset
+
+ way to compute the angular factors can be extended to any number of spherical
+ derivatives by repeated use of product- and differential rules:
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}[\vec{\nabla}]_{lm_{c}}F=\sum_{l=\max(l_{a}l_{b}l_{c})}^{l_{a}+l_{b}+l_{c}}F^{(l)}(\omega^{2}/2)X_{lm_{a}lm_{b}lm_{c}}^{(l)}(\vec{\omega})\]
+
+\end_inset
+
+with 
+\begin_inset Formula $X_{lm_{a}lm_{b}lm_{c}}^{(l)}(\vec{\omega})$
+\end_inset
+
+ computed similarly to 
+\begin_inset Formula $X_{lm_{a}lm_{b}}^{(l)}(\vec{\omega})\equiv X_{lm_{a}lm_{b}00}^{(l)}(\vec{\omega})$
+\end_inset
+
+.
+ Since derivatives with respect to the same argument commute, the quantities
+ 
+\begin_inset Formula $[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}[\vec{\nabla}]_{lm_{c}}F$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{lm_{a}lm_{b}lm_{c}}^{(l)}(\vec{\omega})$
+\end_inset
+
+ are highly symmetric with respect to permutations of (composite) indices
+ 
+\begin_inset Formula $(lm_{a},lm_{b},lm_{c})$
+\end_inset
+
+.
+ This could be used to save time when computing these quantities.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+This symmetry is currently not used by the implementation.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let us consider as an example a simple polynomial function
+\begin_inset Formula \[
+F_{L}(x):=\frac{x^{L}}{L!},\quad x=\omega^{2}/2\]
+
+\end_inset
+
+Its derivatives are given by
+\begin_inset Formula \begin{eqnarray*}
+F_{L}^{(l)} & = & \frac{x^{L-l}}{(L-l)!},\quad l\le L\\
+F_{L}^{(l)} & = & 0,\quad\quad\quad\quad l>L\end{eqnarray*}
+
+\end_inset
+
+Therefore the single derivative of the function 
+\begin_inset Formula $F_{L}(\omega^{2}/2)$
+\end_inset
+
+ will be given by
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}]_{lm}F_{L} & = & F_{L}^{(l)}X_{lm}^{(l)}(\vec{\omega})\\
+ & = & \frac{\omega^{2(L-l)}}{2^{L-l}(L-l)!}[\vec{\omega}]_{lm},\quad l\le L\\
+{}[\vec{\nabla}]_{LM}F_{L} & = & [\vec{\omega}]_{LM}\equiv X_{LM}^{(L)}(\vec{\omega})\end{eqnarray*}
+
+\end_inset
+
+The last line illustrates the case when 
+\begin_inset Formula $l=L$
+\end_inset
+
+.
+ Application of two spherical harmonic derivatives the trial polynomial
+ will give
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}]_{lm_{1}}[\vec{\nabla}]_{lm_{2}}F_{L} & = & \sum_{l=\max(l_{1}l_{2})}^{l_{1}+l_{2}}F_{L}^{(l)}X_{lm_{1}lm_{2}}^{(l)}(\vec{\omega})\\
+ & = & \sum_{l=\max(l_{1}l_{2})}^{\min(L,l_{1}+l_{2})}\frac{\omega^{2(L-l)}}{2^{L-l}(L-l)!}X_{lm_{1}lm_{2}}^{(l)}(\vec{\omega})\\
+{}[\vec{\nabla}]_{lm_{1}}[\vec{\nabla}]_{LM}F_{L} & = & [\vec{\nabla}]_{lm_{1}}[\vec{\omega}]_{LM}\equiv X_{lm_{1}LM}^{(L)}(\vec{\omega}),\quad l_{1}\le L\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[FIXME: i dont 
+\emph on
+feel
+\emph default
+ it, maybe it is wrong?] The vector functions 
+\begin_inset Formula $X^{(l)}$
+\end_inset
+
+ have a meaning of 
+\begin_inset Quotes eld
+\end_inset
+
+multiple derivative
+\begin_inset Quotes erd
+\end_inset
+
+ of the primitive polynomial 
+\begin_inset Formula \[
+F_{l}(x):=\frac{x^{l}}{l!},\quad x=\omega^{2}/2\]
+
+\end_inset
+
+Indeed
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{1}}\ldots[\vec{\nabla}]_{lm_{p}}F_{l}=X_{lm_{1}\ldots lm_{p}}^{(l)}(\vec{\omega})\]
+
+\end_inset
+
+as 
+\begin_inset Formula $F_{l}^{(l)}=1$
+\end_inset
+
+ is the only non-zero derivative of the polynomial 
+\begin_inset Formula $F_{l}$
+\end_inset
+
+ ??at 
+\begin_inset Formula $x=0$
+\end_inset
+
+ or equivalently 
+\begin_inset Formula $\vec{\omega}=0$
+\end_inset
+
+ ??.
+\end_layout
+
+\begin_layout Standard
+[FIXME: is this more clear?] By expanding 
+\begin_inset Formula $F(x)$
+\end_inset
+
+ in Tailor series
+\begin_inset Formula \[
+F(x)=\sum_{l}F^{(l)}(x_{0})\frac{(x-x_{0})^{l}}{l!}=\sum_{l}F^{(l)}(\omega_{0}^{2}/2)\frac{(\omega^{2}/2-\omega_{0}^{2}/2)^{l}}{l!}\]
+
+\end_inset
+
+with 
+\begin_inset Formula $F_{l}$
+\end_inset
+
+ being numbers defined as 
+\begin_inset Formula $l$
+\end_inset
+
+-th derivative at 
+\begin_inset Formula $x=0$
+\end_inset
+
+
+\begin_inset Formula \[
+F_{l}=F^{(l)}(0)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Expression for the integrals with a general angular momentum
+\end_layout
+
+\begin_layout Standard
+Once the 
+\begin_inset Quotes eld
+\end_inset
+
+double
+\begin_inset Quotes erd
+\end_inset
+
+ derivatives w.r.t
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Quotes eld
+\end_inset
+
+intrinsic
+\begin_inset Quotes erd
+\end_inset
+
+ argument 
+\begin_inset Formula $\vec{\omega}$
+\end_inset
+
+
+\begin_inset Formula \[
+F_{lm_{a}^{\prime}lm_{b}^{\prime}}:=\sum_{l=\max(l_{a}^{\prime}l_{b}^{\prime})}^{l_{a}^{\prime}+l_{b}^{\prime}}F^{(l)}(\omega^{2}/2)X_{lm_{a}^{\prime}lm_{b}^{\prime}}^{(l)}(\vec{\omega}),\quad lm_{a}^{\prime}\le lm_{a},\; lm_{b}^{\prime}\le lm_{b}\]
+
+\end_inset
+
+and 
+\begin_inset Formula $\vec{d}$
+\end_inset
+
+
+\begin_inset Formula \[
+S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}}:=\sum_{l=\max(l_{a}^{\prime\prime}l_{b}^{\prime\prime})}^{l_{a}^{\prime\prime}+l_{b}^{\prime\prime}}S^{(l)}(d^{2}/2)X_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}}^{(l)}(\vec{d}),\quad lm_{a}^{\prime\prime}\le lm_{a},\; lm_{b}^{\prime\prime}\le lm_{b}\]
+
+\end_inset
+
+ are available they have to be transformed back the derivatives w.r.t.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray*}
+F_{lm_{a}^{\prime}lm_{b}^{\prime}} & \leftarrow & w_{a}^{l_{a}^{\prime}}w_{b}^{l_{b}^{\prime}}F_{lm_{a}^{\prime}lm_{b}^{\prime}}\\
+S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}} & \leftarrow & (-1)^{l_{b}^{\prime\prime}}S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}}\end{eqnarray*}
+
+\end_inset
+
+and then coupled by the double product rule
+\begin_inset Formula \begin{eqnarray*}
+PR^{2}:\quad\langle lm_{a}|f|lm_{b}\rangle & = & (-1)^{l_{a}+l_{b}}PR(lm_{a},lm_{a}^{\prime},lm_{a}^{\prime\prime})PR(lm_{b},lm_{b}^{\prime},lm_{b}^{\prime\prime})\\
+ & \cdot & F_{lm_{a}^{\prime}lm_{b}^{\prime}}(\vec{\omega})S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}}(\vec{d})\end{eqnarray*}
+
+\end_inset
+
+Since this procedure has to be repeated for every integral type (nuclear,
+ and every exponent of the 
+\begin_inset Formula $s$
+\end_inset
+
+-fit and 
+\begin_inset Formula $r^{2}$
+\end_inset
+
+-fit) that share the same angular factor 
+\begin_inset Formula $X_{lm_{a}^{\prime}lm_{b}^{\prime}}^{(l)}(\vec{\omega})$
+\end_inset
+
+ it may make sense to factor the integral-dependent part 
+\begin_inset Formula $F^{(l)}(\omega^{2}/2)$
+\end_inset
+
+ by postponing its coupling with the angular part
+\begin_inset Formula \begin{eqnarray*}
+X_{lm_{a}^{\prime}lm_{b}^{\prime}}^{(l)} & \leftarrow & w_{a}^{l_{a}^{\prime}}w_{b}^{l_{b}^{\prime}}X_{lm_{a}^{\prime}lm_{b}^{\prime}}^{(l)},\quad lm_{a}^{\prime}\le lm_{a},\; lm_{b}^{\prime}\le lm_{b},\max(l_{a}^{\prime}l_{b}^{\prime})\le l\le l_{a}^{\prime}+l_{b}^{\prime},\end{eqnarray*}
+
+\end_inset
+
+coupling it with overlap 
+\begin_inset Formula \begin{eqnarray*}
+lPR^{2}:\quad Y_{lm_{a}lm_{b}}^{(l)}(\vec{\omega},\vec{d}) & = & (-1)^{l_{a}+l_{b}}PR(lm_{a},lm_{a}^{\prime},lm_{a}^{\prime\prime})PR(lm_{b},lm_{b}^{\prime},lm_{b}^{\prime\prime})\\
+ & \cdot & X_{lm_{a}^{\prime}lm_{b}^{\prime}}^{(l)}(\vec{\omega})S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}}(\vec{d}),\end{eqnarray*}
+
+\end_inset
+
+and later for every integral type (and every exponent of the 
+\begin_inset Formula $s$
+\end_inset
+
+- and 
+\begin_inset Formula $r^{2}$
+\end_inset
+
+-fit) do
+\begin_inset Formula \[
+\langle lm_{a}|f|lm_{b}\rangle=\sum_{l=0}^{l_{a}+l_{b}}F^{(l)}(\omega^{2}/2)Y_{lm_{a}lm_{b}}^{(l)}(\vec{\omega},\vec{d}),\quad m_{a}\le2l_{a}+1,\; m_{b}\le2l_{b}+1\]
+
+\end_inset
+
+every time with a new set of derivatives 
+\begin_inset Formula $F^{(l)}$
+\end_inset
+
+.
+ Note that the sum over 
+\begin_inset Formula $l$
+\end_inset
+
+ runs from 0 to 
+\begin_inset Formula $l_{a}+l_{b}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To generate integrals with the center located at 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+, one simply has to shift all vectors in the final expression by 
+\begin_inset Formula $-\vec{c}$
+\end_inset
+
+.
+ For instance, 
+\begin_inset Formula $\vec{\omega}$
+\end_inset
+
+ is shifted to 
+\begin_inset Formula $(w_{a}\vec{a}+w_{b}\vec{b})-\vec{c}$
+\end_inset
+
+.
+ The difference 
+\begin_inset Formula $\vec{a}-\vec{b}$
+\end_inset
+
+ remains unchanged, of course.
+\end_layout
+
+\begin_layout Section
+Forces in an atom-centered basis 
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:sel-rules-forces"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In general, analytic integrals are expressed in terms of three vector arguments,
+ 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+, that may or may not be independent in an atom-centered basis.
+ In our case these vectors correspond to the position of the ``bra'', ``ket'',
+ and the center of the potential.
+ A displacement of the atomic position 
+\begin_inset Formula $\vec{A}$
+\end_inset
+
+ may correspond to one of the following four cases
+\end_layout
+
+\begin_layout Enumerate
+same displacement for all three ``arguments'' if 
+\begin_inset Formula $\vec{A}\equiv\vec{a}\equiv\vec{b}\equiv\vec{c}$
+\end_inset
+
+, in that case we have zero ``force''
+\begin_inset Formula \[
+\vec{\nabla}_{A}=0=\vec{\nabla}_{a}+\vec{\nabla}_{b}+\vec{\nabla}_{c}\]
+
+\end_inset
+
+because we assume translational invariance of integrals here.
+\end_layout
+
+\begin_layout Enumerate
+same displacement for two ``arguments'' if 
+\begin_inset Formula $\vec{A}\equiv\vec{a}\equiv\vec{c}$
+\end_inset
+
+ but 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ corresponds to a different center 
+\begin_inset Formula $\vec{B}$
+\end_inset
+
+.
+ In that case the ``force'' is
+\begin_inset Formula \begin{eqnarray*}
+\vec{\nabla}_{A} & = & \vec{\nabla}_{a}+\vec{\nabla}_{c}=-\vec{\nabla}_{B}\\
+\vec{\nabla}_{B} & = & \vec{\nabla}_{b}\end{eqnarray*}
+
+\end_inset
+
+(and similarly for any permutation of 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+) 
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:2c"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+displacement of only one ``argument'', if 
+\begin_inset Formula $\vec{A}\equiv\vec{a}$
+\end_inset
+
+ but 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ both correspond to different centers, 
+\begin_inset Formula $\vec{B}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{C}$
+\end_inset
+
+, respectively.
+ In that general case
+\begin_inset Formula \begin{eqnarray*}
+\vec{\nabla}_{A} & = & \vec{\nabla}_{a}\\
+\vec{\nabla}_{B} & = & \vec{\nabla}_{b}\\
+\vec{\nabla}_{C} & = & \vec{\nabla}_{c}\end{eqnarray*}
+
+\end_inset
+
+(and similarly for any permutation of 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+) 
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:3c"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+no displacement of ``arguments'' if neither 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ or 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ correspond to 
+\begin_inset Formula $\vec{A}$
+\end_inset
+
+.
+ In this trivial case one has
+\begin_inset Formula \[
+\vec{\nabla}_{A}=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In summary, the most interesting cases are the general three-center case
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:3c"
+
+\end_inset
+
+) where derivatives (forces) w.r.t.
+\begin_inset space ~
+\end_inset
+
+all three arguments are required, but each one may be always obtained from
+ the other two using the identity 
+\begin_inset Formula $\vec{\nabla}_{A}+\vec{\nabla}_{B}+\vec{\nabla}_{C}=0$
+\end_inset
+
+ and the two-center case (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:2c"
+
+\end_inset
+
+) where only the two derivatives (forces) bound by the relation 
+\begin_inset Formula $\vec{\nabla}_{A}+\vec{\nabla}_{B}=0$
+\end_inset
+
+ are required.
+ In two other cases forces vanish.
+\end_layout
+
+\begin_layout Standard
+Displacement derivatives 
+\begin_inset Formula $\vec{\nabla}_{c}$
+\end_inset
+
+ of the matrix elements 
+\begin_inset Formula $\langle\vec{a}|V|\vec{b}\rangle$
+\end_inset
+
+ of the potential which is a sum over centers 
+\begin_inset Formula $\vec{c}^{\prime}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+\nabla_{c}\sum_{c^{\prime}}\langle a|c^{\prime}|b\rangle & = & \langle a|\nabla c|b\rangle+\delta_{ac}\sum_{c^{\prime}}\langle\nabla a|c^{\prime}|b\rangle+\delta_{bc}\sum_{c^{\prime}}\langle a|c^{\prime}|\nabla b\rangle\end{eqnarray*}
+
+\end_inset
+
+will be built of (up to) three terms.
+ For each pair of 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ that need to be evaluated and added to :
+\begin_inset Formula \begin{eqnarray*}
+\nabla_{c} & +\!\!= & \langle a|\nabla c|b\rangle,\quad\forall c\\
+\nabla_{a} & +\!\!= & \sum_{c^{\prime}}\langle\nabla a|c^{\prime}|b\rangle\\
+\nabla_{b} & +\!\!= & \sum_{c^{\prime}}\langle a|c^{\prime}|\nabla b\rangle\end{eqnarray*}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Section
+Analytic expressions for gradients
+\end_layout
+
+\begin_layout Standard
+Starting from a basic expression for an ss-type integral
+\begin_inset Formula \[
+F(\omega^{2}/2)S(d^{2}/2)\]
+
+\end_inset
+
+ we now derive the gradients 
+\begin_inset Formula $\vec{\nabla}_{a}(FS)$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{\nabla}_{b}(FS)$
+\end_inset
+
+ of the integral w.r.t.
+ position of centers 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+.
+ If required the gradient w.r.t.
+ the integration center 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ is obtained using the identity
+\begin_inset Formula \[
+\vec{\nabla}_{a}+\vec{\nabla}_{b}+\vec{\nabla}_{c}=0\]
+
+\end_inset
+
+when acting on the translationally invariant integrals.
+ By manually invoking the product rule for 
+\begin_inset Formula $l=1$
+\end_inset
+
+ we trivially get
+\begin_inset Formula \begin{eqnarray*}
+\vec{\nabla}_{a}(FS) & = & (\vec{\nabla}_{a}F)S+F(\vec{\nabla}_{a}S)=w_{a}(\vec{\nabla}F)S+F(\vec{\nabla}S)\\
+\vec{\nabla}_{b}(FS) & = & (\vec{\nabla}_{b}F)S+F(\vec{\nabla}_{b}S)=w_{b}(\vec{\nabla}F)S-F(\vec{\nabla}S)\\
+\vec{\nabla}_{c}(FS) & = & -(\vec{\nabla}F)S\end{eqnarray*}
+
+\end_inset
+
+where the parentheses limit the scope of nabla operators which, if subscript
+ omitted, are understood as differentiation w.r.t.
+ intrinsic argument 
+\begin_inset Formula $\vec{\omega}$
+\end_inset
+
+ for 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{d}$
+\end_inset
+
+ for S.
+ 
+\end_layout
+
+\begin_layout Standard
+To generalize the expressions for basis functions of higher angular momenta
+ 
+\begin_inset Formula $l_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{b}$
+\end_inset
+
+ we apply the triple derivatives 
+\begin_inset Formula $[\vec{\nabla}_{a}]_{lm_{g}}[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}$
+\end_inset
+
+ and 
+\begin_inset Formula $[\vec{\nabla}_{b}]_{lm_{g}}[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}$
+\end_inset
+
+ with 
+\begin_inset Formula $l_{g}=1$
+\end_inset
+
+ to the expressions of the ss-integral
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}_{x}]_{lm_{g}}[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}(FS) & = & PR(lm_{g}lm_{g}^{\prime}lm_{g}^{\prime\prime})PR(lm_{a}lm_{a}^{\prime}lm_{a}^{\prime\prime})PR(lm_{b}lm_{b}^{\prime}lm_{b}^{\prime\prime})\\
+ & \cdot & w_{x}^{l_{g}^{\prime}}\quad w_{a}^{l_{a}^{\prime}}\quad w_{b}^{l_{b}^{\prime}}\;\;([\vec{\nabla}]_{lm_{a}^{\prime}}[\vec{\nabla}]_{lm_{b}^{\prime}}[\vec{\nabla}]_{lm_{g}^{\prime}}F)\\
+ & \cdot & (x)^{l_{g}^{\prime\prime}}(+)^{l_{a}^{\prime\prime}}(-)^{l_{b}^{\prime\prime}}([\vec{\nabla}]_{lm_{a}^{\prime\prime}}[\vec{\nabla}]_{lm_{b}^{\prime\prime}}[\vec{\nabla}]_{lm_{g}^{\prime\prime}}S)\end{eqnarray*}
+
+\end_inset
+
+with 
+\begin_inset Formula $x=a,b$
+\end_inset
+
+ and a special notation 
+\begin_inset Formula $(a)^{l}=(+)^{l}$
+\end_inset
+
+ and 
+\begin_inset Formula $(b)^{l}=(-)^{l}$
+\end_inset
+
+ to account for the sign difference in 
+\begin_inset Formula $\vec{\nabla}_{a}S=-\vec{\nabla}_{b}S=\vec{\nabla}S$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Analytic expressions for relativistic integrals
+\end_layout
+
+\begin_layout Standard
+The relativistic SR and SO integrals are obtained as outlined
+\begin_inset Formula \begin{align}
+PF_{ab}\;=\;\langle\vec{a}\alpha|\vec{p}\; f(r)\;\vec{p}|\vec{b}\beta\rangle & \sim(\vec{\nabla}_{a}\,\cdot\,\vec{\nabla}_{b})F(\omega^{2}/2)S(d^{2}/2)\\
+QF_{ab}=\langle\vec{a}\alpha|\vec{p}\times f(r)\vec{p}|\vec{b}\beta\rangle & \sim[\vec{\nabla}_{a}\times\vec{\nabla}_{b}]F(\omega^{2}/2)S(d^{2}/2)\end{align}
+
+\end_inset
+
+with 
+\begin_inset Formula $F$
+\end_inset
+
+ either of nuclear, 
+\begin_inset Formula $s$
+\end_inset
+
+-fit or the 
+\begin_inset Formula $r^{2}$
+\end_inset
+
+-fit form.
+ Expressions of this type we have considered before, they have the structure
+ of a 
+\begin_inset Formula $pp$
+\end_inset
+
+-integral with one minor difference.
+ When evaluating 
+\begin_inset Formula $pp$
+\end_inset
+
+-integrals one normally wants all the 
+\begin_inset Formula $3\times3=9$
+\end_inset
+
+ integrals; in our case we want only four combinations thereof: the scalar
+ product and three components of the vector product.
+ The very formal addition of the two derivatives to all the expressions
+ derived in previous sections (apart from wasting resources for unneeded
+ combinations) will complicate the implementation.
+ By performing explicit scalar and vector coupling it is possible to reduce
+ the number of added derivatives to 1.
+ Consider the double product rule:
+\begin_inset Formula \begin{eqnarray*}
+\nabla_{ai}\nabla_{bj}(F\cdot S) & = & (\nabla_{ai}\nabla_{bj}F)\cdot S+F\cdot(\nabla_{ai}\nabla_{bj}S)+(\nabla_{ai}F)\cdot(\nabla_{bj}S)+(\nabla_{bj}F)\cdot(\nabla_{ai}S)\\
+ & = & w_{a}w_{b}(\nabla_{i}\nabla_{j}F)\cdot S-F\cdot(\nabla_{i}\nabla_{j}S)-w_{a}(\nabla_{i}F)\cdot(\nabla_{j}S)+w_{b}(\nabla_{j}F)\cdot(\nabla_{i}S)\end{eqnarray*}
+
+\end_inset
+
+The indices 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+ are to be coupled with 
+\begin_inset Formula $\delta_{ij}$
+\end_inset
+
+ for scalar product and with 
+\begin_inset Formula $\epsilon_{ijk}$
+\end_inset
+
+ for 
+\begin_inset Formula $k$
+\end_inset
+
+-component of the vector product.
+ For the vector product only two terms do contribute:
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}_{a}\times\vec{\nabla}_{b}]F(\omega^{2}/2)S(d^{2}/2) & = & -(w_{a}+w_{b})[(\vec{\nabla}F)\times(\vec{\nabla}S)]\\
+ & = & -(w_{a}+w_{b})[\vec{\omega}\times\vec{d}]F^{(1)}S^{(1)}\end{eqnarray*}
+
+\end_inset
+
+(in the implementation one actually couples gradients, so that the last
+ transformation is illustratory only).
+ For the scalar coupling one gets:
+\begin_inset Formula \begin{eqnarray*}
+(\vec{\nabla}_{a}\cdot\vec{\nabla}_{b})F(\omega^{2}/2)S(d^{2}/2) & = & w_{a}w_{b}F_{p2}\cdot S-F\cdot S_{p2}+(w_{b}-w_{a})((\vec{\nabla}F)\cdot(\vec{\nabla}S))\\
+ & = & w_{a}w_{b}F_{p2}\cdot S-F\cdot S_{p2}+(w_{b}-w_{a})(\vec{\omega}\cdot\vec{d})F^{(1)}S^{(1)}\end{eqnarray*}
+
+\end_inset
+
+(again in a program one operates with derivatives of 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $S$
+\end_inset
+
+ and not directly with the vectors 
+\begin_inset Formula $\vec{\omega}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{d}$
+\end_inset
+
+).
+ Here we introduced Laplacians 
+\begin_inset Formula $\nabla^{2}S$
+\end_inset
+
+ and 
+\begin_inset Formula $\nabla^{2}F$
+\end_inset
+
+ as:
+\begin_inset Formula \[
+\nabla^{2}F=F_{p2}(x):=\left(2x\frac{\partial^{2}}{\partial x^{2}}+3\frac{\partial}{\partial x}\right)F=2xF^{(2)}+3F^{(1)},\quad x:=\omega^{2}/2\]
+
+\end_inset
+
+[
+\begin_inset Formula $S_{p2}(x)$
+\end_inset
+
+ is defined in analogy].
+ The choice of notations for 
+\begin_inset Formula $F_{p2}$
+\end_inset
+
+ and 
+\begin_inset Formula $S_{p2}$
+\end_inset
+
+ is due to the fact that the ss-elements of the kinetic energy operator
+ 
+\begin_inset Formula $p^{2}/2=-(1/2)\nabla^{2}$
+\end_inset
+
+ is given exactly by this kind of function 
+\begin_inset Formula \[
+K_{ab}=\langle\vec{a}\alpha|-\frac{1}{2}\nabla^{2}|\vec{b}\beta\rangle=-\frac{1}{2}S_{p2}(d^{2}/2)=\zeta(3-2\zeta d^{2})S_{ab}\]
+
+\end_inset
+
+here we used 
+\begin_inset Formula \[
+S_{p2}(x):=\left(2x\frac{\partial^{2}}{\partial x^{2}}+3\frac{\partial}{\partial x}\right)S_{ab}(x)=(8x\zeta^{2}-6\zeta)S_{ab}\]
+
+\end_inset
+
+because 
+\begin_inset Formula $S_{ab}(x)\sim\exp(-2\zeta x)$
+\end_inset
+
+.
+ Thus the SO and SR matrix elements can be built of two terms matching the
+ original structure (product of two pure functions of 
+\begin_inset Formula $\omega^{2}/2$
+\end_inset
+
+ and 
+\begin_inset Formula $d^{2}/2$
+\end_inset
+
+) and coupled in vector and scalar way first derivatives of 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $S$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+To compute the integrals with a general angular momentum (again by parameter
+ differentiation) we will have to apply double derivative 
+\begin_inset Formula $(-1)^{l_{a}+l_{b}}[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}$
+\end_inset
+
+ to the ss-matrix elements we just obtained.
+ For the two terms of SR expressions we apply the formalizm of the previous
+ sections directly since
+\begin_inset Formula \[
+[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}F_{p2}(\omega^{2}/2)\cdot S(d^{2}/2)\]
+
+\end_inset
+
+ and 
+\begin_inset Formula \[
+[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}F(\omega^{2}/2)\cdot S_{p2}(d^{2}/2)\]
+
+\end_inset
+
+ both are just yet another type of 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $S$
+\end_inset
+
+.
+ All one needs is an expression (program) that computes derivatives 
+\begin_inset Formula $F_{p2}^{(l)}(x)$
+\end_inset
+
+ from 
+\begin_inset Formula $F^{(l+2)}(x)$
+\end_inset
+
+, 
+\begin_inset Formula $F^{(l+1)}(x)$
+\end_inset
+
+, and 
+\begin_inset Formula $x$
+\end_inset
+
+ (to be invoked it for 
+\begin_inset Formula $F_{p2}$
+\end_inset
+
+ and 
+\begin_inset Formula $S_{p2}$
+\end_inset
+
+).
+ To deal with the remaining two terms we have to consider triple derivatives
+ of the type
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}[\vec{\nabla}]_{lm_{c}}F(\omega^{2}/2)=\sum_{l=\max(l_{a}l_{b}l_{c})}^{l_{a}+l_{b}+l_{c}}F^{(l)}(\omega^{2}/2)X_{lm_{a}lm_{b}lm_{c}}^{(l)}(\vec{\omega})\]
+
+\end_inset
+
+(and same for 
+\begin_inset Formula $S$
+\end_inset
+
+) with 
+\begin_inset Formula $l_{c}=1$
+\end_inset
+
+, 
+\begin_inset Formula $m_{c}=x,y,z$
+\end_inset
+
+.
+ After these derivatives for 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $S$
+\end_inset
+
+ were obtained, we only need to perform the 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ coupling of 
+\begin_inset Formula $\ldots[\vec{\nabla}]_{lm_{c}^{\prime}}F$
+\end_inset
+
+ and 
+\begin_inset Formula $\ldots[\vec{\nabla}]_{lm_{c}^{\prime\prime}}S$
+\end_inset
+
+ in a scalar (
+\begin_inset Formula $lm_{c}=r2$
+\end_inset
+
+) and vector (
+\begin_inset Formula $lm_{c}=vx,vy,vz$
+\end_inset
+
+) fashion (and discard coupling to 
+\begin_inset Formula $l_{c}=2$
+\end_inset
+
+).
+ That is indicated by a modified 
+\begin_inset Quotes eld
+\end_inset
+
+product rule
+\begin_inset Quotes erd
+\end_inset
+
+ symbol 
+\begin_inset Formula $\overline{PR}$
+\end_inset
+
+ in the following expression:
+\begin_inset Formula \begin{eqnarray*}
+l\overline{PR}^{3}:\quad Y_{lm_{a}lm_{b}lm_{c}}^{(l)}(\vec{\omega},\vec{d}) & = & (-1)^{l_{a}+l_{b}}PR(lm_{a},lm_{a}^{\prime},lm_{a}^{\prime\prime})PR(lm_{b},lm_{b}^{\prime},lm_{b}^{\prime\prime})\\
+ & \cdot & \overline{PR}(lm_{c},lm_{c}^{\prime},lm_{c}^{\prime\prime})X_{lm_{a}^{\prime}lm_{b}^{\prime}lm_{c}^{\prime}}^{(l)}(\vec{\omega})S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}lm_{c}^{\prime\prime}}(\vec{d}),\\
+ &  & lm_{c}=0,r2,vx,vy,vz,\quad m_{a}\le2l_{a}+1,\quad m_{b}\le2l_{b}+1\end{eqnarray*}
+
+\end_inset
+
+The explicit signature of the symbols 
+\begin_inset Formula $\overline{PR}(lm_{c},lm_{c}^{\prime},lm_{c}^{\prime\prime})$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray}
+lm_{c} & \leftarrow & lm_{c}^{\prime}\cdot lm_{c}^{\prime\prime}:\label{eq:SCVC}\\
+r2 & \leftarrow & x\cdot x+y\cdot y+z\cdot z\nonumber \\
+vx & \leftarrow & y\cdot z-z\cdot y\nonumber \\
+vy & \leftarrow & z\cdot x-x\cdot z\nonumber \\
+vz & \leftarrow & x\cdot y-y\cdot x\nonumber \end{eqnarray}
+
+\end_inset
+
+to be compared with the signature of the real product rule coefficients
+ 
+\begin_inset Formula $PR(lm_{a},lm_{a}^{\prime},lm_{a}^{\prime\prime})$
+\end_inset
+
+ for lowest momenta:
+\begin_inset Formula \begin{eqnarray*}
+lm_{a} & \leftarrow & lm_{a}^{\prime}\cdot lm_{a}^{\prime\prime}:\\
+0 & \leftarrow & 0\cdot0\\
+x & \leftarrow & x\cdot0+0\cdot x\\
+y & \leftarrow & y\cdot0+0\cdot y\\
+z & \leftarrow & z\cdot0+0\cdot z\\
+ & \cdots\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Sequence of steps in a simple integral package
+\end_layout
+
+\begin_layout Standard
+In a typical setup for the two shells 
+\begin_inset Formula $l_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{b}$
+\end_inset
+
+ at centers 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ with exponents ranges 
+\begin_inset Formula $\{\alpha\}$
+\end_inset
+
+ and 
+\begin_inset Formula $\{\beta\}$
+\end_inset
+
+ one cycles over the 
+\begin_inset Quotes eld
+\end_inset
+
+shells
+\begin_inset Quotes erd
+\end_inset
+
+ at 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ to compute nuclear attraction of the (point, or finite) nucleus at 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ and the (
+\begin_inset Formula $s$
+\end_inset
+
+-, and 
+\begin_inset Formula $r^{2}$
+\end_inset
+
+-) fit functions at that center.
+ This is an approximate flow of a simple integral package that makes an
+ attempt to re-use the same angular pre-factor for different integral types:
+\end_layout
+
+\begin_layout Enumerate
+for the two given shells 
+\begin_inset Formula $(\vec{a},l_{a},\{\alpha\})$
+\end_inset
+
+ and 
+\begin_inset Formula $(\vec{b},l_{b},\{\beta\})$
+\end_inset
+
+ do 
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:ab-center"
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+distance 
+\begin_inset Formula $\vec{d}=\vec{a}-\vec{b}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+from 
+\begin_inset Formula $\vec{d}$
+\end_inset
+
+ compute the spherical harmonics 
+\begin_inset Formula $[\vec{d}]_{lm}$
+\end_inset
+
+ for 
+\begin_inset Formula $lm\le lm_{ab}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+from 
+\begin_inset Formula $[\vec{d}]_{lm}$
+\end_inset
+
+ compute the angular factor 
+\begin_inset Formula $X_{lm_{a}^{\prime}lm_{b}^{\prime}lm_{c}^{\prime}}^{(l)}(\vec{d})$
+\end_inset
+
+ for 
+\begin_inset Formula $lm_{a}^{\prime}\le lm_{a}$
+\end_inset
+
+, 
+\begin_inset Formula $lm_{b}^{\prime}\le lm_{b}$
+\end_inset
+
+, 
+\begin_inset Formula $l_{c}\le1$
+\end_inset
+
+ if relativistic integrals will be needed (otherwise 
+\begin_inset Formula $lm_{c}\equiv0$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+for each pair of exponent 
+\begin_inset Formula $\{\alpha,\beta\}$
+\end_inset
+
+ compute the derivatives of radial overlap 
+\begin_inset Formula $S^{(l)}(d^{2}/2)$
+\end_inset
+
+, 
+\begin_inset Formula $l\le l_{ab}+2$
+\end_inset
+
+ which are used to compute 
+\begin_inset Formula $S_{p2}^{(l)}(d^{2}/2)$
+\end_inset
+
+, 
+\begin_inset Formula $l\le l_{ab}$
+\end_inset
+
+ for relativistic integrals
+\end_layout
+
+\begin_layout Enumerate
+compute the overlap and 
+\begin_inset Quotes eld
+\end_inset
+
+kinetic energy
+\begin_inset Quotes erd
+\end_inset
+
+ for relativistic integrals by coupling radial derivatives and the angular
+ part for all 
+\begin_inset Formula $lm_{a}^{\prime}\le lm_{a}$
+\end_inset
+
+, 
+\begin_inset Formula $lm_{b}^{\prime}\le lm_{b}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+S_{lm_{a}^{\prime}lm_{b}^{\prime}lm_{c}^{\prime}} & = & \sum_{l}^{l_{ab}+1}S^{(l)}X_{lm_{a}^{\prime}lm_{b}^{\prime}lm_{c}^{\prime}}^{(l)},\quad lm_{c}^{\prime}=0,x,y,z\\
+S_{lm_{a}^{\prime}lm_{b}^{\prime}P2}\;\; & = & \sum_{l}^{l_{ab}}S_{p2}^{(l)}X_{lm_{a}^{\prime}lm_{b}^{\prime}00}^{(l)}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+for each pair of exponent 
+\begin_inset Formula $\{\alpha,\beta\}$
+\end_inset
+
+ compute the center of overlap 
+\begin_inset Formula $\vec{\omega}_{0}=w_{a}\vec{a}+w_{b}\vec{b}$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+for each center 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ prepare the angular integral prefactor common for all integral types (the
+ whole section works with arrays of pairs 
+\begin_inset Formula $\{\alpha,\beta\}$
+\end_inset
+
+) 
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:c-center"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+compute the 
+\begin_inset Quotes eld
+\end_inset
+
+shifted
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\vec{\omega}=\vec{\omega}_{0}-\vec{c}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Enumerate
+from 
+\begin_inset Formula $\vec{\omega}$
+\end_inset
+
+ compute the spherical harmonics 
+\begin_inset Formula $[\vec{\omega}]_{lm}$
+\end_inset
+
+for 
+\begin_inset Formula $lm\le lm_{ab}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+from 
+\begin_inset Formula $[\vec{\omega}]_{lm}$
+\end_inset
+
+ compute the angular factor 
+\begin_inset Formula $X_{lm_{a}^{\prime}lm_{b}^{\prime}lm_{c}^{\prime}}^{(l)}(\vec{\omega})$
+\end_inset
+
+ for 
+\begin_inset Formula $lm_{a}^{\prime}\le lm_{a}$
+\end_inset
+
+, 
+\begin_inset Formula $lm_{b}^{\prime}\le lm_{b}$
+\end_inset
+
+, 
+\begin_inset Formula $l_{c}\le1$
+\end_inset
+
+ if relativistic integrals will be needed (otherwise 
+\begin_inset Formula $lm_{c}\equiv0$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+compute the integral prefactors of double derivatives applied to 
+\begin_inset Formula $FS$
+\end_inset
+
+, 
+\begin_inset Formula $FS_{p2}$
+\end_inset
+
+, 
+\begin_inset Formula $(\vec{\nabla}F\cdot\vec{\nabla}S)$
+\end_inset
+
+, and 
+\begin_inset Formula $[\vec{\nabla}F\times\vec{\nabla}S]$
+\end_inset
+
+ by double product rule and manual coupling of 
+\begin_inset Formula $lm_{c}^{\prime}=0,x,y,z$
+\end_inset
+
+ and 
+\begin_inset Formula $lm_{c}^{\prime\prime}=0,x,y,z$
+\end_inset
+
+ into the 
+\begin_inset Formula $lm_{c}=0$
+\end_inset
+
+ for normal integrals and 
+\begin_inset Formula $lm_{c}=r2,vx,vy,vz$
+\end_inset
+
+ for scalar and vector parts of the relativistic integrals
+\begin_inset Formula \begin{eqnarray*}
+Y_{lm_{a}lm_{b}0}^{(l)}\;\;(\vec{\omega},\vec{d}) & \leftarrow & PR_{a}PR_{b}\quad\quad\quad X_{lm_{a}^{\prime}lm_{b}^{\prime}0}^{(l)}\;\;(\vec{\omega})S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}0}\;(\vec{d})\\
+Y_{lm_{a}lm_{b}P2}^{(l)}(\vec{\omega},\vec{d}) & \leftarrow & PR_{a}PR_{b}\quad\quad\quad X_{lm_{a}^{\prime}lm_{b}^{\prime}0}^{(l)}\;\;(\vec{\omega})S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}P2}(\vec{d})\\
+Y_{lm_{a}lm_{b}R2}^{(l)}(\vec{\omega},\vec{d}) & \leftarrow & PR_{a}PR_{b}\overline{PR}_{c}^{R2}\;\; X_{lm_{a}^{\prime}lm_{b}^{\prime}lm_{c}^{\prime}}^{(l)}(\vec{\omega})S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}lm_{c}^{\prime\prime}}(\vec{d})\\
+Y_{lm_{a}lm_{b}V}^{(l)}\;(\vec{\omega},\vec{d}) & \leftarrow & PR_{a}PR_{b}\overline{PR}_{c}^{V}\;\;\; X_{lm_{a}^{\prime}lm_{b}^{\prime}lm_{c}^{\prime}}^{(l)}(\vec{\omega})S_{lm_{a}^{\prime\prime}lm_{b}^{\prime\prime}lm_{c}^{\prime\prime}}(\vec{d}),\; V=vx,vy,vz\end{eqnarray*}
+
+\end_inset
+
+If no relativistic integrals are not required the first factor is enough.
+ The reduced symbols 
+\begin_inset Formula $PR_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $PR_{b}$
+\end_inset
+
+ stay for the regular product rule over 
+\begin_inset Formula $(lm_{a},lm_{a}^{\prime},lm_{a}^{\prime\prime})$
+\end_inset
+
+ and 
+\begin_inset Formula $(lm_{b},lm_{b}^{\prime},lm_{b}^{\prime\prime})$
+\end_inset
+
+, respectively.
+ The symbols 
+\begin_inset Formula $\overline{PR}_{c}^{R2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\overline{PR}_{c}^{V}$
+\end_inset
+
+ stay for the scalar and vector coupling procedure 
+\begin_inset Formula $lm_{c}\leftarrow lm_{c}^{\prime}\cdot lm_{c}^{\prime\prime}$
+\end_inset
+
+ from the corresponding lines of Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:SCVC"
+
+\end_inset
+
+).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+for all required types of integrals, nuclear, 
+\begin_inset Formula $s$
+\end_inset
+
+-fit, 
+\begin_inset Formula $r^{2}$
+\end_inset
+
+-fit, compute the radial derivatives and couple with the integral prefactor
+ from the previous item (for the fit integrals this step operates with combinati
+ons of 
+\begin_inset Formula $\{\alpha,\beta\}$
+\end_inset
+
+ and fit exponents 
+\begin_inset Formula $\{\gamma\}$
+\end_inset
+
+):
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+compute the radial derivatives 
+\begin_inset Formula $F^{(l)}(\omega^{2}/2)$
+\end_inset
+
+, 
+\begin_inset Formula $l\le l_{ab}+2$
+\end_inset
+
+ corresponding to 
+\begin_inset Formula $\{\alpha,\beta,\gamma\}$
+\end_inset
+
+.
+ From them compute the Laplacian derivatives 
+\begin_inset Formula $F_{p2}^{(l)}(\omega^{2}/2)$
+\end_inset
+
+, 
+\begin_inset Formula $l\le l_{ab}$
+\end_inset
+
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:gamma"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+for 
+\begin_inset Quotes eld
+\end_inset
+
+coulomb
+\begin_inset Quotes erd
+\end_inset
+
+ (non-relativistic integrals) couple the radial and the angular part (for
+ all 
+\begin_inset Formula $m_{a}\le2l_{a}+1$
+\end_inset
+
+ 
+\begin_inset Formula $m_{b}\le2l_{b}+1$
+\end_inset
+
+):
+\begin_inset Formula \[
+F_{lm_{a}lm_{b}}=\sum_{l=0}^{l_{ab}}F^{(l)}(\omega^{2}/2)Y_{lm_{a}lm_{b}0}^{(l)}(\vec{\omega},\vec{d})\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+for SO integrals perform (for each component 
+\begin_inset Formula $V=vx,vy,vz$
+\end_inset
+
+ and for all 
+\begin_inset Formula $m_{a}\le2l_{a}+1$
+\end_inset
+
+ 
+\begin_inset Formula $m_{b}\le2l_{b}+1$
+\end_inset
+
+):
+\begin_inset Formula \[
+F_{lm_{a}lm_{b}}^{V}=\sum_{l=0}^{l_{ab}+1}F^{(l)}(\omega^{2}/2)Y_{lm_{a}lm_{b}V}^{(l)}(\vec{\omega},\vec{d})\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+for SR integrals evaluate the contributions that originate from 
+\begin_inset Formula $F_{p2}S$
+\end_inset
+
+, 
+\begin_inset Formula $FS_{p2}$
+\end_inset
+
+, and 
+\begin_inset Formula $(\vec{\nabla}F\cdot\vec{\nabla}S)$
+\end_inset
+
+, after that sum them up (for all 
+\begin_inset Formula $m_{a}\le2l_{a}+1$
+\end_inset
+
+ 
+\begin_inset Formula $m_{b}\le2l_{b}+1$
+\end_inset
+
+):
+\begin_inset Formula \begin{eqnarray*}
+F_{lm_{a}lm_{b}}^{FP2} & = & \sum_{l=0}^{l_{ab}}F_{p2}^{(l)}(\omega^{2}/2)Y_{lm_{a}lm_{b}0}^{(l)}(\vec{\omega},\vec{d})\\
+F_{lm_{a}lm_{b}}^{SP2} & = & \sum_{l=0}^{l_{ab}}F^{(l)}(\omega^{2}/2)Y_{lm_{a}lm_{b}P2}^{(l)}(\vec{\omega},\vec{d})\\
+F_{lm_{a}lm_{b}}^{R2} & = & \sum_{l=0}^{l_{ab}+1}F^{(l)}(\omega^{2}/2)Y_{lm_{a}lm_{b}R2}^{(l)}(\vec{\omega},\vec{d})\\
+F_{lm_{a}lm_{b}} & = & w_{a}w_{b}F_{lm_{a}lm_{b}}^{FP2}+F_{lm_{a}lm_{b}}^{SP2}+(w_{b}-w_{a})F_{lm_{a}lm_{b}}^{R2}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+now return to item 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:gamma"
+
+\end_inset
+
+ for the next set of derivatives 
+\begin_inset Formula $F^{(l)}$
+\end_inset
+
+ corresponding to the next integral type, or just another exponent 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ within the same integral type.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+after all integral type have been processed, return to item 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:c-center"
+
+\end_inset
+
+ to proceed to the next center 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+after all centers 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ have been processed, its time to go for the next pair of shells 
+\begin_inset Formula $(\vec{a},l_{a},\{\alpha\})$
+\end_inset
+
+ and 
+\begin_inset Formula $(\vec{b},l_{b},\{\beta\})$
+\end_inset
+
+ (item 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:ab-center"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Section
+Other integral types
+\end_layout
+
+\begin_layout Subsection
+Coulomb norm integrals
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+Q_{ss}=\langle\vec{a}\alpha|\frac{1}{|\vec{r}-\vec{r}^{\prime}|}|\vec{b}\beta\rangle & = & \int d^{3}r\; d^{3}r^{\prime}\; e^{-\alpha(\vec{r}-\vec{a})^{2}}\frac{1}{|\vec{r}-\vec{r}^{\prime}|}e^{-\beta(\vec{r}^{\prime}-\vec{b})^{2}}\\
+ & = & \int d^{3}r\; d^{3}r^{\prime}\; e^{-\alpha(\vec{r}-\vec{d})^{2}}\frac{1}{|\vec{r}-\vec{r}^{\prime}|}e^{-\beta r^{\prime2}},\quad\vec{d}=\vec{a}-\vec{b}\\
+ & = & \frac{2\pi^{5/2}}{\alpha\beta(\alpha+\beta)^{1/2}}I_{0}(2\zeta x),\quad\zeta=\frac{\alpha\beta}{\alpha+\beta},\quad x=d^{2}/2\end{eqnarray*}
+
+\end_inset
+
+Now note that 
+\begin_inset Formula \[
+r^{2}e^{-\gamma r^{2}}=-\frac{\partial}{\partial\gamma}e^{-\gamma r^{2}}\]
+
+\end_inset
+
+so that by applying this parameter differentiation to 
+\begin_inset Formula $Q_{ss}$
+\end_inset
+
+ we get 
+\begin_inset Formula \begin{eqnarray*}
+Q_{sr2} & = & -\frac{\partial}{\partial\beta}Q_{ss}\\
+ & = & \frac{2\pi^{5/2}}{\alpha\beta(\alpha+\beta)^{3/2}}\left[\left(\frac{3}{2}+\frac{\alpha}{\beta}\right)I_{0}(2\zeta x)+\frac{\alpha}{\beta}2\zeta xI_{1}(2\zeta x)\right]\end{eqnarray*}
+
+\end_inset
+
+For the 
+\begin_inset Formula $Q_{r2s}$
+\end_inset
+
+ one has to interchange 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta$
+\end_inset
+
+.
+ And for the 
+\begin_inset Formula $Q_{r2r2}$
+\end_inset
+
+will be
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+Q_{r2r2} & = & \frac{\partial^{2}}{\partial\alpha\partial\beta}Q_{ss}\\
+ & = & \frac{2\pi^{5/2}}{\alpha\beta(\alpha+\beta)^{5/2}}\left[\frac{3}{2}\left(\frac{\alpha}{\beta}+\frac{\beta}{\alpha}+\frac{5}{2}\right)I_{0}+\frac{3}{2}(\frac{\alpha}{\beta}+\frac{\beta}{\alpha})2\zeta xI_{1}+(2\zeta x)^{2}I_{2}\right]\end{eqnarray*}
+
+\end_inset
+
+Having expressed 
+\begin_inset Formula $Q_{ss}$
+\end_inset
+
+, 
+\begin_inset Formula $Q_{sr2}$
+\end_inset
+
+, and 
+\begin_inset Formula $Q_{r2r2}$
+\end_inset
+
+ as the pure functions of 
+\begin_inset Formula $x=d^{2}/2$
+\end_inset
+
+ it is easy to apply the parameter differentiation w.r.t.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+\langle lm_{a}\vec{a}\alpha|q|lm_{b}\vec{b}\beta\rangle & = & (-1)^{l_{a}+l_{b}}[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}Q(d^{2}/2)\\
+ & = & (-1)^{l_{a}}[\vec{\nabla}]_{lm_{a}}[\vec{\nabla}]_{lm_{b}}Q(d^{2}/2)\\
+ & \sim & \sum_{l=\max(l_{a}l_{b})}^{l_{a}+l_{b}}Q^{(l)}(d^{2}/2)X_{lm_{a}lm_{b}}^{(l)}(\vec{d})\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Pseudopotential integrals
+\end_layout
+
+\begin_layout Standard
+Pseudopotential is an effective non-local operator of the type
+\begin_inset Formula \begin{eqnarray*}
+V_{p}(\vec{r},\vec{r}^{\prime}) & = & \left(\frac{Z_{c}}{r}+V(r)\right)\delta(\vec{r}-\vec{r}^{\prime})+\sum_{L=0}^{L_{p}}W_{L}(\vec{r},\vec{r}^{\prime})\\
+W_{L}(\vec{r},\vec{r}^{\prime}) & = & \sum_{M}^{2L+1}|LM\rangle V_{L}(r)\langle LM|\\
+ & = & \sum_{M}^{2L+1}Y_{LM}^{\ast}(\vec{r})V_{L}(r)\delta(r-r^{\prime})Y_{LM}(\vec{r}^{\prime})\\
+ & = & \frac{2L+1}{4\pi}V_{L}(r)\delta(r-r^{\prime})P_{L}(\cos\widehat{\vec{r}\vec{r}^{\prime}})\end{eqnarray*}
+
+\end_inset
+
+where non-locality w.r.t.
+\begin_inset space ~
+\end_inset
+
+the angle between 
+\begin_inset Formula $\vec{r}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{r}^{\prime}$
+\end_inset
+
+ has been made explicit in the last expression.
+\end_layout
+
+\begin_layout Subsubsection
+The local part 
+\begin_inset Formula $V(r)$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:pp-local"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $ss$
+\end_inset
+
+-matrix element of any (local and spherically symmetric) 
+\begin_inset Formula $V(r)$
+\end_inset
+
+ is given by the expression:
+\begin_inset Formula \begin{eqnarray*}
+\langle\vec{a}\alpha|V(r)|\vec{b}\beta\rangle & = & S(d^{2}/2)F(\omega^{2}/2)\\
+S & = & e^{-\zeta d^{2}},\quad\vec{d}=\vec{a}-\vec{b},\quad\zeta=\alpha\beta/(\alpha+\beta)\\
+F & = & \int V(r)e^{-\lambda(\vec{r}-\vec{\omega})^{2}}d^{3}r,\quad\vec{\omega}=w_{a}\vec{a}+w_{b}\vec{b},\quad\lambda=\alpha+\beta\end{eqnarray*}
+
+\end_inset
+
+The identity
+\begin_inset Formula \begin{eqnarray*}
+\alpha(\vec{r}-\vec{a})^{2}+\beta(\vec{r}-\vec{b})^{2} & = & \lambda(\vec{r}-\vec{\omega})^{2}+\zeta(\vec{a}-\vec{b})^{2}\\
+\lambda & = & \alpha+\beta\\
+\zeta & = & \alpha\beta/(\alpha+\beta)\end{eqnarray*}
+
+\end_inset
+
+was used here to reduce the product of two exponentials to an exponential
+ with a different origin:
+\begin_inset Formula \[
+\exp[-\alpha(\vec{r}-\vec{a})^{2}]\exp[-\beta(\vec{r}-\vec{b})^{2}]=\exp[-\zeta(\vec{a}-\vec{b})^{2}]\exp[-\lambda(\vec{r}-\vec{\omega})^{2}]\]
+
+\end_inset
+
+The fact that 
+\begin_inset Formula $F$
+\end_inset
+
+ is indeed a pure function of 
+\begin_inset Formula $\omega^{2}/2$
+\end_inset
+
+ only becomes apparent after expanding 
+\begin_inset Formula $(\vec{r}-\vec{\omega})^{2}=r^{2}-2\omega r\cos\theta+\omega^{2}$
+\end_inset
+
+ and angular integration:
+\begin_inset Formula \begin{eqnarray*}
+F & = & \int V(r)e^{-\lambda(\vec{r}-\vec{\omega})^{2}}d^{3}r\\
+ & = & 2\pi e^{-\lambda\omega^{2}}\int_{0}^{\infty}r^{2}dr\; V(r)e^{-\lambda r^{2}}\int_{-1}^{1}dx\; e^{2\lambda\omega rx}\\
+ & = & 4\pi e^{-\lambda\omega^{2}}\int_{0}^{\infty}V(r)e^{-\lambda r^{2}}\frac{\sinh(kr)}{kr}r^{2}dr\\
+ & = & 4\pi e^{-\lambda\omega^{2}}Q(\omega^{2}/2)\\
+Q & := & \int_{0}^{\infty}i_{0}(kr)V(r)e^{-\lambda r^{2}}r^{2}dr\\
+k & := & 2\lambda\omega\\
+\lambda & = & \alpha+\beta\end{eqnarray*}
+
+\end_inset
+
+The function 
+\begin_inset Formula \[
+i_{0}(z)=\frac{\sinh z}{z}\]
+
+\end_inset
+
+is a modified spherical Bessel function, the initial member of the series
+ 
+\begin_inset Formula $i_{l}$
+\end_inset
+
+ that satisfy the differential identities
+\begin_inset Formula \[
+\frac{1}{z}\frac{\partial}{\partial z}\left(\frac{i_{l}(z)}{z^{l}}\right)=\frac{i_{l+1}(z)}{z^{l+1}}\]
+
+\end_inset
+
+Sometimes the factors in ss-type integral are split differently (See Hu
+ paper):
+\begin_inset Formula \begin{eqnarray*}
+\langle\vec{a}\alpha|V(r)|\vec{b}\beta\rangle & = & S(d^{2}/2)F(\omega^{2}/2)\\
+ & = & 4\pi DQ(\omega^{2}/2)\\
+D & := & Se^{-\lambda\omega^{2}}=e^{-\alpha a^{2}}e^{-\beta b^{2}}\end{eqnarray*}
+
+\end_inset
+
+by factorizing from the integral the product 
+\begin_inset Formula $D$
+\end_inset
+
+ of the primitive exponentials at origin instead of the overlap integral
+ 
+\begin_inset Formula $S$
+\end_inset
+
+.
+ In any case the higher order derivatives 
+\begin_inset Formula $Q^{(l)}(x)$
+\end_inset
+
+ w.r.t.
+ 
+\begin_inset Formula $x\equiv\omega^{2}/2$
+\end_inset
+
+ are needed for matrix elements with higher angular momentum.
+ To obtain that we introduce a series of functions
+\begin_inset Formula \[
+Q_{l}(k,\lambda)=\int_{0}^{\infty}\frac{i_{l}(kr)}{k^{l}}r^{2+l}\; V(r)e^{-\lambda r^{2}}dr\]
+
+\end_inset
+
+with the first member of the series being our 
+\begin_inset Formula $Q$
+\end_inset
+
+-function to be differentiated
+\begin_inset Formula \[
+Q=Q_{0}(k,\lambda)\]
+
+\end_inset
+
+and note that
+\begin_inset Formula \begin{eqnarray*}
+k & = & 2\lambda\omega=2\lambda\sqrt{2x}\\
+\frac{\partial}{\partial x} & = & \frac{\partial k}{\partial x}\frac{\partial}{\partial k}=(2\lambda)^{2}\frac{1}{k}\frac{\partial}{\partial k}\end{eqnarray*}
+
+\end_inset
+
+which by invoking the differential identity for Bessel functions rewritten
+ for our case as
+\begin_inset Formula \[
+\frac{1}{k}\frac{\partial}{\partial k}\left(\frac{i_{l}(kr)}{k^{l}}\right)=\frac{i_{l+1}(kr)}{k^{l+1}}r\]
+
+\end_inset
+
+will give us
+\begin_inset Formula \[
+Q^{(l)}(x)=(2\lambda)^{2l}Q_{l}(k,\lambda)\]
+
+\end_inset
+
+Now we consider the derivative 
+\begin_inset Formula $F^{(n)}$
+\end_inset
+
+ of 
+\begin_inset Formula \[
+F=4\pi e^{-2\lambda x}Q(x),\quad x=\omega^{2}/2.\]
+
+\end_inset
+
+One first applies binomial rule for the product differentiation and notes
+ that every differentiation of exponential gives a factor of 
+\begin_inset Formula $-2\lambda$
+\end_inset
+
+, every differentiation of 
+\begin_inset Formula $Q$
+\end_inset
+
+ gives a factor 
+\begin_inset Formula $(2\lambda)^{2}\equiv(-2\lambda)^{2}$
+\end_inset
+
+ and increases the subscript of 
+\begin_inset Formula $Q_{l}$
+\end_inset
+
+ by one:
+\begin_inset Formula \begin{eqnarray*}
+F^{(n)} & = & 4\pi\sum_{k}\left(\begin{array}{c}
+n\\
+k\end{array}\right)(-2\lambda)^{n-k}(-2\lambda)^{2k}[e^{-2\lambda x}Q_{k}]\\
+ & = & 4\pi\sum_{k}\left(\begin{array}{c}
+n\\
+k\end{array}\right)(-2\lambda)^{n+k}[e^{-2\lambda x}Q_{k}]\end{eqnarray*}
+
+\end_inset
+
+So far we did not detail what form of potential 
+\begin_inset Formula $V(r)$
+\end_inset
+
+ we are using, or, equivalently the exact form of 
+\begin_inset Formula $Q_{l}$
+\end_inset
+
+ series.
+ The formulation above applies to any kind of spherical potential.
+ 
+\end_layout
+
+\begin_layout Standard
+The primitive contributions to the local part of the pseudopotential 
+\begin_inset Formula $V(r)$
+\end_inset
+
+ is often taken of the form of another Gaussian:
+\begin_inset Formula \[
+V(r)=r^{p-2}e^{-\gamma r^{2}}\]
+
+\end_inset
+
+which is expressed via the member of generic series
+\begin_inset Formula \begin{eqnarray*}
+Q^{(l)}(k,\gamma) & = & Q_{l}^{p+l}(k,\lambda+\gamma)\\
+Q_{l}^{n}(k,\eta) & := & \int_{0}^{\infty}\frac{i_{l}(kr)}{k^{l}}r^{n}e^{-\eta r^{2}}dr,\quad\eta=\lambda+\gamma\end{eqnarray*}
+
+\end_inset
+
+These function differ from those used in Hu paper by a factor 
+\begin_inset Formula $k^{-l}$
+\end_inset
+
+ although this factor is best incorporated into the definition to avoid
+ singularities at 
+\begin_inset Formula $k=0$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Actually, the implementation appears to compute the 
+\begin_inset Quotes eld
+\end_inset
+
+normalized
+\begin_inset Quotes erd
+\end_inset
+
+ form.
+\end_layout
+
+\end_inset
+
+ As a side note: from the previous sections we know that at least
+\begin_inset Formula \[
+e^{-\lambda\omega^{2}}Q_{0}^{1}(k,\lambda)\sim I_{0}(\lambda\omega^{2})\]
+
+\end_inset
+
+as the two expressions for 
+\begin_inset Formula $V(r)=1/r$
+\end_inset
+
+ have to be identical.
+ Possibly there are closer relation for other combinations too.
+ See also Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Coulomb-damped"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Expansion of the Gaussian at a different center
+\end_layout
+
+\begin_layout Standard
+Given is a Gaussian 
+\begin_inset Formula $\exp[-\lambda(\vec{r}-\vec{\omega})^{2}]$
+\end_inset
+
+ centered at 
+\begin_inset Formula $\vec{\omega}$
+\end_inset
+
+.
+ Then the following expansion holds
+\begin_inset Formula \begin{eqnarray*}
+e^{-\lambda(\vec{r}-\vec{\omega})^{2}} & = & e^{-\lambda\omega^{2}}e^{-\lambda r^{2}}e^{\vec{k}\vec{r}},\quad\vec{k}=2\lambda\vec{\omega}\\
+ & = & e^{-\lambda\omega^{2}}e^{-\lambda r^{2}}4\pi\sum_{L=0}^{\infty}i_{L}(kr)\sum_{M}^{2L+1}Y_{LM}^{\ast}(\vec{k})Y_{LM}(\vec{r})\\
+ & = & e^{-\lambda\omega^{2}}e^{-\lambda r^{2}}\sum_{L=0}^{\infty}(2L+1)i_{L}(kr)P_{L}(\cos\widehat{\vec{k}\vec{r}})\end{eqnarray*}
+
+\end_inset
+
+It is obvious that when integrating the Gaussian in this form with spherically
+ symmetric potential 
+\begin_inset Formula $V(r)$
+\end_inset
+
+ only the harmonic 
+\begin_inset Formula $Y_{00}$
+\end_inset
+
+ will survive after angular integration:
+\begin_inset Formula \[
+\int V(r)e^{-\lambda(\vec{r}-\vec{\omega})^{2}}d^{3}r=4\pi e^{-\lambda\omega^{2}}\int i_{0}(kr)V(r)e^{-\lambda r^{2}}r^{2}dr\]
+
+\end_inset
+
+This result was obtained and used in previous section.
+ Expansion to higher angular momenta will be needed in the next section.
+\end_layout
+
+\begin_layout Subsubsection
+The non-local part 
+\begin_inset Formula $W_{L}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The non-local part 
+\begin_inset Formula \[
+W_{l}(\vec{r},\vec{r}^{\prime})=\frac{2L+1}{4\pi}V_{L}(r)\delta(r-r^{\prime})P_{L}(\cos\widehat{\vec{r}\vec{r}^{\prime}})\]
+
+\end_inset
+
+has a non-trivial dependence on (angle between) 
+\begin_inset Formula $\vec{r}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{r}^{\prime}$
+\end_inset
+
+ and cannot be treated in the same fashion as a local potential 
+\begin_inset Formula $V(r)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+pseudopotential
+\begin_inset Quotes erd
+\end_inset
+
+ terms 
+\begin_inset Formula $W_{L}$
+\end_inset
+
+ have the following ss-matrix elements
+\begin_inset Formula \[
+\langle\vec{a}\alpha|W_{L}|\vec{b}\beta\rangle=D\sum_{m}\int_{0}^{\infty}r^{2}dr\; P_{LM}^{\ast}(r;\vec{a}\alpha)V_{L}(r)P_{LM}(r;\vec{b}\beta)\]
+
+\end_inset
+
+with 
+\begin_inset Formula $D=e^{-\alpha a^{2}}e^{-\beta b^{2}}$
+\end_inset
+
+ being the product of two Gaussians at origin and 
+\begin_inset Quotes eld
+\end_inset
+
+normalized projectors
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+P_{LM}(r;\vec{a}\alpha) & = & e^{\alpha a^{2}}\int Y_{LM}^{\ast}(\vec{r})e^{-\alpha(\vec{r}-\vec{a})^{2}}d^{2}\Omega=4\pi e^{-\alpha r^{2}}i_{L}(k_{a}r)Y_{LM}^{\ast}(\vec{k}_{a})\end{eqnarray*}
+
+\end_inset
+
+Here 
+\begin_inset Formula $\vec{k}_{a}=2\alpha\vec{a}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{k}_{b}=2\alpha\vec{b}$
+\end_inset
+
+, and 
+\begin_inset Formula $i_{L}(z)$
+\end_inset
+
+ is a modified spherical Bessel function.
+ One may perform summation over 
+\begin_inset Formula $M$
+\end_inset
+
+ prior to integration of 
+\begin_inset Formula $W$
+\end_inset
+
+-matrix elements (maybe not for actual implementation but for analysis only)
+ :
+\begin_inset Formula \begin{eqnarray*}
+\sum_{M}Y_{LM}(\vec{k}_{a})Y_{LM}^{\ast}(\vec{k}_{b}) & = & \frac{2L+1}{4\pi}P_{L}(\cos\theta_{ab})\end{eqnarray*}
+
+\end_inset
+
+which is the addition theorem of complex spherical harmonics.
+ The relation between (complex) solid and (complex) spherical harmonics
+ is 
+\begin_inset Formula \[
+\{\vec{r}\}_{LM}=\left(\frac{4\pi}{2L+1}\right)^{1/2}r^{L}Y_{LM}(\vec{r}/r)\]
+
+\end_inset
+
+the corresponding addition theorem reads
+\begin_inset Formula \[
+\sum_{M}\{\vec{k}_{a}\}_{LM}\{\vec{k}_{b}\}_{LM}^{\ast}=(k_{a}k_{b})^{L}P_{L}(\cos\theta_{ab})\]
+
+\end_inset
+
+The polynomials 
+\begin_inset Formula $P_{L}(x)$
+\end_inset
+
+ are the Legendre polynomials:
+\begin_inset Formula \begin{eqnarray*}
+P_{0}(x) & = & 1\\
+P_{1}(x) & = & x\\
+P_{2}(x) & = & (3x^{2}-1)/2\\
+ & \cdots\end{eqnarray*}
+
+\end_inset
+
+The angle 
+\begin_inset Formula $\theta_{ab}$
+\end_inset
+
+ is the angle between 
+\begin_inset Formula $\vec{k}_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{k}_{b}$
+\end_inset
+
+ or between 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+:
+\begin_inset Formula \[
+\cos\theta_{ab}=\frac{(\vec{a}\cdot\vec{b})}{ab}\]
+
+\end_inset
+
+So the expression for the ss-matrix element of 
+\begin_inset Formula $W_{L}$
+\end_inset
+
+ becomes
+\begin_inset Formula \[
+\langle\vec{a}\alpha|W_{L}|\vec{b}\beta\rangle=4\pi(2L+1)P_{L}(\cos\theta_{ab})D\int_{0}^{\infty}i_{L}(k_{a}r)i_{L}(k_{b}r)V_{L}(r)e^{-\lambda r^{2}}r^{2}dr\]
+
+\end_inset
+
+Here 
+\begin_inset Formula $\lambda=\alpha+\beta$
+\end_inset
+
+ as before.
+ With the definition of the special function
+\begin_inset Formula \[
+Q_{L}=\int_{0}^{\infty}\frac{i_{L}(k_{a}r)}{k_{a}^{L}}\frac{i_{L}(k_{b}r)}{k_{b}^{L}}V_{L}(r)e^{-\lambda r^{2}}r^{2}dr\]
+
+\end_inset
+
+that depends only on 
+\begin_inset Formula $a^{2}/2$
+\end_inset
+
+ and 
+\begin_inset Formula $b^{2}/2$
+\end_inset
+
+ via 
+\begin_inset Formula $k_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $k_{b}$
+\end_inset
+
+ the matrix elements 
+\begin_inset Formula $W_{L}$
+\end_inset
+
+ are given by
+\begin_inset Formula \[
+\langle\vec{a}\alpha|W_{L}|\vec{b}\beta\rangle=4\pi(2L+1)(k_{a}k_{b})^{L}P_{L}(\cos\theta_{ab})DQ_{L}\]
+
+\end_inset
+
+For the lowest 
+\begin_inset Formula $L$
+\end_inset
+
+-values that gives:
+\begin_inset Formula \begin{eqnarray*}
+\langle\vec{a}\alpha|W_{0}|\vec{b}\beta\rangle & \sim & Q_{0}D\\
+\langle\vec{a}\alpha|W_{1}|\vec{b}\beta\rangle & \sim & (\vec{a}\cdot\vec{b})Q_{1}D\\
+\langle\vec{a}\alpha|W_{2}|\vec{b}\beta\rangle & \sim & \frac{1}{2}(3(\vec{a}\cdot\vec{b})^{2}-a^{2}b^{2})Q_{2}D\end{eqnarray*}
+
+\end_inset
+
+Now if we split the factors as 
+\begin_inset Formula \begin{eqnarray*}
+W_{L} & = & P_{L}F_{L}\\
+P_{L} & := & (ab)^{L}P_{L}(\cos\theta_{ab})\\
+F_{L} & := & 4\pi(2L+1)(4\alpha\beta)^{L}DQ_{L}\end{eqnarray*}
+
+\end_inset
+
+the first factor 
+\begin_inset Formula $P_{L}$
+\end_inset
+
+ has (eventually) nontrivial dependence on vectors 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+:
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Representation via the Legendre polynomial is useful for gaining insight,
+ but the expression based on the addition theorem might be a more handy
+ form for computations.
+\end_layout
+
+\begin_layout Plain Layout
+FIXME: What is the exact form of the addition theorem for REAL spherical
+ harmonics? I assume that representation of the 
+\begin_inset Quotes eld
+\end_inset
+
+traceless, homogeneous
+\begin_inset Quotes erd
+\end_inset
+
+ polynomials in CSH basis 
+\begin_inset Formula $\{m\}$
+\end_inset
+
+ and RSH basis 
+\begin_inset Formula $[m]$
+\end_inset
+
+ and 
+\begin_inset Formula $[\overline{m}]$
+\end_inset
+
+ defined by 
+\begin_inset Formula $[m]=(\{m\}+\{m\}^{\ast})/\sqrt{2}$
+\end_inset
+
+, and 
+\begin_inset Formula $[\overline{m}]=-\mathrm{i}(\{m\}-\{m\}^{\ast})/\sqrt{2}$
+\end_inset
+
+ are both equally good for evaluation of the 
+\begin_inset Quotes eld
+\end_inset
+
+scalar product
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\sum_{m}\{m\}^{\ast}\{m\}$
+\end_inset
+
+ or 
+\begin_inset Formula $\sum_{m}[m]^{\ast}[m]$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+P_{L} & = & (ab)^{L}P_{L}(\cos\theta_{ab})\\
+ & = & \sum_{M}^{2L+1}[\vec{a}]_{LM}[\vec{b}]_{LM}\\
+ & = & \sum_{M}^{2L+1}[\vec{\nabla}_{a}]_{LM}\frac{(a^{2}/2)^{L}}{L!}[\vec{\nabla}_{b}]_{LM}\frac{(b^{2}/2)^{L}}{L!}\end{eqnarray*}
+
+\end_inset
+
+The second function 
+\begin_inset Formula $F_{L}$
+\end_inset
+
+ is a pure function of two scalar arguments 
+\begin_inset Formula \begin{eqnarray*}
+F_{L}(x,y) & = & 4\pi(2L+1)(4\alpha\beta)^{L}DQ_{L}\\
+x & := & a^{2}/2\\
+y & := & b^{2}/2\end{eqnarray*}
+
+\end_inset
+
+where 
+\begin_inset Formula $D$
+\end_inset
+
+ is just a product of two exponentials
+\begin_inset Formula \[
+D(x,y)=D(x)D(y)=e^{-2\alpha x}e^{-2\beta y}\]
+
+\end_inset
+
+and 
+\begin_inset Formula $Q_{L}$
+\end_inset
+
+ is a slightly more complicated function of the same arguments:
+\begin_inset Formula \begin{eqnarray*}
+Q_{L}(x,y) & = & \int_{0}^{\infty}\frac{i_{L}(k_{a}r)}{k_{a}^{L}}\frac{i_{L}(k_{b}r)}{k_{b}^{L}}V_{L}(r)e^{-\lambda r^{2}}r^{2}dr\\
+k_{a} & = & 2\alpha\sqrt{2x}\\
+k_{b} & = & 2\beta\sqrt{2y}\end{eqnarray*}
+
+\end_inset
+
+As always, the matrix elements with the Gaussians of (in general) non-zero
+ angular momenta 
+\begin_inset Formula $l_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{b}$
+\end_inset
+
+ will be given by 
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}(P_{L}F_{L}) & = & PR(lm_{a},lm_{a}^{\prime},lm_{a}^{\prime\prime})PR(lm_{b},lm_{b}^{\prime},lm_{b}^{\prime\prime})\\
+ & \cdot & ([\vec{\nabla}_{a}]_{lm_{a}^{\prime\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime\prime}}P_{L})\cdot([\vec{\nabla}_{a}]_{lm_{a}^{\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime}}F_{L})\end{eqnarray*}
+
+\end_inset
+
+The double derivative 
+\begin_inset Formula $[\vec{\nabla}_{a}]_{lm_{a}^{\prime\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime\prime}}P_{L}$
+\end_inset
+
+ :
+\begin_inset Formula \begin{eqnarray*}
+[\vec{\nabla}_{a}]_{lm_{a}^{\prime\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime\prime}}P_{L} & = & \sum_{M}^{2L+1}\left([\vec{\nabla}_{a}]_{lm_{a}^{\prime\prime}}[\vec{a}]_{LM}\right)\left([\vec{\nabla}_{b}]_{lm_{b}^{\prime\prime}}[\vec{b}]_{LM}\right)\\
+ & = & \sum_{M}^{2L+1}\left([\vec{\nabla}_{a}]_{lm_{a}^{\prime\prime}}[\vec{\nabla}_{a}]_{LM}\frac{(a^{2}/2)^{L}}{L!}\right)\left([\vec{\nabla}_{b}]_{lm_{b}^{\prime\prime}}[\vec{\nabla}_{b}]_{LM}\frac{(b^{2}/2)^{L}}{L!}\right)\\
+ & = & \sum_{M}^{2L+1}X_{lm_{a}^{\prime\prime}LM}^{(L)}(\vec{a})X_{lm_{b}^{\prime\prime}LM}^{(L)}(\vec{b})\end{eqnarray*}
+
+\end_inset
+
+with the vector functions 
+\begin_inset Formula $X_{lm_{1}lm_{2}}^{(l)}(\vec{r})$
+\end_inset
+
+ introduced in Sec.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Xllmalmb-coup"
+
+\end_inset
+
+ and computed as shown in Sec.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Xllmalmb-unc"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The double derivative 
+\begin_inset Formula $[\vec{\nabla}_{a}]_{lm_{a}^{\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime}}F_{L}$
+\end_inset
+
+ can be expressed as 
+\begin_inset Formula \[
+[\vec{\nabla}_{a}]_{lm_{a}^{\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime}}F_{L}=F_{L}^{(l_{a}^{\prime}l_{b}^{\prime})}[\vec{a}]_{lm_{a}^{\prime}}[\vec{b}]_{lm_{b}^{\prime}}\]
+
+\end_inset
+
+with 
+\begin_inset Formula \[
+F_{L}^{(l_{a}^{\prime}l_{b}^{\prime})}=\left(\frac{\partial}{\partial x}\right)^{l_{a}^{\prime}}\left(\frac{\partial}{\partial y}\right)^{l_{b}^{\prime}}F_{L}(x,y)\]
+
+\end_inset
+
+By factorizing the 
+\begin_inset Quotes eld
+\end_inset
+
+radial derivatives
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $F_{L}^{(l_{a}^{\prime}l_{b}^{\prime})}$
+\end_inset
+
+ the expression for final integrals could be made 
+\begin_inset Formula \[
+[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}(P_{L}F_{L})=\sum_{l_{a}^{\prime}l_{b}^{\prime}}F_{L}^{(l_{a}^{\prime}l_{b}^{\prime})}X_{L;lm_{a}lm_{b}}^{(l_{a}^{\prime}l_{b}^{\prime})}(\vec{a},\vec{b})\]
+
+\end_inset
+
+with the 
+\begin_inset Quotes eld
+\end_inset
+
+angular part
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+and it does really depend 
+\emph on
+only
+\emph default
+ on 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ and not on any exponent; we used to call 
+\begin_inset Quotes eld
+\end_inset
+
+angular parts
+\begin_inset Quotes erd
+\end_inset
+
+ also some functions of 
+\begin_inset Formula $\vec{\omega}$
+\end_inset
+
+ that itself depends on 
+\begin_inset Quotes eld
+\end_inset
+
+radial
+\begin_inset Quotes erd
+\end_inset
+
+ quantities like 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta$
+\end_inset
+
+ (but again not 
+\begin_inset Formula $\gamma$
+\end_inset
+
+).
+ The price one has apparently to pay for that is that the radial derivatives
+ 
+\begin_inset Formula $F_{L}^{(l_{a}^{\prime}l_{b}^{\prime})}$
+\end_inset
+
+ are two-index quantities (depend on 
+\begin_inset Formula $l_{a}^{\prime}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{b}^{\prime}$
+\end_inset
+
+ ).
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{eqnarray*}
+X_{L;lm_{a}lm_{b}}^{(l_{a}^{\prime}l_{b}^{\prime})}(\vec{a},\vec{b}): & = & PR^{\prime}(lm_{a},lm_{a}^{\prime},lm_{a}^{\prime\prime})PR^{\prime}(lm_{b},lm_{b}^{\prime},lm_{b}^{\prime\prime})\\
+ & \cdot & [\vec{a}]_{lm_{a}^{\prime}}[\vec{b}]_{lm_{b}^{\prime}}\sum_{M}^{2L+1}\left([\vec{\nabla}_{a}]_{lm_{a}^{\prime\prime}}[\vec{a}]_{LM}\right)\left([\vec{\nabla}_{b}]_{lm_{b}^{\prime\prime}}[\vec{b}]_{LM}\right)\\
+\sim & \cdot & [\vec{a}]_{lm_{a}^{\prime}}[\vec{b}]_{lm_{b}^{\prime}}\sum_{M}^{2L+1}X_{lm_{a}^{\prime\prime}LM}^{(L)}(\vec{a})X_{lm_{b}^{\prime\prime}LM}^{(L)}(\vec{b})\end{eqnarray*}
+
+\end_inset
+
+(here summation over 
+\begin_inset Formula $l_{a}^{\prime}+l_{a}^{\prime\prime}=l_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{b}^{\prime}+l_{b}^{\prime\prime}=l_{b}$
+\end_inset
+
+ is not performed, that is indicated by prime in 
+\begin_inset Formula $PR^{\prime}$
+\end_inset
+
+).
+ In the special case when 
+\begin_inset Formula $a=b=0$
+\end_inset
+
+ (same center) the only non-zero elements are 
+\begin_inset Formula \[
+F_{L}^{(00)}(0,0)X_{L;LMLM}^{(00)}(\vec{0},\vec{0})\]
+
+\end_inset
+
+diagonal in 
+\begin_inset Formula $M$
+\end_inset
+
+ as should be expected from the nature of the pseudo-potential 
+\begin_inset Formula $W_{L}$
+\end_inset
+
+.
+ In that case only one derivative 
+\begin_inset Formula $F_{L}^{(00)}(0,0)$
+\end_inset
+
+ is required.
+ If only 
+\begin_inset Formula $b=0$
+\end_inset
+
+ and 
+\begin_inset Formula $a\ne0$
+\end_inset
+
+ then only the functions of angular momentum 
+\begin_inset Formula $l_{b}=L$
+\end_inset
+
+ at origin are not 
+\begin_inset Quotes eld
+\end_inset
+
+projected out
+\begin_inset Quotes erd
+\end_inset
+
+: 
+\begin_inset Formula \[
+\sum_{l_{a}^{\prime}}F_{L}^{(l_{a}^{\prime}0)}X_{L;lm_{a}LM}^{(l_{a}^{\prime}0)}(\vec{a},\vec{0})=...\]
+
+\end_inset
+
+In summary, if any of the centers, either 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ or 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+, coincide with 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ there is no need for higher derivatives 
+\begin_inset Formula $F_{L}^{(l^{\prime}l^{\prime\prime})}$
+\end_inset
+
+ w.r.t.
+\begin_inset space ~
+\end_inset
+
+the corresponding argument.
+ Ultimately, in one-center case only 
+\begin_inset Formula $F_{L}^{(00)}$
+\end_inset
+
+ is required.
+\end_layout
+
+\begin_layout Subsection
+Forces due to non-local pseudopotential
+\end_layout
+
+\begin_layout Standard
+As already mentioned in the previous section, the ``projective'' nature
+ of the non-local part 
+\begin_inset Formula $W_{L}$
+\end_inset
+
+ at 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ makes the matrix elements on the same center vanish if either ``bra'' (at
+ 
+\begin_inset Formula $\vec{a}\equiv\vec{c}$
+\end_inset
+
+) or ``ket'' (at 
+\begin_inset Formula $\vec{b}\equiv\vec{c}$
+\end_inset
+
+) angular momenta differ from 
+\begin_inset Formula $L$
+\end_inset
+
+.
+ Obviously there are no forces due to one-center integrals (in 
+\emph on
+atom-bound
+\emph default
+ basis), Sec.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:sel-rules-forces"
+
+\end_inset
+
+.
+ Similarly, if 
+\begin_inset Formula $\vec{b}\equiv\vec{c}\equiv\vec{B}$
+\end_inset
+
+ but 
+\begin_inset Formula $\vec{a}\equiv\vec{A}$
+\end_inset
+
+ corresponds to a different center the integrals with the ``ket'' vectors
+ of the angular momentum different from 
+\begin_inset Formula $L$
+\end_inset
+
+ vanish due to this projection nature.
+ Consequently, the ``forbidden'' matrix elements also do not contribute
+ to the forces (in an 
+\emph on
+atom-bound
+\emph default
+ basis), since ``
+\emph on
+once zero, always zero
+\emph default
+'', independent on what the distance between 
+\begin_inset Formula $\vec{A}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{B}$
+\end_inset
+
+ is.
+ However, the allowed matrix elements with ``ket'' of angular momentum 
+\begin_inset Formula $L$
+\end_inset
+
+ do depend on this distance (and orientation).
+ Due to the translational invariance 
+\begin_inset Formula $\vec{\nabla}_{A}+\vec{\nabla}_{B}=0$
+\end_inset
+
+ it is sufficient to consider dependence on 
+\begin_inset Formula $\vec{\nabla}_{A}=\vec{\nabla}_{a}$
+\end_inset
+
+:
+\begin_inset Formula \[
+\vec{\nabla}_{a}\sum_{l_{a}^{\prime}}F_{L}^{(l_{a}^{\prime}0)}X_{L;lm_{a}LM}^{(l_{a}^{\prime}0)}(\vec{a},\vec{0})\]
+
+\end_inset
+
+from which it is obvious that only the derivatives 
+\begin_inset Formula $F_{L}^{(l0)}$
+\end_inset
+
+ w.r.t.
+\begin_inset space ~
+\end_inset
+
+the first argument, 
+\begin_inset Formula $a^{2}/2$
+\end_inset
+
+, do contribute to the forces.
+ The maximum order of these derivatives is one higher that for the normal
+ integrals: 
+\begin_inset Formula $l\le l_{a}+1$
+\end_inset
+
+, where 
+\begin_inset Formula $l_{a}$
+\end_inset
+
+ is the angular momentum of the ``bra'' vector at 
+\begin_inset Formula $\vec{A}$
+\end_inset
+
+.
+ Therefore, in the only non-trivial special case for forces when one of
+ 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ or 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ coincides with 
+\begin_inset Formula $\vec{c}$
+\end_inset
+
+ only the derivatives 
+\begin_inset Formula $F_{L}^{(0l)}$
+\end_inset
+
+ or 
+\begin_inset Formula $F_{L}^{(l0)}$
+\end_inset
+
+ w.r.t.
+\begin_inset space ~
+\end_inset
+
+the other argument are necessary.
+\end_layout
+
+\begin_layout Subsection
+Derivatives of 
+\begin_inset Formula $Q_{L}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We aim at 
+\begin_inset Formula \begin{eqnarray*}
+Q_{L}^{(l_{a}l_{b})} & := & \left(\frac{\partial}{\partial x}\right)^{l_{a}}\left(\frac{\partial}{\partial y}\right)^{l_{b}}Q_{L}(x,y)\\
+Q_{L}(x,y) & = & \int_{0}^{\infty}\frac{i_{L}(k_{a}r)}{k_{a}^{L}}\frac{i_{L}(k_{b}r)}{k_{b}^{L}}V_{L}(r)e^{-\lambda r^{2}}r^{2}dr\\
+k_{a} & = & 2\alpha\sqrt{2x}\\
+k_{b} & = & 2\beta\sqrt{2y}\end{eqnarray*}
+
+\end_inset
+
+In analogy to how we did it for the local part of the pseudopotential we
+ start with
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial}{\partial x} & = & (2\alpha)^{2}\frac{1}{k_{a}}\frac{\partial}{\partial k_{a}}\\
+\frac{\partial}{\partial y} & = & (2\beta)^{2}\frac{1}{k_{b}}\frac{\partial}{\partial k_{b}}\end{eqnarray*}
+
+\end_inset
+
+ and get
+\begin_inset Formula \[
+Q_{L}^{(l_{a}l_{b})}=(2\alpha)^{2l_{a}}(2\beta)^{2l_{b}}\int_{0}^{\infty}\frac{i_{L+l_{a}}(k_{a}r)}{k_{a}^{L+l_{a}}}\frac{i_{L+l_{b}}(k_{b}r)}{k_{b}^{L+l_{b}}}r^{2+l_{a}+l_{b}}V_{L}(r)e^{-\lambda r^{2}}dr\]
+
+\end_inset
+
+For which we introduce the generic series
+\begin_inset Formula \[
+Q_{L+l_{a}L+l_{b}}=\int_{0}^{\infty}\frac{i_{L+l_{a}}(k_{a}r)}{k_{a}^{L+l_{a}}}\frac{i_{L+l_{b}}(k_{b}r)}{k_{b}^{L+l_{a}}}r^{2+l_{a}+l_{b}}V_{L}(r)e^{-\lambda r^{2}}dr\]
+
+\end_inset
+
+that also includes the original 
+\begin_inset Formula $Q$
+\end_inset
+
+-function:
+\begin_inset Formula \[
+Q_{L}\equiv Q_{LL}\]
+
+\end_inset
+
+ In terms of this generic series the derivatives of 
+\begin_inset Formula $Q_{L}$
+\end_inset
+
+ are given by
+\begin_inset Formula \begin{eqnarray*}
+Q_{LL}^{(l_{a}l_{b})} & = & (2\alpha)^{2l_{a}}(2\beta)^{2l_{b}}Q_{L+l_{a}L+l_{b}}\end{eqnarray*}
+
+\end_inset
+
+The derivatives of the product 
+\begin_inset Formula $DQ$
+\end_inset
+
+ we obtain by binomial rule by noting that 
+\begin_inset Formula \[
+D^{(l_{1}l_{2})}=(-2\alpha)^{l_{1}}(-2\beta)^{l_{2}}D\]
+
+\end_inset
+
+which gives us
+\begin_inset Formula \begin{eqnarray*}
+(DQ_{L})^{(l_{1}l_{2})} & = & \sum_{k_{1}}\sum_{k_{2}}\left(\begin{array}{c}
+l_{1}\\
+k_{1}\end{array}\right)\left(\begin{array}{c}
+l_{2}\\
+k_{2}\end{array}\right)(-2\alpha)^{l_{1}+k_{1}}(-2\beta)^{l_{2}+k_{2}}[DQ_{L+k_{1}L+k_{2}}]\end{eqnarray*}
+
+\end_inset
+
+For the special kind of potential 
+\begin_inset Formula \[
+V_{L}(r):=r^{p-2}e^{-\gamma r^{2}}\]
+
+\end_inset
+
+the corresponding generic series is
+\begin_inset Formula \begin{eqnarray*}
+Q_{L+l_{a}L+l_{b}}(k_{a},k_{b},\lambda) & = & Q_{L+l_{a}L+l_{b}}^{p+l_{a}+l_{b}}(k_{a},k_{b},\lambda+\gamma)\\
+Q_{l_{1}l_{2}}^{n}(k_{a},k_{b},\eta) & := & \int_{0}^{\infty}\frac{i_{l_{1}}(k_{a}r)}{k_{a}^{l_{1}}}\frac{i_{l_{2}}(k_{b}r)}{k_{b}^{l_{2}}}r^{n}e^{-\eta r^{2}}dr\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To evaluate the matrix elements of 
+\begin_inset Formula $W_{L}$
+\end_inset
+
+ with the basis functions of angular momenta 
+\begin_inset Formula $L_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{b}$
+\end_inset
+
+ one needs the set of derivatives
+\begin_inset Formula \[
+\{Q_{L}^{(l_{a}l_{b})},\quad l_{a}\le L_{a},\quad l_{b}\le L_{b}\}\]
+
+\end_inset
+
+which are expressed via the subset of generic series
+\begin_inset Formula \[
+\{Q_{l_{1}l_{2}},\quad L\le l_{1}\le L+L_{b},\quad L\le l_{2}\le L+L_{b}\}\]
+
+\end_inset
+
+which for the special kind of potential 
+\begin_inset Formula $V(r)$
+\end_inset
+
+ details to
+\begin_inset Formula \[
+\{Q_{l_{1}l_{2}}^{n},\quad L\le l_{1}\le L+L_{b},\quad L\le l_{2}\le L+L_{b},\quad n=p+l_{1}+l_{2}-2L\}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Special case: 
+\begin_inset Formula $Q$
+\end_inset
+
+ and 
+\begin_inset Formula $Q_{L}$
+\end_inset
+
+ for small 
+\begin_inset Formula $k$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $z$
+\end_inset
+
+ approaching zero the Bessel function behaves as
+\begin_inset Formula \[
+i_{l}(z)\approx\frac{z^{l}}{(2l+1)!!}\]
+
+\end_inset
+
+and therefore for small 
+\begin_inset Formula $k$
+\end_inset
+
+ we have
+\begin_inset Formula \[
+\frac{i_{l}(kr)}{k^{l}}\approx\frac{r^{l}}{(2l+1)!!}\]
+
+\end_inset
+
+Thus, for values of 
+\begin_inset Formula $k$
+\end_inset
+
+ sufficiently smaller than the inverse of characteristic size of the (damped)
+ potential 
+\begin_inset Formula $V(r)e^{-\lambda r^{2}}$
+\end_inset
+
+ the 
+\begin_inset Formula $Q$
+\end_inset
+
+-function of the first kind is given by a (non-zero) constant
+\begin_inset Formula \begin{eqnarray*}
+Q_{l}(0,\lambda) & = & \frac{1}{(2l+1)!!}\int_{0}^{\infty}r^{2+2l}\; V(r)e^{-\lambda r^{2}}dr\end{eqnarray*}
+
+\end_inset
+
+Similarly for sufficiently small 
+\begin_inset Formula $k_{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $k_{b}$
+\end_inset
+
+ the 
+\begin_inset Formula $Q$
+\end_inset
+
+-function of the second kind is given by
+\begin_inset Formula \begin{eqnarray*}
+Q_{LL}(0,0,\lambda) & = & \frac{1}{[(2L+1)!!]^{2}}\int_{0}^{\infty}r^{2+2L}\; V_{L}(r)e^{-\lambda r^{2}}dr\end{eqnarray*}
+
+\end_inset
+
+ of the same structure as the limiting case of the 
+\begin_inset Formula $Q$
+\end_inset
+
+-integrals of the first kind.
+ Derivatives of higher orders are not required for the case of same center
+ 
+\begin_inset Formula $k_{a}=k_{b}=0$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+If only one argument 
+\begin_inset Formula $k_{b}$
+\end_inset
+
+ approaches zero and 
+\begin_inset Formula $k_{a}$
+\end_inset
+
+ stays finite then we have
+\begin_inset Formula \[
+Q_{L+l_{a}L}(k,0,\lambda)=\frac{1}{(2L+1)!!}\int_{0}^{\infty}\frac{i_{L+l_{a}}(kr)}{k^{L+l_{a}}}r^{2+L+l_{a}}\; V_{L}(r)e^{-\lambda r^{2}}dr\]
+
+\end_inset
+
+The latter expression up to a factor is equal to the 
+\begin_inset Formula $Q$
+\end_inset
+
+-function of the first kind first kind of the order 
+\begin_inset Formula $L+l_{a}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The corresponding relations for the derivatives of 
+\begin_inset Formula $Q$
+\end_inset
+
+-integrals for the special case of Gaussian 
+\begin_inset Formula $V(r)=r^{p-2}e^{-\gamma r^{2}}$
+\end_inset
+
+ will be
+\begin_inset Formula \begin{eqnarray*}
+Q_{LL}^{(l_{a}0)}(k,0,\lambda) & = & \frac{1}{(2L+1)!!}Q^{(L+l_{a})}(k,\eta)\\
+Q_{LL}^{(00)}(0,0,\eta) & = & \frac{1}{(2L+1)!!}Q^{(L)}(0,\eta)\\
+Q^{(l)}(0,\eta) & \sim & \frac{1}{(2l+1)!!}G(p+2l,\eta)\\
+G(p,\eta) & := & \int_{0}^{\infty}r^{p}e^{-\eta r^{2}}dr\\
+ & = & \frac{1}{2}\eta^{-(p+1)/2}\;\Gamma(\frac{p+1}{2})\\
+G(p+2l,\eta) & = & \frac{\Gamma(\frac{p+1}{2}+l)}{\eta^{l}\Gamma(\frac{p+1}{2})}G(p,\eta)\end{eqnarray*}
+
+\end_inset
+
+(the second line is just a special case of the first line, of course).
+\begin_inset Formula \[
+\Gamma(1/2)=\sqrt{\pi},\quad\Gamma(3/2)=\sqrt{\pi}/2,\ldots\]
+
+\end_inset
+
+ and consequently
+\begin_inset Formula \[
+G(0,\eta)=\sqrt{\pi/\eta}/2,\quad G(1,\eta)=\sqrt{\pi}/2\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Evaluation of Integrals 
+\begin_inset Formula $Q_{\nu}^{\lambda}(k,\eta)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[based on the hidden section of Hu paper] The matrix elements of the first
+ type integral deal with the evaluation of the radial integral 
+\begin_inset Formula $Q_{\nu}^{\lambda}(k,\eta)$
+\end_inset
+
+ which can be expressed as 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tab"
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+Q_{\nu}^{\lambda}(k,\eta)=\frac{k^{\nu}}{2^{\nu+1}\eta^{\frac{1}{2}(\nu+\lambda+1)}}RF_{1}(\frac{\lambda+\nu+1}{2};\nu+\frac{1}{2};-\frac{k^{2}}{4\eta})\end{equation}
+
+\end_inset
+
+ where 
+\begin_inset Formula $R=\Gamma(\frac{\nu}{2}+\frac{\lambda}{2}+\frac{1}{2})/\Gamma(\nu+1)$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ is the gamma function and 
+\begin_inset Formula $F_{1}$
+\end_inset
+
+ is the degenerate hypergeometric function which can be expressed as the
+ confluent hypergeometric series 
+\begin_inset Formula \begin{equation}
+F_{1}(a,b;z)=1+\frac{a}{b}\frac{z}{1!}+\frac{a(a+1)}{b(b+1)}\frac{z^{2}}{2!}+\cdots\end{equation}
+
+\end_inset
+
+ An asymptotic series is given by 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "davd"
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+F_{1}(a,b;z) & = & R^{-1}z^{a-b}exp(z)[\frac{(b-a)(1-a)z^{-1}}{1!}\nonumber \\
+ & + & \frac{(b-a)(b-a+1)(1-a)(2-a)z^{-2}}{2!}+\cdots]\end{eqnarray}
+
+\end_inset
+
+ Note that the asymptotic form truncates for 
+\begin_inset Formula $\lambda+\nu$
+\end_inset
+
+ even and 
+\begin_inset Formula $\lambda\geq\nu$
+\end_inset
+
+ providing an exact analytical expression for 
+\begin_inset Formula $F_{1}$
+\end_inset
+
+.
+ An exactly equivalent form for these 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ and 
+\begin_inset Formula $\nu$
+\end_inset
+
+ is found by noting 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "davd"
+
+\end_inset
+
+, 
+\begin_inset Formula \begin{equation}
+F_{1}(a,b,z)=\exp(z)F_{1}(b-a;b;-z)\end{equation}
+
+\end_inset
+
+ Substitution of the confluent hypergeometric series yields 
+\begin_inset Formula \begin{equation}
+F_{1}(a,b,z)=\exp(z)[1-\frac{(b-a)z}{b1!}+\frac{(b-a)(b-a+1)z^{2}}{b(b+1)2!}+\cdots]\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Recursion relations were derived and implemented to allow most 
+\begin_inset Formula $Q_{\nu}^{\lambda}(k,\eta)$
+\end_inset
+
+ to be calculated from just a few starting values.
+ The recursion relation on 
+\begin_inset Formula $i_{\nu}(x)$
+\end_inset
+
+ is given 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "abm"
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+i_{\nu}(x)=i_{\nu-2}(x)-\frac{(2\nu-1)}{x}i_{\nu-1}(x)\end{equation}
+
+\end_inset
+
+ By using this relation and Eq(27), we obtain a number of recursion relations:
+ 
+\begin_inset Formula \begin{eqnarray}
+Q_{\nu}^{\nu+1}\!\!\!\! & = & \frac{k}{2\eta}Q_{\nu-1}^{\nu+1}\\
+Q_{\nu}^{\lambda} & = & \frac{1}{k}[2\eta Q_{\nu-1}^{\lambda+1}-(\lambda+\nu-1)Q_{\nu-1}^{\lambda-1}]\\
+Q_{\nu}^{\lambda} & = & \frac{1}{\lambda+\nu+1}[2\eta Q_{\nu}^{\lambda+2}-kQ_{\nu+1}^{\lambda+1}]\\
+Q_{\nu}^{\lambda} & = & \frac{1}{2\eta}[(\lambda+\nu-1)Q_{\nu}^{\lambda-2}+kQ_{\nu-1}^{\lambda-1}]\\
+Q_{\nu}^{\lambda} & = & \frac{1}{2\eta}\{(\lambda+\nu-3)Q_{\nu-2}^{\lambda-2}+[k-(2\nu-1)\frac{2\eta}{k}]Q_{\nu-1}^{\lambda-1}\}\\
+Q_{\nu}^{\lambda} & = & \frac{1}{\lambda+\nu+1}\{2\eta Q_{\nu+2}^{\lambda+2}-[k-(2\nu+3)\frac{2\eta}{k}]Q_{\nu+1}^{\lambda+1}\}\end{eqnarray}
+
+\end_inset
+
+These relations were examined by Davidson and he found that some of them
+ are not numerical stable depending on the values of 
+\begin_inset Formula $\frac{k^{2}}{4\eta}$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, and 
+\begin_inset Formula $\eta$
+\end_inset
+
+.
+ He gave the separate stable recurrence schemes for small and large 
+\begin_inset Formula $\frac{k^{2}}{4\eta}$
+\end_inset
+
+.
+ Switching from one to the other at 
+\begin_inset Formula $\frac{k^{2}}{4\eta}=3.0$
+\end_inset
+
+ yields a relative accuracy of 
+\begin_inset Formula $10^{-13}$
+\end_inset
+
+ in the 
+\begin_inset Formula $Q_{\nu}^{\lambda}(k,\eta)$
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "davd"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+[AM ADDED:] The corresponding recurrence relations for normalized 
+\begin_inset Formula $Q$
+\end_inset
+
+-functions defined by
+\begin_inset Formula \[
+Q_{\nu}^{\lambda}(k,\eta)=k^{\nu}\mathcal{Q}_{\nu}^{\lambda}(k,\eta)\]
+
+\end_inset
+
+read 
+\begin_inset Formula \begin{eqnarray}
+\mathcal{Q}_{\nu}^{\nu+1}\!\!\!\! & = & \frac{1}{2\eta}\mathcal{Q}_{\nu-1}^{\nu+1}\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{1}{k^{2}}[2\eta\mathcal{Q}_{\nu-1}^{\lambda+1}-(\lambda+\nu-1)\mathcal{Q}_{\nu-1}^{\lambda-1}]\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{1}{\lambda+\nu+1}[2\eta\mathcal{Q}_{\nu}^{\lambda+2}-k^{2}\mathcal{Q}_{\nu+1}^{\lambda+1}]\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{1}{2\eta}[(\lambda+\nu-1)\mathcal{Q}_{\nu}^{\lambda-2}+\mathcal{Q}_{\nu-1}^{\lambda-1}]\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{1}{2\eta}\{\frac{(\lambda+\nu-3)}{k^{2}}\mathcal{Q}_{\nu-2}^{\lambda-2}+[1-(2\nu-1)\frac{2\eta}{k^{2}}]\mathcal{Q}_{\nu-1}^{\lambda-1}\}\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{1}{\lambda+\nu+1}\{2\eta k^{2}\mathcal{Q}_{\nu+2}^{\lambda+2}-[k^{2}-(2\nu+3)2\eta]\mathcal{Q}_{\nu+1}^{\lambda+1}\}\end{eqnarray}
+
+\end_inset
+
+If the ``normalized'' 
+\begin_inset Formula $Q$
+\end_inset
+
+-functions were defined as
+\begin_inset Formula \[
+Q_{\nu}^{\lambda}(k,\eta)=\frac{\tau^{\nu/2}}{\eta^{(\lambda+1)/2}}\mathcal{Q}_{\nu}^{\lambda}(\tau),\quad\tau=\frac{k^{2}}{4\eta}\]
+
+\end_inset
+
+the corresponding recurrence relations simplify to
+\begin_inset Formula \begin{eqnarray}
+\mathcal{Q}_{\nu}^{\nu+1}\!\!\!\! & = & \eta^{-1/2}\mathcal{Q}_{\nu-1}^{\nu+1}\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \tau^{-1}(\mathcal{Q}_{\nu-1}^{\lambda+1}-\frac{\lambda+\nu-1}{2}\mathcal{Q}_{\nu-1}^{\lambda-1})\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{2}{\lambda+\nu+1}(\mathcal{Q}_{\nu}^{\lambda+2}-\tau\mathcal{Q}_{\nu+1}^{\lambda+1})\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{\lambda+\nu-1}{2}\mathcal{Q}_{\nu}^{\lambda-2}+\mathcal{Q}_{\nu-1}^{\lambda-1}\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{\lambda+\nu-3}{2}\tau^{-1}\mathcal{Q}_{\nu-2}^{\lambda-2}+(1-\frac{2\nu-1}{2}\tau^{-1})\mathcal{Q}_{\nu-1}^{\lambda-1}\\
+\mathcal{Q}_{\nu}^{\lambda} & = & \frac{2}{\lambda+\nu+1}[\tau\mathcal{Q}_{\nu+2}^{\lambda+2}-(\tau-\frac{2\nu+3}{2})\mathcal{Q}_{\nu+1}^{\lambda+1}]\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Bits and pieces of the actual implementation
+\end_layout
+
+\begin_layout Standard
+There is a function 
+\family typewriter
+qcomp(n,l,k,eta,tau)
+\family default
+ to compute ``the integral of Bessel function combined with algebraic and
+ exponential functions'' that accepts somewhat redundant arguments:
+\begin_inset Formula \begin{eqnarray*}
+q(n,l,k,\eta) & \equiv & q(n,l,k,\eta,\tau),\quad\tau=\frac{k^{2}}{4\eta}\\
+q(n,l,k,\eta) & = & \int i_{l}(kr)r^{n}e^{-\eta r^{2}}dr\\
+ & = & \frac{q(n,l,\sqrt{4\tau},1)}{\eta^{(n+1)/2}}\\
+ & = & \frac{q(n,l,1,\frac{1}{4\tau})}{k^{n+1}}\\
+q(n,l,\sqrt{4\tau},1) & = & \int i_{l}(\sqrt{4\tau}x)x^{n}e^{-x^{2}}dx,\quad x:=\sqrt{\eta}r\\
+q(n,l,1,\frac{1}{4\tau}) & = & \int i_{l}(x)x^{n}e^{-\frac{x^{2}}{4\tau}}dx,\quad x:=kr\end{eqnarray*}
+
+\end_inset
+
+Depending on the value of the arguments 
+\begin_inset Formula $n$
+\end_inset
+
+, 
+\begin_inset Formula $l$
+\end_inset
+
+, and 
+\begin_inset Formula $\tau$
+\end_inset
+
+ a specific version is invoked to actually compute the integral, either
+ 
+\begin_inset Quotes eld
+\end_inset
+
+analytic
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+asymptotic
+\begin_inset Quotes erd
+\end_inset
+
+, or 
+\begin_inset Quotes eld
+\end_inset
+
+power series
+\begin_inset Quotes erd
+\end_inset
+
+ variant:
+\end_layout
+
+\begin_layout Itemize
+The analytic version 
+\family typewriter
+qalt()
+\family default
+ is invoked for 
+\begin_inset Formula $n>l$
+\end_inset
+
+ of the same ``oddity'' (i.e.
+ when 
+\begin_inset Formula $n+l$
+\end_inset
+
+ is an even number).
+\end_layout
+
+\begin_layout Itemize
+The asymptotic version 
+\family typewriter
+qasy()
+\family default
+ is invoked for sufficiently large 
+\begin_inset Formula $\tau\ge\tau_{min}(n)$
+\end_inset
+
+.
+ The cutoff parameter 
+\begin_inset Formula $\tau_{min}$
+\end_inset
+
+ depends on 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ For 
+\begin_inset Formula $n<9$
+\end_inset
+
+ the first members of the series are 
+\begin_inset Formula $31.0$
+\end_inset
+
+, 
+\begin_inset Formula $28.0$
+\end_inset
+
+, 
+\begin_inset Formula $25.0$
+\end_inset
+
+, etc.
+ At 
+\begin_inset Formula $n=9$
+\end_inset
+
+ or higher the cutoff is set to 
+\begin_inset Formula $15.0$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+The power series 
+\family typewriter
+qpow()
+\family default
+ is otherwise invoked for smaller 
+\begin_inset Formula $\tau$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Coulomb field damped by a Gaussian factor 
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Coulomb-damped"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the potential
+\begin_inset Formula \[
+V(r)=\frac{e^{-\gamma r^{2}}}{r}\]
+
+\end_inset
+
+we evaluate the ss-matrix element from the general result of Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:pp-local"
+
+\end_inset
+
+:
+\begin_inset Formula \[
+\langle\alpha\vec{a}|V(r)|\beta\vec{b}\rangle=\exp\left(-\frac{\alpha\beta}{\alpha+\beta}d^{2}\right)F(\omega^{2}/2),\quad\vec{\omega}=\frac{\alpha\vec{a}+\beta\vec{b}}{\alpha+\beta}\]
+
+\end_inset
+
+with 
+\begin_inset Formula \[
+F=4\pi e^{-\lambda\omega^{2}}Q,\quad\lambda=\alpha+\beta\]
+
+\end_inset
+
+ and 
+\begin_inset Formula \begin{align*}
+Q & =\int_{0}^{\infty}i_{0}(kr)V(r)e^{-\lambda r^{2}}r^{2}dr\quad\text{here}\quad k=2\lambda\omega\\
+ & =\int_{0}^{\infty}\frac{\sinh kr}{kr}\frac{e^{-\gamma r^{2}}}{r}e^{-\lambda r^{2}}r^{2}dr\\
+ & =\frac{1}{2k}\left(\int_{0}^{\infty}e^{-\tau r^{2}+kr}dr-\int_{0}^{\infty}e^{-\tau r^{2}-kr}dr\right)\quad\text{here}\quad\tau=\lambda+\gamma\\
+ & =\frac{1}{2k}e^{\frac{k^{2}}{4\tau}}\left(\int_{0}^{\infty}e^{-\tau(r-\frac{k}{2\tau})^{2}}dr-\int_{0}^{\infty}e^{-\tau(r+\frac{k}{2\tau})^{2}}dr\right)\\
+ & =\frac{1}{2k}e^{\frac{k^{2}}{4\tau}}\left(\int_{-k/2\tau}^{\infty}e^{-\tau x^{2}}dx-\int_{k/2\tau}^{\infty}e^{-\tau x^{2}}dx\right)\\
+ & =\frac{1}{2k}e^{\frac{k^{2}}{4\tau}}\int_{-k/2\tau}^{\;\; k/2\tau}e^{-\tau x^{2}}dx\\
+ & =\frac{1}{k}e^{\frac{k^{2}}{4\tau}}\int_{0}^{k/2\tau}e^{-\tau x^{2}}dx\end{align*}
+
+\end_inset
+
+Finally, the last integral may be expressed by unsing either the definition
+ of the error function 
+\begin_inset Formula $\Phi$
+\end_inset
+
+:
+\begin_inset Formula \[
+Q=\frac{1}{2\tau}\sqrt{\frac{\pi}{2}}e^{\frac{k^{2}}{4\tau}}\frac{\Phi(k/2\sqrt{\tau})}{k/2\sqrt{\tau}}\]
+
+\end_inset
+
+ or via the initial member 
+\begin_inset Formula $I_{0}(x)=\int_{0}^{1}e^{-xt^{2}}dt$
+\end_inset
+
+ of the series, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:In-series"
+
+\end_inset
+
+):
+\begin_inset Formula \[
+Q=\frac{1}{2\tau}e^{\frac{k^{2}}{4\tau}}I_{0}(k^{2}/4\tau)\]
+
+\end_inset
+
+Note that the dimensionless parameter 
+\begin_inset Formula $k^{2}/4\tau$
+\end_inset
+
+ is proportional to 
+\begin_inset Formula $\omega^{2}$
+\end_inset
+
+.
+ 
+\begin_inset Formula \[
+\frac{k^{2}}{4\tau}=\frac{\lambda^{2}}{\lambda+\gamma}\omega^{2}\]
+
+\end_inset
+
+ With the second form of the integral 
+\begin_inset Formula $Q$
+\end_inset
+
+ the final expression for 
+\begin_inset Formula $F$
+\end_inset
+
+ is 
+\begin_inset Formula \[
+F(\omega^{2}/2)=\frac{2\pi}{\lambda+\gamma}\exp\left(-\frac{\lambda\gamma}{\lambda+\gamma}\omega^{2}\right)I_{0}\left(\frac{\lambda^{2}}{\lambda+\gamma}\omega^{2}\right)\]
+
+\end_inset
+
+Derivatives 
+\begin_inset Formula $F^{(l)}$
+\end_inset
+
+ of such product may be evaluated from the values of 
+\begin_inset Formula $I_{l}$
+\end_inset
+
+ by a binomial formula.
+\end_layout
+
+\begin_layout Subsection
+Dipole integrals
+\end_layout
+
+\begin_layout Right Address
+By Gopal Dixit, 2008
+\end_layout
+
+\begin_layout Standard
+The dipole matrix elements of ss-type are given by analytic expression
+\begin_inset Formula \[
+\vec{D}_{ab}=\langle\alpha\vec{a}|\vec{r}|\beta\vec{b}\rangle=\int e^{-\alpha(\vec{r}-\vec{a})^{2}}\vec{r}e^{-\beta(\vec{r}-\vec{b})^{2}}d^{3}\vec{r},\]
+
+\end_inset
+
+here 
+\begin_inset Formula $|\alpha\vec{a}\rangle$
+\end_inset
+
+ and 
+\begin_inset Formula $|\beta\vec{b}\rangle$
+\end_inset
+
+ are the primitive gaussian basis function.
+ The overlap matrix elements of ss-type are given by analytic expression
+ 
+\begin_inset Formula \[
+\vec{S}_{ab}=\langle\alpha\vec{a}|\beta\vec{b}\rangle=\left(\frac{\pi}{\alpha+\beta}\right)^{2}e^{-\zeta(\vec{a}-\vec{b})^{2}},\]
+
+\end_inset
+
+ here 
+\begin_inset Formula $\zeta=\alpha\beta/\alpha+\beta$
+\end_inset
+
+.
+ Now, taking the derivative of overlap matrix elements, i.e.
+ 
+\begin_inset Formula \[
+\vec{\nabla_{b}}\vec{S}_{ab}=\frac{\partial}{\partial\vec{b}}\int e^{-\alpha(\vec{r}-\vec{a})^{2}}e^{-\beta(\vec{r}-\vec{b})^{2}}d^{3}\vec{r}=\int e^{-\alpha(\vec{r}-\vec{a})^{2}}2\beta(\vec{r}-\vec{b)}e^{-\beta(\vec{r}-\vec{b})^{2}}d^{3}\vec{r}=2\beta(\vec{D}_{ab}-\vec{b}\vec{S}_{ab}),\]
+
+\end_inset
+
+therefore, 
+\begin_inset Formula \[
+\vec{D}_{ab}=\frac{1}{2\beta}\vec{\nabla_{b}}\vec{S}_{ab}+\vec{b}\vec{S}_{ab}=\left(\frac{1}{2\beta}\frac{2\alpha\beta}{\alpha+\beta}(\vec{a}-\vec{b})+\vec{b}\right)\vec{S}_{ab}=\vec{\omega}\vec{S}_{ab},\]
+
+\end_inset
+
+where the vector 
+\begin_inset Formula $\vec{\omega}=w_{a}\vec{a}+w_{b}\vec{b}$
+\end_inset
+
+, with 
+\begin_inset Formula $w_{a}=\alpha/(\alpha+\beta)$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{b}=\beta/(\alpha+\beta)$
+\end_inset
+
+ is the center of the overlap of the two primitive gaussians and 
+\begin_inset Formula $S_{ab}$
+\end_inset
+
+ is the overlap integral depending only on 
+\begin_inset Formula $d=|\vec{a}-\vec{b}|$
+\end_inset
+
+.
+ Thus the dipole integral may be expressed as a first derivative of a scalar
+ funciton:
+\begin_inset Formula \[
+\vec{D}_{ab}=\vec{\nabla}_{\omega}F_{1}(\omega^{2}/2)S(d^{2}/2),\]
+
+\end_inset
+
+with a simple function 
+\begin_inset Formula $F_{1}$
+\end_inset
+
+ of 
+\begin_inset Formula $x:=\omega^{2}/2$
+\end_inset
+
+: 
+\begin_inset Formula \[
+F_{1}(x)=x\]
+
+\end_inset
+
+The ``simlicity'' is reflected by the fact that:
+\begin_inset Formula \[
+F_{1}^{(1)}=1,\quad F_{1}^{(l)}=0,\quad l>1\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The integrals involving primitive gaussians with higher angular momenta
+ are evaluated by applying harmonic derivatives with respect to atomic positions
+ 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+:
+\begin_inset Formula \[
+\vec{D}_{ab}(lm_{a},lm_{b})\sim(-1)^{l_{a}+l_{b}}\vec{\nabla}_{\omega}[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}F_{1}(\omega^{2}/2)S(d^{2}/2)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The product rule for derivative of two function can be expressed as 
+\begin_inset Formula \[
+(f,g)^{(1)}=f^{(1)}g^{(0)}+f^{(0)}g^{(1)}\]
+
+\end_inset
+
+therefore, the dipole integrals involving primitive gaussians with higher
+ angular momenta can be evaluated by using the product rule as 
+\begin_inset Formula \[
+[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}F_{1}(\omega^{2}/2)S(d^{2}/2)=[\vec{\nabla}_{a}]_{lm_{a}}\sum_{lm_{b^{'}}lm_{b^{"}}}PR_{b}([\vec{\nabla}_{b}]_{lm_{b^{'}}}F_{1}(\omega^{2}/2))([\vec{\nabla}_{b}]_{lm_{b^{"}}}S(d^{2}/2))\]
+
+\end_inset
+
+or
+\begin_inset Formula \begin{align*}
+[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}F_{1}(\omega^{2}/2)S(d^{2}/2) & =\sum_{lm_{a^{'}}lm_{a^{"}}}PR_{a}\sum_{lm_{b^{'}}lm_{b^{"}}}PR_{b}([\vec{\nabla}_{a}]_{lm_{a^{'}}}[\vec{\nabla}_{b}]_{lm_{b^{'}}}F_{1}(\omega^{2}/2))\\
+ & \quad\;([\vec{\nabla}_{a}]_{lm_{a^{"}}}[\vec{\nabla}_{b}]_{lm_{b^{"}}}S(d^{2}/2))\end{align*}
+
+\end_inset
+
+ and we know 
+\begin_inset Formula $\vec{\nabla_{a}}=\vec{\nabla}_{d}=-\vec{\nabla}_{b}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{\nabla}_{a}=\alpha/\alpha+\beta\vec{\nabla}_{\omega},\vec{\nabla}_{b}=\beta/\alpha+\beta\vec{\nabla}_{\omega}$
+\end_inset
+
+ therefore, one of the part of above Eq.
+ can be written as 
+\begin_inset Formula \[
+[\vec{\nabla}_{a}]_{lm_{a^{'}}}[\vec{\nabla}_{b}]_{lm_{b^{'}}}F_{1}(\omega^{2}/2)=(\frac{\alpha}{\alpha+\beta})^{l_{a}}(\frac{\beta}{\alpha+\beta})^{l_{b}}[\vec{\nabla}_{\omega}]_{lm_{a^{'}}}[\vec{\nabla}_{\omega}]_{lm_{b^{'}}}F_{1}(\omega^{2}/2)\]
+
+\end_inset
+
+In this way, we will get the dipole integrals involving primitive gaussians
+ with higher angular momenta.
+ Since dipole operator 
+\begin_inset Formula $\vec{r}$
+\end_inset
+
+ is a vector of rank 1, then 
+\begin_inset Formula $lm_{a}+lm_{b}>1,$
+\end_inset
+
+ therefore, no transformation from 
+\begin_inset Formula $\vec{\nabla}_{\omega}$
+\end_inset
+
+ to 
+\begin_inset Formula $\vec{\nabla}_{a/b}$
+\end_inset
+
+ is needed.
+ 
+\end_layout
+
+\begin_layout Standard
+To compute the forces in presence of electric field, the dipole moment enters
+ the hamiltonian in a scalar product with the electric field vector:
+\begin_inset Formula \[
+H_{dip}=(\vec{E}\cdot\vec{D})\]
+
+\end_inset
+
+ thus one could reduce three cartesian integrals to a scalar by replacing
+ 
+\begin_inset Formula $\vec{\nabla}_{\omega}$
+\end_inset
+
+ by 
+\begin_inset Formula $(\vec{E}\cdot\vec{\nabla}_{\omega})$
+\end_inset
+
+.
+ In calculation of forces one would need to evaluate both 
+\begin_inset Formula \[
+\vec{\nabla}_{a}=w_{a}\vec{\nabla}_{\omega}+\vec{\nabla}_{d}\]
+
+\end_inset
+
+ and
+\begin_inset Formula \[
+\vec{\nabla}_{b}=w_{b}\vec{\nabla}_{\omega}-\vec{\nabla}_{d}\]
+
+\end_inset
+
+of the 
+\begin_inset Formula $\vec{D}_{ab}$
+\end_inset
+
+ coupled with 
+\begin_inset Formula $\vec{E}$
+\end_inset
+
+ in addition.
+ 
+\end_layout
+
+\begin_layout Section
+Single center: atomic integrals
+\end_layout
+
+\begin_layout Standard
+We will evaluate the atomic integrals using the fact that in central symmetry
+ the integrals are diagonal in magnetic quantum number 
+\begin_inset Formula $m=-l\ldots+l$
+\end_inset
+
+.
+ In this case it is often possible to evaluate the ``average'' over 
+\begin_inset Formula $m$
+\end_inset
+
+ by invoking sum rule
+\begin_inset Formula \begin{equation}
+\sum_{m=-1}^{l}[\vec{r}]_{lm}^{\ast}[\vec{r}]_{lm}=r^{2l}\label{eq:SH-dot-prod}\end{equation}
+
+\end_inset
+
+or an explicit form of the spherical harmonics (SH) with the highest magnetic
+ number
+\begin_inset Formula \[
+[\vec{r}]_{ll}\eqsim(x+\mathrm{i}y)^{l}=(r\sin\vartheta)^{l}\text{e}^{\mathrm{i}l\varphi}\quad\text{(alt. norm)}\]
+
+\end_inset
+
+The r.h.s.
+ is normalized differently from the l.h.s.
+ --- that is reflected by a different relation symbol and an annotation.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status collapsed
+
+\begin_layout Plain Layout
+Any idea how to compute this:
+\begin_inset Formula \[
+\sum_{\mu=-\lambda}^{\lambda}\sum_{m=-l}^{l}\left([\vec{\nabla}]_{\lambda\mu}[\vec{r}]_{lm}\right)^{\ast}\left([\vec{\nabla}]_{\lambda\mu}[\vec{r}]_{lm}\right)=?\]
+
+\end_inset
+
+or this:
+\begin_inset Formula \[
+\sum_{m=-1}^{l}[\vec{r}]_{lm}^{\ast}(\vec{r}\cdot\vec{\nabla})[\vec{r}]_{lm}=?\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Overlap
+\end_layout
+
+\begin_layout Standard
+The overlap integral ``averaged'' over magnetic number is derived by
+\begin_inset Formula \begin{align*}
+S_{l} & =\frac{1}{2l+1}\sum_{m}\langle lm\alpha|lm\beta\rangle\\
+ & =\frac{1}{2l+1}\sum_{m}\int[\vec{r}]_{lm}^{\ast}\text{e}^{-\alpha r^{2}}[\vec{r}]_{lm}\text{e}^{-\beta r^{2}}d^{3}r\\
+ & =\frac{1}{2l+1}\int\left(\sum_{m}[\vec{r}]_{lm}^{\ast}[\vec{r}]_{lm}\right)\text{e}^{-\lambda r^{2}}d^{3}r\quad\text{with}\quad\lambda=\alpha+\beta\\
+ & =\frac{4\pi}{2l+1}\int r^{2l+2}\text{e}^{-\lambda r^{2}}dr=\frac{2\pi}{2l+1}\frac{1}{\lambda^{l+3/2}}\int t^{l+1/2}\text{e}^{-t}dt\quad\mbox{with}\quad t=\lambda r^{2}\\
+ & =\frac{\pi}{l+1/2}\frac{\Gamma(l+3/2)}{\lambda^{l+3/2}}\\
+ & =\pi\frac{\Gamma(l+1/2)}{\lambda^{l+3/2}}\quad\text{by use of}\quad\Gamma(x+1)=x\Gamma(x)\end{align*}
+
+\end_inset
+
+For 
+\begin_inset Formula $l=0$
+\end_inset
+
+ one substitutes 
+\begin_inset Formula $\Gamma(1/2)=\sqrt{\pi}$
+\end_inset
+
+ and obtains the same expression as the in the limit of a single atomic
+ center, 
+\begin_inset Formula $\vec{a}=\vec{b}=\vec{c}$
+\end_inset
+
+:
+\begin_inset Formula \begin{align*}
+S_{0} & =\left(\frac{\pi}{\lambda}\right)^{3/2}\exp[-\zeta(\vec{a}-\vec{b})^{2}]\to\left(\frac{\pi}{\lambda}\right)^{3/2}\end{align*}
+
+\end_inset
+
+The overlap integrals may be expressed as a multiple of ss-overlap
+\begin_inset Formula \[
+S_{l}/S_{0}=\frac{1}{\lambda^{l}}\frac{\Gamma(l+1/2)}{\Gamma(1/2)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Overlap of trial functions
+\end_layout
+
+\begin_layout Standard
+We could have obtained the expression for overlap by examining the integral
+ ivolving the harmonics, 
+\begin_inset Formula $\phi_{ll\alpha}\eqsim(x+iy)^{l}e^{-\alpha r^{2}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\phi_{ll\beta}\eqsim(x+iy)^{l}e^{-\beta r^{2}}$
+\end_inset
+
+, with the highest magnetic number
+\begin_inset Formula \begin{align}
+S_{l} & \eqsim\int(r\sin\vartheta)^{l}\text{e}^{-il\varphi}\text{e}^{-\alpha r^{2}}(r\sin\vartheta)^{l}\text{e}^{il\varphi}\text{e}^{-\beta r^{2}}d^{3}r\nonumber \\
+ & =2\pi\cdot\int_{0}^{\pi}\sin^{2l+1}\vartheta d\vartheta\;\cdot\int r^{2l+2}\text{e}^{-\lambda r^{2}}dr\nonumber \\
+ & =2\pi\cdot\frac{\Gamma(l+1)\Gamma(1/2)}{\Gamma(l+3/2)}\cdot\frac{\Gamma(l+3/2)}{2\lambda^{l+3/2}}\nonumber \\
+ & =\frac{\pi^{3/2}l!}{\lambda^{l+3/2}}\quad\text{(alt. norm)}\label{eq:overlap-of-trial-funcs}\end{align}
+
+\end_inset
+
+As the trial functions are not normalized the expression is different from
+ that of the previous section.
+\end_layout
+
+\begin_layout Subsubsection*
+Kinetic energy
+\end_layout
+
+\begin_layout Standard
+Kinetic energy integrals involve the Laplace operator 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ but bay be obtained by by integrating the kinetic energy density according
+ to the identity 
+\begin_inset Formula \[
+-\int\phi\Delta\phi d^{3}r=\int\left(\vec{\nabla}\phi\right)^{2}d^{3}r\]
+
+\end_inset
+
+or rather of the variant of it
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Closed expressions for 
+\begin_inset Formula $\sum_{m}(\vec{\nabla}[\vec{r}]_{lm}^{\ast}\cdot\vec{\nabla}[\vec{r}]_{lm})$
+\end_inset
+
+ and 
+\begin_inset Formula $\sum_{m}[\vec{r}]_{lm}^{\ast}(\vec{r}\cdot\vec{\nabla})[\vec{r}]_{lm}$
+\end_inset
+
+ would be very useful.
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula \[
+\langle lm\alpha|-\frac{1}{2}\Delta|lm\beta\rangle=\frac{1}{2}\int\left(\vec{\nabla}\phi_{lm\alpha}^{\ast}\cdot\vec{\nabla}\phi_{lm\beta}\right)d^{3}r\]
+
+\end_inset
+
+The components of the gradient vector in in spherical coordinates are given
+ by
+\begin_inset Formula \[
+\vec{\nabla}=\left(\frac{\partial}{\partial r};\;\frac{1}{r}\frac{\partial}{\partial\vartheta};\;\frac{1}{r\sin\vartheta}\frac{\partial}{\partial\varphi}\right)\]
+
+\end_inset
+
+We will choose the GTOs 
+\begin_inset Formula $\phi_{lm\alpha}$
+\end_inset
+
+ and 
+\begin_inset Formula $\phi_{lm\beta}$
+\end_inset
+
+ with the highest harmonic, 
+\begin_inset Formula $l=m$
+\end_inset
+
+: 
+\begin_inset Formula \[
+\phi_{ll\alpha}\eqsim(r\sin\vartheta)^{l}\text{e}^{-\alpha r^{2}}\text{e}^{\mathrm{i}l\varphi}\quad\text{(alt. norm)}\]
+
+\end_inset
+
+and apply the gradient operator 
+\begin_inset Formula \[
+\vec{\nabla}\phi_{ll\alpha}=\left(\frac{l}{r}-2\alpha r;\;\frac{l}{r\tan\vartheta};\;\frac{\mathrm{i}l}{r\sin\vartheta}\right)\phi_{ll\alpha}\]
+
+\end_inset
+
+The scalar product of the two particular gradients 
+\begin_inset Formula $\vec{\nabla}\phi_{ll\alpha}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{\nabla}\phi_{ll\beta}$
+\end_inset
+
+ is given by
+\begin_inset Formula \begin{equation}
+(\vec{\nabla}\phi_{ll\alpha}^{\ast}\cdot\vec{\nabla}\phi_{llb})\eqsim\left(\frac{l^{2}}{r^{2}}\frac{2}{\sin^{2}\vartheta}-2l\lambda+4\alpha\beta r^{2}\right)(r\sin\vartheta)^{2l}\text{e}^{-\lambda r^{2}}\label{eq:nabla-dot-nabla}\end{equation}
+
+\end_inset
+
+with the usual 
+\begin_inset Formula $\lambda=\alpha+\beta$
+\end_inset
+
+.
+ Then the kinetic energy integral between two Gaussians will be then given
+ by 
+\begin_inset Formula \begin{align*}
+K_{l} & \eqsim\pi\int\left(\frac{l^{2}}{r^{2}}\frac{2}{\sin^{2}\vartheta}-2l\lambda+4\alpha\beta r^{2}\right)(r\sin\vartheta)^{2l}\text{e}^{-\lambda r^{2}}r^{2}\sin\vartheta d\vartheta dr\\
+ & =(2l+3)\zeta\cdot\frac{\pi^{3/2}l!}{\lambda^{l+3/2}}\quad\mbox{(alt. norm)}\\
+ & \eqsim(2l+3)\zeta\cdot\pi\frac{\Gamma(l+1/2)}{\lambda^{l+3/2}}\quad\mbox{with}\quad\zeta=\frac{\alpha\beta}{\alpha+\beta}\end{align*}
+
+\end_inset
+
+The two first terms in the integral that have angular momentum 
+\begin_inset Formula $l\geq0$
+\end_inset
+
+ as a pre-factor happen to cancel each other 
+\emph on
+identically
+\emph default
+.
+ Comparing the result with the expression for 
+\begin_inset Formula $S_{l}$
+\end_inset
+
+ we observe that
+\begin_inset Formula \[
+K_{l}/S_{l}=(2l+3)\zeta\]
+
+\end_inset
+
+which, of course agrees with special case of 
+\begin_inset Formula $l=0$
+\end_inset
+
+ in the limit 
+\begin_inset Formula $\vec{a}-\vec{b}\to0$
+\end_inset
+
+: 
+\begin_inset Formula \begin{align*}
+K_{0} & =\left(3-2\zeta(\vec{a}-\vec{b})^{2}\right)\zeta S_{0}\to3\zeta S_{0}\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Nuclear attraction
+\end_layout
+
+\begin_layout Standard
+Nuclear attraction integrals (up to a sign and a scaling factor 
+\begin_inset Formula $Z$
+\end_inset
+
+) are given by the ``average''
+\begin_inset Formula \begin{align}
+N_{l} & =\frac{1}{2l+1}\sum_{m}\langle lm\alpha|\frac{1}{r}|lm\beta\rangle=\frac{4\pi}{2l+1}\int r^{2l+1}\text{e}^{-\lambda r^{2}}dr=\frac{2\pi}{2l+1}\frac{\Gamma(l+1)}{\lambda^{l+1}}\label{eq:atomic-point-nuc}\end{align}
+
+\end_inset
+
+in the special case of 
+\begin_inset Formula $l=0$
+\end_inset
+
+ to be compared with the limit 
+\begin_inset Formula $\vec{d}\to0$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{\omega}\to0$
+\end_inset
+
+ of ss-integral: 
+\begin_inset Formula \begin{align*}
+N_{0} & =2\left(\frac{\lambda}{\pi}\right)^{1/2}I_{0}(\lambda\omega^{2})S_{0}\to\frac{2\pi}{\lambda}\end{align*}
+
+\end_inset
+
+Expressed via the overlap integral: 
+\begin_inset Formula \[
+N_{l}/S_{l}=\lambda^{1/2}\frac{\Gamma(l+1)}{\Gamma(l+3/2)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Scalar-relativistic matrix elements
+\end_layout
+
+\begin_layout Standard
+Scalar relativistic integrals of the nuclear attraction (up to a sign and
+ a scaling factor 
+\begin_inset Formula $Z$
+\end_inset
+
+) just as other integral types discussed before are independent of 
+\begin_inset Formula $m$
+\end_inset
+
+ and 
+\begin_inset Formula \begin{align*}
+O_{l} & =\langle lm\alpha|\vec{p}\frac{1}{r}\vec{p}|lm\beta\rangle=\int\left(\vec{\nabla}\phi_{lm\alpha}^{\ast}\cdot\vec{\nabla}\phi_{lm\beta}\right)\frac{1}{r}d^{3}r\\
+ & \eqsim2\pi\int\left(\frac{l^{2}}{r^{2}}\frac{2}{\sin^{2}\vartheta}-2l\lambda+4\alpha\beta r^{2}\right)(r\sin\vartheta)^{2l}\frac{1}{r}\text{e}^{-\lambda r^{2}}r^{2}\sin\vartheta d\vartheta dr\\
+ & =\left(\frac{4\alpha\beta}{\lambda^{2}}(l+1)+\frac{l}{l}\right)\lambda N_{l}\end{align*}
+
+\end_inset
+
+The ratio 
+\begin_inset Formula $l/l$
+\end_inset
+
+ in the last equation is defined as unity if 
+\begin_inset Formula $l>0$
+\end_inset
+
+ and zero otherwise expressing the fact that the two first terms in the
+ integrand are only present if 
+\begin_inset Formula $l>0$
+\end_inset
+
+.
+ Expressed as a multiple of overlap integral the scalar-relativisitc integral
+ is
+\begin_inset Formula \[
+O_{l}/S_{l}=\lambda^{3/2}\left(\frac{4\alpha\beta}{\lambda^{2}}(l+1)+\frac{l}{l}\right)\frac{\Gamma(l+1)}{\Gamma(l+3/2)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Potential of the finite nucleus by Gaussian density distribution
+\end_layout
+
+\begin_layout Standard
+Potential of the finite nucleus represented by Gaussian density distribution
+ is given by the integral
+\begin_inset Formula \[
+V_{\gamma}(\vec{x})=\int\!\!\! d^{3}\vec{y}\frac{e^{-\gamma y^{2}}}{|\vec{x}-\vec{y}|}=\int_{y>x}+\int_{y<x}\]
+
+\end_inset
+
+By invoking the multipole expansion in each of the subdomains, e.g.
+\begin_inset space \space{}
+\end_inset
+
+for 
+\begin_inset Formula $y>x$
+\end_inset
+
+:
+\begin_inset Formula \[
+\frac{1}{\sqrt{x^{2}-2(\vec{x}\vec{y})+y^{2}}}=\frac{1}{y}\sum_{l=0}^{\infty}\left(\frac{x}{y}\right)^{l}P_{l}(\cos\theta_{xy})\]
+
+\end_inset
+
+ and noting that all terms in the expansions except the first one vanish
+ identically after integrating over the angular variables we obtain for
+ the first integral
+\begin_inset Formula \[
+\int_{y>x}=4\pi\int_{x}^{\infty}y^{2}dy\frac{1}{y}e^{-\gamma y^{2}}=\frac{2\pi}{\gamma}e^{-\gamma x^{2}}\]
+
+\end_inset
+
+The second integral will be expressed via the error function
+\begin_inset Formula \begin{equation}
+\Phi(z)=\frac{2}{\sqrt{\pi}}\int_{0}^{z}e^{-t^{2}}dt,\quad\Phi^{\prime}(z)=\frac{2}{\sqrt{\pi}}e^{-z^{2}}\label{eq:errror-function-integral}\end{equation}
+
+\end_inset
+
+according to 
+\begin_inset Formula \begin{align*}
+\int_{y<x} & =\frac{4\pi}{x}\int_{0}^{x}y^{2}e^{-\gamma y^{2}}dy\\
+ & =\frac{4\pi}{x}\left(-\frac{\partial}{\partial\gamma}\right)\int_{0}^{x}e^{-\gamma y^{2}}dy\\
+ & =\frac{4\pi}{x}\left(-\frac{\partial}{\partial\gamma}\right)\left(\frac{\sqrt{\pi}}{2}\frac{1}{\sqrt{\gamma}}\Phi(\sqrt{\gamma}x)\right)\\
+ & =\frac{1}{x}\left(\frac{\pi}{\gamma}\right)^{3/2}\!\!\!\Phi(\sqrt{\gamma}x)-\frac{2\pi}{\gamma}e^{-\gamma x^{2}}\end{align*}
+
+\end_inset
+
+The second term in the last expression is canceled exactly by the first
+ integrals over 
+\begin_inset Quotes eld
+\end_inset
+
+outer sphere
+\begin_inset Quotes erd
+\end_inset
+
+ resulting in
+\begin_inset Formula \[
+V_{\gamma}(\vec{x})=\frac{1}{x}\left(\frac{\pi}{\gamma}\right)^{3/2}\!\!\!\Phi(\sqrt{\gamma}x)\]
+
+\end_inset
+
+When using the 
+\emph on
+normalized
+\emph default
+ Gaussian charge distribution instead 
+\begin_inset Formula \[
+\rho(\vec{y})=\left(\frac{\gamma}{\pi}\right)^{3/2}e^{-\gamma y^{2}}\]
+
+\end_inset
+
+one obtains the 
+\begin_inset Quotes eld
+\end_inset
+
+scaled
+\begin_inset Quotes erd
+\end_inset
+
+ Coulomb potential with straightforward asymptotic limit: 
+\begin_inset Formula \begin{equation}
+V_{\gamma}(\vec{x})=\frac{1}{x}\Phi(\sqrt{\gamma}x)\approx\frac{1}{x}\quad(\sqrt{\gamma}x\gg1)\label{eq:potential-finite-nuc}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Matrix elements of the potential of the finite nucleus
+\end_layout
+
+\begin_layout Standard
+The matrix element of the Coulomb potential 
+\begin_inset Formula $V_{\gamma}(\vec{r})$
+\end_inset
+
+, Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:potential-finite-nuc"
+
+\end_inset
+
+), of the normalized Gaussian distribution is given by the integral
+\begin_inset Formula \begin{align*}
+N_{l}(\gamma):=\langle ll\alpha|V_{\gamma}|ll\beta\rangle & \eqsim2\pi\iint(r\sin\vartheta)^{2l}\text{e}^{-\lambda r^{2}}\frac{\Phi(\sqrt{\gamma}r)}{r}\sin\vartheta d\vartheta r^{2}dr\\
+ & =2\pi\cdot\Theta_{l}\cdot R_{l}(\lambda,\gamma)\quad\quad\quad\text{(alt. norm)}\end{align*}
+
+\end_inset
+
+The integral factorizes into the product of angular and radial integrals:
+\begin_inset Formula \begin{equation}
+\Theta_{l}=\int_{0}^{\pi}\sin^{2l+1}\vartheta d\vartheta=\frac{\Gamma(l+1)\Gamma(1/2)}{\Gamma(l+3/2)}\label{eq:int-sin-2l+1}\end{equation}
+
+\end_inset
+
+and 
+\begin_inset Formula \begin{equation}
+R_{l}(\lambda,\gamma)=\int_{0}^{\infty}r^{2l}\text{e}^{-\lambda r^{2}}\frac{\Phi(\sqrt{\gamma}r)}{r}r^{2}dr\label{eq:int-r2l-explambda-erf}\end{equation}
+
+\end_inset
+
+The series of the radial integrals may be obtained by parameter differentiation
+ of the initial member of the series:
+\begin_inset Formula \[
+R_{n}(\lambda,\gamma)=\left(-\frac{\partial}{\partial\lambda}\right)^{n}R_{0}(\lambda,\gamma)\]
+
+\end_inset
+
+To evaluate the radial integral 
+\begin_inset Formula $R_{0}$
+\end_inset
+
+ we will use the definition of the error function 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ via the integral, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:errror-function-integral"
+
+\end_inset
+
+): 
+\begin_inset Formula \begin{align*}
+R_{0}(\lambda,\gamma) & =\int_{0}^{\infty}\text{e}^{-\lambda x^{2}}\Phi(\sqrt{\gamma}x)xdx\\
+ & =\int_{0}^{\infty}xdx\text{e}^{-\lambda x^{2}}\left(2\sqrt{\frac{\gamma}{\pi}}\int_{0}^{x}\text{e}^{-\gamma y^{2}}dy\right)\\
+ & =2\sqrt{\frac{\gamma}{\pi}}\int_{0}^{\infty}dy\text{e}^{-\gamma y^{2}}\int_{y}^{\infty}\text{e}^{-\lambda x^{2}}xdx\\
+ & =2\sqrt{\frac{\gamma}{\pi}}\frac{1}{2\lambda}\int_{0}^{\infty}\text{e}^{-(\lambda+\gamma)y^{2}}dy\\
+ & =\frac{1}{2\lambda}\sqrt{\frac{\gamma}{\lambda+\gamma}}\end{align*}
+
+\end_inset
+
+Here we changed the ``vertical'' integration over 
+\begin_inset Formula $y<x$
+\end_inset
+
+ to the ``horizontal'' integration over 
+\begin_inset Formula $x>y$
+\end_inset
+
+ in the double integral.
+\end_layout
+
+\begin_layout Standard
+In order to derive closed expressions for higher order integrals 
+\begin_inset Formula $R_{l}$
+\end_inset
+
+ we first note that 
+\begin_inset Formula \begin{align*}
+\left(-\frac{\partial}{\partial x}\right)^{k}\;\frac{\Gamma(1)}{x}\;\; & =\frac{\Gamma(k+1)}{x^{k+1}}\\
+\left(-\frac{\partial}{\partial x}\right)^{k}\frac{\Gamma(1/2)}{x^{1/2}} & =\frac{\Gamma(k+1/2)}{x^{k+1/2}}\end{align*}
+
+\end_inset
+
+and then apply binomial formula to the derivative of the product
+\begin_inset Formula \begin{align*}
+\left(-\frac{\partial}{\partial\lambda}\right)^{n}\frac{\Gamma(1)\Gamma(1/2)}{\lambda(\lambda+\gamma)^{1/2}} & =\sum_{k=0}^{n}\frac{n!}{k!(n-k)!}\left(\frac{\Gamma(n-k+1)}{\lambda^{n-k+1}}\right)\left(\frac{\Gamma(k+1/2)}{(\lambda+\gamma)^{k+1/2}}\right)\\
+ & =\frac{\Gamma(n+1)\Gamma(1/2)}{\lambda^{n+1}(\lambda+\gamma)^{1/2}}\sum_{k=0}^{n}\frac{\Gamma(k+1/2)}{\Gamma(k+1)\Gamma(1/2)}\zeta^{k},\quad\zeta=\frac{\lambda}{\lambda+\gamma}\end{align*}
+
+\end_inset
+
+Finally, the radial integrals may be evaluated as
+\begin_inset Formula \begin{align*}
+R_{0} & =\frac{1}{2\lambda}\sqrt{\frac{\gamma}{\lambda+\gamma}}\\
+R_{l}/R_{0} & =\frac{l!}{\lambda^{l}}\cdot\sum_{k=0}^{l}\frac{\Gamma(k+1/2)}{\Gamma(k+1)\Gamma(1/2)}\zeta^{k},\quad\zeta=\frac{\lambda}{\lambda+\gamma}\end{align*}
+
+\end_inset
+
+Combined with the angular integral, the matrix element of the normalized
+ Gaussian distribution will be given by
+\begin_inset Formula \[
+N_{l}(\gamma)\eqsim\frac{2\pi}{2l+1}\frac{\Gamma(l+1)}{\lambda^{l+1}}\cdot\sqrt{\frac{\gamma}{\lambda+\gamma}}\cdot\frac{\Gamma(l+1)\Gamma(1/2)}{\Gamma(l+1/2)}\cdot\sum_{k=0}^{l}\frac{\Gamma(k+1/2)}{\Gamma(k+1)\Gamma(1/2)}\zeta^{k}\]
+
+\end_inset
+
+By comparison with the overlap integral of the two (unnormalized) trial
+ finctions, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:overlap-of-trial-funcs"
+
+\end_inset
+
+), we conclude that
+\begin_inset Formula \[
+N_{l}(\gamma)/S_{l}=\lambda^{1/2}\cdot\sqrt{\frac{\gamma}{\lambda+\gamma}}\cdot\frac{\Gamma(l+1)}{\Gamma(l+3/2)}\cdot\sum_{k=0}^{l}\frac{\Gamma(k+1/2)}{\Gamma(k+1)\Gamma(1/2)}\zeta^{k}\]
+
+\end_inset
+
+ or rather 
+\begin_inset Formula \[
+N_{l}(\gamma)/N_{l}=\sqrt{\frac{\gamma}{\lambda+\gamma}}\cdot\sum_{k=0}^{l}\frac{\Gamma(k+1/2)}{\Gamma(k+1)\Gamma(1/2)}\zeta^{k},\quad\zeta=\frac{\lambda}{\lambda+\gamma}\]
+
+\end_inset
+
+where 
+\begin_inset Formula $N_{l}\equiv N_{l}(\infty)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Description
+Tabular
+\begin_inset space ~
+\end_inset
+
+material.
+ We used here the integral tables for 
+\begin_inset Formula \[
+\int_{0}^{\pi/2}\sin^{\mu-1}\vartheta\cos^{\nu-1}\vartheta d\vartheta=\frac{1}{2}B(\frac{\mu}{2},\frac{\nu}{2})\]
+
+\end_inset
+
+ or a special case thereof
+\begin_inset Formula \[
+\int_{0}^{\pi/2}\sin^{\mu-1}\vartheta d\vartheta=\int_{0}^{\pi/2}\cos^{\mu-1}\vartheta d\vartheta=2^{\mu-2}B(\frac{\mu}{2},\frac{\mu}{2})\]
+
+\end_inset
+
+Then the angular integral 
+\begin_inset Formula $\Theta_{l}$
+\end_inset
+
+ evaluates to 
+\begin_inset Formula \begin{align*}
+\Theta_{l} & =\int_{0}^{\pi}\sin^{2l+1}\vartheta d\vartheta=2\int_{0}^{\pi/2}\sin^{2l+1}\vartheta d\vartheta\\
+ & =B(l+1,1/2)\\
+ & =\frac{\Gamma(l+1)\Gamma(1/2)}{\Gamma(l+3/2)}\quad\quad\quad\left(=2\frac{(2l)!!}{(2l+1)!!}\right)\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Scalar relativistic matrix element of the Coulomb field of Gaussian density
+\end_layout
+
+\begin_layout Standard
+With the scalar-product of the two orbital gradients, 
+\begin_inset Formula $\vec{\nabla}\phi_{ll\alpha}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{\nabla}\phi_{ll\beta}$
+\end_inset
+
+ given in Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:nabla-dot-nabla"
+
+\end_inset
+
+), the scalar matrix element of the potential of the finite nucleus, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:potential-finite-nuc"
+
+\end_inset
+
+), is given by the itegral:
+\begin_inset Formula \begin{align*}
+O_{l}(\gamma) & :=\langle ll\alpha|\vec{p}V_{\gamma}\vec{p}|ll\beta\rangle\\
+ & =\int\left(\vec{\nabla}\phi_{ll\alpha}(\vec{r})\cdot\vec{\nabla}\phi_{ll\beta}(\vec{r})\right)V_{\gamma}(\vec{r})d^{3}\vec{r}\\
+ & \eqsim2\pi\iint\left(\frac{l^{2}}{r^{2}}\frac{2}{\sin^{2}\vartheta}-2l\lambda+4\alpha\beta r^{2}\right)(r\sin\vartheta)^{2l}\text{e}^{-\lambda r^{2}}\frac{\Phi(\sqrt{\gamma}r)}{r}\sin\vartheta d\vartheta r^{2}dr\end{align*}
+
+\end_inset
+
+The last eqality holds up to the different normalization of the trial functions.
+ Each of the additive terms in the integral can be factorized into the product
+ of angular integral 
+\begin_inset Formula $\Theta_{m}$
+\end_inset
+
+ of some degree 
+\begin_inset Formula $m$
+\end_inset
+
+, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:int-sin-2l+1"
+
+\end_inset
+
+), and a radial integral 
+\begin_inset Formula $R_{n}$
+\end_inset
+
+ of some degree 
+\begin_inset Formula $n$
+\end_inset
+
+, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:int-r2l-explambda-erf"
+
+\end_inset
+
+):
+\begin_inset Formula \begin{equation}
+O_{l}(\gamma)\eqsim2\pi\left(2l^{2}\Theta_{l-1}R_{l-1}-2l\lambda\Theta_{l}R_{l}+4\alpha\beta\Theta_{l}R_{l+1}\right)\label{eq:sr-fin-nuc-ang-rad}\end{equation}
+
+\end_inset
+
+Note that the two first terms in the Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:sr-fin-nuc-ang-rad"
+
+\end_inset
+
+) are only present if 
+\begin_inset Formula $l>0$
+\end_inset
+
+.
+ The sum of these two terms evaluates to
+\begin_inset Formula \[
+2\pi\left(2l^{2}\Theta_{l-1}R_{l-1}-2l\lambda\Theta_{l}R_{l}\right)=\frac{2\pi}{2l+1}\cdot2R_{0}\frac{l!}{\lambda^{l-1}}\cdot\frac{\Gamma(l+1)\Gamma(1/2)}{\Gamma(l+1/2)}\cdot\left(\sum_{k=0}^{l-1}T_{k}-2lT_{l}\right)\]
+
+\end_inset
+
+where we introduced the abbreviation 
+\begin_inset Formula $T_{k}$
+\end_inset
+
+ for the polynomial terms
+\begin_inset Formula \[
+T_{k}(\zeta)=\frac{\Gamma(k+1/2)}{\Gamma(k+1)\Gamma(1/2)}\zeta^{k}\]
+
+\end_inset
+
+The other term evaluates similarly to
+\begin_inset Formula \[
+2\pi\left(4\alpha\beta\Theta_{l}R_{l+1}\right)=\frac{2\pi}{2l+1}\cdot2R_{0}\frac{l!}{\lambda^{l-1}}\cdot\frac{\Gamma(l+1)\Gamma(1/2)}{\Gamma(l+1/2)}\cdot\frac{4\alpha\beta}{\lambda^{2}}(l+1)\sum_{k=0}^{l+1}T_{k}\]
+
+\end_inset
+
+Finally, the scalar-relativisitc integral of a Gaussian density distribution
+ is
+\begin_inset Formula \[
+O_{l}(\gamma)\eqsim\frac{2\pi}{2l+1}\cdot\frac{\Gamma(l+1)}{\lambda^{l}}\sqrt{\frac{\gamma}{\lambda+\gamma}}\cdot\frac{\Gamma(l+1)\Gamma(1/2)}{\Gamma(l+1/2)}\cdot\left(\frac{4\alpha\beta}{\lambda^{2}}(l+1)\sum_{k=0}^{l+1}T_{k}+\sum_{k=0}^{l-1}T_{k}-2lT_{l}\right)\]
+
+\end_inset
+
+Of course, the latter two terms are only significant if 
+\begin_inset Formula $l>0$
+\end_inset
+
+.
+ By comparison with the overlap integral of the two (unnormalized) trial
+ finctions, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:overlap-of-trial-funcs"
+
+\end_inset
+
+), we conclude that
+\begin_inset Formula \[
+O_{l}(\gamma)/S_{l}=\lambda^{3/2}\sqrt{\frac{\gamma}{\lambda+\gamma}}\cdot\frac{\Gamma(l+1)}{\Gamma(l+3/2)}\cdot\left(\frac{4\alpha\beta}{\lambda^{2}}(l+1)\sum_{k=0}^{l+1}T_{k}+\sum_{k=0}^{l-1}T_{k}-2lT_{l}\right)\]
+
+\end_inset
+
+or rather
+\begin_inset Formula \[
+O_{l}(\gamma)/N_{l}=\lambda\cdot\sqrt{\frac{\gamma}{\lambda+\gamma}}\cdot\left(\frac{4\alpha\beta}{\lambda^{2}}(l+1)\sum_{k=0}^{l+1}T_{k}+\sum_{k=0}^{l-1}T_{k}-2lT_{l}\right)\]
+
+\end_inset
+
+where 
+\begin_inset Formula $N_{l}$
+\end_inset
+
+ is the nuclear attraction integral of 
+\emph on
+point
+\emph default
+ nucleus.
+\end_layout
+
+\begin_layout Subsubsection*
+Finite nucleus by Gaussian density distribution
+\end_layout
+
+\begin_layout Standard
+The single-center (atomic) matrix element of the Coulomb field of the Gaussian
+ nucleus 
+\begin_inset Formula \[
+V_{\gamma}(\vec{x})=\int\!\! d^{3}\vec{y}\frac{\mathrm{e}^{-\gamma y^{2}}}{|\vec{x}-\vec{y}|}\]
+
+\end_inset
+
+between two s-type Gaussian functions is given by the symmetric double integral
+\begin_inset Formula \[
+\langle\alpha|V_{\gamma}|\beta\rangle=V(\lambda,\gamma):=\iint\!\! d^{3}\vec{x}d^{3}\vec{y}\frac{\mathrm{e}^{-\lambda x^{2}}\mathrm{e}^{-\gamma y^{2}}}{|\vec{x}-\vec{y}|},\quad\lambda=\alpha+\beta\]
+
+\end_inset
+
+In order to evaluate this integral we first split the integration domain
+ in two subdomains
+\begin_inset Formula \begin{align*}
+\iint & =\iint_{x>y}+\iint_{y>x}\end{align*}
+
+\end_inset
+
+Both integrals are equivalent up to relabeling 
+\begin_inset Formula $x\leftrightarrow y$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda\leftrightarrow\gamma$
+\end_inset
+
+, thus:
+\begin_inset Formula \[
+V(\lambda,\gamma)=V^{\prime}(\lambda,\gamma)+V^{\prime}(\gamma,\lambda)\]
+
+\end_inset
+
+ In each of these domains we invoke the multipole expansion, e.g.
+\begin_inset space \space{}
+\end_inset
+
+for 
+\begin_inset Formula $x>y$
+\end_inset
+
+: 
+\begin_inset Formula \[
+\frac{1}{\sqrt{x^{2}-2(\vec{x}\vec{y})+y^{2}}}=\frac{1}{x}\sum_{l=0}^{\infty}\left(\frac{y}{x}\right)^{l}P_{l}(\cos\theta_{xy})\]
+
+\end_inset
+
+and note that by the invariance of the original integral all terms of orders
+ higher than one in the summation vanish identically:
+\begin_inset Formula \[
+V^{\prime}(\lambda,\gamma)=\int\!\! d^{3}\vec{y}\;\mathrm{e}^{-\gamma y^{2}}\int_{x>y}\!\! d^{3}\vec{x}\;\frac{1}{x}\mathrm{e}^{-\lambda x^{2}}\]
+
+\end_inset
+
+The inner integral over 
+\begin_inset Formula $x>y$
+\end_inset
+
+ evaluates to
+\begin_inset Formula \[
+4\pi\int_{y}^{\infty}\!\!\!\! x\mathrm{e}^{-\lambda x^{2}}dx=\frac{2\pi}{\lambda}\mathrm{e}^{-\lambda y^{2}}\]
+
+\end_inset
+
+The outer integral is, thus, given by
+\begin_inset Formula \[
+V^{\prime}(\lambda,\gamma)=\frac{2\pi}{\lambda}4\pi\int\!\! y^{2}\mathrm{e}^{-(\lambda+\gamma)y^{2}}dy=\frac{2\pi^{5/2}}{\lambda(\lambda+\gamma)^{3/2}}\]
+
+\end_inset
+
+and the sum of two partial integrals over subdomains is
+\begin_inset Formula \begin{equation}
+V(\lambda,\gamma)=V^{\prime}(\lambda,\gamma)+V^{\prime}(\gamma,\lambda)=2\pi^{5/2}\left(\frac{1}{\lambda}+\frac{1}{\gamma}\right)\frac{1}{(\lambda+\gamma)^{3/2}}\label{eq:atomic-ss-finite-nuc}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the atomic integrals involving higher angular momentum harmonics we
+ invoke the ``resolution of the identity'' rule, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:SH-dot-prod"
+
+\end_inset
+
+), for spherical harmonics for the ``average of the equal'':
+\begin_inset Formula \[
+\frac{1}{2l+1}\sum_{m}\langle lm\alpha|V_{\gamma}|lm\beta\rangle=\frac{1}{2l+1}\iint\!\!\! d^{3}\vec{x}d^{3}\vec{y}\; x^{2l}\frac{\mathrm{e}^{-\lambda x^{2}}\mathrm{e}^{-\gamma y^{2}}}{|\vec{x}-\vec{y}|},\quad\lambda=\alpha+\beta\]
+
+\end_inset
+
+and note that the resulting integral up to a factor 
+\begin_inset Formula $(2l+1)^{-1}$
+\end_inset
+
+ may be obtained from the ss-integral by parameter differentiation:
+\begin_inset Formula \[
+V^{(l)}(\lambda,\gamma)=\left(-\frac{\partial}{\partial\lambda}\right)^{l}V(\lambda,\gamma)\]
+
+\end_inset
+
+The action of the higher-order derivative on the partial factors in the
+ closed expression for 
+\begin_inset Formula $V^{(0)}(\lambda,\gamma)=V(\lambda,\gamma)$
+\end_inset
+
+ is can be derived from the identities:
+\begin_inset Formula \begin{align*}
+\left(-\frac{\partial}{\partial z}\right)^{l}\;\frac{\Gamma(1)}{z}\;\; & =\frac{\Gamma(l+1)}{z^{l+1}}\\
+\left(-\frac{\partial}{\partial z}\right)^{l}\frac{\Gamma(3/2)}{z^{3/2}} & =\frac{\Gamma(l+3/2)}{z^{l+3/2}}\end{align*}
+
+\end_inset
+
+The derivative of the product of two factors is given by the binomial sum:
+\begin_inset Formula \begin{align*}
+\left(-\frac{\partial}{\partial\lambda}\right)^{l}\frac{\Gamma(1)\Gamma(3/2)}{\lambda(\lambda+\gamma)^{3/2}} & =\sum_{k=0}^{l}\frac{l!}{k!(l-k)!}\left(\frac{\Gamma(l-k+1)}{\lambda^{l-k+1}}\right)\left(\frac{\Gamma(k+3/2)}{(\lambda+\gamma)^{k+3/2}}\right)\\
+ & =\frac{\Gamma(l+1)\Gamma(3/2)}{\lambda^{l}(\lambda+\gamma)^{3/2}}\;\frac{1}{\lambda}\;\sum_{k=0}^{l}\frac{\Gamma(k+3/2)}{\Gamma(k+1)\Gamma(3/2)}\zeta^{k},\quad\zeta=\frac{\lambda}{\lambda+\gamma}\\
+\left(-\frac{\partial}{\partial\lambda}\right)^{l}\frac{\Gamma(3/2)}{\gamma(\lambda+\gamma)^{3/2}} & =\frac{\Gamma(l+1)\Gamma(3/2)}{\lambda^{l}(\lambda+\gamma)^{3/2}}\;\frac{1}{\gamma}\;\frac{\Gamma(l+3/2)}{\Gamma(l+1)\Gamma(3/2)}\zeta^{l}\end{align*}
+
+\end_inset
+
+Here we introduced the beta-function of two arguments: 
+\begin_inset Formula \[
+B(x,y)=\frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)},\quad B(1,1/2)=2\]
+
+\end_inset
+
+ and the ratio of exponents
+\begin_inset Formula \[
+\zeta=\frac{\lambda}{\lambda+\gamma}=\frac{\alpha+\beta}{\alpha+\beta+\gamma}\]
+
+\end_inset
+
+Therefore the final integral will be given by
+\begin_inset Formula \begin{align*}
+\langle l\alpha||V_{\gamma}||l\beta\rangle & =\frac{\;\;2\pi^{5/2}}{2l+1}\frac{2l!}{\lambda^{l}(\lambda+\gamma)^{3/2}}\left(\frac{1}{\lambda}\sum_{k=0}^{l}\frac{\zeta^{k}}{B(k+1,1/2)}+\frac{1}{\gamma}\frac{\zeta^{l}}{B(l+1,1/2)}\right)\end{align*}
+
+\end_inset
+
+ which reduces to the same expression, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:atomic-ss-finite-nuc"
+
+\end_inset
+
+), for 
+\begin_inset Formula $l=0$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+When using the 
+\emph on
+normalized
+\emph default
+ Gaussian charge distribution 
+\begin_inset Formula \[
+\rho(\vec{x})=\left(\frac{\gamma}{\pi}\right)^{3/2}\mathrm{e}^{-\gamma x^{2}}\]
+
+\end_inset
+
+ the reduced matrix elements of the potential will be given by
+\begin_inset Formula \[
+\langle l\alpha||V_{\gamma}||l\beta\rangle=\frac{4\pi}{2l+1}\frac{l!}{\lambda^{l}}\left(1-\zeta\right)^{3/2}\left(\frac{1}{\lambda}\sum_{k=0}^{l}\frac{\zeta^{k}}{B(k+1,1/2)}+\frac{1}{\gamma}\frac{\zeta^{l}}{B(l+1,1/2)}\right)\]
+
+\end_inset
+
+Here we replaced the exponent ratio 
+\begin_inset Formula $\gamma/(\lambda+\gamma)$
+\end_inset
+
+ by 
+\begin_inset Formula $1-\zeta$
+\end_inset
+
+.
+ In the limit of point nucleus 
+\begin_inset Formula $\gamma\to\infty$
+\end_inset
+
+ and therefore 
+\begin_inset Formula $\zeta\to0$
+\end_inset
+
+ the result approaches the finite nucleus expression, Eq.
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:atomic-point-nuc"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Description
+Excercise.
+ Show that final expression for 
+\begin_inset Formula $\langle l\alpha||V_{\gamma}||l\beta\rangle$
+\end_inset
+
+ in this and previous sections are identical.
+ Are they?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+The ``modular'' approach to the integrals with a ``coupled'' backend
+\end_layout
+
+\begin_layout Subsubsection*
+Frontend: everything is a (multiple) spherical derivative or a combination
+ of the them.
+\end_layout
+
+\begin_layout Standard
+Applying 4-times the addition theorem (product rule) to the 
+\begin_inset Formula $ssss$
+\end_inset
+
+-integral factorized into the product of 
+\begin_inset Formula $ab$
+\end_inset
+
+- and 
+\begin_inset Formula $cd$
+\end_inset
+
+-overlaps (
+\begin_inset Formula $S_{ab}$
+\end_inset
+
+ and 
+\begin_inset Formula $S_{cd}$
+\end_inset
+
+) with the coulomb integral of the product densities 
+\begin_inset Formula $F_{abcd}$
+\end_inset
+
+ 
+\begin_inset Formula \begin{align*}
+(lm_{a}lm_{b}|lm_{c}lm_{d}) & =[\vec{\nabla}_{a}]_{lm_{a}}[\vec{\nabla}_{b}]_{lm_{b}}[\vec{\nabla}_{c}]_{lm_{c}}[\vec{\nabla}_{d}]_{lm_{d}}\cdot(S_{ab}F_{abcd}S_{cd})\\
+ & =\sum_{lm_{1}^{\prime}lm_{1}^{\prime\prime}}^{\text{AT}(lm_{a})}\quad\sum_{lm_{b}^{\prime}lm_{b}^{\prime\prime}}^{\text{AT}(lm_{b})}\quad\sum_{lm_{b}^{\prime}lm_{b}^{\prime\prime}}^{\text{AT}(lm_{c})}\quad\sum_{lm_{a}^{\prime}lm_{b}^{\prime\prime}}^{\text{AT}(lm_{d})}\quad\cdot\\
+ & \quad\cdot\left([\vec{\nabla}_{a}]_{lm_{a}^{\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime}}[\vec{\nabla}_{c}]_{lm_{c}^{\prime}}[\vec{\nabla}_{d}]_{lm_{d}^{\prime}}\cdot F_{abcd}\right)\\
+ & \quad\cdot\left([\vec{\nabla}_{a}]_{lm_{a}^{\prime\prime}}[\vec{\nabla}_{b}]_{lm_{b}^{\prime\prime}}[\vec{\nabla}_{c}]_{lm_{c}^{\prime\prime}}[\vec{\nabla}_{d}]_{lm_{d}^{\prime\prime}}\cdot(S_{ab}S_{cd})\right)\end{align*}
+
+\end_inset
+
+one reduces the problem to evaluation of ``multiple'' derivatives of functions
+ of scalar arguments
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{1}}[\vec{\nabla}]_{lm_{2}}[\vec{\nabla}]_{lm_{3}}[\vec{\nabla}]_{lm_{4}}\cdot F(x^{2}/2),\quad\vec{\nabla}=\partial/\partial\vec{x}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Backend: multiple derivatives are derivatives of a ``lifted'' function.
+\end_layout
+
+\begin_layout Standard
+By applying twice the angular momentum coupling theorem in the form
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{1}}[\vec{\nabla}]_{lm_{2}}=\sum_{lm}(lm_{1}lm_{2}|lm)\;[\vec{\nabla}]_{lm}\;\Delta^{(L-l)/2},\quad L=l_{1}+l_{2},\quad L=l\;\text{mod}\;2\]
+
+\end_inset
+
+one may deduce the coupled form for the product of four-harmonics 
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{1}}[\vec{\nabla}]_{lm_{2}}[\vec{\nabla}]_{lm_{3}}[\vec{\nabla}]_{lm_{4}}=\sum_{lm}(lm_{1}lm_{2}lm_{3}lm_{4}|lm)[\vec{\nabla}]_{lm}\Delta^{(L-l)/2},\quad L=l_{1}+l_{2}+l_{3}+l_{4},\quad L=l\;\text{mod}\;2\]
+
+\end_inset
+
+with Clebsh-Gordan coefficients for coupling of the four-angular momenta
+\begin_inset Formula \[
+(lm_{1}lm_{2}lm_{3}lm_{4}|lm)=\sum_{lm^{\prime}}^{\text{s1}}\sum_{lm^{\prime\prime}}^{\text{s2}}(lm_{1}lm_{2}|\underbrace{lm^{\prime})(lm^{\prime}}_{\text{s1}}lm_{3}|\underbrace{lm^{\prime\prime})(lm^{\prime\prime}}_{\text{s2}}lm_{4}|lm)\]
+
+\end_inset
+
+obtained here in one of the many possible associative ways.
+ Therefore it is possible to express 
+\begin_inset Formula $N_{>}$
+\end_inset
+
+ 4-fold 4-index derivatives 
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm_{1}}[\vec{\nabla}]_{lm_{2}}[\vec{\nabla}]_{lm_{3}}[\vec{\nabla}]_{lm_{4}}F\]
+
+\end_inset
+
+where 
+\begin_inset Formula $N_{>}$
+\end_inset
+
+ is given by the ``square of the product'': 
+\begin_inset Formula \[
+N_{>}=(l_{1}+1)^{2}(l_{2}+1)^{2}(l_{3}+1)^{2}(l_{4}+1)^{2}\]
+
+\end_inset
+
+ via the asymptotically smaller number 
+\begin_inset Formula $N_{<}$
+\end_inset
+
+ of quantities given by the ``square of the sum'': 
+\begin_inset Formula \[
+N_{<}=(L+1)^{2}=(l_{1}+l_{2}+l_{3}+l_{4}+1)^{2}\]
+
+\end_inset
+
+These quantities are the spherical derivatives of the function of scalar
+ argument which was ``lifted'' by Laplacian (scalar operation) to ensure
+ the proper overall order of derivative: 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \[
+[\vec{\nabla}]_{lm}F_{L-l},\quad\text{with}\quad F_{2n}(x^{2}/2)=\Delta^{n}F(x^{2}/2)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Scratch paper
+\end_layout
+
+\begin_layout Subsubsection*
+Kinetic energy
+\end_layout
+
+\begin_layout Standard
+Kinetic energy integrals involve the Laplace operator that in spherical
+ coordinates is given by
+\begin_inset Formula \[
+\Delta=\frac{1}{r^{2}}\frac{\partial}{\partial r}r^{2}\frac{\partial}{\partial r}+\frac{1}{r^{2}}\left(\frac{1}{\sin\vartheta}\frac{\partial}{\partial\vartheta}\sin\vartheta\frac{\partial}{\partial\vartheta}+\frac{1}{\sin^{2}\vartheta}\frac{\partial^{2}}{\partial\varphi^{2}}\right)=\Delta_{r}+\Delta_{\vartheta\varphi}\]
+
+\end_inset
+
+the radial part of the Laplace operator may be also expressed as 
+\begin_inset Formula \[
+\Delta_{r}=\left(\frac{1}{r}\frac{\partial}{\partial r}r\right)^{2}=\frac{1}{r}\frac{\partial^{2}}{\partial r^{2}}r\]
+
+\end_inset
+
+We will also need to apply the Lapalace operator to GTO, where we for the
+ moment, separate the radial and angular 
+\begin_inset Formula \[
+[\vec{r}]_{lm}\text{e}^{-\beta r^{2}}=\left(\frac{4\pi}{2l+1}\right)^{1/2}\text{e}^{-\beta r^{2}}r^{l}Y_{lm}\]
+
+\end_inset
+
+By using 
+\begin_inset Formula \[
+\Delta\; Y_{lm}=\Delta_{\vartheta\varphi}Y_{lm}=-\frac{l(l+1)}{r^{2}}Y_{lm}\]
+
+\end_inset
+
+and 
+\begin_inset Formula \[
+\Delta\; r^{l}\text{e}^{-\beta r^{2}}=\Delta_{r}\; r^{l}\text{e}^{-\beta r^{2}}=\left(\frac{l(l+1)}{r^{2}}-2(2l+3)\beta+4\beta^{2}r^{2}\right)r^{l}\text{e}^{-\beta r^{2}}\]
+
+\end_inset
+
+one derives the action on GTO
+\begin_inset Formula \[
+-\frac{1}{2}\Delta\;[\vec{r}]_{lm}\text{e}^{-\beta r^{2}}=\left((2l+3)\beta-2\beta^{2}r^{2}\right)[\vec{r}]_{lm}\text{e}^{-\beta r^{2}}\]
+
+\end_inset
+
+Then the ``averaged'' kinetic energy matrix element between two Gaussians
+ will be then given by 
+\begin_inset Formula \begin{align*}
+K_{l} & =\frac{1}{2l+1}\sum_{m}\langle lm\alpha|-\frac{1}{2}\Delta|lm\beta\rangle\\
+ & =\frac{4\pi}{2l+1}\int r^{2l+2}\left((2l+3)\beta-2\beta^{2}r^{2}\right)\text{e}^{-\lambda r^{2}}dr\\
+ & =\frac{2\pi}{2l+1}\left((2l+3)\beta\frac{\Gamma(l+3/2)}{\lambda^{l+3/2}}-2\beta^{2}\frac{\Gamma(l+5/2)}{\lambda^{l+5/2}}\right)\\
+ & =(2l+3)\zeta\pi\frac{\Gamma(l+1/2)}{\lambda^{l+3/2}}\quad\mbox{with}\quad\zeta=\frac{\alpha\beta}{\alpha+\beta}\end{align*}
+
+\end_inset
+
+Comparing this with the expression for 
+\begin_inset Formula $S_{l}$
+\end_inset
+
+ we observe that
+\begin_inset Formula \[
+K_{l}=(2l+3)\zeta S_{l}\]
+
+\end_inset
+
+which, of course agrees with special case of 
+\begin_inset Formula $l=0$
+\end_inset
+
+ in the limit 
+\begin_inset Formula $\vec{a}-\vec{b}\to0$
+\end_inset
+
+: 
+\begin_inset Formula \begin{align*}
+K_{0} & =\left(3-2\zeta(\vec{a}-\vec{b})^{2}\right)\zeta S_{0}\to3\zeta S_{0}\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Unsorted
+\end_layout
+
+\begin_layout Standard
+If normalized Gaussian functions are used the overlap integrals appearing
+ in all integrals have to be replaced by the scaled by 
+\begin_inset Formula \[
+\left(\frac{2\alpha}{\pi}\right)^{3/4}\left(\frac{2\beta}{\pi}\right)^{3/4}[\alpha^{l}(2l-1)!!]^{-1/2}[\beta^{l}(2l-1)!!]^{-1/2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However in order to obtain atomic integrals of higher angular momenta we
+ postpone the limit of 
+\begin_inset Formula $\vec{a}=\vec{b}=\vec{c}$
+\end_inset
+
+ and consider the average (reduced) integral:
+\begin_inset Formula \[
+\langle l\vec{a}\alpha||f||l\vec{b}\beta\rangle:=\frac{1}{2l+1}\sum_{m}^{2l+1}\langle lm\vec{a}\alpha|f|lm\vec{b}\beta\rangle=\frac{1}{2l+1}\sum_{m}^{2l+1}[\vec{\nabla}_{a}]_{lm}^{\ast}[\vec{\nabla}_{b}]_{lm}\langle\vec{a}\alpha|f|\vec{b}\beta\rangle\]
+
+\end_inset
+
+For the two-center integrals we can use
+\begin_inset Formula \[
+F(d^{2}/2):=\langle\vec{a}\alpha|f|\vec{b}\beta\rangle,\quad\vec{d}=\vec{a}-\vec{b}\]
+
+\end_inset
+
+and the fact that 
+\begin_inset Formula $\vec{\nabla}_{a}=-\vec{\nabla}_{b}=\vec{\nabla}_{d}$
+\end_inset
+
+ so that we can omit the subscript off the gradient operator and invoke
+ sum rule for harmonics of the same argument:
+\begin_inset Formula \[
+\langle l\vec{a}\alpha||f||l\vec{b}\beta\rangle=(-\Delta)^{l}F(d^{2}/2)=\left(-2x\frac{\partial^{2}}{\partial x^{2}}-3\frac{\partial}{\partial x}\right)^{l}F(x),\quad x=d^{2}/2\]
+
+\end_inset
+
+Note that the ss-integrals of kinetic energy are related to ss-integral
+ of overlap by
+\begin_inset Formula \[
+K_{ab}=\frac{1}{2}(-\Delta)S_{ab}\]
+
+\end_inset
+
+so that both two-center integrals are given by powers of 
+\begin_inset Formula \[
+\Delta=2x\frac{\partial^{2}}{\partial x^{2}}+3\frac{\partial}{\partial x}\]
+
+\end_inset
+
+ applied to overlap integrals.
+ As we will be interested only in the limit 
+\begin_inset Formula $\vec{a}=\vec{b}$
+\end_inset
+
+ we expand 
+\begin_inset Formula $S(x)$
+\end_inset
+
+ in series
+\begin_inset Formula \[
+S(x)=\sum_{k=0}^{\infty}S^{(k)}\frac{x^{k}}{k!}\]
+
+\end_inset
+
+where 
+\begin_inset Formula $S^{(k)}$
+\end_inset
+
+ is 
+\begin_inset Formula $k$
+\end_inset
+
+th derivative of 
+\begin_inset Formula $S(x)$
+\end_inset
+
+ at 
+\begin_inset Formula $x=0$
+\end_inset
+
+.
+ The corresponding series for 
+\begin_inset Formula $T:=\Delta S$
+\end_inset
+
+ will be given by coefficients
+\begin_inset Formula \begin{align*}
+T^{(k)} & =3S^{(k+1)}+2kS^{(k+2)}\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "bibam,bibms"
+options "myprsty"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

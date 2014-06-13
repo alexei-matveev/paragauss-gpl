@@ -1,0 +1,128 @@
+#!/bin/csh
+setenv machine dec
+setenv local /scratch/simol.$$
+mkdir $local
+if ( $1 == "" ) then
+ echo Parameter must be specified
+ exit
+endif
+if( $machine == "hp" ) then
+ set SIMOL=/users/hp2/lcgto/prod/exe/simol
+ setenv FTN_PREFIX ftn
+ setenv FTN_PREFIX_Z ftn0
+else if ( $machine == "sgi" ) then
+ set SIMOL=/soft/lcgto/exe/simol_v180
+ setenv FTN_PREFIX fort.
+ setenv FTN_PREFIX_Z fort.
+else if ( $machine == "dec" ) then
+# set SIMOL=/home/exe/simol_v180
+# set SIMOL=/home/exe/simol_v180l
+ set SIMOL=/home/exe/simol_v180epe1
+ set SIMOL=/home/exe/simol_v180epe2
+ setenv FTN_PREFIX fort.
+# setenv FTN_PREFIX ftn
+ setenv FTN_PREFIX_Z fort.
+else if ( $machine == "convex" ) then
+ set SIMOL=/mnt1/naslusov/EXE/simol_nl
+ setenv FTN_PREFIX fort.
+ setenv FTN_PREFIX_Z fort.
+else
+ echo ' UNKNOWN MACHINE:' $machine
+ exit
+endif
+
+if ( $2 == "" ) then
+ if( $machine == "hp" ) then
+  set SIMOL="$SIMOL"_nl.exe
+ else
+  set SIMOL="$SIMOL".exe
+ endif
+else
+ set SIMOL="$SIMOL""$2".exe
+endif
+echo Using $SIMOL
+if ( ! -e $SIMOL ) then
+ echo $SIMOL does not exist.
+ exit
+endif
+setenv base  `pwd`/.
+set infile = $1
+
+cp    $SIMOL $local/simol.exe
+cd $local
+if (-e $base/gx.$infile) then
+cp $base/gx.$infile $local/"$FTN_PREFIX"92
+endif
+if (-e $base/$infile.gsn) then
+cp $base/$infile.gsn $local/gsn
+endif
+if (-e $base/$infile.fl9) then
+cp $base/$infile.fl9 $local/"$FTN_PREFIX_Z"9
+endif
+if (-e $base/$infile.fl10) then
+cp $base/$infile.fl10 $local/"$FTN_PREFIX"10
+endif
+if (-e $base/xo.$infile) then
+cp $base/xo.$infile $local/xo
+endif
+if (-e $base/$infile.gx_g) then
+cp $base/$infile.gx_g $local/gx_grad.sav
+endif
+if (-e $base/epe.r) then
+cp $base/epe.r $local/epe.r 
+endif
+if (-e $base/epe.pcr) then
+cp $base/epe.pcr $local/epe.pcr 
+endif
+if (-e $base/epe.pcs) then
+cp $base/epe.pcs $local/epe.pcs 
+endif
+if(-e $base/epe_simol_parameters) then
+echo 'cp $local/epe_simol_parameters $base/epe_simol_parameters'
+cp $base/epe_simol_parameters $local/epe_simol_parameters 
+endif
+
+$local/simol.exe >& flepo.out
+#$local/simol.exe 
+
+if (-e $local/dipmom.sav) then
+cp $local/dipmom.sav $base/$infile.dipm
+endif
+if (-e $local/pc.xyz) then
+mv $local/pc.xyz $base/$infile.pc
+endif
+if (-e $local/xmol.xyz) then
+mv $local/xmol.xyz $base/$infile.xyz
+endif
+
+if (-e $local/xo)  then
+mv $local/xo $base/xo.$infile
+endif
+if (-e $local/epe.r) then
+mv $local/epe.r $base/epe.r
+endif
+mv $local/"$FTN_PREFIX"92 $base/gx.$infile
+if (-e $local/gsn)  then
+mv $local/gsn $base/$infile.gsn
+endif
+echo '***************************** flepo.out *****************************'
+#cat $local/flepo.out
+cat $local/flepo.out >> $base/dfp.$infile
+if (-e $local/"$FTN_PREFIX_Z"9)  then
+mv $local/"$FTN_PREFIX_Z"9 $base/$infile.fl9
+endif
+if (-e $local/"$FTN_PREFIX"10)  then
+mv $local/"$FTN_PREFIX"10 $base/$infile.fl10
+endif
+if (-e $local/gx_grad.sav)  then
+cp gx_grad.sav  $base/$infile.gx_g
+endif
+if(-e $local/epe_simol_parameters) then
+echo 'cp $local/epe_simol_parameters $base/epe_simol_parameters'
+cp $local/epe_simol_parameters $base/epe_simol_parameters
+endif
+if(-e $local/conv) then
+cp $local/conv $base/conv
+endif
+rm -r $local
+

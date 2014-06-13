@@ -1,0 +1,61 @@
+#!/bin/csh
+
+setenv machine dec
+setenv local /scratch/ewald.$$
+
+mkdir $local
+if ( $1 == "" ) then
+ echo Parameter must be specified
+ exit
+endif
+
+###    instal_dir - direcrory where ewald exe file is stored ###
+###    set ewald=/home1/bin/ewald
+
+ set ewald="$ewald"_<VERS>.exe
+
+setenv base  `pwd`
+set infile = $1
+
+cp    $ewald $local/ewald.exe
+cd $local
+
+cp $base/$infile.ewa $local
+
+if (-e $base/gx.c.$infile) then
+cp $base/gx.c.$infile $local/gxcell
+endif
+
+if (-e $base/gx.cv.$infile) then
+cp $base/gx.cv.$infile $local/cellvec
+endif
+
+if (-e $base/gx.$infile) then
+cp $base/gx.$infile $local/hdsdvm.buf
+endif
+
+if (-e $base/$infile.ewald.mpcr) then
+mv   $base/$infile.ewald.mpcr $local/evald.mpcr
+endif
+
+############################################
+$local/ewald.exe  < $infile.ewa > ewald.out
+#$local/ewald.exe  < $infile.ewa >& ewald.out
+#$local/ewald.exe  < $infile.ewa
+############################################
+
+#if(-e $local/ewald.out)
+mv $local/ewald.out  $base/ewa.$infile
+#endif
+
+if (-e $local/evald.pcr) then
+mv  $local/evald.pcr $base/ewald.pcr
+endif
+if (-e $local/evald.mpcr) then
+mv  $local/evald.mpcr $base/$infile.ewald.mpcr
+endif
+
+cd $base
+rm -rf $local
+
+

@@ -1,0 +1,433 @@
+#!/usr/bin/perl -w
+#
+# $Id: mkdepf90,v 1.6 2011-11-03 07:41:09 nikodem Exp $
+# Author:  Ted Stern <stern@cray.com>
+#
+# Usage:
+#
+#	mkdepf90.perl \
+#		-src srcfile \
+#		[-uc] \
+#		[-objdir objdir] \
+#		[-moddir moddir] \
+#		[-depdir depdir] \
+#		[-mdeps mdepsfile] \
+#		[-odeps odepsfile]
+#
+# - Intended for use with GNU Make versions 3.79.1 and higher.
+#
+# - Generates macros, target rules, and dependency listings for f90 files
+#   that USE or define modules.
+#
+# - Intended for one source file at a time.  For example, use in a Makefile
+#   with the following pattern rule and include statement:
+#
+#       $(OBJDIR)/%.f90mdeps $(OBJDIR)/%.f90odeps: $(SRCDIR)/%.f90
+#               $(PERL) -w mkdepf90.perl -src $< -objdir $(@D)
+#
+#       # include module and object macro definitions and
+#       # module dependencies:
+#       include $(F90_objs:.o=.f90mdeps)
+#
+#       # include extra object dependencies:
+#       include $(F90_objs:.o=.f90odeps)
+#
+# - It doesn't matter if the object directory has a trailing slash or not.
+#
+# - Use "-uc" option to upcase module basenames.  Default is to downcase.
+#   The only platform that requires -uc, to my knowledge, is Cray UNICOS.
+#
+# - "mdeps" stands for module dependency listings,
+#   "odeps" stands for object dependency listings.
+#   These are separated just in case objects are not all placed in a single
+#   directory.  If mdeps files are all read in before odeps files, all
+#   required macro definitions will have been made for the odeps dependencies
+#   to resolve correctly.
+#
+# - Order of arguments is unimportant.
+#
+# - NOTE:  if -objdir is provided, objdir is the default directory in which
+#	   the module and object dependency files will be created, unless their
+#	   output locations are specified explicitly using -mdeps and/or
+#	   -odeps.
+#
+# Acknowledgements:
+# Cribbed basic dependency text-processing logic from makemake.perl[1],
+# with argument parsing idea from fmkmf[4] but with clearer switch construct.
+# [2] provided the idea of using macros for the object and module names, and
+# Daniel Grimwood[2] also helped by providing feedback, counterexamples, and
+# tests of various schemes.
+#
+# References:
+#      [1] http://www.fortran.com/makemake.perl
+#      [2] http://www.theochem.uwa.edu.au/fortran/recompile/
+#      [3] http://www.helsinki.fi/~eedelman/makedepf90.html
+#      [4] http://www.met.ed.ac.uk/~hcp/fmkmf.html
+#      [5] http://www.gfdl.gov/~vb/mkmf.html
+#      [6] http://www.canb.auug.org.au/~millerp/rmch/recu-make-cons-harm.html
+#      [7] http://www.paulandlesley.org/gmake/
+#
+#-----------------------------------------------------------------------
+# Implementation comments:
+#
+# A GNU MAKE target-specific variable $(byproduct) is defined so that an
+# f90 object knows what its module byproduct files are.
+#
+# Example of simple output for no OBJDIR and no modules created:
+#
+#   mkdepf90.perl -src filename.f90
+#
+#   output in filename.f90rule:
+#
+#       # Variable containing the full path to the object:
+#       filename.o := filename.o
+#
+#   output in filename.f90deps:
+#
+#       # Extra dependencies of the obj file:
+#       $(filename.o): $(A_DEF.mod) file1.h file2.inc
+#
+# Example of complex case with -objdir specified, multiple modules created,
+# and multiple module and include dependencies:
+#
+#   mkdepf90.perl -uc -src complex_def.f90 -objdir $(OBJDIR)/indep/c/
+#
+#   output in $(OBJDIR)/indep/c/complex_def.f90mdeps:
+#
+#       # Using objdir $(OBJDIR)/indep/c/ from cmd line
+#       # Variable containing the full path to the object:
+#       complex_def.o := $(OBJDIR)/indep/c/complex_def.o
+#
+#       # For each defined module, define the dir-stripped module name
+#       # as the full path to the generated module:
+#       A_DEF.mod := $(OBJDIR)/indep/c/A_DEF.mod
+#
+#       B_DEF.mod := $(OBJDIR)/indep/c/B_DEF.mod
+#
+#       # Variable containing the complete list of generated modules:
+#       complex_def.o.mods := $(A_DEF.mod) $(B_DEF.mod)
+#
+#       # Target-specific variable:
+#       # byproduct = modules associated with the main object:
+#       $(complex_def.o) : byproduct := $(complex_def.o.mods)
+#
+#   output in $(OBJDIR)/indep/c/complex_def.f90odeps:
+#
+#       # Extra dependencies of the obj file:
+#       $(complex_def.o): $(C_DEF.mod) $(D_DEF.mod) $(E_DEF.mod) \
+#		$(F_DEF.mod) file1.h file2.inc file3.inc
+#
+#-----------------------------------------------------------------------
+# Argument parsing.  Set defaults:
+$argerr=0;
+$argerr=1 if ($#ARGV+1==0);
+
+undef $filename;
+undef $mdepsfile;
+undef $odepsfile;
+
+$ModCase=DnCase;                # default is to dncase .mod file basename
+$objdir = "";
+$moddir = "";
+$depdir = "";
+$mod_ext="mod";
+
+while (@ARGV) {
+    $arg=shift;
+    SWITCH: for ($arg) {
+        /^-uc$/      && do { $ModCase=UpCase;  last; };
+        /^-src$/     && do { $filename=shift;  last; };
+        /^-objdir$/  && do { $objdir=shift;    last; };
+        /^-moddir$/  && do { $moddir=shift;    last; };
+        /^-depdir$/  && do { $depdir=shift;    last; };
+        /^-mdeps$/   && do { $mdepsfile=shift; last; };
+        /^-odeps$/   && do { $odepsfile=shift; last; };
+        /^-mod_ext$/ && do { $mod_ext=shift;   last; };
+        $argerr=1;
+        warn "\nUnexpected arg $arg\n";
+    }
+}
+
+defined $filename || do {
+    $argerr=1; warn "\nError : -src filename not supplied.\n"
+};
+
+# We need the filename, at least!
+if ( $argerr==1 ) {
+    die(
+        "\nUsage :\n",
+        "\t perl -w ./mkdepf90.perl -src srcfile \\\n",
+        "\t\t[-uc] \\\n",
+        "\t\t[-mod_ext ext] \\\n",
+        "\t\t[-objdir objdir] \\\n",
+        "\t\t[-moddir moddir] \\\n",
+        "\t\t[-depdir depdir] \\\n",
+        "\t\t[-mdeps mdepsfile] \\\n",
+        "\t\t[-odeps odeps_file],\n",
+        "\n",
+        "Where :\n",
+        "\t-src srcfile\t: \"srcfile\" is the source file to be parsed.\n",
+        "\t-uc\t\t: .mod filenames are to be uppercased (e.g., for UNICOS).\n",
+        "\t-mod_ext ext\t: \"ext\" is the module file extension.\n",
+        "\t\t\t  Default extension is \"mod\".\n",
+        "\t-objdir objdir\t: \"objdir\" is the object file location,\n",
+        "\t\t\t  and the default directory destination for module files\n",
+        "\t\t\t  and dependency files output by this script.\n",
+        "\t\t\t  A trailing slash may be included but is not required.\n",
+        "\t-moddir moddir\t: \"moddir\" is the module file location,\n",
+        "\t-depdir depdir\t: \"depdir\" is the default destination directory for\n",
+        "\t\t\t  the dependency files output by this script.\n",
+        "\t-mdeps mdepsfile: \"mdepsfile\" is the module dependency file.\n",
+        "\t-odeps odepsfile: \"odepsfile\" is the object dependency file.\n",
+        "\n",
+        "Notes :\n",
+        "\tDependency output is split into two files:\n",
+        "\t\tmdepsfile (module & object macros + module dependencies), and\n",
+        "\t\todepsfile (object dependencies).\n",
+        "\n",
+        "\tDefault mdeps and odeps files are sent to objdir with same base\n",
+        "\tas src file, with .f90mdeps and .f90odeps extensions, respectively.\n",
+        "\tIf you don't like those extensions, use -mdeps and/or -odeps.\n",
+        "\n",
+        "\tYou can change the dependency file destination directory using\n",
+        "\tthe -depdir option, or specify the destination files explicitly\n",
+        "\tusing the -mdeps or -odeps options.\n",
+        "\n",
+        "\t-mdeps and -odeps specifications override -depdir.\n",
+        "\n");
+}
+
+# Get the base part of the filename (remove everything after last .):
+($base = $filename) =~ s/\.[^\.]+$//;
+# Strip everything up to last slash:
+$base =~ s/^.*\///;
+
+# Extract the object directory prefix from what was passed in:
+$objdir = &SetPrefix($objdir);
+
+# Set the module directory prefix, using the object directory as the default
+if ( $moddir ) {
+    $moddir = &SetPrefix($moddir);
+} else {
+    $moddir = $objdir;
+}
+
+# Set the dependency file prefix, using the object directory as the default
+if ( $depdir ) {
+    $depdir = &SetPrefix($depdir);
+} else {
+    $depdir = $objdir;
+}
+
+# Define default mdeps filename if not provided
+defined $mdepsfile || do {
+    ($mdepsfile = $base) =~ s/.*/$depdir$&.f90mdeps/;
+};
+
+# Define default odeps filename if not provided
+defined $odepsfile || do {
+    ($odepsfile = $base) =~ s/.*/$depdir$&.f90odeps/;
+};
+
+# $objbase defined as the directory-stripped object file name with
+# a .o extension:
+($objbase = $base) =~ s/$/.o/;
+
+# $objfile defined as $objbase prefixed with the objdir.
+# $objfile = $objbase;
+# defined $prefix && do { $objfile =~ s/^/$prefix/; };
+($objfile = $objbase) =~ s/^/$objdir/;
+
+open(FILE, $filename) or die "Cannot open -src file $filename: $!\n";
+
+unlink $mdepsfile;
+open(OUTFILE,">" . $mdepsfile) or
+    die "Can't write module dependencies file \n\t$mdepsfile -- check directory or perms.\n";
+
+# Search for includes and USE calls:
+undef @incs;
+undef @modules;
+undef @moddefs;
+
+while (<FILE>) {
+    /^\s*(\#|\?\?)*\s*include\s+[\"\']([^\"\']+)[\"\']/i && push(@incs, $2);
+
+    #/^\s*use\s+([^\s,!]+)/i && push(@modules, &$ModCase($1));
+    /^\s*use\s+(\w+)/i && push(@modules, &$ModCase($1));
+    # Perl 5.8.0 on Altix has a problem with original REXP.
+
+    # Make sure we don't mistakenly grab "module procedure" lines:
+    #^\s*module\s+([^\s,!]+)/i &&
+    # Perl 5.8.0 on Altix has a problem with original REXP.
+    /^\s*module\s+(\w+)/i &&
+        (lc($1) ne "procedure") &&
+        push(@moddefs, &$ModCase($1));
+}
+
+# Define the MAKE macro $($objbase) as the full path to
+# the object.  E.g., 'foo.o = /path/to/foo.o'
+print OUTFILE
+    "# MAKE variable containing full path to object:\n",
+    "$objbase := $objfile\n\n";
+
+# If modules are defined, create macros for modules and
+# a combined object+module target rule:
+undef @modlist;
+
+defined @moddefs && do {
+    # @modlist stores module names with .mod on the end
+    foreach $module (&Uniq(sort(@moddefs))) {
+        ($name = $module) =~ s/$/.$mod_ext/;
+        push(@modlist, $name);
+    }
+
+    # Redefine @moddefs to the new @modlist
+    @moddefs = @modlist;
+
+    # Redefine @modlist with each element of @moddefs surrounded by
+    # MAKE parens:
+    undef @modlist;
+    foreach $module (@moddefs) {
+      ($name = $module) =~ s/.*/\$\($&\)/;
+      push(@modlist, $name);
+    }
+
+    print OUTFILE "# For each module, define dir-stripped module name\n";
+    print OUTFILE "# as the full path to the generated module:\n";
+    foreach $module (@moddefs) {
+        # Define the MAKE macro $(modnamebase.mod) as the full path to the
+        # module
+        print OUTFILE "$module := $moddir$module\n\n";
+    }
+
+    # This defines the macro $(objbase.o.mods) as the list of
+    # modules dependent on the object.
+    print OUTFILE "# MAKE Variable containing list of generated modules:\n";
+    print OUTFILE "$objbase.mods := ";
+    $j = length($objbase) + 9;
+
+    &PrintWords($j, 0, @modlist);
+    print OUTFILE "\n\n";
+
+    # Make sure .mod files depend on the object file:
+    print OUTFILE "# Define main obj as prereq for module files:\n";
+    print OUTFILE "\$($objbase.mods): \$($objbase)\n\n";
+
+    # Print out a target specific variable:
+    print OUTFILE "# Target-specific variable:\n";
+    print OUTFILE "# byproduct := modules associated with the main obj:\n";
+    print OUTFILE "\$($objbase): byproduct := \$($objbase.mods)\n\n";
+};
+
+# Stop writing to mdeps file, start writing to odeps file:
+close(OUTFILE);
+unlink $odepsfile;
+open(OUTFILE,">" . $odepsfile) or
+    die "Can't write object dependencies file\n\t$odepsfile -- check directory or perms.\n";
+
+# Print out extra dependencies for the object file beyond the default:
+undef @dependencies;
+
+defined @modules && do {
+    foreach $module (&Uniq(sort(@modules))) {
+        ($name = $module) =~ s/.*/\$\($&.$mod_ext\)/;
+        push(@dependencies, $name);
+    }
+};
+
+defined @incs && do {
+    push(@dependencies, &Uniq(sort(@incs)));
+};
+
+defined @dependencies && do {
+    print OUTFILE "# Extra dependencies of the obj file:\n";
+    print OUTFILE "\$($objbase): ";
+    $j = length($objbase) + 5;
+    &PrintWords($j, 0, @dependencies);
+};
+
+print OUTFILE "\n";             # Add newline to .deps file
+close(OUTFILE);
+
+# End of processing.  Below are utility routines:
+#-----------------------------------------------------------------------
+# Internal text formatting functions, copied (with some modifications)
+# from makemake.perl.
+#-----------------------------------------------------------------------
+# &PrintWords(current output column, extra tab?, word list); --- print words
+#    nicely
+#
+sub PrintWords {
+    my $columns = 78 - shift(@_);
+    my $extratab = shift(@_);
+    my $wordlength;
+    #
+    print OUTFILE "$_[0]";
+    $columns -= length(shift(@_));
+    foreach $word (@_) {
+        $wordlength = length($word);
+        if ($wordlength + 1 < $columns) {
+            print OUTFILE " $word";
+            $columns -= $wordlength + 1;
+        }
+        elsif ($extratab) {
+            #
+            # Continue onto a new line
+            #
+            print OUTFILE " \\\n\t\t$word";
+            $columns = 62 - $wordlength;
+        }
+        else {
+            print OUTFILE " \\\n\t$word";
+            $columns = 70 - $wordlength;
+        }
+    }
+}
+
+# The only reason to define the following routines is so that I can
+# set up a function pointer to them.  If you know how to set up a function
+# pointer to a perl intrinsic, please let me know! -- Ted
+
+#-----------------------------------------------------------------------
+# &UpCase(string); --- convert string to upper case
+#
+sub UpCase {
+    return uc($_[0]);
+}
+
+#-----------------------------------------------------------------------
+# &DnCase(string); --- convert string to lower case
+#
+sub DnCase {
+    return lc($_[0]);
+}
+
+#-----------------------------------------------------------------------
+# &Uniq(sorted word list); --- remove adjacent duplicate words
+#
+sub Uniq {
+    my @words = (shift(@_));    # initialize @words with first argument
+    foreach $word (@_) {
+        if ($word ne $words[$#words]) {
+            push(@words, $word);
+        }
+    }
+    return @words;
+}
+
+#-----------------------------------------------------------------------
+# &SetPrefix(directory); --- cleans up directory for use as a prefix
+#
+sub SetPrefix {
+    my $dir = $_[0];
+    my $prefix = "";
+    if ( $dir ) {
+        $dir =~ s/\/\.$//;       # ignore trailing "/."
+        $dir =~ s/^\.\/+//;      # ignore leading "./"
+        $dir =~ s/\/*$//;        # remove trailing slashes
+        $dir =~ s/^\.$//;        # ignore "." directory
+        # set $prefix to the object directory with a trailing slash
+        if ( $dir ) { ($prefix = $dir) =~ s/$/\//; }
+    }
+    return $prefix;
+}

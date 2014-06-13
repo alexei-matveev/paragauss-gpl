@@ -1,0 +1,14 @@
+    complete pg         'c/--/(help help-commands help-synonyms)/' \
+                        'p/1/(2weblab insert_fermi no_qm_epe no_cluster \
+                        make_reg_reference save_reg_reference make_epe_reference \
+                        save_gx_reg gx2xyz max_iterations=30 epe2xyz \
+                        directaccess_int embed_convergence_limit \
+                        orbitals_in_memory stop_after_eperel output_timing \
+                        make_epe_relaxation use_epe_reference insert_diisham \
+                        no_recover_opt no_epe_relaxation no_geo_optimization \
+                        main_calc_ffh make_optimization make_periodic_optimization \
+                        opt_gx_reg xyz2gx  level_shift_mix save_eigenvec\
+			spectr2holes.pl optimize_geo_and_epe \
+                        insert_pt no_pert_theory)/' 'n/-a/(edit unedit commit \
+                        all none)/' 'n/watch/(on off add remove)/'
+

@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>Kurze Beschreibung des Inputs von ParaGau</title>
+</head>
+<BODY BGCOLOR="#ffffff">
+<body>
+<h1>How to do orbital plots with <em>ParaGauss</em> and <em>ParaPlot</em></h1>
+In order to generate orbital plots, you have to perform three steps. 
+<ol>
+<li> First, a file containing the MO coefficients <b>saved_eigenvec.dat</b> has
+to be generated with a full <em>ParaGauss</em> run. It is important, that the file is
+created with the <tt>save_eigenvec</tt> and <tt>save_eigenvec_all</tt> switches.
+Please refer to the <a href="file:/home/ttfs/DOCUMENTATION/users_manual.html#namelist_RECOVER_OPTIONS"> RECOVER_OPTIONS </a>.
+Note that once you have the file <b>saved_eigenvec.dat</b> you can use this for
+plots of any orbital of the system under investigation. <br>
+
+<li> With the file <b>saved_eigenvec.dat</b> in your input-directory, a so-called 
+<a href="file:/home/ttfs/DOCUMENTATION/users_manual.html#namelist_PROPERTIES"> properties-run </a> 
+ has to be done in order to generate a data-file <b> plot.dat</b>
+plot program <em>ParaPlot</em>. This is a run in which only the symmetry part and a
+short integral part of <em>ParaGauss</em> is performed. <br>Usually this will take only some
+minutes and you will not have to run this in parallel or submit it to a queue
+unless you are dealing with a really large molecule. Please be aware that the 
+parallel version may still be somewhat contaminated with bugs. A serial run,
+however, should represent no problem.<br>
+In order to specify the plane of the plot, the orbitals to be displayed and so on, 
+please look up the namelist <a href="file:/home/ttfs/DOCUMENTATION/users_manual.html#namelist_ORBITAL_PLOT">
+orbital_plot </a>. You may have to play around with this a bit until you
+find the optimal geometrical parameters and thus please remember to keep
+the file <b>saved_eigenvec.dat</b>.
+<li> Finally, the actual plot program <a href="file:/home/ttfs/DOCUMENTATION/DOK/paraplot.dvi"> <em>ParaPlot</em> </a> 
+has to be called. Note, that although the file <b>plot.dat</b> may contain data sets for 
+several orbitals, you do not have to plot them all. Instead, you may specify those which
+you want to appear in one plot in the input file <b>orb_plot.input</b> for <em>ParaPlot</em>.
+</ol><p>
+</body>
+</html>
+
+

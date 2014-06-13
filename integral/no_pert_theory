@@ -1,0 +1,3 @@
+perl -p -e 's/PERTURBATION_THEORY\s*=\s*(TRUE|T)/PERTURBATION_THEORY = f/i'\
+ input >inpuT
+mv inpuT input

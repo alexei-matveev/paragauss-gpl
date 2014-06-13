@@ -1,0 +1,80 @@
+
+Start ParaGauss serially as in
+
+    ./mainscf_VX.Y.Z
+
+The program expects the input file named
+
+    input
+
+to reside in the current directory.
+
+Beware there will  be a lot of temporary files  created in the current
+directory together  with the output  files.  Specify location  for the
+temporary files by setting environment variable
+
+    export TTFSTMP=/tmp
+
+or in the command line
+
+    TTFSTMP=/tmp ./mainscf_VX.Y.Z
+
+For MPI-enabled builds use mpirun/mpiexec as appropriate:
+
+    TTFSTMP=/tmp mpirun -np 8 $PWD/mainscf_VX.Y.Z
+
+You can specify output directory and the alternative name of the input
+file as in
+
+    TTFSTMP=/tmp TTFSOUPUTDIR=$PWD/output-dir TTFSINPUT=i.test ./mainscf_VX.Y.Z
+
+Note that  the directory, if specified, must  already exist.  Moreover
+it  must  exist  on  all  nodes potentially  involved  in  a  parallel
+computation.
+
+The startup script located in
+
+    ./bin/runpg
+
+attempts  to guess  execution nodes  and create  directories  prior to
+invoking  ParaGauss. However,  the startup  procedure varies  from one
+setup to  another so that  the startup script  may or may not  work on
+your platform.
+
+
+=== Extending GNU Guile Scheme interpreter by QM calculations ===
+
+There is a  possibility to run PG from a  Scheme interpreter. For that
+set
+
+    WITH_GUILE = 1
+
+in the Makefile and recompile ("make -r" may suffice).
+
+This  produces an executable  "guile-qm" in  the top  directory (where
+this  README file resides)  that can  be used  as a  standalone Scheme
+interpreter.  You may try to execute it in serial ...
+
+    $ ./guile-qm
+    guile> (+ 1 2)
+    3
+
+... and run PG from within it:
+
+    guile> (copy-file "some-input" "input")
+    guile> (define world (qm-init))
+    guile> (qm-run world)
+    guile> (qm-finalize world)
+
+For parallel calculation in batch mode use the Scheme script
+
+    ./guile/runqm.scm
+
+that does its best to emulate the behaviour of the traditional "runpg"
+bash script mentioned above. Use it as in
+
+    mpirun -np 8 runqm.scm [INPUTS...]
+
+Note that if neither "runqm.scm"  nor "guile-qm" are in your $PATH you
+will  need to specify  them by  hand and/or  adapt the  "shebang" line
+(first line starting with #!) at the top of "runqm.scm".

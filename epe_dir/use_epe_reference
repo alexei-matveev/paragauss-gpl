@@ -1,0 +1,15 @@
+perl -p -e 's/operations_make_reg_reference\s*=\s*(t|true)/operations_make_reg_reference=f/i; \
+            s/qm_interfaced_mode\s*=\s*(f|false)/qm_interfaced_mode=t/i; \
+            s/basic_action\s*=\s*\d*/basic_action=0/i; \
+            s/make_epe_reference\s*=\s*(t|true)/make_epe_reference=f/i; \
+            s/use_epe_reference\s*=\s*(f|false)/use_epe_reference=t/i; \
+            s/use_pgdata\s*=\s*(f|false)/use_epe_reference=t/i;' $1.epe>epe.input
+perl -p -e 's/epe_relaxation\s*=\s*(f|false)/epe_relaxation=t/i; \
+            s/OPERATIONS_EPE_LATTICE\s*=\s*(t|true)/OPERATIONS_EPE_LATTICE = f/i; \
+            s/OPERATIONS_GEO_OPT\s*=\s*(f|false)/OPERATIONS_GEO_OPT = t/i; \
+            s/OPERATIONS_POST_HOC\s*=\s*(f|false)/OPERATIONS_POST_HOC = t/i; \
+            s/OPERATIONS_GRADIENTS\s*=\s*(f|false)/OPERATIONS_GRADIENTS =t/i; \
+            s/EPE_RELAXATION\s*=\s*(f|false)/EPE_RELAXATION=t/i;' input>temp_input
+mv temp_input input 
+touch use_epe_reference\ script\ executed
+        

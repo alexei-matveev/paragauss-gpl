@@ -1,0 +1,41 @@
+This is a guile interpreter with an extension that allows manipulating
+process   groups   (MPI   communicators)   and   basic   inter-process
+communication. To build it execute
+
+    make
+
+in the current directory. Then start the custom interpreter:
+
+    $ export GUILE_LOAD_PATH=..
+    $ ./guile-comm
+
+Try importing the comm module --- this initializes the module defining
+basic communication primitives:
+
+    > (use-modules (guile comm))
+
+The comm-init procedure returns  the MPI_COMM_WORLD communicator as an
+integer:
+
+    > (comm-init (command-line))
+    $1 = 0
+
+Compute  Pi with  that communicator  by adding  that many  terms (this
+needs a few seconds of your patience):
+
+    > (comm-pi 0 100000000)
+    $2 = 3.14159265359023
+
+Finalize MPI:
+
+    > (comm-finalize)
+    $3 = 0
+
+MPI does not handle STDIN multiplexing so for parallel runs execute it
+in batch mode:
+
+    $ export GUILE_LOAD_PATH=..
+    $ mpirun -np 4 $PWD/guile-comm -s $PWD/test-guile-comm.scm
+
+Here  $PWD might  be necessary  if mpirun  does not  respect  CWD when
+spawning processes.

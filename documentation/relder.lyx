@@ -1,0 +1,5631 @@
+#LyX 1.4.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass book
+\begin_preamble
+\usepackage{a4wide}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{bm}
+\setcounter{MaxMatrixCols}{30}
+%TCIDATA{OutputFilter=latex2.dll}
+%TCIDATA{Version=5.00.0.2606}
+%TCIDATA{LastRevised=Sunday, March 13, 2005 21:38:35}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=BibTeX}
+\newcommand{\noun}[1]{\textsc{#1}}
+\renewcommand{\vec}[1]{ \mbox {\boldmath$#1$}}
+\end_preamble
+\options twoside
+\language english
+\inputencoding auto
+\fontscheme times
+\graphics default
+\paperfontsize 11
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 2
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes true
+\end_header
+
+\begin_body
+
+\begin_layout Title
+RELDER: Relativistic derivatives
+\end_layout
+
+\begin_layout Author
+Alexei V.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+Matveev
+\end_layout
+
+\begin_layout Date
+17.05.05
+\end_layout
+
+\begin_layout Section
+Linear response of an adiabatic DFT system
+\end_layout
+
+\begin_layout Standard
+The (parametric) DFT system is described by the energy functional
+\begin_inset Formula \begin{equation}
+E=E[x,\rho]\label{eq:Efunc}\end{equation}
+
+\end_inset
+
+with the corresponding 
+\begin_inset Quotes eld
+\end_inset
+
+equation of motion
+\begin_inset Quotes erd
+\end_inset
+
+ for 
+\emph on
+electrons
+\emph default
+
+\begin_inset Formula \begin{equation}
+\frac{\delta E}{\delta\rho}[x,\rho]=0\label{eq:motion}\end{equation}
+
+\end_inset
+
+In the adiabatic approximation with slowly varying 
+\begin_inset Formula $x(t)$
+\end_inset
+
+ one may assume that the the fast moving electrons always bring 
+\begin_inset Quotes eld
+\end_inset
+
+in sync
+\begin_inset Quotes erd
+\end_inset
+
+ the density 
+\begin_inset Formula $\rho(t)$
+\end_inset
+
+ to correspond to the current parameters set 
+\begin_inset Formula $x(t)$
+\end_inset
+
+.
+ So that equation of motion, Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:motion}
+
+\end_inset
+
+), holds along the whole trajectory 
+\begin_inset Formula $\{ x(t),\rho(t)\}$
+\end_inset
+
+.
+ We also assume that there is no dependence of the energy functional of
+ such dynamic system on the 
+\begin_inset Quotes eld
+\end_inset
+
+velocity
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\dot{\rho}$
+\end_inset
+
+ or any higher harmonics.
+ We also postpone dealing with the trivial dependence of the energy functional
+ on 
+\begin_inset Formula $\dot{x}$
+\end_inset
+
+ for the special case of 
+\begin_inset Formula $x$
+\end_inset
+
+ as nuclear coordinates.
+ These assumptions allow us to consider the parametrized system, Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:Efunc}
+
+\end_inset
+
+), with equation of motion, Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:motion}
+
+\end_inset
+
+), that holds for any value of parameter 
+\begin_inset Formula $x$
+\end_inset
+
+ and dont worry for any time-related issues.
+\end_layout
+
+\begin_layout Standard
+Now starting with 
+\begin_inset Formula $E[0,\rho]$
+\end_inset
+
+ we consider the linear response of the system for small 
+\begin_inset Quotes eld
+\end_inset
+
+perturbation
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $x\ne0$
+\end_inset
+
+:
+\begin_inset Formula \begin{equation}
+E[x,\rho]=E[0,\rho]+xE^{x}[0,\rho]\end{equation}
+
+\end_inset
+
+where by superscript 
+\begin_inset Formula $x$
+\end_inset
+
+ we denote the 
+\begin_inset Quotes eld
+\end_inset
+
+derivative along the trajectory
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+E^{x}=\frac{d}{dx}E\end{equation}
+
+\end_inset
+
+which is given by
+\begin_inset Formula \begin{equation}
+\frac{dE}{dx}=\frac{\partial E}{\partial x}+\rho^{x}\frac{\delta E}{\delta\rho}\label{eq:dEdx}\end{equation}
+
+\end_inset
+
+and includes the density response of the system 
+\begin_inset Formula $\rho^{x}=d\rho/dx$
+\end_inset
+
+ which maybe obtained (if necessary) from the (expansion of) equation of
+ motion
+\begin_inset Formula \begin{eqnarray}
+\frac{d}{dx}\frac{\delta E}{\delta\rho} & = & \frac{\partial}{\partial x}\frac{\delta E}{\delta\rho}+\rho^{x}\frac{\delta^{2}E}{\delta\rho^{2}}=0\\
+K\rho^{x} & = & -\frac{\partial}{\partial x}\frac{\delta E}{\delta\rho},\quad K:=\frac{\delta^{2}E}{\delta\rho^{2}}\label{eq:CPKS}\\
+\rho^{x} & = & -K^{-1}\frac{\partial}{\partial x}\frac{\delta E}{\delta\rho}\label{eq:invCPKS}\end{eqnarray}
+
+\end_inset
+
+ (not necessarily by direct inversion of the kernel 
+\begin_inset Formula $K$
+\end_inset
+
+ but by any available method of solving the linear equation of such type).
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+driving fource
+\begin_inset Quotes erd
+\end_inset
+
+ on the r.h.s.\InsetSpace ~
+of CPKS equation, Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:CPKS}
+
+\end_inset
+
+), depends on the nature of the perturbation 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ In the case of the nuclear displacements (and with inclusion of the Pulay
+ derivatives) pretty much all of the operators in 
+\begin_inset Formula $\delta E/\delta\rho$
+\end_inset
+
+ contribute to the driving fource.
+\end_layout
+
+\begin_layout Standard
+However for the 
+\emph on
+first
+\emph default
+ derivatives of the energy the response of the density 
+\begin_inset Formula $\rho^{x}$
+\end_inset
+
+ is 
+\emph on
+not necessary
+\emph default
+ at all.
+ Indeed, since equation of motion holds along the whole trajectory, i.e.\InsetSpace ~
+ 
+\begin_inset Formula $\delta E/\delta\rho$
+\end_inset
+
+ vanishes, the second term of the total derivative 
+\begin_inset Formula $dE/dx$
+\end_inset
+
+ proportional to 
+\begin_inset Formula $\rho^{x}$
+\end_inset
+
+, Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:dEdx}
+
+\end_inset
+
+), does this as well.
+ This is the DFT counterpart of the Hellman-Feynman theorem.
+\end_layout
+
+\begin_layout Section
+Quadratic response
+\end_layout
+
+\begin_layout Standard
+The second derivative of the energy functional along the trajectory is given
+ by
+\begin_inset Formula \begin{eqnarray}
+\frac{d^{2}E}{dydx} & = & \frac{d}{dy}\left(\frac{\partial E}{\partial x}+\rho^{x}\frac{\delta E}{\delta\rho}\right)\\
+ & = & \frac{\partial^{2}E}{\partial y\partial x}+\rho^{y}\frac{\delta}{\delta\rho}\frac{\partial}{\partial x}E+\frac{d}{dy}\left(\rho^{x}\frac{\delta E}{\delta\rho}\right)\\
+ & = & \frac{\partial^{2}E}{\partial y\partial x}+\rho^{x}\frac{\delta}{\delta\rho}\frac{\partial}{\partial y}E+\frac{d}{dx}\left(\rho^{y}\frac{\delta E}{\delta\rho}\right)\\
+ & = & \frac{\partial^{2}E}{\partial y\partial x}-\rho^{y}K\rho^{x}+0,\quad K=\frac{\delta^{2}E}{\delta\rho^{2}}\end{eqnarray}
+
+\end_inset
+
+Three different expressions are possible because of possibility to interchange
+ 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+, the symmetric expression is obtained by substituting 
+\begin_inset Formula \begin{equation}
+\frac{\delta}{\delta\rho}\frac{\partial}{\partial x}E=\frac{\partial}{\partial x}\frac{\delta}{\delta\rho}E=-K\rho^{x}\end{equation}
+
+\end_inset
+
+from the expression of motion.
+ The full derivatives 
+\begin_inset Formula \begin{equation}
+\frac{d}{dy}\left(\rho^{x}\frac{\delta E}{\delta\rho}\right)\end{equation}
+
+\end_inset
+
+or 
+\begin_inset Formula \begin{equation}
+\frac{d}{dx}\left(\rho^{y}\frac{\delta E}{\delta\rho}\right)\end{equation}
+
+\end_inset
+
+ or even any
+\begin_inset Formula \begin{equation}
+\frac{d}{dx}\left(g\frac{\delta E}{\delta\rho}\right)=\frac{d}{dx}\int g(x,y,\vec{r})\frac{\delta E[x,y,\rho]}{\delta\rho(\vec{r})}d^{3}\vec{r}=0\end{equation}
+
+\end_inset
+
+because the functional derivative 
+\begin_inset Formula $\delta E/\delta\rho$
+\end_inset
+
+ is 
+\emph on
+identicaly
+\emph default
+ zero for any value of 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+ according to adiabatic equation of motion.
+ 
+\end_layout
+
+\begin_layout Standard
+Neglecting the additional 
+\begin_inset Quotes eld
+\end_inset
+
+response
+\begin_inset Quotes erd
+\end_inset
+
+ term in the expression for the second derivatives
+\begin_inset Formula \begin{equation}
+\frac{d^{2}E}{dydx}=\frac{\partial^{2}E}{\partial y\partial x}-\rho^{y}K\rho^{x}\end{equation}
+
+\end_inset
+
+may produce too steep minima of the energy w.r.t.
+ (nuclear) coordinates 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+.
+ That is because by neglecting this term we do not allow for the 
+\begin_inset Quotes eld
+\end_inset
+
+relaxation
+\begin_inset Quotes erd
+\end_inset
+
+ of the electronic degrees of freedom in the neighborhood of 
+\begin_inset Formula $x=0$
+\end_inset
+
+, and 
+\begin_inset Formula $y=0$
+\end_inset
+
+.
+ Indeed, the kernel 
+\begin_inset Formula $K$
+\end_inset
+
+ in the case of the Coulomb-only functional is positively defined
+\begin_inset Formula \begin{equation}
+K(\vec{r},\vec{r}^{\prime})=\frac{\delta^{2}E}{\delta\rho(\vec{r})\delta\rho(\vec{r}^{\prime})}=\frac{\delta^{2}}{\delta\rho(\vec{r})\delta\rho(\vec{r}^{\prime})}\int\frac{\rho(\vec{r})\rho(\vec{r}^{\prime})}{|\vec{r}-\vec{r}^{\prime}|}d^{3}r\; d^{3}r^{\prime}=\frac{1}{|\vec{r}-\vec{r}^{\prime}|}>0\end{equation}
+
+\end_inset
+
+in other cases this part may still dominate over the exchange and correlation
+ parts.
+ Therefore the 
+\begin_inset Quotes eld
+\end_inset
+
+response
+\begin_inset Quotes erd
+\end_inset
+
+ term may be expected to be negative.
+\end_layout
+
+\begin_layout Section
+Response of the system of non-interacting electrons
+\end_layout
+
+\begin_layout Standard
+By non-interacting here we mean the linear dependence of the energy functional
+ on 
+\begin_inset Formula $\rho$
+\end_inset
+
+, e.g.:
+\begin_inset Formula \begin{equation}
+E[x,\rho]=\int[T(\vec{r})+V(x,\vec{r})]\rho(\vec{r})d^{3}r\end{equation}
+
+\end_inset
+
+with kinetic energy density 
+\begin_inset Formula $T$
+\end_inset
+
+ and (
+\begin_inset Formula $\rho$
+\end_inset
+
+-independent) potential 
+\begin_inset Formula $V$
+\end_inset
+
+.
+ Such a system completely neglects any kind of Coulomb, exchange, or correlation
+ interactions (unless it was hardwired in some way into potential 
+\begin_inset Formula $V(\vec{r})$
+\end_inset
+
+ after which the eventual dependence on 
+\begin_inset Formula $\rho$
+\end_inset
+
+ was 
+\begin_inset Quotes eld
+\end_inset
+
+forgotten
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+From the previous sections we know that the derivatives of the energy functional
+ are given by
+\begin_inset Formula \begin{eqnarray}
+\frac{dE}{dx} & = & \frac{\partial E}{\partial x}\\
+\frac{d^{2}E}{dydx} & = & \frac{\partial^{2}E}{\partial y\partial x}-\rho^{y}K\rho^{x}\end{eqnarray}
+
+\end_inset
+
+with the kernel
+\begin_inset Formula \begin{equation}
+K=\frac{\delta^{2}E}{\delta\rho^{2}}\end{equation}
+
+\end_inset
+
+ Since the energy functional is linear in 
+\begin_inset Formula $\rho$
+\end_inset
+
+ the kernel 
+\begin_inset Formula $K$
+\end_inset
+
+ vanishes identically.
+ Thus, for a non-interacting system we have
+\begin_inset Formula \begin{eqnarray}
+\frac{dE}{dx} & = & \frac{\partial E}{\partial x}\\
+\frac{d^{2}E}{dydx} & = & \frac{\partial^{2}E}{\partial y\partial x}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Response of an algebraic DFT system
+\end_layout
+
+\begin_layout Subsection
+Variational extrema of the energy functional
+\end_layout
+
+\begin_layout Standard
+In a basis set formulation the leading energy terms may be expressed as
+\begin_inset Formula \begin{equation}
+E=\sum_{\mu\nu}H_{\mu\nu}P_{\mu\nu}+\frac{1}{2}\sum_{\mu\nu\lambda\rho}P_{\mu\nu}K_{\mu\nu\lambda\rho}P_{\lambda\rho}\label{eq:algEfun}\end{equation}
+
+\end_inset
+
+where the one-electron operator 
+\begin_inset Formula $H$
+\end_inset
+
+ typically stays for the kinetic energy and the external field contributions
+ and the two-electron operator 
+\begin_inset Formula $K$
+\end_inset
+
+ is normally a Coulomb integral or a sum of Coulomb and exchange exchange
+ integrals.
+ For simplicity we assume the symmetry
+\begin_inset Formula \begin{equation}
+K_{\mu\nu\lambda\rho}=K_{\lambda\rho\mu\nu}(=K_{\nu\mu\lambda\rho})\end{equation}
+
+\end_inset
+
+of the Coulomb integral.
+ For brevity we will sometimes omit the dumb summation indices as for example
+ in the energy expression:
+\begin_inset Formula \begin{align}
+E & =HP+\frac{1}{2}PKP\\
+ & =FP-\frac{1}{2}PKP\\
+F & :=H+PK\end{align}
+
+\end_inset
+
+In variational formulation starts we require the energy variation to vanish:
+\begin_inset Formula \begin{equation}
+\delta E=F\delta P=0\label{eq:delE}\end{equation}
+
+\end_inset
+
+The infinitesemal change in energy 
+\begin_inset Formula $\delta E$
+\end_inset
+
+ is thus conveniently expressed via the Fock matrix
+\begin_inset Formula \begin{equation}
+F_{\mu\nu}=H_{\mu\nu}+\sum_{\lambda\rho}P_{\lambda\rho}K_{\lambda\rho\mu\nu}\end{equation}
+
+\end_inset
+
+which, of course, must not vanish identically at the energy extrema as the
+ possible density matrices (and their variations) are actualy limited.
+ A system with one electron
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+It will be a ``self-interacting'' electron in our case.
+\end_layout
+
+\end_inset
+
+ the density matrix is of the form
+\begin_inset Formula \begin{align}
+P_{\mu\nu} & =C_{\mu}C_{\nu}\\
+\delta P_{\mu\nu} & =\delta C_{\mu}C_{\nu}+C_{\mu}\delta C_{\nu}\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $C$
+\end_inset
+
+ is the vector of amplitudes of the electron (ground) state.
+ An energy variation in terms of these amplitudes will be
+\begin_inset Formula \begin{equation}
+\delta E=2\sum_{\mu\nu}\delta C_{\mu}F_{\mu\nu}C_{\nu}\end{equation}
+
+\end_inset
+
+but again we must limit the possible amplitude variations by those preserving
+ the norm:
+\begin_inset Formula \begin{align}
+N & =\sum_{\mu}|C_{\mu}|^{2}=1\\
+\delta N & =2\sum_{\mu}\delta C_{\mu}C_{\mu}=0.\end{align}
+
+\end_inset
+
+We achieve that by looking for extrema of the Lagrange functional instead
+\begin_inset Formula \begin{align}
+{\cal L} & =E-\epsilon N\\
+\delta{\cal L} & =2\sum_{\mu}\delta C_{\mu}\sum_{\nu}(F_{\mu\nu}-\epsilon\delta_{\mu\nu})C_{\nu}=0.\end{align}
+
+\end_inset
+
+The eigenvalue equation
+\begin_inset Formula \begin{equation}
+\sum_{\nu}F_{\mu\nu}C_{\nu n}=\epsilon_{n}C_{\mu n}\label{eq:eigFock}\end{equation}
+
+\end_inset
+
+has many solutions 
+\begin_inset Formula $C_{\mu n}$
+\end_inset
+
+ corresponding to different eigenvalues 
+\begin_inset Formula $\epsilon_{n}$
+\end_inset
+
+.
+ The solution with the lowest eigenvalue corresponds normally to the minimum
+ of the energy functional.
+\end_layout
+
+\begin_layout Standard
+The Fock matrix in the basis of eigenfunctions is a diagonal matrix:
+\begin_inset Formula \begin{equation}
+\langle m|F|n\rangle=\epsilon_{n}\delta_{mn}.\label{eq:diagFock}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Parametric response of the energy functional
+\end_layout
+
+\begin_layout Standard
+If the energy functional 
+\begin_inset Formula $E=E[x,P]$
+\end_inset
+
+, Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:algEfun}
+
+\end_inset
+
+), depends on some parameter 
+\begin_inset Formula $x$
+\end_inset
+
+ via the one- and two-electron operators 
+\begin_inset Formula $H(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $K(x)$
+\end_inset
+
+, the density matrix 
+\begin_inset Formula $P$
+\end_inset
+
+ that corresponds to the 
+\emph on
+minimum
+\emph default
+ of such functional will also depend on 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ For parametric derivatives we will distinguish between a full derivative
+ 
+\begin_inset Formula $d/dx$
+\end_inset
+
+ along the valley corresponding to the minima of the functional and partial
+ derivatives 
+\begin_inset Formula $\partial/\partial x$
+\end_inset
+
+ where the density 
+\begin_inset Formula $P$
+\end_inset
+
+ is constant:
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Think of non-adiabatic and adiabac changes with and without relaxation upon
+ the change.
+ Think of non-inertial and inertial frames on trajectory.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\frac{dE}{dx}=\frac{\partial E}{\partial x}+\frac{\delta E}{\delta P}\frac{dP}{dx}.\end{equation}
+
+\end_inset
+
+ Or, if we denote the full derivative with supersript
+\begin_inset Formula \begin{equation}
+E^{x}=\frac{\partial E}{\partial x}+\frac{\delta E}{\delta P}P^{x}.\end{equation}
+
+\end_inset
+
+From our previous consideration we learned that the variational derivative
+ 
+\begin_inset Formula $\delta E/\delta P$
+\end_inset
+
+ vanishes at the minima.
+ An indeed, according to Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:algEfun}
+
+\end_inset
+
+) 
+\begin_inset Formula \begin{align}
+E^{x} & =(H^{x}P+\frac{1}{2}PK^{x}P)+\underbrace{(H+PK)}P^{x}\\
+ & =\ldots+FP^{x}\end{align}
+
+\end_inset
+
+and we know that for any (allowed) 
+\begin_inset Formula $\delta P$
+\end_inset
+
+ including 
+\begin_inset Formula $\delta P=P^{x}dx$
+\end_inset
+
+ the trace of the product with the Fock matrix vanishes [cp.\InsetSpace ~
+Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:delE}
+
+\end_inset
+
+)]: 
+\begin_inset Formula \begin{equation}
+\mathrm{Sp}(F\delta P)=0.\label{eq:SpFdP}\end{equation}
+
+\end_inset
+
+Therefore the first-order response of the energy may be computed without
+ knowing density matrix response.
+\end_layout
+
+\begin_layout Subsection
+Coupled-perturbed equations
+\end_layout
+
+\begin_layout Standard
+We learned that the first-order response of the energy may be computed without
+ knowing density matrix response.
+ On the other hand the identity in Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:SpFdP}
+
+\end_inset
+
+) or equivalently the eigenvalue equation in Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:eigFock}
+
+\end_inset
+
+) may be used, if necessary, to obtain the density response.
+ A simple way to do that is to apply the perturbation theory to the Fock
+ eigenvalue eqations.
+ In the (inertial) basis of (unperturbed) Fock eigenvectors the Fock matrix
+ is diagonal when 
+\begin_inset Formula $x=0$
+\end_inset
+
+ but aquires off-diagonal ``perturbation'' 
+\begin_inset Formula $xF^{x}$
+\end_inset
+
+ when 
+\begin_inset Formula $x\neq0$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Do not mix this with the ``non-inertial'' representation in a ``moving''
+ basis of Fock eigenvectors where the Fock matrix 
+\emph on
+always
+\emph default
+ stays diagonal albeit with changing eigenvalues.
+\end_layout
+
+\end_inset
+
+ Transition aplitudes into the excited states due to such perturbation are
+ given by the usual expression:
+\begin_inset Formula \begin{equation}
+X_{ai}=\frac{\langle a|F^{x}|i\rangle}{\epsilon_{i}-\epsilon_{a}}.\label{eq:Xai}\end{equation}
+
+\end_inset
+
+The perturbed eigenvector differs then by
+\begin_inset Formula \[
+C_{\mu i}^{x}=\sum_{a}C_{\mu a}X_{ai}.\]
+
+\end_inset
+
+Perturbation of the density matrix 
+\begin_inset Formula $P^{x}$
+\end_inset
+
+ is obtained accordingly.
+\end_layout
+
+\begin_layout Standard
+Rotation generator 
+\begin_inset Formula $X$
+\end_inset
+
+ is such that the ``non-inertial'' derivative of the Fock matrix in the
+ ``moving'' basis of its own eigenvectors was always diagonal:
+\begin_inset Formula \[
+F^{\{ x\}}:=F^{x}+[X,F]=\mathrm{diag}(\epsilon^{x}).\]
+
+\end_inset
+
+Indeed, requiring the matrix element between two eigenstates of the Fock
+ matrix 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $a$
+\end_inset
+
+ to vanish we obtain the requirment
+\begin_inset Formula \[
+F_{ai}^{x}+X_{ai}\epsilon_{i}-\epsilon_{a}X_{ai}=0\]
+
+\end_inset
+
+from which immediately follows Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:Xai}
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+The only complication for solving this problem for coefficients 
+\begin_inset Formula $X$
+\end_inset
+
+ is that the Fock matrix depends recursively on the density matrix and so
+ do the corresponding derivatives:
+\begin_inset Formula \begin{align*}
+F^{x} & =\frac{\partial F}{\partial x}+\frac{\delta F}{\delta P}P^{x}\\
+ & =(H^{x}+PK^{x})+P^{x}K\\
+ & =:F^{(x)}+P^{x}K.\end{align*}
+
+\end_inset
+
+Therefore another iterative process (CPKS) is required to resolve equations.
+ The input to CPKS procedure is the (diagonal) Fock matrix itself, the partial
+ derivative 
+\begin_inset Formula \[
+F^{(x)}=\partial F/\partial x\]
+
+\end_inset
+
+ and the two-electron kernel
+\begin_inset Formula \[
+K=\frac{\delta F}{\delta P}=\frac{\delta^{2}E}{\delta P^{2}},\]
+
+\end_inset
+
+the output --- response of the density matrix 
+\begin_inset Formula $P^{x}$
+\end_inset
+
+ built of eigenvector derivatives 
+\begin_inset Formula $C^{x}$
+\end_inset
+
+ of the occupied subset.
+\end_layout
+
+\begin_layout Subsection
+Quadratic response
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align*}
+E^{xy} & =(H^{xy}P+\frac{1}{2}PK^{xy}P)-P^{x}KP^{y}\\
+ & +F^{x}P^{y}+F^{y}P^{x}+FP^{xy}\\
+ & =(H^{xy}P+\frac{1}{2}PK^{xy}P)+P^{x}KP^{y}\\
+ & +F^{(x)}P^{y}+F^{(y)}P^{x}+FP^{xy}\end{align*}
+
+\end_inset
+
+The trace of the product of the Fock pmatrix with the second derivative
+ of the density matrix
+\begin_inset Formula \begin{align*}
+P_{\mu\nu}^{xy} & =\sum_{e}n_{e}(C_{\mu e}^{x}C_{\nu e}^{y}+C_{\mu e}^{y}C_{\nu e}^{x}+C_{\mu e}^{xy}C_{\nu e}+C_{\mu e}C_{\nu e}^{xy})\\
+P_{ij}^{xy} & =\sum_{e}n_{e}(X_{ie}Y_{je}+Y_{ie}X_{je})+\frac{dX_{ij}}{dy}+n_{j}\sum_{k}Y_{ik}X_{kj}+C_{\mu}C_{\nu}^{xy}\end{align*}
+
+\end_inset
+
+Derivatives of the amplitudes
+\begin_inset Formula \begin{align*}
+C_{\mu i}^{x} & =\sum_{a}C_{\mu a}X_{ai}\\
+C_{\mu i}^{xy} & =\sum_{j}C_{\mu j}\left(\frac{dX_{ji}}{dy}+\sum_{k}Y_{jk}X_{ki}\right)\end{align*}
+
+\end_inset
+
+therefore
+\begin_inset Formula \[
+\mathrm{Sp}(FP^{xy})=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+multiplied by the Fock matrix will give
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align*}
+E^{xy} & =\sum_{\mu\nu}P_{\mu\nu}^{y}H_{\mu\nu}^{x}+\sum_{\mu\nu}P_{\mu\nu}H_{\mu\nu}^{xy}-\sum_{\mu\nu}W_{\mu\nu}^{y}S_{\mu\nu}^{x}-\sum_{\mu\nu}W_{\mu\nu}S_{\mu\nu}^{xy}\\
+ & +\sum_{\mu\nu}P_{\mu\nu}^{y}\sum_{k}a_{k}[\mu\nu|f_{k}]^{x}+\sum_{\mu\nu}P_{\mu\nu}\sum_{k}a_{k}^{y}[\mu\nu|f_{k}]^{x}+\sum_{\mu\nu}P_{\mu\nu}\sum_{k}a_{k}[\mu\nu|f_{k}]^{xy}\\
+ & -\sum_{kl}a_{k}^{y}a_{l}[f_{k}|f_{l}]^{x}-\frac{1}{2}\sum_{kl}a_{k}a_{l}[f_{k}|f_{l}]^{xy}\\
+ & +E_{xc}^{[y](x)}+E_{xc}^{(x)(y)}\\
+ & =\sum_{\mu\nu}P_{\mu\nu}H_{\mu\nu}^{xy}-\sum_{\mu\nu}W_{\mu\nu}S_{\mu\nu}^{xy}\\
+ & +\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Derivative of the (energy) density matrix
+\end_layout
+
+\begin_layout Standard
+The matrix of eigenvector coefficients diagonalizes two matrices simultaneosely
+\begin_inset Formula \begin{align*}
+C^{\dagger}FC & =\hat{\epsilon}\\
+C^{\dagger}SC & =\hat{1}\end{align*}
+
+\end_inset
+
+the density matrix is given by
+\begin_inset Formula \[
+P=C\hat{n}C^{\dagger}\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\hat{n}$
+\end_inset
+
+ is a diagonal matrix of occupation numbers.
+ For its derivative we will need the definition of orbital rotation 
+\begin_inset Formula $X$
+\end_inset
+
+:
+\begin_inset Formula \[
+C^{x}=:CX\]
+
+\end_inset
+
+Assuming occupation numbers constant we obtain
+\begin_inset Formula \begin{align*}
+P^{x} & =C^{x}\hat{n}C^{\dagger}+C\hat{n}C^{x\dagger}\\
+ & =C(X\hat{n}+\hat{n}X^{\dagger})C^{\dagger}\end{align*}
+
+\end_inset
+
+We therefore introduce 
+\begin_inset Formula \[
+n^{x}:=X\hat{n}+\hat{n}X^{\dagger}\]
+
+\end_inset
+
+Its matrix elements are given by
+\begin_inset Formula \[
+n_{pq}^{x}=X(p,q)n_{q}+n_{p}X^{\ast}(p,q)\]
+
+\end_inset
+
+or for real 
+\begin_inset Formula $X$
+\end_inset
+
+
+\begin_inset Formula \[
+n_{pq}^{x}=(n_{p}+n_{q})X(p,q)\]
+
+\end_inset
+
+It makes sense to distinguish occupied-occupied block
+\begin_inset Formula \[
+n_{ij}^{x}=(n_{i}+n_{j})X(i,j)\]
+
+\end_inset
+
+ and occupied-virtual block
+\begin_inset Formula \[
+n_{ia}^{x}=n_{i}X(i,a)\]
+
+\end_inset
+
+The virtual-virtual block is zero because of the zero occupation numbers.
+\end_layout
+
+\begin_layout Standard
+For the energy (weighted) density matrix
+\begin_inset Formula \[
+W=C\hat{w}C^{\dagger}\]
+
+\end_inset
+
+with diagonal 
+\begin_inset Formula \[
+\hat{w}=\hat{n}\hat{\epsilon}\]
+
+\end_inset
+
+and we similarly obtain
+\begin_inset Formula \[
+W^{x}=C(\hat{w}^{x}+X\hat{w}+\hat{w}X^{\dagger})C^{\dagger}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Dipole perturbation
+\end_layout
+
+\begin_layout Standard
+The (maybe) simplest potential type is the potential of a charged point
+ nucleus
+\begin_inset Formula \begin{equation}
+V(\vec{c},\vec{r})=\frac{1}{|\vec{r}-\vec{c}|}\end{equation}
+
+\end_inset
+
+By an infinitesemal displacement of 
+\begin_inset Formula $\vec{c}\to\vec{c}+\vec{x}$
+\end_inset
+
+ the linear perturbation of the potential is of the dipole type
+\begin_inset Formula \begin{equation}
+(\vec{x}\cdot\vec{\nabla}_{c})V(\vec{c},\vec{r})=\frac{(\vec{x}\cdot\vec{R})}{R^{3}},\quad\vec{R}=\vec{r}-\vec{c}\end{equation}
+
+\end_inset
+
+The linear response of the non-interacting system of electrons to the dipole
+ term 
+\begin_inset Formula \begin{equation}
+V^{x}=\frac{\vec{R}}{R^{3}}\end{equation}
+
+\end_inset
+
+is given by
+\begin_inset Formula \begin{equation}
+\frac{dE}{dx}=\frac{\partial E}{\partial x}=\int V^{x}(\vec{r})\rho(\vec{r})d^{3}r.\end{equation}
+
+\end_inset
+
+This expression is basis set-free.
+ In a basis set calculation the integration over the space is performed
+ prior to density assembly to obtain the matrix elements
+\begin_inset Formula \begin{equation}
+V_{mn}^{x}=\langle m|V^{x}|n\rangle=\int\phi_{m}^{\ast}(\vec{r})V^{x}(\vec{r})\phi_{n}(\vec{r})d^{3}r\end{equation}
+
+\end_inset
+
+ and once the density matrix 
+\begin_inset Formula $P_{mn}$
+\end_inset
+
+ becomes available one evaluates
+\begin_inset Formula \begin{equation}
+\frac{dE}{dx}=\sum_{mn}V_{mn}^{x}P_{mn}.\end{equation}
+
+\end_inset
+
+Similarly to the potential of a dipole, potential of point quadrupel is
+ 
+\begin_inset Formula \begin{equation}
+V^{ij}=\frac{\partial^{2}}{\partial c_{i}\partial c_{j}}\frac{1}{R}=\frac{3R_{i}R_{j}-R^{2}\delta_{ij}}{R^{5}}\end{equation}
+
+\end_inset
+
+and for the second derivatives of the energy would hold
+\begin_inset Formula \begin{equation}
+\frac{d^{2}E}{dxdy}=\sum_{mn}V_{mn}^{xy}P_{mn}\end{equation}
+
+\end_inset
+
+This would be the end of the story if basis set would not depend on the
+ nuclei locations.
+\end_layout
+
+\begin_layout Section
+Perturbation theory for secular equations
+\begin_inset LatexCommand \label{sec:pert-theory}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The secular equation 
+\begin_inset Formula \begin{equation}
+(H-\epsilon)C=0\end{equation}
+
+\end_inset
+
+has the solutions 
+\begin_inset Formula $\{\epsilon_{n},C_{n}\}$
+\end_inset
+
+ that satisfy
+\begin_inset Formula \begin{equation}
+(H-\epsilon_{n})C_{n}=0\end{equation}
+
+\end_inset
+
+and the orthogonality condition
+\begin_inset Formula \begin{equation}
+\langle m|n\rangle=\delta_{mn}\end{equation}
+
+\end_inset
+
+After infinitesemal change 
+\begin_inset Formula \begin{equation}
+H\to H+xH^{x}\end{equation}
+
+\end_inset
+
+ the solutions have to be corrected (linearly) according to
+\begin_inset Formula \begin{eqnarray}
+\epsilon_{n} & \to & \epsilon_{n}+x\epsilon_{n}^{x}\\
+C_{n} & \to & C_{n}+xC_{n}^{x}\end{eqnarray}
+
+\end_inset
+
+These correction must satisfy the orthogonality condition
+\begin_inset Formula \begin{equation}
+\langle m|n^{x}\rangle+\langle m^{x}|n\rangle=0\end{equation}
+
+\end_inset
+
+and the new simplified secular eqaution
+\begin_inset Formula \begin{equation}
+\langle m|H^{x}|n\rangle-\epsilon_{n}^{x}\delta_{mn}+(\epsilon_{m}-\epsilon_{n})\langle m|n^{x}\rangle=0.\end{equation}
+
+\end_inset
+
+By expanding the derivatives in the basis of unperturbed eigenvectors
+\begin_inset Formula \begin{equation}
+C_{n}^{x}=\sum_{m}a_{mn}C_{m}\end{equation}
+
+\end_inset
+
+we obtain the following equations for 
+\begin_inset Formula $a_{mn}$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray}
+a_{mn}+a_{nm}^{\ast} & = & 0\\
+\langle m|H^{x}|n\rangle-\epsilon_{n}^{x}\delta_{mn}+(\epsilon_{m}-\epsilon_{n})a_{mn} & = & 0\end{eqnarray}
+
+\end_inset
+
+From the first equation follows that the matrix 
+\begin_inset Formula $a_{mn}$
+\end_inset
+
+ is an antihermitean matrix and 
+\begin_inset Formula $a_{nn}=0$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+FIXME: actualy 
+\begin_inset Formula $Re(a_{nn})=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ From the second equation we obtain
+\begin_inset Formula \begin{eqnarray}
+\epsilon_{n}^{x} & = & \quad\langle n|H^{x}|n\rangle\\
+a_{mn} & = & -\frac{\langle m|H^{x}|n\rangle}{\epsilon_{m}-\epsilon_{n}},\quad m\ne n\end{eqnarray}
+
+\end_inset
+
+Therefore, the derivative of the solution is
+\begin_inset Formula \begin{equation}
+C_{n}^{x}=-\sum_{m\ne n}\frac{\langle m|H^{x}|n\rangle}{\epsilon_{m}-\epsilon_{n}}C_{m}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now let us consider a different kind of perturbation, we slightly change
+ the metric 
+\begin_inset Formula $S$
+\end_inset
+
+ used in secular equations
+\begin_inset Formula \begin{equation}
+(H-S\epsilon)C=0\end{equation}
+
+\end_inset
+
+form 
+\begin_inset Formula $S=1$
+\end_inset
+
+ to 
+\begin_inset Formula $S=1+xS^{x}$
+\end_inset
+
+.
+ Since the orthogonality condition we start with is
+\begin_inset Formula \begin{equation}
+\langle m|S|n\rangle=\delta_{mn}\end{equation}
+
+\end_inset
+
+its response counterpart will be
+\begin_inset Formula \begin{equation}
+\langle m|n^{x}\rangle+\langle m^{x}|n\rangle=-\langle m|S^{x}|n\rangle\end{equation}
+
+\end_inset
+
+and the corresponding secular equation
+\begin_inset Formula \begin{equation}
+-\epsilon_{n}\langle m|S^{x}|n\rangle-\epsilon_{n}^{x}\delta_{mn}+(\epsilon_{m}-\epsilon_{n})\langle m|n^{x}\rangle=0.\end{equation}
+
+\end_inset
+
+Or for the coefficients 
+\begin_inset Formula $a_{mn}$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray}
+a_{mn}+a_{nm}^{\ast} & = & -\langle m|S^{x}|n\rangle\\
+-\epsilon_{n}\langle m|S^{x}|n\rangle-\epsilon_{n}^{x}\delta_{mn}+(\epsilon_{m}-\epsilon_{n})a_{mn} & = & 0\end{eqnarray}
+
+\end_inset
+
+Thus we obtain
+\begin_inset Formula \begin{eqnarray}
+\epsilon_{n}^{x} & = & -\langle n|S^{x}|n\rangle\epsilon_{n}\\
+a_{mn} & = & \quad\frac{\langle m|S^{x}|n\rangle}{\epsilon_{m}-\epsilon_{n}}\epsilon_{n},\quad m\ne n\\
+a_{nn} & = & -\frac{1}{2}\langle n|S^{x}|n\rangle\end{eqnarray}
+
+\end_inset
+
+with coefficients 
+\begin_inset Formula $a_{mn}$
+\end_inset
+
+ (
+\begin_inset Formula $m\ne n$
+\end_inset
+
+) that automatically satisfy orthogonality equation for any Hermitean 
+\begin_inset Formula $S^{x}$
+\end_inset
+
+ (which we have to require anyway).
+ For a general case of a combined perturbation we thus have:
+\begin_inset Formula \begin{eqnarray}
+\epsilon_{n}^{x} & = & \langle n|H^{x}-S^{x}\epsilon_{n}|n\rangle\\
+C_{n}^{x} & = & -\frac{1}{2}\langle n|S^{x}|n\rangle C_{n}-\sum_{m\ne n}\frac{\langle m|H^{x}-S^{x}\epsilon_{n}|n\rangle}{\epsilon_{m}-\epsilon_{n}}C_{m}\end{eqnarray}
+
+\end_inset
+
+For some 
+\begin_inset Quotes eld
+\end_inset
+
+physical
+\begin_inset Quotes erd
+\end_inset
+
+ perturbation like introduction of the dipole term
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+curly braces in the superscript shall indicate the 
+\begin_inset Quotes eld
+\end_inset
+
+direct
+\begin_inset Quotes erd
+\end_inset
+
+ or physical perturbation
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{equation}
+H^{x}=V^{(x)},\quad S^{x}=0\end{equation}
+
+\end_inset
+
+ we get the usual result that the first order energy change is just an expectati
+on value of the perturbation in the unperturbed state.
+ The admixture of the 
+\begin_inset Quotes eld
+\end_inset
+
+excited
+\begin_inset Quotes erd
+\end_inset
+
+ states due to such perturbation is proportional to the transition matrix
+ element that couples the 
+\begin_inset Quotes eld
+\end_inset
+
+ground
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+excited
+\begin_inset Quotes erd
+\end_inset
+
+ states divided by the excitation energy.
+ For the 
+\begin_inset Quotes eld
+\end_inset
+
+unpysical
+\begin_inset Quotes erd
+\end_inset
+
+ (or indirect, or Pulay, or choose another term) perturbation like the change
+ of the basis, or basis set location one usually gets both contributions
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+square braces in the superscript shall indicate the 
+\begin_inset Quotes eld
+\end_inset
+
+indirect
+\begin_inset Quotes erd
+\end_inset
+
+ or Pulay perturbation
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+H^{x}=H^{[x]},\quad S^{x}=S^{[x]}\end{equation}
+
+\end_inset
+
+and then the general formula apply.
+ However this kind of 
+\begin_inset Quotes eld
+\end_inset
+
+perturbation
+\begin_inset Quotes erd
+\end_inset
+
+ is expected to vanish in the limit of complete basis set.
+ Moreover the two contributions due to 
+\begin_inset Formula $H^{[x]}$
+\end_inset
+
+ and 
+\begin_inset Formula $S^{[x]}$
+\end_inset
+
+ as they actually have the same origin (basis set displacement) may compensate
+ each other in the differences 
+\begin_inset Formula $H^{[x]}-S^{[x]}\epsilon_{n}$
+\end_inset
+
+.
+ This might be more obvious for a Hueckel-type hamiltonian where 
+\begin_inset Formula \begin{equation}
+H_{mn}=\kappa S_{mn}(e_{m}+e_{n})/2\end{equation}
+
+\end_inset
+
+ with some fixed 
+\begin_inset Formula $e_{m}$
+\end_inset
+
+ and 
+\begin_inset Formula $e_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $\kappa\approx1$
+\end_inset
+
+.
+ The result of such 
+\begin_inset Quotes eld
+\end_inset
+
+indirect
+\begin_inset Quotes erd
+\end_inset
+
+ perturbation is less obvious (and basis set-dependent).
+\end_layout
+
+\begin_layout Standard
+However, in some respects the 
+\begin_inset Quotes eld
+\end_inset
+
+indirect
+\begin_inset Quotes erd
+\end_inset
+
+ perturbations are simpler.
+ Consider an LCAO with atom-attached basis.
+ By 
+\begin_inset Formula $|a\rangle$
+\end_inset
+
+ and 
+\begin_inset Formula $|b\rangle$
+\end_inset
+
+ we will denote the basis functions located at atoms 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+, respectively.
+ Then the basis set displacement perturbation
+\begin_inset Formula \begin{equation}
+\langle a|S|b\rangle^{[c]}\end{equation}
+
+\end_inset
+
+is only non-zero if either 
+\begin_inset Formula $c=a$
+\end_inset
+
+ or 
+\begin_inset Formula $c=b$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+the same holds for the matrix of Hamiltonian 
+\begin_inset Formula $H$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Thus, the matrices of such 
+\begin_inset Quotes eld
+\end_inset
+
+indirect
+\begin_inset Quotes erd
+\end_inset
+
+ perturbations may be very sparse in the many-atomic system.
+ This is different from the 
+\begin_inset Quotes eld
+\end_inset
+
+pysical
+\begin_inset Quotes erd
+\end_inset
+
+ perturbation e.g.:
+\begin_inset Formula \begin{equation}
+\langle a|V(\vec{r}-\vec{c})|b\rangle^{(c)}\end{equation}
+
+\end_inset
+
+that affects all matrix elements.
+\end_layout
+
+\begin_layout Standard
+[FIXME: some weaker statment?] Last, but not least, its the Pulay terms
+ originating from the moving basis set that make the basis set calculation
+ translationally invariant.
+ If the basis set is nailed to space, the system is tied to the basis location
+ which it cannot easily escape without getting a variational penalty.
+\end_layout
+
+\begin_layout Section
+Yet another perturbation theory
+\end_layout
+
+\begin_layout Standard
+Starting from the 
+\begin_inset Quotes eld
+\end_inset
+
+free particle
+\begin_inset Quotes erd
+\end_inset
+
+ Hamiltonian with eigenstates 
+\begin_inset Formula $u_{p}$
+\end_inset
+
+ that correspond to the eigenvalues 
+\begin_inset Formula $e_{p}$
+\end_inset
+
+ 
+\begin_inset Formula \[
+(H-e_{p})u_{p}=0\]
+
+\end_inset
+
+the first thing we do is to transform all operators to this 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ representation
+\begin_inset Formula \[
+E=U^{\dagger}HU\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $E$
+\end_inset
+
+ is a diagonal matrix muilt of 
+\begin_inset Formula $e_{p}$
+\end_inset
+
+.
+ Examples of such 
+\begin_inset Quotes eld
+\end_inset
+
+easy to solve
+\begin_inset Quotes erd
+\end_inset
+
+ Hamiltonians are the non-relativistic free-particle Hamiltonian 
+\begin_inset Formula \[
+H=p^{2}/2\]
+
+\end_inset
+
+ with eigenstates being the plane-waves, or the relativistic free-particle
+ Hamiltonian
+\begin_inset Formula \[
+H=\vec{\alpha}\vec{p}c+\beta c^{2}.\]
+
+\end_inset
+
+ To consider a weak perturbation 
+\begin_inset Formula $V$
+\end_inset
+
+ we first transfrom it to the 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ space 
+\begin_inset Formula \[
+V\leftarrow U^{\dagger}VU\]
+
+\end_inset
+
+and for convenience split it into the 
+\begin_inset Quotes eld
+\end_inset
+
+even
+\begin_inset Quotes erd
+\end_inset
+
+ (diagonal) and 
+\begin_inset Quotes eld
+\end_inset
+
+odd
+\begin_inset Quotes erd
+\end_inset
+
+ (off-diagonal) parts
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+The terms 
+\begin_inset Quotes eld
+\end_inset
+
+even
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+odd
+\begin_inset Quotes erd
+\end_inset
+
+ are just convenient terms for a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ problem
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+V & = & \mathcal{E}[V]+\mathcal{O}[V]\\
+\mathcal{E}[V] & = & \mathrm{diag}(V)\end{eqnarray*}
+
+\end_inset
+
+Now that perturbed Hamiltonian (in momentum space) is given by
+\begin_inset Formula \[
+H=E+\mathcal{E}_{1}+\mathcal{O}_{1}\]
+
+\end_inset
+
+the free-particle solution are no more the eigenstate of this hamiltonian
+ because of the coupling term 
+\begin_inset Formula $\mathcal{O}_{1}=\mathcal{O}[V]$
+\end_inset
+
+.
+ Looking forward we note that 
+\begin_inset Formula $\mathcal{E}_{1}=\mathcal{E}[V]$
+\end_inset
+
+ built of the diagonal elements 
+\begin_inset Formula $V_{pp}$
+\end_inset
+
+ is exactly the first order energy correction to the eigenvalues 
+\begin_inset Formula $e_{p}$
+\end_inset
+
+.
+ To go to the higher orders in energy and to obtaind the corrected eigenvectors
+ we introduce a unitary rotation 
+\begin_inset Formula \[
+U_{1}=\exp W_{1}=1+W_{1}+\frac{1}{2}W_{1}^{2}+\ldots\]
+
+\end_inset
+
+with an anti-hermitean rotation generator 
+\begin_inset Formula $W_{1}=-W_{1}^{\dagger}$
+\end_inset
+
+ linear in perturbation 
+\begin_inset Formula $V$
+\end_inset
+
+.
+ Unitary transformation of any operator 
+\begin_inset Formula $C$
+\end_inset
+
+ gives
+\begin_inset Formula \begin{eqnarray*}
+U_{1}^{\dagger}CU_{1} & = & C-[W_{1},C]+\frac{1}{2}[W_{1},[W_{1},C]]+\ldots\end{eqnarray*}
+
+\end_inset
+
+Applying that to the perturbed Hamiltonian 
+\begin_inset Formula $H$
+\end_inset
+
+ we have
+\begin_inset Formula \begin{eqnarray*}
+H_{1}:=U_{1}^{\dagger}H_{1}U_{1} & = & E\\
+ & + & \mathcal{E}_{1}-[W_{1},E]+\mathcal{O}_{1}\\
+ & + & \frac{1}{2}[W_{1},[W_{1},E]]-[W_{1},\mathcal{O}_{1}]-[W_{1},\mathcal{E}_{1}]\\
+ & + & O(V^{3})\end{eqnarray*}
+
+\end_inset
+
+Here we grouped the terms on the r.h.s.\InsetSpace ~
+by the order of perturbation potential
+ 
+\begin_inset Formula $V$
+\end_inset
+
+.
+ The terms linear in 
+\begin_inset Formula $V$
+\end_inset
+
+ are the even (diagonal) 
+\begin_inset Formula $\mathcal{E}_{1}$
+\end_inset
+
+ and the sum of two odd (off-diagonal) contributions: 
+\begin_inset Formula $\mathcal{O}_{1}$
+\end_inset
+
+ (odd by definition), and the commutator 
+\begin_inset Formula $[W_{1},E]$
+\end_inset
+
+ with matrix elements
+\begin_inset Formula \[
+[W_{1},E]_{pq}=W_{1;pq}e_{q}-e_{p}W_{1;pq}=(e_{q}-e_{p})W_{1;pq}\]
+
+\end_inset
+
+that vanish on the diagonal.
+ We chose the requirement for the off-diagonal elements linear in 
+\begin_inset Formula $V$
+\end_inset
+
+ to vanish as the definition of the transformation generator 
+\begin_inset Formula $W_{1}$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray}
+-[W_{1},E]+\mathcal{O}_{1} & = & 0\label{eq:defW}\\
+W_{1;pq} & = & \frac{\mathcal{O}_{1;pq}}{e_{q}-e_{p}}=\frac{V_{pq}}{e_{q}-e_{p}},\quad p\ne q\nonumber \\
+W_{1;pp} & = & 0\nonumber \end{eqnarray}
+
+\end_inset
+
+Now we may simplify 
+\begin_inset Formula $H_{1}$
+\end_inset
+
+ by omitting the (mutually cancelled) first-order odd part and substituting
+ the first-order odd term 
+\begin_inset Formula $\mathcal{O}_{1}$
+\end_inset
+
+ in commutator 
+\begin_inset Formula $[W_{1},\mathcal{O}_{1}]$
+\end_inset
+
+ by its expression via 
+\begin_inset Formula $W_{1}$
+\end_inset
+
+, Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:defW}
+
+\end_inset
+
+):
+\begin_inset Formula \begin{eqnarray*}
+H_{1} & = & E+\mathcal{E}_{1}+\frac{1}{2}[W_{1},[W_{1},E]]-[W_{1},[W_{1},E]]-[W_{1},\mathcal{E}_{1}]+O(V^{3})\\
+ & = & E+\mathcal{E}_{1}-\frac{1}{2}[W_{1},[W_{1},E]]-[W_{1},\mathcal{E}_{1}]+O(V^{3})\end{eqnarray*}
+
+\end_inset
+
+It obviousely does not contain odd terms of the first order, because this
+ is how we have chosen the rotation 
+\begin_inset Formula $W$
+\end_inset
+
+.
+ Let us examine the double commutator
+\begin_inset Formula \[
+[W_{1},[W_{1},E]]=W_{1}^{2}E+EW_{1}^{2}-2W_{1}EW_{1}.\]
+
+\end_inset
+
+Its matrix element 
+\begin_inset Formula $pq$
+\end_inset
+
+ is given by
+\begin_inset Formula \[
+\sum_{r}W_{1;pr}(e_{q}+e_{p}-2e_{r})W_{1;rq}\]
+
+\end_inset
+
+In this sum only the contributions that similtaneousely satisfy 
+\begin_inset Formula $r\ne p$
+\end_inset
+
+, 
+\begin_inset Formula $r\ne q$
+\end_inset
+
+ are left.
+ In a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ problem the indices 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $q$
+\end_inset
+
+ may only aquire two values, 1 and 2.
+ Setting 
+\begin_inset Formula $p=1$
+\end_inset
+
+ and 
+\begin_inset Formula $q=2$
+\end_inset
+
+ (or vice versa) excludes the summation range over 
+\begin_inset Formula $r$
+\end_inset
+
+ completely.
+ Therefore, in a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ problem this second order term has no odd (off-daigonal) part.
+ For higher dimensions this term contains both even and odd parts.
+ Another second order term 
+\begin_inset Formula $[W,\mathcal{E}_{1}]$
+\end_inset
+
+ is and odd term, because 
+\begin_inset Formula $\mathcal{E}_{1}$
+\end_inset
+
+ is even (diagonal).
+ Now we split the second order terms in Hamiltonian into the even and odd
+ parts:
+\begin_inset Formula \[
+-\frac{1}{2}[W_{1},[W_{1},E]]-[W_{1},\mathcal{E}_{1}]=:\mathcal{E}_{2}+\mathcal{O}_{2}\]
+
+\end_inset
+
+where the even part 
+\begin_inset Formula $\mathcal{E}_{2}$
+\end_inset
+
+ contains the diagonal of the double commutator
+\begin_inset Formula \[
+\mathcal{E}_{2}=-\frac{1}{2}\mathrm{diag}([W_{1},[W_{1},E]]),\]
+
+\end_inset
+
+the odd part 
+\begin_inset Formula $\mathcal{O}_{2}$
+\end_inset
+
+ contains the rest.
+ In these notation the hamiltonian is represented by
+\begin_inset Formula \[
+H_{1}=E+\mathcal{E}_{1}+\mathcal{E}_{2}+\mathcal{O}_{2}+O(V^{3})\]
+
+\end_inset
+
+The diagonal elements of this Hamiltonian are
+\begin_inset Formula \[
+e_{p}+V_{pp}+\sum_{r}\frac{|V_{rp}|^{2}}{e_{p}-e_{r}}+O(V^{3})\]
+
+\end_inset
+
+which is the well know expression for the second order energy correction
+ given by perturbation theory.
+ To obtain the second order correction to the eigenvectors we again apply
+ to 
+\begin_inset Formula $H_{2}$
+\end_inset
+
+ a unitary rotation 
+\begin_inset Formula \[
+U_{2}=\exp W_{2}\]
+
+\end_inset
+
+ for which we require that the off-diagonal terms of the second order in
+ perturbation 
+\begin_inset Formula $V$
+\end_inset
+
+ vanish.
+ Collecting just the second order terms we obtain equation for 
+\begin_inset Formula $W_{2}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+[W_{2},E] & = & \mathcal{O}_{2}=-[W_{1},\mathcal{E}_{1}]-\frac{1}{2}[W_{1},[W_{1},E]]\\
+W_{2;pq} & = & \frac{\mathcal{O}_{2;pq}}{e_{q}-e_{p}}\\
+W_{2;pp} & = & 0\end{eqnarray*}
+
+\end_inset
+
+BTW, the only term of the third order that contains corrections to the diagonal
+ elements (was put into 
+\begin_inset Formula $O(V^{3})$
+\end_inset
+
+ before) is
+\begin_inset Formula \[
+\frac{1}{2}[W_{1},[W_{1},\mathcal{E}_{1}]]\]
+
+\end_inset
+
+is expressed via the first order transformation generator 
+\begin_inset Formula $W_{1}$
+\end_inset
+
+.
+ The transformation 
+\begin_inset Formula $W_{2}$
+\end_inset
+
+ gives rise to only one therm of third order which is odd
+\begin_inset Formula \[
+-[W_{2},\mathcal{E}_{1}]\]
+
+\end_inset
+
+ and does not contribute to the expectation value.
+\end_layout
+
+\begin_layout Standard
+For any operator 
+\begin_inset Formula $C$
+\end_inset
+
+ application of 
+\begin_inset Formula \[
+U_{1}U_{2}=\exp W_{1}\exp W_{2}\]
+
+\end_inset
+
+ up to the second order in 
+\begin_inset Formula $V$
+\end_inset
+
+ will give
+\begin_inset Formula \[
+C-[W_{1}C]+\frac{1}{2}[W_{1}[W_{1}C]]-[W_{2}C]+O(V^{3})\]
+
+\end_inset
+
+The explicit expression for matrix elements of 
+\begin_inset Formula $W_{2}$
+\end_inset
+
+ is 
+\begin_inset Formula \begin{eqnarray*}
+W_{2;pq} & = & \frac{1}{2}\sum_{r}\frac{V_{pr}V_{rq}}{(e_{q}-e_{r})(e_{q}-e_{p})}-\frac{1}{2}\sum_{r}\frac{V_{pr}V_{rq}}{(e_{r}-e_{p})(e_{q}-e_{p})}-\frac{V_{pq}(V_{qq}-V_{pp})}{(e_{q}-e_{p})^{2}}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Metric distortion
+\end_layout
+
+\begin_layout Standard
+In the 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ space we have
+\begin_inset Formula \[
+(E-e_{p})u_{p}=0.\]
+
+\end_inset
+
+ The eigenvectors 
+\begin_inset Formula $u_{p}$
+\end_inset
+
+ are orthogonal
+\begin_inset Formula \[
+\langle u_{p}|u_{q}\rangle=\delta_{pq}.\]
+
+\end_inset
+
+ Now we consider distortion of the metric such that 
+\begin_inset Formula \[
+\langle u_{p}|u_{q}\rangle=\delta_{pq}+S_{pq}\]
+
+\end_inset
+
+with small 
+\begin_inset Formula $S_{pq}$
+\end_inset
+
+ and seek linear and quadratic corrections to the eigenvalues and eigenvectors
+ of the modified eigenvalue problem:
+\begin_inset Formula \begin{eqnarray*}
+(E-(1+S)e_{p})u_{p} & = & 0\\
+u_{p}^{\dagger}(1+S)u_{q} & = & \delta_{pq}\end{eqnarray*}
+
+\end_inset
+
+Solution of these equations is equivalent to finding a matrix 
+\begin_inset Formula $U$
+\end_inset
+
+ that simultaneously diagonalizes two matrices
+\begin_inset Formula \begin{eqnarray*}
+E^{\prime} & = & U^{\dagger}EU\\
+1 & = & U^{\dagger}(1+S)U\end{eqnarray*}
+
+\end_inset
+
+We will look for a transformation 
+\begin_inset Formula \[
+U_{1}=\exp W_{1}=1+W_{1}+\frac{1}{2}W_{1}^{2}+\ldots\]
+
+\end_inset
+
+ that 
+\begin_inset Quotes eld
+\end_inset
+
+fixes
+\begin_inset Quotes erd
+\end_inset
+
+ the orthogonality condition
+\begin_inset Formula \begin{eqnarray*}
+U_{1}^{\dagger}(1+S)U_{1} & = & 1+(S+W_{1}^{\dagger}+W_{1})+O(S^{2})\\
+W_{1}^{\dagger}+W_{1} & = & -S\end{eqnarray*}
+
+\end_inset
+
+and tries not to indroduce odd terms in the transformed hamiltonian, at
+ least in the first order in 
+\begin_inset Formula $S$
+\end_inset
+
+:
+\begin_inset Formula \[
+H_{1}=E+W^{\dagger}E+EW=E-SE-[W,E]\]
+
+\end_inset
+
+by requiring 
+\begin_inset Formula \begin{eqnarray*}
+[W,E] & = & \mathcal{O}\{-SE\}\end{eqnarray*}
+
+\end_inset
+
+Given explicitly:
+\begin_inset Formula \begin{eqnarray*}
+W_{pq} & = & -\frac{S_{pq}e_{q}}{e_{q}-e_{p}}\\
+W_{pp} & = & -\frac{1}{2}S_{pp}\end{eqnarray*}
+
+\end_inset
+
+in this representation the metric becomes a unity with the accuracy 
+\begin_inset Formula $O(S^{2})$
+\end_inset
+
+:
+\begin_inset Formula \[
+1+W^{\dagger}S+SW+\frac{1}{2}(W^{\dagger2}+W^{2}+2W^{\dagger}W)=1-\frac{1}{2}(S^{2}+[WS])\]
+
+\end_inset
+
+and the hamiltonian becomes second order terms:
+\begin_inset Formula \begin{eqnarray*}
+H_{1} & = & E+\mathcal{E}_{1}+\frac{1}{2}(W^{\dagger2}E+EW^{2}+2W^{\dagger}EW)+O(W^{3})\\
+\mathcal{E}_{1} & = & \mathrm{diag}(-SE)\end{eqnarray*}
+
+\end_inset
+
+now the second order trafo 
+\begin_inset Formula \[
+U_{2}=\exp W_{2}\]
+
+\end_inset
+
+ to fix the metric up to second order and eliminate the off-diagonal elements
+ of hamiltonian up to second order:
+\begin_inset Formula \begin{eqnarray*}
+W_{2}^{\dagger}+W_{2} & = & \frac{1}{2}(S^{2}+[WS])\\
+W_{2}^{\dagger}E+EW_{2} & = & -\frac{1}{2}(W^{\dagger2}E+EW^{2}+2W^{\dagger}EW)\end{eqnarray*}
+
+\end_inset
+
+multiplying the first by 
+\begin_inset Formula $-E$
+\end_inset
+
+ from the right and adding the two
+\begin_inset Formula \begin{eqnarray*}
+[W_{2}E] & = & -S^{2}E-[W,SE]-\frac{1}{2}[W[WE]]=:\mathcal{O}_{2}\\
+W_{2;pq} & = & -\frac{\mathcal{O}_{2;pq}}{e_{q}-e_{p}},\quad p\ne q\\
+W_{2;pp} & = & -\frac{1}{4}(S^{2}+[WS])_{pp}\end{eqnarray*}
+
+\end_inset
+
+Now that we cannot argue that 
+\begin_inset Formula $W_{2}$
+\end_inset
+
+ is an anti-symmetric matrix we have to add its (second order) contribution
+ to the energy
+\begin_inset Formula \begin{eqnarray*}
+H_{2} & = & E+\mathcal{E}_{1}+\mathcal{E}_{2}+O(S^{3})\\
+\mathcal{E}_{1} & = & W_{1}^{\dagger}E+EW_{1}\\
+\mathcal{E}_{2} & = & W_{2}^{\dagger}E+EW_{2}+\frac{1}{2}(W^{\dagger2}E+EW^{2}+2W^{\dagger}EW)\end{eqnarray*}
+
+\end_inset
+
+And of course 
+\begin_inset Quotes eld
+\end_inset
+
+even
+\begin_inset Quotes erd
+\end_inset
+
+ terms are understood as diagonal contributions, 
+\begin_inset Quotes eld
+\end_inset
+
+no off-diagonal elements
+\begin_inset Quotes erd
+\end_inset
+
+ was the requirement put in definition of 
+\begin_inset Formula $W_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $W_{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+General case: distortion of Hamiltonian and metric
+\end_layout
+
+\begin_layout Standard
+To find eigenvalue and eigenvector corrections in a situation where both
+ the Hamiltonian and the metric were perturbed we need to find a matrix
+ 
+\begin_inset Formula $U$
+\end_inset
+
+ such that
+\begin_inset Formula \begin{eqnarray*}
+E^{\prime} & = & U^{\dagger}(E+V)U\\
+1 & = & U^{\dagger}(1+S)U\end{eqnarray*}
+
+\end_inset
+
+We first take 
+\begin_inset Formula \[
+U_{1}=\exp W_{1}\]
+
+\end_inset
+
+to solve the eiganvalue problem to the first order in 
+\begin_inset Formula $V$
+\end_inset
+
+ and 
+\begin_inset Formula $S$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray*}
+H_{1} & = & E+V+(W_{1}^{\dagger}E+EW_{1})+O(V^{2})\\
+S_{1} & = & 1+S+(W_{1}^{\dagger}+W_{1})+O(S^{2})\end{eqnarray*}
+
+\end_inset
+
+ so we require matric to be one and the cancellation of off-diagonal elements
+\begin_inset Formula \begin{eqnarray*}
+W_{1}^{\dagger}+W_{1} & = & -S\\
+W_{1}^{\dagger}E+EW_{1} & = & -\mathcal{O}\{ V\}\end{eqnarray*}
+
+\end_inset
+
+which is solved by
+\begin_inset Formula \begin{eqnarray*}
+[W_{1}E] & = & \mathcal{O}_{1}\\
+\mathcal{O}_{1} & = & \mathcal{O}\{ V-SE\}\\
+W_{1;pq} & = & \frac{V_{pq}-S_{pq}e_{q}}{e_{q}-e_{p}},\quad p\ne q\\
+W_{1;pp} & = & -\frac{1}{2}S_{pp}\end{eqnarray*}
+
+\end_inset
+
+that gives the required cancellation of odd term and indroduces first order
+ correction to the eigenvalues due to the changed matric: 
+\begin_inset Formula \begin{eqnarray*}
+W_{1}^{\dagger}E+EW_{1} & = & -(S+W)E+EW\\
+ & = & -SE-[WE]\\
+ & = & -SE-\mathcal{O}\{ V-SE\}\\
+ & = & \mathcal{E}\{-SE\}-\mathcal{O}\{ V\}\end{eqnarray*}
+
+\end_inset
+
+ If we take the properties of 
+\begin_inset Formula $W_{1}$
+\end_inset
+
+ into account the Hamiltonian and the metric can be written as:
+\begin_inset Formula \begin{eqnarray*}
+H_{1} & = & E+\mathcal{E}_{1}-SV-[W_{1}V]+\frac{1}{2}(W_{1}^{\dagger}E+EW_{1}^{2}+2W_{1}^{\dagger}EW_{1})+O(V^{3})\\
+\mathcal{E}_{1} & = & \mathcal{E}\{ V-SE\}\\
+S_{1} & = & 1-\frac{1}{2}(S^{2}+[WS])+O(S^{3})\end{eqnarray*}
+
+\end_inset
+
+Now we seek such 
+\begin_inset Formula $W_{2}$
+\end_inset
+
+ that
+\begin_inset Formula \begin{eqnarray*}
+W_{2}^{\dagger}+W_{2} & = & \frac{1}{2}(S^{2}+[W_{1},S])\\
+W_{2}^{\dagger}E+EW_{2} & = & -\mathcal{O}\{-SV-[W_{1},V]+\frac{1}{2}(W_{1}^{\dagger}E+EW_{1}^{2}+2W_{1}^{\dagger}EW_{1})\}\end{eqnarray*}
+
+\end_inset
+
+which is the same type of equation as for 
+\begin_inset Formula $W_{1}$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray*}
+[W_{2}E] & = & \mathcal{O}_{2}\\
+\mathcal{O}_{2} & = & \mathcal{O}\{ S(V-SE)+[W_{1},V-SE]-\frac{1}{2}[W_{1},[W_{1},E]]\}\end{eqnarray*}
+
+\end_inset
+
+The contribution to the Hamiltonian due to 
+\begin_inset Formula $W_{2}$
+\end_inset
+
+ will be given by
+\begin_inset Formula \[
+W_{2}^{\dagger}E+EW_{2}=\mathcal{E}\{\frac{1}{2}(S^{2}E+[W_{1},S]E)\}-\mathcal{O}(\ldots)\]
+
+\end_inset
+
+ where the odd term cancells the odd terms of 
+\begin_inset Formula $H_{1}$
+\end_inset
+
+ of the second order in perturbation strength.
+ The second order hamiltonian becomes
+\begin_inset Formula \begin{eqnarray*}
+H_{2} & = & E+\mathcal{E}_{1}+\mathcal{E}_{2}+O(V^{3})\\
+\mathcal{E}_{1} & = & \mathcal{E}\{ V-SE\}\\
+\mathcal{E}_{2} & = & \mathcal{E}\{-S(V-SE)-[W_{1},V-SE]+\frac{1}{2}[W_{1}[W_{1}E]]\}\\
+ & = & \mathcal{E}\{-S(V-SE)-[W_{1},\mathcal{E}_{1}]-\frac{1}{2}[W_{1}[W_{1}E]]\}\\
+S_{2} & = & 1+O(S^{3})\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Kinetically balanced Dirac equation
+\end_layout
+
+\begin_layout Standard
+One of the most convenient represenations of the Dirac Hamiltonian is the
+ usual
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+We adopt relativistic units with 
+\begin_inset Formula $c=\hbar=1$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \[
+H=\beta m+\vec{\alpha}\vec{p}+V\]
+
+\end_inset
+
+It exhibits 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ structure
+\begin_inset Formula \[
+H=T+V=\left(\begin{array}{cc}
+m+V & \vec{\sigma}\vec{p}\\
+\vec{\sigma}\vec{p} & -m+V\end{array}\right)\]
+
+\end_inset
+
+Solution for the free-electrons (
+\begin_inset Formula $V=0$
+\end_inset
+
+) are the plane waves
+\begin_inset Formula \[
+u_{p}^{+}=\sqrt{\frac{e+m}{2e}}\left(\begin{array}{c}
+1\\
+\frac{\vec{\sigma}\vec{p}}{e+m}\end{array}\right)\phi,\quad u_{p}^{-}=\sqrt{\frac{e+m}{2e}}\left(\begin{array}{c}
+-\frac{\vec{\sigma}\vec{p}}{e+m}\\
+\;1\end{array}\right)\phi\]
+
+\end_inset
+
+that correspond to the eigenvalues 
+\begin_inset Formula $\pm e$
+\end_inset
+
+, where 
+\begin_inset Formula $e$
+\end_inset
+
+ is the relativistic kinetic energy
+\begin_inset Formula \[
+e^{2}=m^{2}+p^{2}\]
+
+\end_inset
+
+and 
+\begin_inset Formula $\phi$
+\end_inset
+
+ is an arbitrary 2-spinor.
+ In the basis of these plane-waves the free-particle Hamiltonian is diagonal
+\begin_inset Formula \[
+T_{FW}=\left(\begin{array}{cc}
+e\\
+ & -e\end{array}\right)\]
+
+\end_inset
+
+Though we can choose any orientation for the large component 2-spinor the
+ orientation of corresponding small-component is detemined from that uniquely.
+ For the positive energy solution we have
+\begin_inset Formula \[
+u_{p}^{+}\sim\left(\begin{array}{c}
+\phi\\
+\chi\end{array}\right),\quad\chi=\frac{\vec{\sigma}\vec{p}}{e+m}\phi\approx\frac{\vec{\sigma}\vec{p}}{2m}\phi\]
+
+\end_inset
+
+Apart from the low magnitude due to the rest mass in the denominator we
+ observe a spinor rotation by 
+\begin_inset Formula $\pi$
+\end_inset
+
+ around the axis given by momentum direction 
+\begin_inset Formula $\vec{p}$
+\end_inset
+
+ which is normally represented by a rotation matrix:
+\begin_inset Formula \[
+P(\varphi\vec{n})=e^{i\vec{\sigma}\vec{n}\varphi/2}=\cos\frac{\varphi}{2}+i\vec{\sigma}\vec{n}\sin\frac{\varphi}{2},\quad\vec{n}=\vec{p}/p,\quad\varphi=\pi\]
+
+\end_inset
+
+Such rotation preserves of course the 
+\emph on
+projection
+\emph default
+ of the spin on the momentum direction.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+FIXME: must be related somehow to the chirality-conservation in at high
+ energies
+\end_layout
+
+\end_inset
+
+ But in general the spinors for large and small components of solutions
+ are not 
+\begin_inset Quotes eld
+\end_inset
+
+aligned
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Let us change the quantization axis for the small components by applying
+ unitary rotation
+\begin_inset Formula \[
+P(\vec{p}):=\left(\begin{array}{cc}
+1\\
+ & e^{i\vec{\sigma}\vec{n}\varphi/2}\end{array}\right)=\left(\begin{array}{cc}
+1\\
+ & \frac{\vec{\sigma}\vec{p}}{p}\end{array}\right)\]
+
+\end_inset
+
+in this represenation the Dirac Hamiltonian is given by
+\begin_inset Formula \[
+H^{\prime}=T^{\prime}+V^{\prime}=P^{\dagger}HP=\left(\begin{array}{cc}
+m+V & p\\
+p & -m+\frac{\vec{\sigma}\vec{p}}{p}V\frac{\vec{\sigma}\vec{p}}{p}\end{array}\right)\]
+
+\end_inset
+
+the soltutions of its free-particle part 
+\begin_inset Formula \[
+T^{\prime}=\left(\begin{array}{cc}
+m & p\\
+p & -m\end{array}\right)\]
+
+\end_inset
+
+are given by
+\begin_inset Formula \[
+u_{p}^{+}=\sqrt{\frac{e+m}{2e}}\left(\begin{array}{c}
+1\\
+\frac{p}{e+m}\end{array}\right)\phi,\quad u_{p}^{-}=\sqrt{\frac{e+m}{2e}}\left(\begin{array}{c}
+-\frac{p}{e+m}\\
+\;1\end{array}\right)\phi\]
+
+\end_inset
+
+and may be easily 
+\begin_inset Quotes eld
+\end_inset
+
+back-trasformed
+\begin_inset Quotes erd
+\end_inset
+
+ to the origianal picture by applying (bilateral) rotation 
+\begin_inset Formula $P(\vec{p})$
+\end_inset
+
+.
+ The free-particle Hamiltonian in this basis is diagonal
+\begin_inset Formula \[
+T_{FW}^{\prime}=\left(\begin{array}{cc}
+e\\
+ & -e\end{array}\right)\]
+
+\end_inset
+
+The large and small components of the solutions are now related by a sclalar
+ 
+\begin_inset Formula $p/(e+m)$
+\end_inset
+
+:
+\begin_inset Formula \[
+u_{p}^{+}\sim\left(\begin{array}{c}
+\phi\\
+\chi\end{array}\right),\quad\chi=\frac{p}{e+m}\phi\approx\frac{p}{2m}\phi\]
+
+\end_inset
+
+That implies that e.g.
+ the spatial parts of the large and small component spinors in an LCAO basis
+ expansion have the same angular dependence.
+ This is unlike the orginal represenation where we had 
+\begin_inset Formula $\chi\approx(1/2m)\vec{\sigma}\vec{p}\phi$
+\end_inset
+
+ that necesarily involves a change of (orbital) angular momentum in an LCAO
+ expansion.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+FIXME: parity balance?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Dirac Hamiltonian with metric
+\end_layout
+
+\begin_layout Standard
+In this section we investigate different pictures from the diagram
+\begin_inset Formula \[
+\begin{array}{ccccc}
+ &  & Knn\\
+ &  & \stackrel{S^{-1/2}}{\downarrow}\\
+D & \stackrel{K}{\longrightarrow} & Kn & \stackrel{G^{-1/2}}{\longrightarrow} & Ko\\
+\stackrel{U_{0}}{}\downarrow &  & \downarrow &  & \downarrow\\
+FW & \stackrel{K}{\longrightarrow} & FWn & \stackrel{G^{-1/2}}{\longrightarrow} & FWo\\
+\stackrel{U_{1}}{}\downarrow\\
+DK2\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The ``canonical'' form of the Dirac Hamiltonian is
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+\begin_inset Formula $D$
+\end_inset
+
+ in front of the equation shall indicate the calssical Dirac picture.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \[
+D:\quad H=\vec{\alpha}\vec{p}+\beta m+V=\left(\begin{array}{cc}
+m+V & \vec{\sigma}\vec{p}\\
+\vec{\sigma}\vec{p} & -m+V\end{array}\right)\]
+
+\end_inset
+
+with the corresponding eigenvalue equation
+\begin_inset Formula \[
+D:\quad(H-I\epsilon)\Psi=0\]
+
+\end_inset
+
+This Hamiltonian may be interpreted as an operator acting on the four-spinors.
+ Equally well it may be undestood as a matrix representation of the operator
+ where we omitted matrix indices from every block.
+ For instance in the basis of the plane waves the matrix is built of the
+ (diagonal) kinetic energy 
+\begin_inset Formula $T(\vec{p})$
+\end_inset
+
+ and the (Fourier-trasform of the) potential 
+\begin_inset Formula $V(\vec{q})$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{q}=\vec{p}-\vec{p}^{\prime}$
+\end_inset
+
+:
+\begin_inset Formula \[
+H(\vec{p},\vec{p}^{\prime})=T(\vec{p},\vec{p}^{\prime})+V(\vec{p},\vec{p}^{\prime})=T(\vec{p})\delta(\vec{q})+V(\vec{q})\]
+
+\end_inset
+
+The free-particle part of the Dirac Hamiltonian is diagonalized by the unitary
+ rotation
+\begin_inset Formula \begin{eqnarray*}
+D\to FW:\quad U_{0} & = & \left(\begin{array}{cc}
+1 & -\kappa\vec{\sigma}\vec{p}\\
+\kappa\vec{\sigma}\vec{p} & 1\end{array}\right)a=(1+\bar{r}\beta)a\\
+\bar{r} & = & \gamma_{5}\kappa\vec{\sigma}\vec{p},\quad\kappa=\frac{1}{e+m},\quad a=(1+\bar{r}^{2})^{-1/2}=\sqrt{\frac{e+m}{2e}}\end{eqnarray*}
+
+\end_inset
+
+which we will refer to as the free--particle Foldy-Wouthusen transformation
+ (fpFW or simply FW).
+ A general Hamiltonian in this picture is built of diagonal kinetic energy
+ 
+\begin_inset Formula $T$
+\end_inset
+
+ and the (transformed) potential 
+\begin_inset Formula $V^{\prime}$
+\end_inset
+
+:
+\begin_inset Formula \[
+T=\left(\begin{array}{cc}
+e\\
+ & -e\end{array}\right),\quad V^{\prime}=a\left(\begin{array}{cc}
+V+\kappa O\kappa & [\kappa\vec{\sigma}\vec{p},V]\\
+-[\kappa\vec{\sigma}\vec{p},V] & V+\kappa O\kappa\end{array}\right)a\]
+
+\end_inset
+
+where we introduced notation 
+\begin_inset Formula $O=\vec{\sigma}\vec{p}V\vec{\sigma}\vec{p}$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+To compare later with other pictures one should note that for operators
+ holds: 
+\begin_inset Formula $\vec{\sigma}\vec{p}O=p^{2}V$
+\end_inset
+
+ and 
+\begin_inset Formula $O\vec{\sigma}\vec{p}=Vp^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So far we only considered orthogonal bases, and only unitary transformations
+ from one to another.
+ Now we split the transformation 
+\begin_inset Formula $P(\vec{p})$
+\end_inset
+
+ of ``kinetic balancing'' into the actual (unnormalized) rotation 
+\begin_inset Formula $K$
+\end_inset
+
+ and ``renormalization'' 
+\begin_inset Formula $G$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray*}
+D\to Ko:\quad P & = & KG^{-1/2}=G^{-1/2}K\\
+D\to Kn:\quad K & = & \left(\begin{array}{cc}
+1\\
+ & \vec{\sigma}\vec{p}\end{array}\right)\\
+Kn\to Ko:\quad G & = & \left(\begin{array}{cc}
+1\\
+ & p^{2}\end{array}\right)\end{eqnarray*}
+
+\end_inset
+
+For operators in the complete function space we have the commutation relation
+ 
+\begin_inset Formula $[K,G]=0$
+\end_inset
+
+, and therefore one can choose either ``left'' or ``right'' form for 
+\begin_inset Formula $P$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+In order to make use of this computation relation in a general basis set
+ representation one has to assure enough flexibility in basis set so that
+ both 
+\begin_inset Formula $K$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ can have common eigenvectors.
+ That is not always possible or wanted.
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Applying the (non-unitary) transformation 
+\begin_inset Formula $K$
+\end_inset
+
+ to the Dirac Hamiltonian (and the trivial unity metric) gives us ``kinetically
+ balanced'' unnormalized Hamiltonian and the corresponding metric: 
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+\begin_inset Formula $Kn$
+\end_inset
+
+ in front of the equation shall indicate the kinitically balanced non-orthogonal
+ picture.
+ The basis of the plane waves is still 
+\emph on
+othogonal
+\emph default
+ with this metric but a general one is not.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \[
+Kn:\quad H=\gamma_{5}p^{2}+\beta mG+V^{\prime}=\left(\begin{array}{cc}
+m+V & p^{2}\\
+p^{2} & -mp^{2}+O\end{array}\right),\quad G=\left(\begin{array}{cc}
+1\\
+ & p^{2}\end{array}\right)\]
+
+\end_inset
+
+The potential 
+\begin_inset Formula $V^{\prime}$
+\end_inset
+
+ in this picture is given by
+\begin_inset Formula \[
+Kn:\quad V^{\prime}=\left(\begin{array}{cc}
+V\\
+ & O\end{array}\right)\]
+
+\end_inset
+
+The corresponding eigenvalue problem is
+\begin_inset Formula \[
+Kn:\quad(H-G\epsilon)\Psi=0\]
+
+\end_inset
+
+in this represenation.
+ 
+\end_layout
+
+\begin_layout Standard
+In operator formulation this picture is fully equivalent to the original
+ picture of Dirac.
+ There is no such equivalence beween matrix representations, unless we roll
+ back all the simplifications we have made, e.g.\InsetSpace ~
+
+\begin_inset Formula $(\vec{\sigma}\vec{p})(\vec{\sigma}\vec{p})=p^{2}$
+\end_inset
+
+ (as the squared matrix representation of 
+\begin_inset Formula $\vec{\sigma}\vec{p}$
+\end_inset
+
+ is not the same as the matrix represenataion of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ in the finite basis).
+ Similary to claim the equivalence of matrix represenations in Dirac and
+ kintetically balanced pictures we have to evaluate the matrix of 
+\begin_inset Formula $O=\vec{\sigma}\vec{p}V\vec{\sigma}\vec{p}$
+\end_inset
+
+ as the product of three matrices 
+\begin_inset Formula $(\vec{\sigma}\vec{p})V(\vec{\sigma}\vec{p})$
+\end_inset
+
+ even if the matrix elements of 
+\begin_inset Formula $O$
+\end_inset
+
+ can be evaluated analytically.
+ After that the equivalence may be established also for matrix representation
+ and together with that 
+\series bold
+one gets all the kinetic balance issues of the original Dirac Hamiltonian
+ back
+\series default
+.
+ Alternatively, one may start with the modified but equivalent picture for
+ operators to evaluate the matrix elements with any available method.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+maybe approximate, if the particular form of potential 
+\begin_inset Formula $V$
+\end_inset
+
+ requires that; matrix elements of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ present no problem in Gaussian basis sets.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the matrix formulation to solve the (generalized) eigenvalue problem
+ is to find the matrix of coefficients 
+\begin_inset Formula $C$
+\end_inset
+
+ that simultaneousely diagonalizes 
+\begin_inset Formula $H$
+\end_inset
+
+ and makes metric 
+\begin_inset Formula $G$
+\end_inset
+
+ a unity matrix: 
+\begin_inset Formula $C^{\dagger}HC=E$
+\end_inset
+
+, and 
+\begin_inset Formula $C^{\dagger}GC=1$
+\end_inset
+
+.
+ This is a very common task in QM computation so that one often does not
+ even bother to build representations of operators in the orthonormal bases.
+ So far we assumed that for simplicity (by using the orthogonal plane wave
+ basis in all the examples).
+ To release this requirement we have to substitue all constants in the matrix
+ representations by the overlap matrix 
+\begin_inset Formula $S$
+\end_inset
+
+:
+\begin_inset Formula \[
+Knn:\quad H=\left(\begin{array}{cc}
+mS+V & p^{2}\\
+p^{2} & -mp^{2}+O\end{array}\right),\quad G=\left(\begin{array}{cc}
+S\\
+ & p^{2}\end{array}\right)\]
+
+\end_inset
+
+the rest of symbols is undestood as matrix representations of the corresponding
+ operators in the general, non-orthogonal basis.
+ This is a ready-to be used representaion of the Dirac operator equivalent
+ (in the operator sense) to the original one.
+ If necessary one may apply (partial) canonical orthogonalization to obtain
+ again the 
+\begin_inset Formula $Kn$
+\end_inset
+
+ picture
+\begin_inset Formula \[
+Knn\to Kn:\quad U=S^{-1/2}\]
+
+\end_inset
+
+however this requires taking a square root of the full matrix.
+\end_layout
+
+\begin_layout Standard
+In the absence of external potential the Dirac Hamiltonian reduces to
+\begin_inset Formula \[
+Kn:\quad T=\left(\begin{array}{cc}
+m & p^{2}\\
+p^{2} & -mp^{2}\end{array}\right),\quad G=\left(\begin{array}{cc}
+1\\
+ & p^{2}\end{array}\right)\]
+
+\end_inset
+
+This operator may be brought to diagonal form by transformation
+\begin_inset Formula \begin{equation}
+Kn\to FWn:\quad U=K^{-1}U_{0}K=\left(\begin{array}{cc}
+1 & -\kappa p^{2}\\
+\kappa & 1\end{array}\right)a\label{eq:U-Kn-FWn}\end{equation}
+
+\end_inset
+
+where we have also expressed the transformation matrix via the the fpFW
+ matrix 
+\begin_inset Formula $U_{0}$
+\end_inset
+
+ and the kinetic balancing matrix 
+\begin_inset Formula $K$
+\end_inset
+
+.
+ The (free-particle) Hamiltonian after the transformation becomes
+\begin_inset Formula \[
+FWn:\quad T=\left(\begin{array}{cc}
+e\\
+ & -ep^{2}\end{array}\right),\quad G=\left(\begin{array}{cc}
+1\\
+ & p^{2}\end{array}\right)\]
+
+\end_inset
+
+ The potential in this picture would have the following form:
+\begin_inset Formula \[
+FWn:\quad V=a\left(\begin{array}{cc}
+V+\kappa O\kappa & \kappa O-V\kappa p^{2}\\
+O\kappa-\kappa p^{2}V & O+\kappa p^{2}V\kappa p^{2}\end{array}\right)a\]
+
+\end_inset
+
+After orthogonalization with 
+\begin_inset Formula $G^{-1/2}$
+\end_inset
+
+ we could arrive at the 
+\begin_inset Formula $FWo$
+\end_inset
+
+ picture where the kinetic energy and potential would have the form:
+\begin_inset Formula \[
+FWo:\quad T=\left(\begin{array}{cc}
+e\\
+ & -e\end{array}\right),\quad V=a\left(\begin{array}{cc}
+V+\kappa O\kappa & \kappa Op^{-1}-V\kappa p\\
+p^{-1}O\kappa-\kappa pV & p^{-1}Op^{-1}+\kappa pV\kappa p\end{array}\right)a\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The operators in any other than the Dirac picture look noticably more complicate
+d.
+ The simplest of the alternative representations is the 
+\begin_inset Formula $Kn$
+\end_inset
+
+ picture.
+ The full Hamiltonian (and the corresponding metric) in the 
+\begin_inset Formula $Kn$
+\end_inset
+
+ picture are built of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $V$
+\end_inset
+
+, and 
+\begin_inset Formula $O$
+\end_inset
+
+ operators only.
+ We shall consider this representation in more detail.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $Kn$
+\end_inset
+
+ matrix representation of the kinetic energy in the non-orthogonal basis
+ is built of matrix elements of 
+\begin_inset Formula $p^{2}=-\Delta$
+\end_inset
+
+ and overlap 
+\begin_inset Formula $S$
+\end_inset
+
+:
+\begin_inset Formula \[
+Knn:\quad T=\left(\begin{array}{cc}
+mS & p^{2}\\
+p^{2} & -mp^{2}\end{array}\right),\quad G=\left(\begin{array}{cc}
+S\\
+ & p^{2}\end{array}\right)\]
+
+\end_inset
+
+By means of any available (gneralized) eigensolver it can be brought to
+ a diagonal form.
+ 
+\end_layout
+
+\begin_layout Standard
+In a special case when the (spatial) bases for the ``large'' and ``small''
+ components (in this kinetically balanced picture picture) are identical,
+ one may simplify the problem by using our 
+\emph on
+a-priori
+\emph default
+ knowledge of the matrix 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ structure.
+ In this case all blocks in 
+\begin_inset Formula $T$
+\end_inset
+
+ are square and repeated instances of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ stay for the same square matrix.
+ Note, that if the dimension of the 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ matrix is one so that 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ is just a number and 
+\begin_inset Formula $S=1$
+\end_inset
+
+ is another number the solution is obviousely given by the matrix 
+\begin_inset Formula $U(p^{2})$
+\end_inset
+
+ of Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:U-Kn-FWn}
+
+\end_inset
+
+), eventually followed by orthogonalization 
+\begin_inset Formula $G^{-1/2}(p)$
+\end_inset
+
+.
+ Now to exploit the 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ structure of the 
+\begin_inset Formula $2n\times2n$
+\end_inset
+
+ matrix of kinetic energy 
+\begin_inset Formula $T$
+\end_inset
+
+ we first simultaneosely diagonalize the (
+\begin_inset Formula $n\times n$
+\end_inset
+
+) overlap 
+\begin_inset Formula $S$
+\end_inset
+
+ and (
+\begin_inset Formula $n\times n$
+\end_inset
+
+) matrix of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ by solving the (
+\begin_inset Formula $n\times n$
+\end_inset
+
+) generalized eigenvalue equation:
+\begin_inset Formula \begin{eqnarray*}
+(p^{2}-2St)F & = & 0\\
+F^{\dagger}p^{2}F & = & 2t\\
+F^{\dagger}SF & = & 1\end{eqnarray*}
+
+\end_inset
+
+where 
+\begin_inset Formula $2t$
+\end_inset
+
+ is the diagonal matrix and transform the free-particle kinetic energy to
+ the intermediate ``momentum'' basis 
+\begin_inset Formula $Mn$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray*}
+Knn\to Mn:\quad U & = & \left(\begin{array}{cc}
+F\\
+ & F\end{array}\right)\\
+Mn:\quad T & = & \left(\begin{array}{cc}
+m & 2t\\
+2t & -2mt\end{array}\right),\quad G=\left(\begin{array}{cc}
+1\\
+0 & 2t\end{array}\right)\end{eqnarray*}
+
+\end_inset
+
+ That reduces the 
+\begin_inset Formula $2n\times2n$
+\end_inset
+
+ eigenvalue problem to 
+\begin_inset Formula $n$
+\end_inset
+
+ simpler 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ problems which solutions 
+\begin_inset Formula $U(2t)$
+\end_inset
+
+ we already know from Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:U-Kn-FWn}
+
+\end_inset
+
+):
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+This technique was proposed by Hess to evaluate complicated momentum-dependent
+ operators by use of resolution of identity in ``momentum'' space.
+ This motivation does not belong here where 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ is the only operator in question.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+Mn\to FWn:\quad U & = & U(2t)\\
+Knn\to FWn:\quad U & = & FU(2t)\\
+FWn:\quad T & = & \left(\begin{array}{cc}
+e\\
+ & -2et\end{array}\right),\quad G=\left(\begin{array}{cc}
+1\\
+0 & 2t\end{array}\right),\quad e=\sqrt{m^{2}+4t^{2}}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+LCAO: The Dirac--Hess Hamiltonian 
+\end_layout
+
+\begin_layout Standard
+To use the kinetically balanced Dirac Hamiltonian in a typical basis set-calcula
+tion implies a necessety to represent the kinetic energy operator
+\begin_inset Formula \[
+T^{\prime}=\left(\begin{array}{cc}
+m & p\\
+p & -m\end{array}\right)\]
+
+\end_inset
+
+in an (e.g.
+ GTO) basis.
+ For the simplest case where the bases for large and small components are
+ the same we face a problem of having a need for the square matrix
+\begin_inset Formula \[
+\langle m|p|n\rangle\]
+
+\end_inset
+
+with 
+\begin_inset Formula $|m\rangle$
+\end_inset
+
+ and 
+\begin_inset Formula $|n\rangle$
+\end_inset
+
+ being some basis fucntions, e.g.
+ the primitive Gaussians.
+ The approach of Hess to this problem is to evaluate the matrix of 
+\begin_inset Formula \[
+\langle m|p^{2}|n\rangle=-\langle m|\frac{\partial^{2}}{\partial x^{2}}+\frac{\partial^{2}}{\partial y^{2}}+\frac{\partial^{2}}{\partial z^{2}}|n\rangle\]
+
+\end_inset
+
+digonalize it 
+\begin_inset Formula \[
+\langle p|p^{2}|p^{\prime}\rangle=p^{2}\delta_{pp^{\prime}}\]
+
+\end_inset
+
+and take a square root after which let
+\begin_inset Formula \[
+\langle p|p|p^{\prime}\rangle:=p\delta_{pp^{\prime}}\]
+
+\end_inset
+
+Or basically evaluate the matrix of 
+\begin_inset Formula $p$
+\end_inset
+
+ as the (matrix) square root of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ matrix
+\begin_inset Formula \[
+p=\sqrt{p^{2}}\]
+
+\end_inset
+
+This approach may not be applicable to any kind of operator as the simplest
+ example of a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ matrix shows
+\begin_inset Formula \[
+T^{\prime2}=\left(\begin{array}{cc}
+m & p\\
+p & -m\end{array}\right)^{2}=\left(\begin{array}{cc}
+m^{2}+p^{2}\\
+ & m^{2}+p^{2}\end{array}\right)\]
+
+\end_inset
+
+(here 
+\begin_inset Formula $m$
+\end_inset
+
+ and 
+\begin_inset Formula $p$
+\end_inset
+
+ are just numbers for the moment) which naively whould lead to
+\begin_inset Formula \[
+T^{\prime}=\sqrt{T^{\prime2}}=\left(\begin{array}{cc}
+\sqrt{m^{2}+p^{2}}\\
+ & \sqrt{m^{2}+p^{2}}\end{array}\right)\quad(wrong!)\]
+
+\end_inset
+
+which is wrong even in the 
+\begin_inset Quotes eld
+\end_inset
+
+eigenvalue
+\begin_inset Quotes erd
+\end_inset
+
+ sense because of the lost sign.
+ The problem of signs of the square root is irrelevant for the positively
+ defined operators 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+.
+ The relation 
+\begin_inset Formula $p=\sqrt{p^{2}}$
+\end_inset
+
+ will only hold in the 
+\begin_inset Quotes eld
+\end_inset
+
+eiganvalue sense
+\begin_inset Quotes erd
+\end_inset
+
+ and only in the assymptotic limit of complete basis set.
+ This reasoning was enough to sucessfully employ the Hess technique for
+ relativistic kinetic energy and other 
+\begin_inset Quotes eld
+\end_inset
+
+kinematic factors
+\begin_inset Quotes erd
+\end_inset
+
+ in the Douglass-Kroll-Hess Hamiltonian.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+In fact the DKH Hamiltonian is obtained as an approximation of the Dirac-Hess
+ Hamiltonian where the higher orders in the potential 
+\begin_inset Formula $V$
+\end_inset
+
+ are thrown away
+\end_layout
+
+\end_inset
+
+ So there is no reason not to emply this technique to represent approximately
+ operator 
+\begin_inset Formula $p$
+\end_inset
+
+ in the Dirac-Hess Hamiltonian.
+ Having done so the matrix of the free-particle Hamiltonian in the 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ basis of Hess will be
+\begin_inset Formula \[
+T^{\prime}=\left(\begin{array}{cc}
+m & p\\
+p & -m\end{array}\right)\]
+
+\end_inset
+
+where 
+\begin_inset Formula $m$
+\end_inset
+
+ is a diagonal matrix proportional to the unity matrix and 
+\begin_inset Formula $p$
+\end_inset
+
+ is the diagonal matrix built of square roots of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ eigenvalues.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Alternatively, after a basis set 
+\emph on
+permutation
+\emph default
+ one may consider the matrix of 
+\begin_inset Formula $T^{\prime}$
+\end_inset
+
+ as a block-diagonal matrix consisting of 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ blocks 
+\begin_inset Formula $\left(\begin{array}{cc}
+m & p_{k}\\
+p_{k} & -m\end{array}\right)$
+\end_inset
+
+, where 
+\begin_inset Formula $k$
+\end_inset
+
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ eigenfunction index.
+\end_layout
+
+\end_inset
+
+ It is diagonalized by the unitary transformation
+\begin_inset Formula \[
+U_{0}=\sqrt{\frac{e+m}{2e}}\left(\begin{array}{cc}
+1 & -\frac{p}{e+m}\\
+\frac{p}{e+m} & 1\end{array}\right),\quad e=\sqrt{m^{2}+p^{2}}\]
+
+\end_inset
+
+that results into a diagonal matrix
+\begin_inset Formula \[
+T_{FW}^{\prime}=U_{0}^{\dagger}T^{\prime}U_{0}=\left(\begin{array}{cc}
+e\\
+ & -e\end{array}\right)\]
+
+\end_inset
+
+ where the 
+\begin_inset Quotes eld
+\end_inset
+
+kinematic factors
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $e$
+\end_inset
+
+ and 
+\begin_inset Formula $a=\sqrt{(e+m)/(2e)}$
+\end_inset
+
+ are built as diagonal matrices in the complete analogy to 
+\begin_inset Formula $p$
+\end_inset
+
+ starting from eigenvalues of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In order to introduce the potential 
+\begin_inset Formula $V$
+\end_inset
+
+ into the Dirac-Hess Hamiltonian one first has to evaluate in e.g.\InsetSpace ~
+GTO basis
+ the matrices of 
+\begin_inset Formula $V$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{\sigma}\vec{p}V\vec{\sigma}\vec{p}$
+\end_inset
+
+ then transform them to the 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ basis of Hess an built the matrix of potential 
+\begin_inset Formula $V$
+\end_inset
+
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+kinetically balanced
+\begin_inset Quotes erd
+\end_inset
+
+ picture
+\begin_inset Formula \[
+V^{\prime}=\left(\begin{array}{cc}
+V\\
+ & p^{-1}\vec{\sigma}\vec{p}V\vec{\sigma}\vec{p}p^{-1}\end{array}\right)=:\left(\begin{array}{cc}
+V\\
+ & p^{-1}Op^{-1}\end{array}\right)\]
+
+\end_inset
+
+where the 
+\begin_inset Formula $LL$
+\end_inset
+
+-part is just the 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ space representation of the initial GTO-matrix 
+\begin_inset Formula $V$
+\end_inset
+
+.
+ And the 
+\begin_inset Formula $SS$
+\end_inset
+
+-part that involves 
+\begin_inset Formula $p^{-1}$
+\end_inset
+
+ is evaluated (if necessary) according to Hess again starting from the momentum
+ representation of 
+\begin_inset Formula $O$
+\end_inset
+
+ (full matrix) and diagonal 
+\begin_inset Formula $p^{-1}$
+\end_inset
+
+ bracketing it from left and right.
+ There is no way to avoid evaluation of 
+\begin_inset Formula $O=\vec{\sigma}\vec{p}V\vec{\sigma}\vec{p}$
+\end_inset
+
+ in the original LCAO basis (or in the true 
+\begin_inset Quotes eld
+\end_inset
+
+orientationally non-degenerate
+\begin_inset Quotes erd
+\end_inset
+
+ momentum basis).
+ Since the vector 
+\begin_inset Formula $\vec{p}$
+\end_inset
+
+ is not 
+\emph on
+necessarily
+\emph default
+ diagonal in the basis of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ eigenvectors
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Yes, it can be 
+\emph on
+made
+\emph default
+ diagonal since 
+\begin_inset Formula $[p^{2},p_{i}]=0$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ (even in the limit of complete basis set) the Hess technique cannot be
+ applied to it in principle.
+ Or in other words the non-trivial dependence of 
+\begin_inset Formula $\vec{\sigma}\vec{p}V_{pp^{\prime}}\vec{\sigma}\vec{p}^{\prime}$
+\end_inset
+
+ on vectors 
+\begin_inset Formula $\vec{p}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{p}^{\prime}$
+\end_inset
+
+ (or on their difference 
+\begin_inset Formula $\vec{q}=\vec{p}-\vec{p}^{\prime}$
+\end_inset
+
+ if 
+\begin_inset Formula $V=V(\vec{r})$
+\end_inset
+
+ is local) cannot be mimicked by any fancy function of 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Approximation to Dirac-Hess Hamiltonian: Douglas-Kroll-Hess
+\end_layout
+
+\begin_layout Standard
+Starting from the Dirac-Hess Hamiltonian in the 
+\begin_inset Quotes eld
+\end_inset
+
+kinetically balanced
+\begin_inset Quotes erd
+\end_inset
+
+ picture
+\begin_inset Formula \[
+H^{\prime}[V,O]=\left(\begin{array}{cc}
+m+V & p\\
+p & -m+p^{-1}Op^{-1}\end{array}\right)\]
+
+\end_inset
+
+and having a way to (approximately) represent all participating operators
+ in a basis set we may of-course diagonalize it by any available eigensolver.
+ One will obtain two sets of solutions with positive and negative eigenvalues.
+ Sometimes one is only interested in positive energy solutions (a suitable
+ job for a specialized eigensolvers).
+ One often wants to only approximately introduce the effect of the negative
+ solutions and gain in return a reduction of the problem dimension.
+ The latter goal may be achived by a procedure due to Douglas and Kroll.
+\end_layout
+
+\begin_layout Standard
+For that we first apply the (Hess-counterpart of) Foldy-Wouthyusen tranformation
+ 
+\begin_inset Formula \begin{eqnarray*}
+U_{0} & = & \sqrt{\frac{e+m}{2e}}\left(\begin{array}{cc}
+1 & -\frac{p}{e+m}\\
+\frac{p}{e+m} & 1\end{array}\right)=:(1+r\beta)a\\
+r & = & \left(\begin{array}{cc}
+0 & \frac{p}{e+m}\\
+\frac{p}{e+m} & 0\end{array}\right),\quad a=\sqrt{\frac{e+m}{2e}}\end{eqnarray*}
+
+\end_inset
+
+and obtain
+\begin_inset Formula \begin{eqnarray*}
+H_{FW}^{\prime} & = & T_{FW}^{\prime}+aV^{\prime}a+arV^{\prime}ra+a(\beta rV^{\prime}+V^{\prime}r\beta)a\\
+ & = & T_{FW}^{\prime}+aV^{\prime}a+arV^{\prime}ra+\beta a[r,V^{\prime}]a\\
+ & = & \left(\begin{array}{cc}
+e+aVa+\frac{a}{e+m}O\frac{a}{e+m} & \frac{a}{e+m}O\frac{a}{p}-aV\frac{ap}{e+m}\\
+-\frac{ap}{e+m}Va+\frac{a}{p}O\frac{a}{e+m} & -e+\frac{a}{p}O\frac{a}{p}+\frac{ap}{e+m}V\frac{ap}{e+m}\end{array}\right)\\
+ & = & \beta E+\mathcal{E}_{1}[V]+\mathcal{O}_{1}[V]\\
+ & = & \left(\begin{array}{cc}
+e+AVA+ARVRA & A[R,V]A\frac{\vec{\sigma}\vec{p}}{p}\\
+-\frac{\vec{\sigma}\vec{p}}{p}A[R,V]A & -e+\frac{\vec{\sigma}\vec{p}}{p}(AVA+ARVRA)\frac{\vec{\sigma}\vec{p}}{p}\end{array}\right)\end{eqnarray*}
+
+\end_inset
+
+Note that the scary-looking Hamiltonian 
+\begin_inset Formula $H_{FW}^{\prime}$
+\end_inset
+
+ is fully equivalent to 
+\begin_inset Formula $H^{\prime}$
+\end_inset
+
+ even if the matrix representation in a finite basis is meant.
+ So unless we would like to invoke some approximation there is no need to
+ perform the transformation.
+ The last form of 
+\begin_inset Formula $H_{FW}^{\prime}$
+\end_inset
+
+ where we introduced the familiar 
+\begin_inset Formula $R=\frac{\vec{\sigma}\vec{p}}{e+m}$
+\end_inset
+
+ and 
+\begin_inset Formula $A=a$
+\end_inset
+
+ is meant to establish the similarity to the usual FW Hamiltonian and demonstrat
+e that this is actually a result of 
+\begin_inset Quotes eld
+\end_inset
+
+kinetic balancing
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula $\vec{\sigma}\vec{p}$
+\end_inset
+
+-termination
+\begin_inset Quotes erd
+\end_inset
+
+ of the usual FW-transformed Hamiltonian:
+\begin_inset Formula \[
+H_{FW}^{\prime}=P^{\dagger}(\vec{p})H_{FW}P(\vec{p})\]
+
+\end_inset
+
+The odd potential terms in 
+\begin_inset Formula $\mathcal{O}_{1}$
+\end_inset
+
+ still couple the positive and negative energy solution, however the coupling
+ is dumped by the rest mass as in 
+\begin_inset Formula $V/(2m)$
+\end_inset
+
+.
+ One may choose to ignore this coupling; that gives the first order DK (or
+ FW) Hamiltonian for positive (and negative, but decoupled from former)
+ subspaces.
+ To achive a higher accuracy one may apply second unitary transformation
+\begin_inset Formula \[
+U_{1}=\exp W\approx1+W+\frac{1}{2}W^{2}\]
+
+\end_inset
+
+with 
+\begin_inset Formula $W^{\dagger}=-W$
+\end_inset
+
+ which fulfills
+\begin_inset Formula \[
+[W,\beta E]=\mathcal{O}_{1}\]
+
+\end_inset
+
+in order to cancell the odd terms op to second order in potential 
+\begin_inset Formula $V$
+\end_inset
+
+.
+ The 
+\begin_inset Formula $LL$
+\end_inset
+
+-part of the transformed Hamiltonian will be given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+H_{DK2}^{\prime} & = & e+\mathcal{E}_{1}+\mathcal{E}_{2}\\
+\mathcal{E}_{1} & = & aVa+\frac{a}{e+m}O\frac{a}{e+m}\\
+\mathcal{E}_{2} & = & -\frac{1}{2}[w^{\dagger}we+ew^{\dagger}w+2w^{\dagger}ew]\\
+ & = & -\frac{1}{2}[(wr)^{\dagger}r^{-2}(rw)e+(wr)^{\dagger}er^{-2}(rw)+h.c.]\\
+rw & = & r^{2}a\tilde{V}a-\frac{a}{e+m}\tilde{O}\frac{a}{e+m}\\
+r & = & \frac{p}{e+m}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Relativistic system of non-interacting electrons
+\end_layout
+
+\begin_layout Standard
+The relativistic system of non-interacting electrons may be described by
+ the DK hamiltonian
+\begin_inset Formula \begin{eqnarray}
+H[V] & = & \beta E_{p}+\mathcal{E}_{1}[V]+\mathcal{E}_{2}[V]\\
+ & = & c^{2}\sqrt{1+(p/c)^{2}}+(AV\! A+ARV\! RA)-\frac{1}{2}[W,[W,\beta E_{p}]]\end{eqnarray}
+
+\end_inset
+
+twith 
+\begin_inset Formula $W[V]=A[R,\tilde{V}]R$
+\end_inset
+
+.
+ The terms have been grouped by the order of potential 
+\begin_inset Formula $V$
+\end_inset
+
+.
+ The linear response to the change in potential, 
+\begin_inset Formula $V^{x}$
+\end_inset
+
+ (e.g.\InsetSpace ~
+the dipole perturbation or the Hartree term 
+\begin_inset Formula $V_{ee}$
+\end_inset
+
+), is given by
+\begin_inset Formula \begin{eqnarray}
+H^{x} & = & \frac{\delta H}{\delta V}V^{x}\\
+ & = & \mathcal{E}_{1}[V^{x}]+\frac{\delta\mathcal{E}_{2}}{\delta V}V^{x}\\
+ & = & \mathcal{E}_{1}[V^{x}]-\frac{1}{2}([W,[W^{x},\beta E_{p}]]+[W^{x},[W,\beta E_{p}]])\\
+ & = & \mathcal{E}_{1}[V^{x}]-[W,[W^{x},\beta E_{p}]]-[[W,W^{x}],\beta E_{p}]/2\end{eqnarray}
+
+\end_inset
+
+The two first terms in the last line
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+One way to arrive there is to invoke the Jacobi identity 
+\begin_inset Formula $[a,[b,c]]+[c,[a,b]]+[b,[c,a]]=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ correspond to the first order transform of the 
+\begin_inset Formula $V^{x}$
+\end_inset
+
+ and the additional term of second order transform of 
+\begin_inset Formula $V^{x}$
+\end_inset
+
+ in the field 
+\begin_inset Formula $V$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+In the DKee classification DKee1, DKee2, and the last term is only present
+ in DKee3
+\end_layout
+
+\end_inset
+
+ The second derivative is longer but straghtforward
+\begin_inset Formula \begin{equation}
+H^{xy}=\mathcal{E}_{1}[V^{xy}]-\frac{1}{2}(W^{xy}W+W^{x}W^{y}+W^{y}W^{x}+WW^{xy})\beta E_{p}\end{equation}
+
+\end_inset
+
+ where we only left the 
+\begin_inset Quotes eld
+\end_inset
+
+sigantures
+\begin_inset Quotes erd
+\end_inset
+
+ for the second order term for brevity: e.g.\InsetSpace ~
+the siganture 
+\begin_inset Formula $W^{x}W^{y}\beta E_{p}$
+\end_inset
+
+ corresponds to the double commutator 
+\begin_inset Formula $[W^{x},[W^{y},\beta E_{p}]$
+\end_inset
+
+ (that is the reason to keep 
+\begin_inset Formula $W^{x}W^{y}$
+\end_inset
+
+ and 
+\begin_inset Formula $W^{y}W^{x}$
+\end_inset
+
+ separated).
+ The functionals 
+\begin_inset Formula $\mathcal{E}_{1}[V]$
+\end_inset
+
+ and 
+\begin_inset Formula $W[V]$
+\end_inset
+
+ are linear in 
+\begin_inset Formula $V$
+\end_inset
+
+ that is why one can freely move the derivative symbols from the functional
+ to the argument
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+We implicitely did it already for the energy of the non-interacting system:
+ 
+\begin_inset Formula $E^{xy}[H,\rho]=E[H^{xy},\rho]=\int H^{xy}(\vec{r})\rho(\vec{r})d^{3}r$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray}
+\mathcal{E}_{1}^{xy} & = & \mathcal{E}_{1}[V^{xy}]\\
+W^{xy} & = & W[V^{xy}].\end{eqnarray}
+
+\end_inset
+
+ All these expressions are basis-set free.
+ In a basis set calculation one operates with the corresponding matrices
+ instead of operators or functionals.
+ And, in a basis set calculations with atom-centered basis one is back to
+ the question of the 
+\begin_inset Quotes eld
+\end_inset
+
+unphysical
+\begin_inset Quotes erd
+\end_inset
+
+ (indirect, Pulay) contributions.
+\end_layout
+
+\begin_layout Standard
+The usual source of these contributions is the evaluation of the matrix
+ elements in a moving basis-set:
+\begin_inset Formula \begin{eqnarray}
+V^{x}\; & = & V^{(x)}+V^{[x]}\\
+V^{xy} & = & V^{(xy)}+V^{[xy]}\\
+ & = & V^{(x)(y)}+(V^{[x][y]}+V^{(x)[y]}+\ldots)\end{eqnarray}
+
+\end_inset
+
+Here we have split the matrix of 
+\begin_inset Formula $V^{x}$
+\end_inset
+
+ into its physical and Pulay contributions, 
+\begin_inset Formula $V^{(x)}$
+\end_inset
+
+ and 
+\begin_inset Formula $V^{[x]}$
+\end_inset
+
+, respectively.
+ However there is another source of these contributions in the relativistic
+ case because the functionals 
+\begin_inset Formula $\mathcal{E}_{1}[V]$
+\end_inset
+
+, 
+\begin_inset Formula $W[V]$
+\end_inset
+
+, and even the 
+\begin_inset Quotes eld
+\end_inset
+
+lost
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $E_{p}$
+\end_inset
+
+ (and, of course, any combination thereof, including products) are usually
+ not evaluted exactly but approximated at the similar level of accuracy
+ as the the operator 
+\begin_inset Formula $V^{x}$
+\end_inset
+
+ is approximated by its matrix representation in a finite basis set.
+\end_layout
+
+\begin_layout Section
+Pulay corrections to the relativistic transformation
+\end_layout
+
+\begin_layout Standard
+The approach of Hess used troughout for evaluation of functionals 
+\begin_inset Formula $E_{p}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathcal{E}_{1}[V]$
+\end_inset
+
+, 
+\begin_inset Formula $W[V]$
+\end_inset
+
+, and other terms in a finite basis set relies on computations in 
+\begin_inset Quotes eld
+\end_inset
+
+momentum
+\begin_inset Quotes erd
+\end_inset
+
+ space.
+ In this momentum space 
+\begin_inset Formula $|p\rangle$
+\end_inset
+
+ the matrix of the kinetic energy 
+\begin_inset Formula \begin{equation}
+T=\frac{p^{2}}{2m},\quad m=1\label{eq:defKIN}\end{equation}
+
+\end_inset
+
+ is a diagonal matrix (denoted by 
+\begin_inset Formula $t$
+\end_inset
+
+); the eigenvalue corresponding to 
+\begin_inset Formula $|p\rangle$
+\end_inset
+
+ is 
+\begin_inset Formula $t_{p}$
+\end_inset
+
+:
+\begin_inset Formula \begin{equation}
+(t-t_{p})|p\rangle=0\label{eq:momKIN}\end{equation}
+
+\end_inset
+
+To arrive at this representation in a (non-orthogonal) basis set one has
+ to solve the generalized symmetric eigenvalue problem:
+\begin_inset Formula \begin{equation}
+(T-St_{p})|p\rangle=0\label{eq:DGSYEV}\end{equation}
+
+\end_inset
+
+One may do it by any suitable eigensolver.
+ One imaginable possibility is to first 
+\begin_inset Quotes eld
+\end_inset
+
+orthogonalize
+\begin_inset Quotes erd
+\end_inset
+
+ e.g.\InsetSpace ~
+by canonical orthogonalization that requires digonalization of overlap
+ 
+\begin_inset Formula $S$
+\end_inset
+
+.
+ And then solve a symmetric eigenvalue problem in an orthogonal basis.
+ However this requires two diagonalizations and is normally less efficient
+ than the direct solution of (one) generalized problem as the efficient
+ solvers for that exist (e.g.\InsetSpace ~
+LAPACK).
+ Anyway, assuming that the momentum space was defined, the operators that
+ are diagonal in 
+\begin_inset Formula $p^{2}$
+\end_inset
+
+ are evaluated using the eigenvalues of 
+\begin_inset Formula $p^{2}=2t$
+\end_inset
+
+, e.g.:
+\begin_inset Formula \[
+E_{p}=c^{2}\sqrt{1+(p^{2}/c^{2})}:=c^{2}\sqrt{1+(2t/c^{2})}\]
+
+\end_inset
+
+with the corresponding eigenvalues
+\begin_inset Formula \[
+e_{p}=c^{2}\sqrt{1+(2t_{p}/c^{2})}\]
+
+\end_inset
+
+For other operators like the potential 
+\begin_inset Formula $V$
+\end_inset
+
+ (or 
+\begin_inset Formula $\vec{p}V\vec{p}$
+\end_inset
+
+, or 
+\begin_inset Formula $\vec{p}V\times\vec{p}$
+\end_inset
+
+) one first has to evaluate its momentum representation
+\begin_inset Formula \[
+V_{pp^{\prime}}=\langle p|V|p^{\prime}\rangle\]
+
+\end_inset
+
+which is then used in combination with 
+\begin_inset Quotes eld
+\end_inset
+
+kinematic factors
+\begin_inset Quotes erd
+\end_inset
+
+.
+ For example one obtains the matrix of 
+\begin_inset Formula $\tilde{V}$
+\end_inset
+
+ by
+\begin_inset Formula \[
+\tilde{V}_{pp^{\prime}}:=\frac{V_{pp^{\prime}}}{e_{p}+e_{p^{\prime}}}\]
+
+\end_inset
+
+Any 
+\begin_inset Quotes eld
+\end_inset
+
+physical
+\begin_inset Quotes erd
+\end_inset
+
+ perturbation only affects the potential terms 
+\begin_inset Formula $V$
+\end_inset
+
+.
+ The metric 
+\begin_inset Formula $S$
+\end_inset
+
+ and the kinetic energy are not affected by such perturbations.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+unless we want to change the mass of an electron 
+\begin_inset Formula $m$
+\end_inset
+
+ in Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:defKIN}
+
+\end_inset
+
+), then and only then the kinetic energy operator is physically 
+\begin_inset Quotes eld
+\end_inset
+
+perturbed
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ The Pulay-type pertubation however affect both the kinetic energy matrix
+ 
+\begin_inset Formula $T$
+\end_inset
+
+ and the metric 
+\begin_inset Formula $S$
+\end_inset
+
+:
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+we omit the square braces from the superscripts 
+\begin_inset Formula $x$
+\end_inset
+
+ as this is the only type of perturbation that kan happen to 
+\begin_inset Formula $T$
+\end_inset
+
+ and 
+\begin_inset Formula $S$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \[
+T\to T+xT^{x},\quad S\to S+xS^{x}\]
+
+\end_inset
+
+Since the choice of basis is arbitrary we can chose to operate in the momentum
+ basis we discussed before (to distinguish we will turn to the lower case):
+\begin_inset Formula \[
+t\to t+xt^{x},\quad s=1\to1+xs^{x}.\]
+
+\end_inset
+
+Both 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $s=1$
+\end_inset
+
+ were diagonal before perturbation; the contributions 
+\begin_inset Formula $t^{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $s^{x}$
+\end_inset
+
+ are, in general, full matrices.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+apart from the block structure induced by the symmetry
+\end_layout
+
+\end_inset
+
+ Two representtions are related by a (fixed so far) transformation 
+\begin_inset Formula $\mathcal{P}$
+\end_inset
+
+ written in matrix ad elemental form:
+\begin_inset Formula \begin{eqnarray*}
+t^{x}=\mathcal{P}^{\dagger}T^{x}\mathcal{P}, &  & t_{pq}^{x}=\langle p|t^{x}|q\rangle\\
+s^{x}=\mathcal{P}^{\dagger}S^{x}\mathcal{P}, &  & s_{pq}^{x}=\langle p|s^{x}|q\rangle\end{eqnarray*}
+
+\end_inset
+
+ According to the perturbation theory for secular equations, Sec.\InsetSpace ~
+
+\begin_inset LatexCommand \ref{sec:pert-theory}
+
+\end_inset
+
+, correction to the eigenvalues of Eq.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:momKIN}
+
+\end_inset
+
+) will be:
+\begin_inset Formula \begin{eqnarray}
+t_{p}^{x} & = & \mathcal{E}\{ t^{x}-s^{x}t\}_{pp}=t_{pp}^{x}-s_{pp}^{x}t_{p}\end{eqnarray}
+
+\end_inset
+
+The linear correction to the relativistic kinetic energy 
+\begin_inset Quotes eld
+\end_inset
+
+eigenvalues
+\begin_inset Quotes erd
+\end_inset
+
+ (or other kinematic factors) is evaluated by the chain rule e.g.:
+\begin_inset Formula \begin{eqnarray*}
+e_{p}^{x} & = & \frac{\partial e_{p}}{\partial t_{p}}t_{p}^{x}=\frac{t_{p}^{x}}{\sqrt{1+(2t_{p}/c^{2})}}\\
+a_{p}^{x} & = & \frac{\partial a_{p}}{\partial t_{p}}t_{p}^{x}\end{eqnarray*}
+
+\end_inset
+
+Note that the corrected 
+\begin_inset Quotes eld
+\end_inset
+
+eigenvalue
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $e_{p}+xe_{p}^{x}$
+\end_inset
+
+ corresponds to a corrected state 
+\begin_inset Formula $|p+xp^{x}\rangle$
+\end_inset
+
+.
+ The back-transformation from the momentum space has to account for this
+ difference.
+\end_layout
+
+\begin_layout Standard
+The infinitesemal 
+\begin_inset Quotes eld
+\end_inset
+
+rotation
+\begin_inset Quotes erd
+\end_inset
+
+ of the basis 
+\begin_inset Formula $|p\rangle$
+\end_inset
+
+ is described by the rotation generator 
+\begin_inset Formula $W^{x}$
+\end_inset
+
+ with the matrix elements defined from the first order perturbation theory.
+ Any 
+\begin_inset Quotes eld
+\end_inset
+
+forward
+\begin_inset Quotes erd
+\end_inset
+
+ transformation to the (corrected) momentum basis
+\begin_inset Formula \[
+\mathcal{P}+x\mathcal{P}^{x}=\mathcal{P}(1+xW^{x})\]
+
+\end_inset
+
+ of e.g.\InsetSpace ~
+the nuclear potential 
+\begin_inset Formula $N$
+\end_inset
+
+ at this level of accuracy induces additional Pyllay term 
+\begin_inset Formula $n^{[x]}$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray*}
+n & = & \mathcal{P}^{\dagger}N\mathcal{P}\\
+n+xn^{[x]} & = & n+x(nW^{x}+W^{\dagger x}n)\\
+ & = & n+x(nW^{x}+h.c.)\\
+ & =: & n+x\{ nW^{x}\}\end{eqnarray*}
+
+\end_inset
+
+where the curly braces stay for the 
+\begin_inset Quotes eld
+\end_inset
+
+symmetrized product
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula \[
+\{ AW\}=AW+(AW)^{\dagger}=AW+W^{\dagger}A^{\dagger}\]
+
+\end_inset
+
+that in case of an anti-symmetric 
+\begin_inset Formula $W^{\dagger}=-W$
+\end_inset
+
+ (which is not true if the metric is perturbed) would lead to a commutator
+ 
+\begin_inset Formula \[
+\{ AW\}=[A,W].\]
+
+\end_inset
+
+That gives nozero response of the potential in the 
+\emph on
+momentum space
+\emph default
+ even if there were no actuall perturbation to the potential itself:
+\begin_inset Formula \[
+n^{[x]_{F}}=\{ nW^{x}\}\]
+
+\end_inset
+
+The subscript symbol of derivative 
+\begin_inset Formula $[x]_{F}$
+\end_inset
+
+ should displays that this is the result of the 
+\emph on
+forward
+\emph default
+ trasformation.
+ At this (linear) level of accuracy the derivative 
+\begin_inset Formula $N^{x}$
+\end_inset
+
+ (i.e.
+ dipole perturbation
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+that might, or might not include the Pullay terms
+\end_layout
+
+\end_inset
+
+) has to be transformed as
+\begin_inset Formula \[
+n^{x}=\mathcal{P}^{\dagger}N^{x}\mathcal{P}\]
+
+\end_inset
+
+without further corrections;
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+these terms are the scope of the previous section, here we consider the
+ Pullay terms in trasformation only
+\end_layout
+
+\end_inset
+
+ this might change for the second derivatives.
+ In this way corrections in momentum space may be obtained for all terms
+ in the DKH hamiltonian.
+\end_layout
+
+\begin_layout Standard
+Similarly to the 
+\begin_inset Quotes eld
+\end_inset
+
+froward
+\begin_inset Quotes erd
+\end_inset
+
+ transformation, the 
+\begin_inset Quotes eld
+\end_inset
+
+back
+\begin_inset Quotes erd
+\end_inset
+
+-transformation
+\begin_inset Formula \[
+(1+xW^{x})^{-1}\mathcal{Q}=(1-xW^{x})\mathcal{Q},\quad\mathcal{Q}=\mathcal{P}^{-1}\]
+
+\end_inset
+
+ introduces Pullay terms as well.
+ Consider the infinitesemal part of this transformation first for the some
+ 
+\begin_inset Formula $n$
+\end_inset
+
+ (e.g.\InsetSpace ~
+nuclear potential, eventually relativistic):
+\begin_inset Formula \begin{eqnarray*}
+n^{[x]_{B}} & = & -\{ nW^{x}\}=-n^{[x]_{F}}\end{eqnarray*}
+
+\end_inset
+
+is a reverse of the forward transformation as should be expected for the
+ inverse transformation.
+ However we do not transform to momentum space just to immediatly apply
+ the reverse transformation.
+ The actual sequence is (i) forward transformation, (ii) manupulations in
+ momentum space, e.g.
+ scaling with kinematic factors, adding their Pullay contributions, (iii)
+ backtransform of the resulting (relativistic) operator.
+ Anything that is not affected by the middle (relativistic) part (or affected
+ only mildly) will also be left unchanged (or largly cancel out) by the
+ forward-backward transform.
+\end_layout
+
+\begin_layout Subsection
+Relativistic kinetic energy
+\end_layout
+
+\begin_layout Itemize
+[FORW]: The perturbation of kinetic energy matrix 
+\begin_inset Formula $T+xT^{x}$
+\end_inset
+
+ and the metric 
+\begin_inset Formula $S+xS^{x}$
+\end_inset
+
+ in the real-space basis have to be first transformed to the momentum basis,
+ first by applying 
+\begin_inset Formula $\mathcal{P}$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+matrices 
+\begin_inset Formula $T^{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $S^{s}$
+\end_inset
+
+ are very sparse, that should be used to efficiently apply similarity transforma
+tion which is an expensive operation for full matrices.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+t & \leftarrow & \mathcal{P}^{\dagger}T\mathcal{P}\\
+t^{x} & \leftarrow & \mathcal{P}^{\dagger}T^{x}\mathcal{P}\\
+1 & \leftarrow & \mathcal{P}^{\dagger}S\mathcal{P}\\
+s^{x} & \leftarrow & \mathcal{P}^{\dagger}S^{x}\mathcal{P}\end{eqnarray*}
+
+\end_inset
+
+and then by applying infinitesemal 
+\begin_inset Formula $W^{x}$
+\end_inset
+
+ such that the kinetic energy matrix becomes diagonal
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+this formulation is just meant to mention the infinitesemal 
+\begin_inset Quotes eld
+\end_inset
+
+forward
+\begin_inset Quotes erd
+\end_inset
+
+ picture change, which otherwise may appear to be forgotten.
+ The actuall condition is given by adding Eqs.\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eq:matHx}
+
+\end_inset
+
+) and (
+\begin_inset LatexCommand \ref{eq:matSx}
+
+\end_inset
+
+) and requirng 
+\begin_inset Formula $\Lambda\equiv t$
+\end_inset
+
+ it to stay diagonal.
+\end_layout
+
+\end_inset
+
+ with eigenvalues 
+\begin_inset Formula $t_{p}+xt_{p}^{x}$
+\end_inset
+
+ 
+\begin_inset Formula \begin{eqnarray*}
+t_{p}^{x} & \leftarrow & t_{pp}^{x}-t_{p}s_{pp}^{x}\\
+(W_{x})_{pq} & \leftarrow & t_{pq}^{x},\; s_{pq}^{x},\; t_{p},\; t_{q}\end{eqnarray*}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+[REL]: From the eigenvalues 
+\begin_inset Formula $t_{p}$
+\end_inset
+
+ (and 
+\begin_inset Formula $t_{p}^{x}$
+\end_inset
+
+) we built the matrix of relativistic kinetic energy
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+i.e.\InsetSpace ~
+apply the relativistic transformation to 
+\begin_inset Formula $t$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ with 
+\begin_inset Quotes eld
+\end_inset
+
+eigenvalues
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $e_{p}+xe_{p}^{x}$
+\end_inset
+
+ ...
+\end_layout
+
+\begin_layout Itemize
+[BACK]: ...
+ and transfrom that back to real space.
+ First by application the infinitesemal rotation
+\begin_inset Formula \begin{eqnarray*}
+e_{p}^{x} & \leftarrow & e_{p}^{x}+e_{p}^{[x]_{B}}=e_{p}^{x}-\{ e_{p}W^{x}\}\end{eqnarray*}
+
+\end_inset
+
+and then the transforamtion of the result to the real space:
+\begin_inset Formula \begin{eqnarray*}
+T_{rel} & \leftarrow & \mathcal{Q}^{\dagger}e_{p}\mathcal{Q}\\
+T_{rel}^{x} & \leftarrow & \mathcal{Q}^{\dagger}e_{p}^{x}\mathcal{Q}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Relativistic nuclear potenatial
+\end_layout
+
+\begin_layout Itemize
+[FORW]: Relativistic nuclear potential is built from two (three) matrices:
+ the non-relativistic potential 
+\begin_inset Formula $N$
+\end_inset
+
+, and the SR (or SR+SO) matrix 
+\begin_inset Formula $O=\vec{p}V\vec{p}$
+\end_inset
+
+ (or 
+\begin_inset Formula $O=\vec{\sigma}\vec{p}V\vec{\sigma}\vec{p}$
+\end_inset
+
+).
+ Both have to be first transformed to the momentum space by applying 
+\begin_inset Formula $\mathcal{P}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+n & \leftarrow & \mathcal{P}^{\dagger}N\mathcal{P}\\
+o & \leftarrow & \mathcal{P}^{\dagger}O\mathcal{P}\\
+n^{x} & \leftarrow & \mathcal{P}^{\dagger}N^{x}\mathcal{P},\quad\mathrm{or}\quad0\\
+o^{x} & \leftarrow & \mathcal{P}^{\dagger}O^{x}\mathcal{P},\quad\mathrm{or}\quad0\end{eqnarray*}
+
+\end_inset
+
+The last two transfrorms have to be done if there is a physical perturbation
+ to 
+\begin_inset Formula $N$
+\end_inset
+
+ (with or without additional Pullay terms).
+ After that one applies the infinitesemal 
+\begin_inset Formula $W^{x}$
+\end_inset
+
+ to obtain the 
+\begin_inset Quotes erd
+\end_inset
+
+trafo
+\begin_inset Quotes erd
+\end_inset
+
+ contributions to the Pulay terms:
+\begin_inset Formula \begin{eqnarray*}
+n^{x} & \leftarrow & n^{x}+n^{[x]_{F}}=n^{x}+\{ nW^{x}\}\\
+o^{x} & \leftarrow & o^{x}+o^{[x]_{F}}=o^{x}+\{ oW^{x}\}\end{eqnarray*}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+[REL]: From the momentum space representations of 
+\begin_inset Formula $n$
+\end_inset
+
+, 
+\begin_inset Formula $o$
+\end_inset
+
+, 
+\begin_inset Formula $n^{x}$
+\end_inset
+
+, and 
+\begin_inset Formula $o^{x}$
+\end_inset
+
+ one first computes relativistic potential and it's response:
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+The use of 
+\begin_inset Quotes eld
+\end_inset
+
+assignment
+\begin_inset Quotes erd
+\end_inset
+
+ syntax 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula $\leftarrow$
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ forces me to put the transformation of the potential on the second place,
+ since the yet non-relativistic potential is also used for evaluation of
+ the gradient.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+n^{x} & \leftarrow & \mathcal{E}_{1}[n^{x},o^{x}]+\frac{\delta\mathcal{E}_{2}}{\delta V}[n^{x},o^{x}]\\
+ & + & \mathcal{E}_{1}^{\{ x\}}[n,o]+\mathcal{E}_{2}^{\{ x\}}[n,o]\\
+n & \leftarrow & \mathcal{E}_{1}[n,o]+\mathcal{E}_{2}[n,o]\end{eqnarray*}
+
+\end_inset
+
+where as usual
+\begin_inset Formula \begin{eqnarray*}
+\mathcal{E}_{1}[n,o] & = & ana+akoka\\
+\mathcal{E}_{1}^{\{ x\}}[n,o] & = & a^{x}na+ana^{x}+(ak)^{x}o(ka)+(ak)o(ak)^{x}\\
+\mathcal{E}_{2}[n,o] & = & (rw)^{\dagger}\frac{e}{r^{2}}(rw)+\frac{1}{2}\{(rw)^{\dagger}\frac{1}{r^{2}}(rw),e\},\\
+\frac{\delta\mathcal{E}_{2}}{\delta V}[n,o] & = & \ldots\\
+\mathcal{E}_{2}^{\{ x\}}[n,o] & = & \ldots\\
+ &  & (rw)=r^{2}a\tilde{n}a-ak\tilde{o}ka=-(rw)^{\dagger},\\
+ &  & r^{2}=k^{2}p^{2},\quad\tilde{n}_{pq}=\frac{n_{pq}}{e_{p}+e_{q}},\quad\tilde{o}_{pq}=\frac{o_{pq}}{e_{p}+e_{q}}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+[BACK]: After that the contribution of the back-trafo has to be added 
+\begin_inset Formula \begin{eqnarray*}
+n^{x} & \leftarrow & n^{x}+n^{[x]_{B}}=n^{x}-\{ nW^{x}\}\end{eqnarray*}
+
+\end_inset
+
+and then, if necessary, the transforamtion of the result to the real space:
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+The tranformation of the gradient to the real space will be most probably
+ followed by the coupling with the density matrix.
+ It might make sense to transform the 
+\emph on
+density matrix
+\emph default
+ to the momentum space instead, to avoid expensive similarity transformations.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+N_{rel} & \leftarrow & \mathcal{Q}^{\dagger}n\mathcal{Q}\\
+N_{rel}^{x} & \leftarrow & \mathcal{Q}^{\dagger}n^{x}\mathcal{Q}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Pullay terms for the second derivatives
+\end_layout
+
+\begin_layout Standard
+The second order-perturbation theory for the eigenvaluies of kinetic energy
+ gives the second order correction to the eigenvalues in the form
+\begin_inset Formula \begin{eqnarray*}
+\Delta t & = & xy(\mathcal{E}_{1}^{xy}+\mathcal{E}_{2}^{xy})\\
+\mathcal{E}_{1}^{xy} & = & t^{xy}-s^{xy}t\\
+\mathcal{E}_{2}^{xy} & = & -s^{x}(t^{y}-s^{y}t)-[W^{x},\mathcal{E}_{1}^{y}]-\frac{1}{2}[W^{x}[W^{y}t]]+\{ x\leftrightarrow y\}\end{eqnarray*}
+
+\end_inset
+
+[where the r.h.s.
+ is implicitly limited to the even (diagonal) part only].
+ That gives the expression for the second derivative of the eigenvalues
+ 
+\begin_inset Formula $t_{p}^{xy}$
+\end_inset
+
+ which are used to compute the second derivatives of the relativistic kinematic
+ factors.
+ Infinitesemal second order transformation of the nuclear potential results
+ in
+\begin_inset Formula \[
+n\leftarrow n+\{ nW_{1}\}+\frac{1}{2}(\{ nW_{1}^{2}\}+2W_{1}^{\dagger}nW_{1})+\{ nW_{2}\}\]
+
+\end_inset
+
+therefore the second order derivative of the matrix 
+\begin_inset Formula $n$
+\end_inset
+
+ will be given by
+\begin_inset Formula \begin{eqnarray*}
+n^{xy} & \leftarrow & n^{xy}+\{ n^{x}W_{1}^{y}\}+\{ n^{y}W_{1}^{x}\}+\{ nW_{1}^{xy}\}\\
+ &  & +\frac{1}{2}(\{ nW_{1}^{x}W_{1}^{y}\}+2W_{1}^{\dagger x}nW_{1}^{y})\\
+ &  & +\frac{1}{2}(\{ nW_{1}^{y}W_{1}^{x}\}+2W_{1}^{\dagger y}nW_{1}^{x})\\
+ &  & +\{ nW_{2}^{xy}\}\end{eqnarray*}
+
+\end_inset
+
+and similarly for the matrix 
+\begin_inset Formula $o$
+\end_inset
+
+.
+ After these Pullay terms have been added the derivatives of the relativistic
+ potential can be evaluated
+\begin_inset Formula \begin{eqnarray*}
+n^{xy} & \leftarrow & \mathcal{E}_{1}[n^{xy},o^{xy}]+\mathcal{E}_{1}^{\{ xy\}}[n,n^{x},n^{y},o,o^{x},o^{y}]+\ldots\\
+\mathcal{E}_{1}^{\{ xy\}} & = & a^{xy}na+ana^{xy}+(a^{x}n^{y}a+a^{x}na^{y}+an^{x}a^{y}+\{ x\leftrightarrow y\})\\
+ &  & +(ak)^{xy}o(ka)+\ldots\end{eqnarray*}
+
+\end_inset
+
+The back-transformation introduces additional pullay terms wich may be obtained
+ from those for forward transformation by replacing 
+\begin_inset Formula $W_{1}\to-W_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $W_{2}\to-W_{2}$
+\end_inset
+
+ because of:
+\begin_inset Formula \[
+(1+W_{1}+\frac{1}{2}W_{1}^{2}+\ldots)^{-1}=(1-W_{1}+\frac{1}{2}W_{1}^{2}+\ldots).\]
+
+\end_inset
+
+The derivatives (and the value) of the potential 
+\begin_inset Formula $n$
+\end_inset
+
+ that enter the back-transformation are of course the relativistically corrected
+ ones.
+ After that one again either transfomrs the second derivative to the orbital
+ basis or couples it with momentum represenation of the density matrix.
+\end_layout
+
+\begin_layout Subsection
+Derivatives of the kinematic factors
+\end_layout
+
+\begin_layout Standard
+KInematic factors are given by
+\begin_inset Formula \begin{eqnarray*}
+e_{p} & = & \sqrt{c^{4}+p^{2}c^{2}}\approx c^{2}\left(1+\frac{1}{2}\left(\frac{p}{c}\right)^{2}-\frac{1}{8}\left(\frac{p}{c}\right)^{4}+\frac{1}{16}\left(\frac{p}{c}\right)^{6}\right)\\
+t_{p} & = & e_{p}-c^{2}\\
+a_{p} & = & \sqrt{\frac{e_{p}+c^{2}}{2e_{p}}}\\
+k_{p} & = & \frac{c}{e_{p}+c^{2}}\\
+a_{p}k_{p} & =\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Difference to the two-step procedure with canonical orthogonalization
+\end_layout
+
+\begin_layout Standard
+To solve the generalized eigenvalue problem
+\begin_inset Formula \[
+(T-St)z=0\]
+
+\end_inset
+
+one might first go into the orthogonal basis (
+\begin_inset Formula $U$
+\end_inset
+
+-space) such that
+\begin_inset Formula \[
+U^{\dagger}SU=s.\]
+
+\end_inset
+
+ Response of the eigenvalues and eigenvectors will be given by
+\begin_inset Formula \begin{eqnarray*}
+W_{U;pq}^{x} & = & \frac{s_{pq}^{x}}{s_{q}-s_{p}}\\
+s_{p}^{x} & = & s_{pp}^{x}\\
+s^{x} & = & U^{\dagger}S^{x}U\end{eqnarray*}
+
+\end_inset
+
+every operator is transformed to the 
+\begin_inset Formula $U$
+\end_inset
+
+-space by 
+\begin_inset Formula \begin{eqnarray*}
+T_{U} & \leftarrow & U^{\dagger}TU\\
+T_{U}^{x} & \leftarrow & U^{\dagger}T^{x}U+\{ T_{U}W_{U}^{x}\}=U^{\dagger}T^{x}U-[W_{U}^{x},T_{U}]\end{eqnarray*}
+
+\end_inset
+
+The next transformation to the 
+\begin_inset Formula $C$
+\end_inset
+
+-space is an actual ortho-
+\emph on
+normalization
+\emph default
+, 
+\begin_inset Formula \begin{eqnarray*}
+1 & \leftarrow & s^{-1/2}ss^{-1/2}\\
+T_{C} & \leftarrow & s^{-1/2}T_{U}s^{-1/2}\\
+T_{C}^{x} & \leftarrow & s^{-1/2}T_{U}^{x}s^{-1/2}-[W_{C}^{x}T_{C}]\\
+W_{C;pq}^{x} & = & -\frac{s_{p}^{x}}{2s_{p}}\delta_{pq}\end{eqnarray*}
+
+\end_inset
+
+That is followed by the transformation to the momentum space (
+\begin_inset Formula $V$
+\end_inset
+
+-space):
+\begin_inset Formula \begin{eqnarray*}
+t & \leftarrow & V^{\dagger}T_{C}V\\
+t^{x} & \leftarrow & V^{\dagger}T_{C}^{x}V-[W_{V}^{x}t]\\
+W_{V;pq}^{x} & = & \frac{t_{pq}^{x}}{t_{q}-t_{p}}\end{eqnarray*}
+
+\end_inset
+
+For the kinetic energy the off-daigonal elements of 
+\begin_inset Formula $t^{x}$
+\end_inset
+
+ become zero, that is the way we've chosen the transformation.
+ For other matrices, like the nuclear attraction and its gradient we have
+ a sequence
+\begin_inset Formula \begin{eqnarray*}
+N_{U} & \leftarrow & U^{\dagger}NU\\
+N_{U}^{x} & \leftarrow & U^{\dagger}N^{x}U-[W_{U}^{x},N_{U}]\\
+N_{C} & \leftarrow & s^{-1/2}N_{U}s^{-1/2}\\
+N_{C}^{x} & \leftarrow & s^{-1/2}N_{U}^{x}s^{-1/2}-[W_{C}^{x}N_{C}]\\
+n & \leftarrow & V^{\dagger}N_{C}V\\
+n^{x} & \leftarrow & V^{\dagger}N_{C}^{x}V-[W_{V}^{x}n]\end{eqnarray*}
+
+\end_inset
+
+where the 
+\begin_inset Quotes eld
+\end_inset
+
+direct
+\begin_inset Quotes erd
+\end_inset
+
+ term 
+\begin_inset Formula $V^{\dagger}N_{C}^{x}V$
+\end_inset
+
+ and the 
+\begin_inset Quotes eld
+\end_inset
+
+Pullay
+\begin_inset Quotes erd
+\end_inset
+
+ term 
+\begin_inset Formula $[W_{V}^{x}n]$
+\end_inset
+
+ are independent.
+ Ultimately one has to arrive at the same values and gradients as given
+ by the direct transformation to the momentum space:
+\begin_inset Formula \begin{eqnarray*}
+t & \leftarrow & \mathcal{P}^{\dagger}T\mathcal{P}\\
+t^{x} & \leftarrow & \mathcal{P}^{\dagger}T^{x}\mathcal{P}\quad(*)\\
+1 & \leftarrow & \mathcal{P}^{\dagger}S\mathcal{P}\\
+s^{x} & \leftarrow & \mathcal{P}^{\dagger}S^{x}\mathcal{P}\quad(*)\\
+n & \leftarrow & \mathcal{P}^{\dagger}N\mathcal{P}\\
+n^{x} & \leftarrow & \mathcal{P}^{\dagger}N^{x}\mathcal{P}+\{ nW^{x}\}\quad(*)\\
+W_{pq}^{x} & = & \frac{t_{pq}^{x}-s_{pq}^{x}t_{q}}{t_{q}-t_{p}},\quad p\ne q\\
+W_{pp}^{x} & = & -\frac{1}{2}s_{pp}^{x}\end{eqnarray*}
+
+\end_inset
+
+I've marked with 
+\begin_inset Formula $(*)$
+\end_inset
+
+ the steps that have to be repeated for every gradient component.
+ Note that the two first similarity transformations of 
+\begin_inset Formula $T^{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $S^{x}$
+\end_inset
+
+ are actually cheap, since the gradient matrices are sparse.
+\end_layout
+
+\begin_layout Subsection
+Implementation of second derivative transformations in PG
+\end_layout
+
+\begin_layout Subsection*
+DKH-1:
+\end_layout
+
+\begin_layout Subsection*
+\begin_inset Formula \begin{align*}
+aVa & :=aVa\\
+akOka & :=akOka\\
+V_{R} & :=(aVa)+(akOka)\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+DKH-2:
+\end_layout
+
+\begin_layout Subsection*
+\begin_inset Formula \begin{align*}
+RW & :=r^{2}\cdot(aVa)-(akOka)\\
+\widetilde{RW} & :=tilde(RW)\\
+A & :=(\widetilde{RW})e+e(\widetilde{RW})\\
+B & :=(r^{-2}A)^{\dagger}(\widetilde{RW})\\
+V_{R} & :=V_{R}-(B+B^{\dagger})/2-t\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Y-grad:
+\end_layout
+
+\begin_layout Standard
+Transform gradient matrices to inertial momentum frame:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align*}
+S^{Y} & :=U^{\dagger}S^{Y}U\\
+T^{Y} & :=U^{\dagger}T^{Y}U\\
+V^{Y} & :=U^{\dagger}V^{Y}U\end{align*}
+
+\end_inset
+
+Compute infinitesemal rotation of the non-inertial momentum frame by non-degener
+ate first-order perturbation theory applied to the general eigenvalu problem:
+\begin_inset Formula \[
+\{ P_{Y},(p^{2})^{Y}\}:=PT(p^{2},T^{Y},S^{Y})\]
+
+\end_inset
+
+Transform potential gradients to the non-inertial momentum frame (use 
+\begin_inset Formula $P^{Y}$
+\end_inset
+
+):
+\begin_inset Formula \begin{align*}
+V^{Y} & :=V^{Y}+\{ V,P^{Y}\}\\
+O^{Y} & :=O^{Y}+\{ O,P^{Y}\}\end{align*}
+
+\end_inset
+
+Obtain gradients of (diagonal in non-inertial momentum frame) kinematic
+ factors (use 
+\begin_inset Formula $(p^{2})^{Y}$
+\end_inset
+
+):
+\begin_inset Formula \[
+\{ t^{Y},e^{Y},a^{Y},k^{Y},(ak)^{Y},(r^{2})^{Y}\}:=chainrule\{ p^{2},(p^{2})^{Y}\}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Y-derivative of DKH-1:
+\end_layout
+
+\begin_layout Subsubsection*
+\begin_inset Formula \begin{align*}
+(aVa)^{Y} & :=aV^{Y}a+a^{Y}Va+aVa^{Y}\\
+(akOka)^{Y} & :=\ldots\\
+V_{R}^{Y} & :=(aVa)^{Y}+(akOka)^{Y}\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Y-derivative of DKH-2:
+\end_layout
+
+\begin_layout Subsubsection*
+\begin_inset Formula \begin{align*}
+(RW)^{Y} & :=r^{2}\cdot(aVa)^{Y}-(akOka)^{Y}+(r^{2})^{Y}\cdot(aVa)\\
+(\widetilde{RW})^{Y} & :=\ldots\\
+A^{Y} & :=(\widetilde{RW})^{Y}e+e(\widetilde{RW})^{Y}+(\widetilde{RW})e^{Y}+e^{Y}(\widetilde{RW})\\
+B^{Y} & :=((r^{-2})^{Y}A)^{\dagger}(\widetilde{RW})+((r^{-2}A^{Y})^{\dagger}(\widetilde{RW})+((r^{-2}A)^{\dagger}(\widetilde{RW})^{Y}\\
+V_{R}^{Y} & :=V_{R}^{Y}-(B^{Y}+B^{Y\dagger})/2-t^{Y}\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The same procedure is repeated for X-derivative.
+\end_layout
+
+\begin_layout Subsection*
+XY-derivative of DKH
+\end_layout
+
+\begin_layout Standard
+Transform XY-derivatives into inertial momentum frame:
+\end_layout
+
+\begin_layout Subsection*
+\begin_inset Formula \begin{align*}
+S^{XY} & :=U^{\dagger}S^{XY}U\\
+T^{XY} & :=U^{\dagger}T^{XY}U\\
+V^{XY} & :=U^{\dagger}V^{XY}U\\
+O^{XY} & :=U^{\dagger}O^{XY}U\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Transform second derivatives of 
+\begin_inset Formula $T$
+\end_inset
+
+ and 
+\begin_inset Formula $S$
+\end_inset
+
+ into non-inertial momentum frame using infinitesemal rotation generators
+ 
+\begin_inset Formula $P_{X}$
+\end_inset
+
+ and 
+\begin_inset Formula $P_{Y}$
+\end_inset
+
+:
+\begin_inset Formula \begin{align*}
+T^{XY} & :=T^{XY}+\{ t^{X}P_{Y}\}+\{ t^{Y}P_{X}\}-\{\{ tP_{X}\} P_{Y}\}/2-\{\{ tP_{Y}\} P_{X}\}/2\\
+S^{XY} & :=S^{XY}\quad\quad\quad\quad\quad\quad\quad\quad\quad-\{\{ P_{X}\} P_{Y}\}/2-\{\{ P_{Y}\} P_{X}\}/2\end{align*}
+
+\end_inset
+
+Invoke first-order non-degenerate pertubation theory for generalized eigenvalue
+ problem
+\begin_inset Formula \[
+\{ P_{XY},t^{XY}\}:=PT(t,T^{XY},S^{XY})\]
+
+\end_inset
+
+Transform second derivatives of of 
+\begin_inset Formula $V$
+\end_inset
+
+ and 
+\begin_inset Formula $O$
+\end_inset
+
+ into non-inertial momentum frame using infinitesemal rotation generators
+ 
+\begin_inset Formula $P_{X}$
+\end_inset
+
+ , 
+\begin_inset Formula $P_{Y}$
+\end_inset
+
+, and 
+\begin_inset Formula $P_{XY}$
+\end_inset
+
+:
+\begin_inset Formula \begin{align*}
+V^{XY} & :=V^{XY}+\{ V^{X}P_{Y}\}+\{ V^{Y}P_{X}\}-\{\{ VP_{X}\} P_{Y}\}/2-\{\{ VP_{Y}\} P_{X}\}/2+\{ VP_{XY}\}\\
+O^{XY} & :=\ldots\end{align*}
+
+\end_inset
+
+Note that the first derivatives 
+\begin_inset Formula $V^{X}$
+\end_inset
+
+ and 
+\begin_inset Formula $V^{Y}$
+\end_inset
+
+ have been already overwritten by their corrected counterparts in non-inertial
+ momentum basis! Therefore the minus by double "brakets".
+\end_layout
+
+\begin_layout Subsection
+Cholesky factorization 
+\end_layout
+
+\begin_layout Standard
+To solve the generalized eigenvalue problem
+\begin_inset Formula \[
+(T-St)z=0\]
+
+\end_inset
+
+ one first factorizes the overlap as
+\begin_inset Formula \[
+S=U^{H}U\]
+
+\end_inset
+
+then the problem reduces to
+\begin_inset Formula \begin{eqnarray*}
+(C-t)y & = & 0,\quad y=Uz,\quad C=U^{-H}TU^{-1}\end{eqnarray*}
+
+\end_inset
+
+Once solutions 
+\begin_inset Formula $y$
+\end_inset
+
+ are found
+\begin_inset Formula \[
+z=U^{-1}y\]
+
+\end_inset
+
+ The matrix 
+\begin_inset Formula $Z$
+\end_inset
+
+ is thus given by
+\begin_inset Formula \[
+Z=U^{-1}Y\]
+
+\end_inset
+
+ and its inverse
+\begin_inset Formula \begin{eqnarray*}
+Z^{-1} & = & Y^{-1}U=Y^{H}U=Z^{H}U^{H}U=Z^{H}S\end{eqnarray*}
+
+\end_inset
+
+oops, it must have been obvious, since
+\begin_inset Formula \[
+Z^{H}SZ=1\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+RAW: Symmetry considerations
+\end_layout
+
+\begin_layout Standard
+Basically, to do a 
+\begin_inset Quotes eld
+\end_inset
+
+symmetry breaking
+\begin_inset Quotes erd
+\end_inset
+
+ by perturbation which maybe followed by evaluation of second derivatives
+ one will need 
+\end_layout
+
+\begin_layout Itemize
+for CPKS: symmetry adapted matrix elements crossing the irrep boundaries
+ e.g.
+\begin_inset Formula \begin{eqnarray*}
+\langle\Gamma_{m}\gamma_{m}|\Gamma_{x}\gamma_{x}|\Gamma_{n}\gamma_{n}\rangle & \sim & \langle(\Gamma_{m}\Gamma_{n})\Gamma_{mn}\gamma_{mn}|\Gamma_{x}\gamma_{x}\rangle\\
+ & \sim & \langle(\Gamma_{m}\Gamma_{n})\Gamma||\Gamma\rangle\\
+ & = & \frac{1}{\dim\Gamma}\sum_{\gamma}\langle(\Gamma_{m}\Gamma_{n})\Gamma\gamma|\Gamma\gamma\rangle\\
+ &  & \Gamma_{mn}=\Gamma_{x}=\Gamma\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+for 2nd DERS: additionally second derivatives are required:
+\begin_inset Formula \begin{eqnarray*}
+\langle\Gamma_{m}\gamma_{m}|\Gamma_{x}\gamma_{x}\Gamma_{y}\gamma_{y}|\Gamma_{n}\gamma_{n}\rangle & \sim & \langle\Gamma_{m}\gamma_{m}|(\Gamma_{x}\Gamma_{y})\Gamma_{xy}\gamma_{xy}|\Gamma_{n}\gamma_{n}\rangle\\
+ & \sim & \langle(\Gamma_{m}\Gamma_{n})\Gamma_{mn}\gamma_{mn}|(\Gamma_{x}\Gamma_{y})\Gamma_{xy}\gamma_{xy}\rangle\\
+ & \sim & \langle(\Gamma_{m}\Gamma_{n})\Gamma||(\Gamma_{x}\Gamma_{y})\Gamma\rangle\\
+ & = & \frac{1}{\dim\Gamma}\sum_{\gamma}\langle(\Gamma_{m}\Gamma_{n})\Gamma\gamma|(\Gamma_{x}\Gamma_{y})\Gamma\gamma\rangle\\
+ &  & \Gamma_{mn}=\Gamma_{xy}=\Gamma\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Perform CPKS for each perturbation symmetry 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+ separately.
+ Such a perturbation, in general, opens several transition channels 
+\begin_inset Formula $m\to n$
+\end_inset
+
+ of the same symmetry: 
+\begin_inset Formula $(\Gamma_{m}\Gamma_{n})\Gamma$
+\end_inset
+
+.
+ And vice versa: same transition channel may be opened by several pertirbations:
+ 
+\begin_inset Formula $(\Gamma_{m}\Gamma_{n})\Gamma^{\prime}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Gamma^{\prime}\ne\Gamma$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+not working:
+\end_layout
+
+\begin_layout Standard
+The equation of 
+\begin_inset Quotes eld
+\end_inset
+
+electron motion
+\begin_inset Quotes erd
+\end_inset
+
+ for the density response is
+\begin_inset Formula \[
+K\rho^{x}=-\frac{\partial}{\partial x}\frac{\delta E}{\delta\rho},\quad K:=\frac{\delta^{2}E}{\delta\rho^{2}}\]
+
+\end_inset
+
+where all operator are evaluated at 
+\begin_inset Formula $x=0$
+\end_inset
+
+, i.e.
+ the unperturbed 
+\begin_inset Quotes eld
+\end_inset
+
+totally
+\begin_inset Quotes erd
+\end_inset
+
+ symmetric location.
+ Since the kernel 
+\begin_inset Formula $K$
+\end_inset
+
+ is evaluated at 
+\begin_inset Formula $x=0$
+\end_inset
+
+ it is 
+\begin_inset Quotes eld
+\end_inset
+
+totally symmetric
+\begin_inset Quotes erd
+\end_inset
+
+ as well.
+ However, the r.h.s.
+ of the CPKS equation contains the derivative w.r.t.
+ perturbation of the KS energy density (hamiltonian)
+\begin_inset Formula \[
+\frac{\partial}{\partial x}\frac{\delta E}{\delta\rho}=\frac{\partial}{\partial x}h_{KS}\]
+
+\end_inset
+
+the symmetry of this 
+\begin_inset Quotes eld
+\end_inset
+
+driving force
+\begin_inset Quotes erd
+\end_inset
+
+ is determined by the nature of perturbation, since the KS potential is
+ again a totally symmetric operator.
+ In a straightforward CPKS the density response is expanded
+\begin_inset Formula \[
+\rho^{x}=\sum_{mn}\phi_{m}^{\ast}\phi_{n}P_{mn}^{x}+(\phi_{m}^{\ast}\phi_{n})^{[x]}P_{mn}=:\rho^{(x)}+\rho^{[x]}\]
+
+\end_inset
+
+and the second term would vanish if the basis would not be nailed to the
+ atoms (in the case of geometrical perturbations, otherwise it is zero anyway).
+ The second term is evaluated with the unpertubred density matrix 
+\begin_inset Formula $P_{mn}$
+\end_inset
+
+ so that we may safely move it to the r.h.s.
+ where the rest of the 
+\begin_inset Quotes eld
+\end_inset
+
+driving force
+\begin_inset Quotes erd
+\end_inset
+
+ belongs
+\begin_inset Formula \[
+K\rho^{(x)}=-\frac{\partial}{\partial x}h-K\rho^{[x]}\]
+
+\end_inset
+
+Representing the change in the basis set expansion coefficients as an infinitese
+mal 
+\begin_inset Quotes eld
+\end_inset
+
+rotation
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $U^{x}=1+xW^{x}$
+\end_inset
+
+:
+\begin_inset Formula \[
+C+xC^{x}=CU^{x}=C(1+xW^{x})\]
+
+\end_inset
+
+we may express the density matrix response as
+\begin_inset Formula \begin{eqnarray*}
+P_{mn} & = & \sum_{e}n_{e}C_{m}^{e\ast}C_{n}^{e}\\
+P_{mn}^{x} & = & \sum_{pq}(W_{pm}^{x\ast}+W_{qn}^{x})\sum_{e}n_{e}C_{p}^{e\ast}C_{q}^{e}\end{eqnarray*}
+
+\end_inset
+
+or in matrix form
+\begin_inset Formula \[
+P^{x}=W^{x\dagger}P+PW^{x}=\{ PW^{x}\}.\]
+
+\end_inset
+
+The moving basis set is responsible for breaking the changing the metric
+ so we must require our transformation to 
+\begin_inset Quotes eld
+\end_inset
+
+fix
+\begin_inset Quotes erd
+\end_inset
+
+ it as well:
+\begin_inset Formula \begin{eqnarray*}
+W^{x}+W^{x\dagger} & = & -s^{[x]}\\
+K(PW^{x}+W^{x\dagger}P) & = & -\frac{\partial}{\partial x}h-K\rho^{[x]}\end{eqnarray*}
+
+\end_inset
+
+or by substituting 
+\begin_inset Formula $W^{x\dagger}$
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+K[W^{x},P] & = & \frac{\partial}{\partial x}h+K(\rho^{[x]}-s^{[x]}P)\end{eqnarray*}
+
+\end_inset
+
+The commutator
+\begin_inset Formula \[
+[WP]_{pq}=\sum_{r}(W_{pr}P_{rq}-P_{pr}W_{rq})=W_{pq}(n_{q}-n_{p})\]
+
+\end_inset
+
+in the basis with the diagonal 
+\begin_inset Formula $P_{pr}=n_{r}\delta_{nr}$
+\end_inset
+
+ has only non-zero elements with the levels that differ by occupations 
+\begin_inset Formula $n_{p}\ne n_{q}$
+\end_inset
+
+.
+ For patterns where occupation numbers are either zero or two we get
+\begin_inset Formula \[
+-2K_{pq,ai}W_{ai}^{x}=\frac{\partial}{\partial x}h_{pq}+K(\rho^{[x]}-s^{[x]}P)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand \bibtex[myprsty]{bibam,bibms}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,440 @@
+#
+# ParaGauss, a program package for high-performance computations
+# of molecular systems
+# Copyright (C) 2014
+# T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+# M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+# A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+# T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+# M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+# M. Roderus, N. Rösch
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as published
+# by the Free Software Foundation [1].
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Please see the accompanying LICENSE file for further information.
+#
+### To obtain working Makefile, type: mpp <machine>; makedependent -d
+###  mpp SGI ; ipp SGI_THEO
+### To obtain working sim script, type: make sims
+### To obtain working xyz2gx program, type: make 2gx
+### SGI mpp SGI; ipp SGI_THEO; makedependent -d 
+### DEC mpp DEC; ipp DEC_KRSK; makedependent -d
+### LINUX mpp LINUX; ipp LINUX_THEO; makedependent -d
+### VPP mpp VPP; ipp VPP_LRZ; makedependent -d    
+
+VERS = V2.1devel
+
+#### Home Directory #### 
+#IPP:LINUX_THEO# HOME = /users/ttfs
+#IPP:LINUX_KRSK# HOME = /home
+#IPP:DEC_KRSK# HOME = /home1
+#IPP:SGI_THEO# HOME = /home/ttfs
+#IPP:VPP_LRZ# HOME = /home/t/t3831ak
+
+#### Directory where Sources are stored #### 
+#IPP:DEC_KRSK# BASEDIR = /vobs/ttfs
+#IPP:SGI_THEO#  BASEDIR =    /vobs/ttfs
+#IPP:LINUX_THEO# BASEDIR = $(HOME)/pg_linux
+#IPP:LINUX_KRSK# BASEDIR = /home/ttfs/para.vova
+#IPP:VPP_LRZ# BASEDIR = $(HOME)/mnt
+
+#### Directory where Scripts are stored #####
+BINDIR =        $(BASEDIR)/bin
+
+#### Directory where executables are installed #####
+#IPP NOT:SGI_THEO:SP2_MAUI#INSTALLDIR =    $(HOME)/bin
+#IPP:SGI_THEO:SGI_BAR:SGI_BOL#INSTALLDIR =    $(HOME)/bin.sgi
+#IPP:SP2_MAUI#INSTALLDIR =    $(HOME)/paragau/tools
+
+
+XYZ2GX= $(INSTALLDIR)/xyz2gx
+TXT2GSN=$(INSTALLDIR)/txt2gsn
+SIM=$(INSTALLDIR)/sim
+XYZ2WEBLAB=$(INSTALLDIR)/xyz2weblab
+
+#MPP:DEC# MACH = DEC
+#MPP:SGI:SGI_MPI#  MACH =       SGI
+#MPP:LINUX#  MACH =       LINUX
+#MPP:VPP#  MACH =       VPP
+
+#### NAME OF EXECUTABLE ####
+EXE    =   $(INSTALLDIR)/simol_$(VERS).exe
+
+#### COMPILER ####
+
+## C
+#MPP NOT:IBM_MPI:LINUX#CC = cc
+#MPP:IBM_MPI#CC = cc
+#MPP:LINUX# CC  = gcc
+
+#MPP:fujLINUX# FC  = f90
+#MPP:fujLINUX# F77 = f90
+#MPP:LINUX# FC  = /usr/absoft/bin/f90
+#MPP:LINUX# F77 = /usr/absoft/bin/f90
+#MPP:HP:SGI# FC =        f90
+#MPP:HP:SGI# F77 =        f90
+#MPP:DEC# FC = f95
+#MPP:DEC# F77 = f95
+#MPP:VPP# FC =  frt
+#MPP:VPP# F77 =  frt
+
+CPP = /lib/cpp
+#MPP NOT:LINUX#CPPOPTIONS = -P -C -D_$(MACH)
+#MPP:LINUX#CPPOPTIONS = -undef -P -C -D_$(MACH)
+
+#### COMPILER FLAGS ####
+## F90BASEFLAGS free  form Fortran 90 flags (always used)
+## FBASEFLAGS   fixed form Fortran 90 flags (always used)
+## F90FLAGS    additonal Fortran 90 flags
+## F90ALTFLAGS additonal Fortran 90 alternate flags (see makro ALTFLAGS below to see for which files)
+## Additional flags can also be included in a file termed <sourcefile>.flags .
+## In this case, neither F90FLAGS nor F90ALTFLAGS are used.
+## CCFLAGS  C compiler flags
+## F77FLAGS Fortran 77
+
+#MPP:DEC# F90BASEFLAGS = -arch host -O4 -tune host
+#MPP:DEC# F90ALTFLAGS = -arch host -O0 -tune host
+#MPP:DEC# F90FLAGS = -O4
+#MPP:DEC# FBASEFLAGS = -extend_source
+#MPP:SGI## -O3 aggressive optimization that might affect floating point results.
+#MPP:SGI## -O2 (-O) turns on global optimizations. This is the default
+#MPP:SGI## --fullwarn -extend_source -nocpp
+#MPP:SGI## F90FLAGS = -g2 -DEBUG:subscript_check
+#MPP:SGI## F90ALTFLAGS = -g2 -DEBUG:subscript_check
+#MPP:SGI## LINKFLAGS = -64  -g2 -r10000 -fullwarn -nocpp
+##MPP:SGI# F90FLAGS = -O2 -OPT:Olimit=0
+#MPP:SGI# F90FLAGS = -O2 -extend_source  -OPT:Olimit=0
+#MPP:SGI# F90ALTFLAGS = -O3 -OPT:Olimit=0
+#MPP:SGI# LINKFLAGS = -64 -r10000 -fullwarn
+#MPP:SGI# CCFLAGS = -64 -r10000
+#MPP:SGI# FBASEFLAGS =  -r10000 -64 -fullwarn -extend_source -nocpp
+#MPP:SGI# F90BASEFLAGS = -64 -r10000  -freeform -fullwarn -extend_source -nocpp
+
+#MPP:LINUX# CCFLAGS = -c
+#MPP:LINUX#   F90BASEFLAGS =
+#MPP:LINUX#   FBASEFLAGS = -W132
+#MPP:LINUX#   F90FLAGS = -O -B100 -YEXT_NAMES=LCS -YEXT_SFX=_
+#MPP:LINUX#   F90ALTFLAGS = -O -B100 -YEXT_NAMES=LCS -YEXT_SFX=_ 
+#MPP:LINUX#   F77FLAGS = -O -B100 -YEXT_NAMES=LCS -YEXT_SFX=_ 
+#MPP:LINUX#   LINKFLAGS = -YEXT_NAMES=LCS -YEXT_SFX=_   -llapack -lblas
+
+#MPP:VPP## -Of full optimization
+#MPP:VPP## -Wv,-m3 extended Vectorisation messages
+#MPP:VPP## -Eeilmpu -Post extent of compiler messages
+#MPP:VPP## -NI no external procedure inlining
+#MPP:VPP## -Z <file> output file for compiler listings
+#MPP:VPP## -Fixed -w fixed form sources with extended lines
+#MPP:VPP## -X9 f90 language level
+#MPP:VPP## -Am generate .mod file
+##MPP:VPP#  F90BASEFLAGS = -Eeilmp -Post -NI -Am
+##MPP:VPP#  FBASEFLAGS = -Eeilmp -Post -NI -Fixed -w -X9 -Am
+##MPP:VPP#  F90FLAGS = -Of -Wv,-m3,-noalias
+##MPP:VPP#  F90ALTFLAGS = -Oe,-P,-E -Wv,-qs,-m3
+##MPP:VPP#  F77FLAGS = -Of -Wv,-m3 -Eeilmp -Post -NI -Fixed -w
+
+#MPP:VPP#  F90BASEFLAGS = -X9 -Of -w -Wv,-qm,-Of -Kfast -KVPP700 -Am -Ne
+#MPP:VPP#  FBASEFLAGS = -X9 -Of -w -Wv,-qm,-Of -Kfast -KVPP700 -Am -Ne
+#MPP:VPP#  F90FLAGS = -X9 -Of -w -Wv,-qm,-Of -Kfast -KVPP700 -Am -Ne
+#MPP:VPP#  F90ALTFLAGS = -X9 -Of -w -Wv,-qm,-Of -Kfast -KVPP700 -Am -Ne
+#MPP:VPP#  F77FLAGS = -X7 -Of -w -Wv,-qm,-Of -Kfast -KVPP700 -Am -Ne
+
+
+
+#### LDFLAGS, LIBRARY-PATH ####
+
+#MPP:SGI#LIBS    = -L/soft/pvm3/lib -L/soft/pvm3/lib/SGIMP64 -lfpvm3 -lpvm3 -lcomplib.sgimath -lblas
+#MPP:SGI#INCLUDE        = -I$(BASEDIR)/modules -I$(BASEDIR)/comm/pvm_dir -I/soft/pvm3/include
+
+#MPP:SGI_MPI#LIBS    = -L/soft/mpi/mpich2/mpich/lib/IRIX64/ch_shmem -lmpich -lfmpich -lcomplib.sgimath -lblas
+#MPP:SGI_MPI#INCLUDE    = -I$(BASEDIR)/modules -I/soft/mpi/mpich2/mpich/include -I$(BASEDIR)/comm/mpi_dir -I$(BASEDIR)/comm/mpi_dir/vpp
+
+#MPP:DEC#LIBS    = -ldxml
+#MPP:DEC#INCLUDE    = -I$(BASEDIR)/modules -I$(BASEDIR)/comm/serial_dir # -I$(BASEDIR)
+
+#MPP:LINUX#LIBS = -lU77 
+#MPP:LINUX#INCLUDE = -p$(BASEDIR)/modules -p$(BASEDIR)/comm/pvm_dir -I/usr/lib/pvm3/include -p$(BASEDIR)/epe_dir
+
+##MPP:VPP#  LIBS    = -Wl,-P,-dy -J -L/usr/lang/pvm/lib/VPP300 -lpvm -lmp -lpx -lm -lelf -lsocket
+#MPP:VPP#  LIBS    = 
+#MPP:VPP## -Wl,-P,-J,-dn mark as parllel Vector executable
+#MPP:VPP#  INCLUDE    = -I$(BASEDIR)/modules -I$(BASEDIR)/comm/pvm_dir -I/usr/lang/pvm/include
+#MPP:VPP#LIBS_F77   =
+
+
+
+# for makedependent:    MODOBJS
+
+MODOBJS = smlcom.o	\
+	xyzsml.o	\
+	zzzsml.o	\
+	numsml.o	\
+	zarsml.o	\
+	symsml.o	\
+	simol_io.o	\
+	slspar_module.o \
+	optsml.o	\
+	flpocm.o	\
+	evout.o		\
+	givens.o 	\
+	futg.o 		\
+	vecnrm.o 	\
+	matinv.o 	\
+	vecprt.o 	\
+	freq.o		\
+	qnstep1.o	\
+	coortype_module.o	\
+	math_module.o \
+	simol.o  \
+		../modules/type_module.o \
+	../eis/rs.o \
+		../eis/rsg.o \
+		../eis/tred2.o \
+		../eis/tqlrat.o \
+		../eis/tql2.o \
+		../eis/tred1.o \
+		../eis/reduc.o \
+		../eis/htribk.o \
+		../eis/rebak.o  \
+	eigensolver.o 
+#	../lapack/dgetri.o \
+#		../lapack/dswap.o \
+#		../lapack/dtrsm.o \
+#		../lapack/dtrti2.o \
+#		../lapack/dtrtri.o \
+#		../lapack/ilaenv.o \
+#		../lapack/dgetf2.o \
+#		../lapack/dgetrf.o \
+#		../lapack/dlaswp.o \
+#		../lapack/idamax.o \
+#		../lapack/xerbla.o \
+#		../lapack/lsame.o \
+#		../lapack/dscal_lapack.o \
+#		../lapack/dgetrs.o \
+#		../lapack/dlaset.o \
+#		../lapack/dlamch.o \
+#		../lapack/dlabad.o \
+#		../lapack/dlange.o \
+#		../lapack/dlascl.o \
+#		../lapack/dgeqrf.o \
+#		../lapack/dormqr.o \
+#		../lapack/dgelqf.o \
+#		../lapack/dormlq.o \
+#		../lapack/dlassq.o \
+#		../lapack/dgeqr2.o \
+#		../lapack/dlarft.o \
+#		../lapack/dlarfb.o \
+#		../lapack/dorm2r.o \
+#		../lapack/dgelq2.o \
+#		../lapack/dorml2.o \
+#		../lapack/dlarfg.o \
+#		../lapack/dgemv.o \
+#		../lapack/dtrmv.o \
+#		../lapack/dcopy.o \
+#		../lapack/dtrmm.o \
+#		../lapack/dgemm.o \
+#		../lapack/dlarf.o \
+#		../lapack/dnrm2.o \
+#		../lapack/dlapy2.o \
+#		../lapack/dger.o \
+#		../lapack/dgels.o \
+.SUFFIXES: .f .fp .f90  .f90p  .o .mod .compile .c 
+#### implicit rules #### 
+#==================================================== 
+#MPP NOT:VPP:VPP_MPI:VPP_SER START#
+.f.o:
+	$(BINDIR)/compile $(@D) $(<F)  $(MACH) \
+	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.fp.o:
+	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f.mod:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.fp.mod:
+	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+#MPP END#
+#==================================================== 
+#MPP:VPP:VPP_MPI:VPP_SER START# 
+.f.o:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.fp.o:
+	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f.mod:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.fp.mod:
+	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+#MPP END#
+
+#MPP:HP:SGI:SGI_MPI:DEC:LINUX START#   
+.f90.o:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+# type "make any_module.compile" to rebuild it ignoring deps: 
+
+.f90.compile:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90.mod:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90p.o:
+	rm -f $(*).cpp
+	$(CPP) $(CPPOPTIONS) -I$(BASEDIR) $(<) > $(*).cpp
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(*F).cpp $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+	rm -f $(*).cpp
+
+.f90p.mod:
+	rm -f $(*).cpp 
+	$(CPP) $(CPPOPTIONS) -I$(BASEDIR) $(<) > $(*).cpp 
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(*F).cpp $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+	rm -f $(*).cpp 
+
+# type "make any_module.compile" to rebuild it ignoring deps:
+.f90p.compile:
+	rm -f $(*).cpp
+	$(CPP) $(CPPOPTIONS) -I$(BASEDIR) $(<) > $(*).cpp
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(*F).cpp $(MACH) \ 
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+	rm -f $(*).cpp   
+
+#MPP END#  
+#====================================================
+#MPP:IBM:IBM_PVM:IBM_SER:IBM_MPI START#
+.f90.o:
+	$(BINDIR)/compile -cp $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90.compile: 
+	$(BINDIR)/compile -cp $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90.mod:
+	$(BINDIR)/compile -cp $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90p.o:
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90p.compile: 
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90p.mod:
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+#MPP END#
+
+#MPP:VPP:VPP_MPI:VPP_SER START#
+.f90.o:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f90.compile:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f90.mod:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)' 
+.f90p.o:
+	rm -f $(*).cpp
+	$(CPP) $(CPPOPTIONS) $(<) > $(*).cpp 
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(*F).cpp $(MACH) \ 
+	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+	rm -f $(*).cpp
+.f90p.mod:
+	rm -f $(*).cpp
+	$(CPP) $(CPPOPTIONS) $(<) > $(*).cpp 
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(*F).cpp $(MACH) \
+	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+	rm -f $(*).cpp
+.f90p.compile:
+	rm -f $(*).cpp
+	$(CPP) $(CPPOPTIONS) $(<) > $(*).cpp
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(*F).cpp $(MACH) \
+	$(FC) '$(F90BASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+	rm -f $(*).cpp
+#MPP END#
+.c.o:
+	( cd $(@D); \
+	rm -f  $(@F) ; \
+	$(CC) -c $(CCFLAGS) $(INCLUDE) $(<F) -o $(@F); \
+	test -f $(@F) )
+# end of implicit rules
+
+##### EXECUTABLE ##### 
+
+
+#MPP:SGI:SGI_SER:SGI_MPI:DEC:LINUX START# 
+$(EXE):	$(ALTFLAGS) $(MODOBJS)
+	rm -f $(MODOBJS:.o=.newmod)
+	$(FC) $(LINKFLAGS) -o	$(EXE)	$(MODOBJS)  $(LIBS) 
+	chmod 777 $(EXE)
+2gx:
+	$(FC) $(F90BASEFLAGS) -o $(XYZ2GX)  xyz2gx.f90
+	chmod 777 $(XYZ2GX)
+
+weblab:
+	cp ./2weblab $(XYZ2WEBLAB)
+	chmod 777 $(XYZ2WEBLAB)
+
+2gsn:
+	$(FC) $(F90BASEFLAGS) -o $(TXT2GSN) txt2gsn.f90
+	chmod 777 $(TXT2GSN)
+#MPP END# 
+
+
+#MPP:VPP START#
+$(EXE): $(ALTFLAGS) $(OBJS) $(MODOBJS) usleep_.o $(MEMOBJS) $(OWNLIBS)
+	rm -f $(MODOBJS:.o=.newmod)
+	$(FC) -o $(EXE) $(OBJS) $(MODOBJS) usleep_.o $(MEMOBJS) $(OWNLIBS) $(LIBS)
+
+#MPP END#
+
+
+# makedependent start insert
+# makedependent end insert
+
+##### SPECIAL COMMANDS #####
+
+sims:
+#MPP:DEC#	sed '/insert_mach/r dec_mach' sim|sed 's/<VERS>/$(VERS)/g'> $(SIM)_$(VERS)
+#MPP:SGI#	sed '/insert_mach/r sgi_mach' sim|sed 's/<VERS>/$(VERS)/g'> $(SIM)_$(VERS)
+#MPP:LINUX#	sed '/insert_mach/r linux_mach' sim|sed 's/<VERS>/$(VERS)/g'> $(SIM)_$(VERS)
+#MPP:VPP#	sed '/insert_mach/r vpp_mach' sim|sed 's/<VERS>/$(VERS)/g'> $(SIM)_$(VERS)
+	chmod 755 $(SIM)_$(VERS)
+#IPP:SGI:LINUX_THEO#	chgrp theochem $(SIM)_$(VERS)
+#IPP:LINUX_KRSK#	chgrp newusers $(SIM)_$(VERS)
+#MPP:DEC#	chgrp users $(SIM)_$(VERS)
+
+clean:          modclean  #rm all objects
+	rm -f $(MODOBJS)
+
+modclean:
+	rm -f $(MODOBJS:.o=.mod)
+	rm -f $(MODOBJS:.o=.newmod)
+depclean:
+	rm -f $(MODOBJS:.o=.dep)
+
+
+backupclean: #rm backup files automatically created by emacs, merges, makedependent
+	rm -f *~ */*~ *.contrib* */*.contrib* *.merge* */*.merge* *.old */*.old findmerge.* *.oldmod */*.oldmod
+

@@ -1,0 +1,245 @@
+
+* DYNAMIC LOAD BALANCING
+
+The library created in this sub-folder (called libdlb.a) takes care of
+dynamical load balancing.  There are two different cases possible: one
+where all jobs are equal in name and a second one where each job has a
+special color.  There are  6 different functions altogether, where two
+are common ones,  while of the other each two belong  to the case with
+and without color.
+
+* DIFFERENT VARIANTS
+
+Which of  the different variants of  the DLB implementions  is used is
+selected by  DLB_VARIANT. In the  case of DLB_VARIANT  = 0 there  is a
+static distribution, where no  communication between the processors is
+used.
+
+DLB_VARIANT = 1:  is a remote memory access (RMA)  method. When RMA is
+    really asynchronous, or  done by the hardware, this  method can be
+    very effective.
+
+DLB_VARIANT  = 2 and  DLB_VARIANT =  3: Both  methods use  threads for
+    making the DLB algorithm work.  They need a higher level of thread
+    safety  than  the normal  MPI_INIT().   They  should  be run  with
+    MPI_INIT_THREAD,  where  the  variant   2  needs  at  least  level
+    MPI_THREAD_SERIALIZED, while  variant 3 needs MPI_THREAD_MULTIPLE.
+    The start some threads to handle the MPI communication between the
+    processors. Variant  3 needs a  good thread handling  for blocking
+    MPI  calls. If  this  thread alternates  nicely  with the  working
+    thread this  method should  be better than  variant 2,  where this
+    alternation  is done  by hand.  But  MPI has  often an  aggressive
+    polling by blocking calls, where  the variant 3 easily doubles the
+    time requirement.  The variants need also POSIX Threads available.
+
+* ACTING OF DLB
+
+DLB takes  care about the available  job numbers. On  request it gives
+several of these to a processor to work on. It takes care that each of
+them is given back exactly once.   If a processor runs out of jobs, he
+can, for DLB_VARIANT  > 0, ask the other processors  to give them some
+of theirs.
+
+* INTERFACE
+
+All functions  have to  be called on  all processors.  The  two common
+functions are:  dlb_init() and dlb_finalize().  They  have to surround
+the use of the other functions.  When calling dlb_init() MPI has to be
+already  initialized,  also dlb_finalize()  has  to  be called  before
+MPI_FINALIZE().   Other  than  the   MPI  counterparts  there  is  the
+possibility to finalize and initialize  DLB in between some uses.  The
+function  dlb_init()  has the  argument  world,  which  should be  the
+communicator  of MPI, of  which DLB  makes a  private copy.   Thus the
+calculations with DLB should be surrounded by:
+
+    call dlb_init(world)
+    ...
+    call dlb_finalize()
+
+The calculation  itself is done  by the two functions  dlb_setup() and
+dlb_give_more()  or their  counterparts with  colors dlb_setup_color()
+and dlb_give_more_color().
+
+dlb_setup() will take the number  of available jobs as an argument. It
+will already perform a static distribution.
+
+dlb_give_more() has two arguments:  the first, MAXJOBS, stands for the
+number of  job indices it wants  at once.  The second  argument is the
+interval jobs, which  the processor should now work  on.  The work the
+processor   should   then   do    is   between   jobs(1)   +   1   and
+jobs(2). dlb_give_more() is a function, which will return true as long
+as there a  jobs and false if  there are none. In the  last case there
+will be also jobs(1) >= jobs(2). If it returns true there is always at
+least one job.  But there may be also fewer, if the processor has only
+few, this  has nothing to do  with the amount of  jobs, all processors
+have.  If it returns false,  all processors have terminated (except in
+case  DLB_VARIANT  = 0).   Otherwise  it  will  wait in  the  function
+dlb_give_more() if the termination has not yet confirmed.
+
+Usage:
+
+    call dlb_setup(NJOBS)
+
+    do while (dlb_give_more (MAXJOBS, jobs))
+      ...
+
+Here NJOBS is  integer of idlb_kind, MAXJOBS is  integer of idlb_kind,
+jobs(2) is  an integer  array of idlb_kind  DLB provides  the specific
+integer kind idlb_kind,  which is currently an 8-byte  integer. But as
+this is  able to change and in  order to have the  code always running
+with the current setting make your integer of the idlb_kind
+
+The  difference of  the color  case, is  that here  the color  is also
+considered.  In  dlb_setup_color() one gives a  distribution, with the
+colors, thus  it gets an integer  array containing the  number of jobs
+for  the corresponding  color (for  the i'th  element the  color  i is
+used).  dlb_give_more_color() will give  in addition to the jobs their
+color.  Furthermore  it ensures that all  jobs it gives  back have the
+same color.
+
+Usage:
+
+    call dlb_setup_color(distr)
+
+    do while (dlb_give_more_color (MAXJOBS, color, jobs))
+      ...
+
+Here distr is integer(idlb_kind)  array of size (many_colors), MAXJOBS
+and color are  integers of the idlb_kind, jobs(2)  is integer array of
+idlb_kind.
+
+The third  case is using a  round robin over the  regions.  Thus every
+process  gets every n'th  task, where  n is  the number  of processes.
+There  is   a  significant  difference   between  dlb_give_more()  and
+dlb_give_more_rr():  the output  jobs  is of  different  size and  has
+different meaning.  For the case  of dlb_give_more() the slice of task
+IDs, included in it are the  tasks with jobs(1) + 1: jobs(2): jobs(3),
+where jobs(3) is the stride for the succeding job IDs.
+
+Usage:
+
+    call dlb_setup_rr(NJOBS)
+
+    do while (dlb_give_more_rr (MAXJOBS, jobs))
+      ...
+
+Additionally  there  is a  function  for  printing  statistics. It  is
+possible to not print the output directly (see output_level below) but
+also     to    give    them     summarized    with     the    function
+dlb_print_statistics(). The output of  this function is independent on
+the  output_level  of the  DLB  module but  the  amount  of output  is
+specified by an  variable, given directly to it.   This functions need
+some reuse functions,  thus it could cause some  overhead. In case the
+function   gets  level   =   0   this  step   is   also  omitted   and
+dlb_print_statistics()  will  return   immediately.   For  the  static
+back-end  of DLB  only level  0 and  1 give  reasonable  results.  the
+statistic function expects to get an integer with 4 bytes.
+
+The output  specified with the  level is always including  all smaller
+levels:
+
+level  | new output
+0      | None
+1      | SUM(time spend in dlb_give_more())  [last time separated]
+2      | About how long waited for new tasks
+3      | Time of last two batches spend outside DLB
+4      | Statistics about task length (time between dlb_give_more()
+         calls) + complete time between dlb_setup() and the finish of
+         DLB
+
+Usage:
+
+    call dlb_print_statistics(level)
+
+Here level is an integer.
+
+* DLB AND THREAD SAFETY
+
+Different  implementations   have  different  requirements  concerning
+thread  safety,  especially  as  some  of  the  implementations  build
+explicitly  on them.  MPI provides  some  different MPI_THREAD_LEVELS,
+which  show what could  be expected  in that  regard from  the current
+implementation.  Each DLB variant  can show the required thread level,
+as it  is stored  in the variable  DLB_THREAD_REQUIRED, which  is also
+handed over to the general DLB  wrapper.  But be aware that the thread
+level is only for the usage of DLB. It is assumed that DLB will be the
+only one to do some message  passing in there. If the code, which uses
+DLB  should have  also some  thread level  requirements one  of course
+needs to use the higher one, which should cause no problems to DLB. If
+in the parts  of the code using DLB contain  some message passing also
+one  even might  to raise  the level  again. This  of course  does not
+affect MPI_THREAD_SINGLE and might not even affect MPI_THREAD_FUNNELED
+but    MPI_THREAD_SERIALIZED     should    then    be     raised    to
+MPI_THREAD_MULTIPLE.
+
+
+* EXAMPLE
+
+  use mpi
+  use dlb
+  integer :: ierr, prov, i
+  integer(idlb_kind) :: NJOBS, MAXJOBS, jobs(2)
+  integer(idlb_kind) :: distr(4), color
+
+  call MPI_INIT_THREADS(MPI_THREAD_MULTIPLE, prov, ierr)
+
+  call dlb_init(MPI_COMM_WORLD)
+
+  NJOBS = 20
+  MAXJOBS = 2
+
+  call dlb_setup(NJOBS)
+  do while (dlb_give_more (MAXJOBS, jobs))
+     do i = jobs(1) + 1, jobs(2)
+        print *, "Doing job", i
+     enddo
+  enddo
+
+  MAXJOBS = 3
+  distr(1) = 10
+  distr(2) = 13
+  distr(3) = 1
+  distr(4) = 9
+
+  call dlb_setup_color(distr)
+  do while (dlb_give_more_color (MAXJOBS, color, jobs))
+     do i = jobs(1) + 1, jobs(2)
+        print *, "Doing job", i, "of color", color
+     enddo
+  enddo
+
+  call dlb_setup_rr(NJOBS)
+  do while (dlb_give_more_rr (MAXJOBS, jobs))
+     do i = jobs(1) + 1, jobs(2), jobs(3)
+        print *, "Doing job", i
+     enddo
+  enddo
+
+  call dlb_finalize()
+
+  call MPI_FINALIZE(ierr)
+
+* COMPILATION
+
+If DLB is used external from the ParaGauss repository set DLB_EXTERNAL
+= 1 on top of the DLB Makefile.
+
+** OUTPUT LEVEL
+
+DLB is able  to run without producing output. But  it may also provide
+some  informations and  statistics  up to  very detailed  informations
+about its  behavior.  What it  will print of  them is selected  by the
+output level.  The output  level is defined by parameter OUTPUT_BORDER
+in the Makefile. This output is independent to the output of the
+print_statistics function. Be aware that every process creates its
+own output independent of the others (expect for OUTPUT_BORDER<=1)
+thus only use them if you know that the IO routines are thread save.
+
+OUTPUT_BORDER = 0: no output at all
+OUTPUT_BORDER = 1: at initialization it will be printed which DLB
+	           variant is used
+OUTPUT_BORDER = 2: the DLB variants will also provide some more
+                   statistics with summarized informations about the
+                   run of DLB
+OUTPUT_BORDER > 2: additional output will appear with time stamps at
+                   some selected places

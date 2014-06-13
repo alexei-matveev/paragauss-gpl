@@ -1,0 +1,10 @@
+perl -p -e 's/optimization\s*=\s*(false|f)/OPTIMIZATION = TRUE/i' optimizer.input > optimizer.inputT
+mv optimizer.inputT optimizer.input
+perl -p -e 's/epe_relaxation\s*=\s*(true|t)/EPE_RELAXATION = FALSE/i; \
+            s/OPERATIONS_OPTIMIZER_ONLY\s*=\s*(true|t)/OPERATIONS_OPTIMIZER_ONLY=f/i; \
+            s/operations_epe_lattice\s*=\s*(true|t)/OPERATIONS_EPE_LATTICE = FALSE/i; \
+            s/&tasks\s*task\s*=\s*"Epe_lattice"/#&tasks task = "Epe_lattice"/i; \
+            s/max_geo_iteration\s*=\s*\d+/MAX_GEO_ITERATION = 25/i' input > temp_input
+mv  temp_input input
+touch no_epe_relaxation\ script\ executed
+

@@ -1,0 +1,564 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\begin_preamble
+\usepackage[dvips]{graphicx}
+\renewcommand{\baselinestretch}{1.25}
+\textheight 24.2cm
+\textwidth 16.0cm
+\textheight 24.0cm
+\topmargin  -0.5cm
+\headheight 0cm
+\headsep    0cm
+\hoffset -2.0cm
+\sloppy
+
+
+\newcommand{\drv}[2]{\biggl(\displaystyle{\frac{\partial #1}{\partial #2}}\biggr)}
+\newcommand{\drvs}[2]{\displaystyle{\frac{\partial #1}{\partial #2}}}
+\newcommand{\dsum}[1]{\displaystyle{\sum_{#1}}}
+\newcommand{\ddrv}[3]{\biggl(\displaystyle{ \frac{\partial^2 #1}{\partial #2\partial #3} }\biggr)}
+\newcommand{\four}[2]{(#1||#2)}
+\newcommand{\bv}[1]{{\bf #1}}
+\newcommand{\fourc}[2]{[#1||#2]}
+\end_preamble
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize 11
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Part*
+
+On status of the second derivatives implementation
+\layout Enumerate
+
+Derivatives of environmental nuclear charges (VN, done)
+\layout Enumerate
+
+Extention of code on spinpolirized case (VN, done)
+\layout Enumerate
+
+Extention of code on the GGA case (VN, done).
+ Becke exchange(VN) and other functionals...(SB)
+\layout Enumerate
+
+New pseudopotentials with separated radial and angle factors(AM,done)
+\layout Enumerate
+
+Primitive derivatives of nonlocal PP contributions (VN, angle part - done,
+ radial parts - needs some cleaning )
+\layout Enumerate
+
+Primitive derivatives of local PP (AM, angle and radial parts done )
+\layout Enumerate
+
+Interface to already implemented data flow structure (VN, in progress)
+\layout Enumerate
+
+Primitive derivatives of scalar relativistic contributions (AM, done)
+\layout Enumerate
+
+Restructuring of gradient code to prepare relativistic transformations of
+ derivatives(AM, done)
+\layout Enumerate
+
+Relativistic transformations of derivatives (to be done)
+\layout Enumerate
+
+Optimization of speed and memory usage in treating of XC part is still possible.
+ Expert testing for extended systems ( to be done)
+\layout Enumerate
+
+Complete nontotalsymetric spectral analysis( to be done)
+\layout Enumerate
+
+Moving atoms option for gradients and derivatives (VV, to be done throughout)
+\layout Enumerate
+
+Use with updated optimizer code with analytical recalculation of Hessian
+ and consequent updates(VV)
+\newline 
+
+\layout Title
+
+
+\series bold 
+\size large 
+On implementation of KS energy second derivatives
+\layout Paragraph*
+\align left 
+Second derivatives of KS energy are given as follows: 
+\size large 
+
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+{\mathcal{E}}_{KS}^{xy}=\dsum{\mu\nu}P_{\mu\nu}^{y}H_{\mu\nu}^{x}+\dsum{\mu\nu}P_{\mu\nu}H_{\mu\nu}^{xy}-\dsum{\mu\nu}W_{\mu\nu}^{y}S_{\mu\nu}^{x}-\dsum{\mu\nu}W_{\mu\nu}S_{\mu\nu}^{xy}+\\
+\phantom{{\mathcal{E}}_{KS}^{xy}=}\dsum{\mu\nu}P_{\mu\nu}^{y}\dsum{k}a_{k}[\mu\nu|f_{k}]^{x}+\dsum{\mu\nu}P_{\mu\nu}\dsum{k}a_{k}^{y}[\mu\nu|f_{k}]^{x}+\dsum{\mu\nu}P_{\mu\nu}\dsum{k}a_{k}[\mu\nu|f_{k}]^{xy}-\\
+\phantom{{\mathcal{E}}_{KS}^{xy}=}\dsum{k,l}a_{k}^{y}a_{l}[f_{k}|f_{l}]^{x}-\frac{1}{2}\dsum{k,l}a_{k}a_{l}[f_{k}|f_{l}]^{xy}+\\
+\phantom{{\mathcal{E}}_{KS}^{xy}=}E_{xc}^{[y](x)}+E_{xc}^{(x)(y)}\end{array}\label{grad_grad_E_KS}\end{equation}
+
+\end_inset 
+
+ To find implicit derivatives 1st order CPKS equations are solved
+\layout Standard
+
+
+\size large 
+
+\begin_inset Formula \begin{equation}
+\bv{u}=\bv{u}^{0}+\bv{A}\bv{u}\label{CPHF_matrix}\end{equation}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\size large 
+where 
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\bv{u}_{ai}=U_{ai}^{(1)},\;\;\bv{u}_{(ai)}^{0}={\displaystyle {\frac{Q_{ai}^{(1)}}{\varepsilon_{a}(0)-\varepsilon_{i}(0)}}}\end{array}\label{CPHF_defs}\end{equation}
+
+\end_inset 
+
+
+\layout Standard
+
+Here
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+Q_{ai}={\displaystyle \sum_{k}a_{k}^{(y)}}[ai|f_{k}]+{\mathcal{H}}_{ai}^{y}+{\displaystyle \sum_{k}a_{k}}[ai|f_{k}]^{(y)}-{\mathcal{S}}_{ai}^{y}\varepsilon_{i}\\
+\begin{array}{l}
+-\dsum{kl}\biggl\{\;\dsum{mn}\;[ai|f_{m}]\; G_{mn}\;[f_{n}|kl]\;+\;\bigg\langle ai\bigg|\drv{v_{xc}}{\rho}\bigg|kl\bigg\rangle\;\biggr\}{\mathcal{S}}_{kl}^{y}\end{array}\end{array}\label{Qmat}\end{equation}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\size large 
+
+\begin_inset Formula \begin{equation}
+A_{ai,bj}=\frac{\biggl\{\;\dsum{mn}\;[ai|f_{m}]\; G_{mn}\;[f_{n}|bj]\;+\;\bigg\langle ai\bigg|\drv{v_{xc}}{\rho}\bigg|bj\bigg\rangle\;\biggr\}}{(\varepsilon_{a}-\varepsilon_{i})}\label{Amat}\end{equation}
+
+\end_inset 
+
+
+\layout Standard
+
+and
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+G_{mn}=\dsum{j}F_{mj}Z_{jn}^{-1}, & \quad\qquad F_{mj}=\delta_{mj}-\left\langle \bar{f}_{j}\right\rangle \bar{\bar{a}}_{m}\\
+\left\langle \bar{f}_{j}\right\rangle =\frac{f_{j}}{{\textstyle {\displaystyle \sum_{k}}f_{k}}\bar{\bar{a}}_{k}} & {\displaystyle \quad\qquad\sum_{k}Z_{jk}}\bar{\bar{a}}_{k}=\left\langle f_{k}\right\rangle \end{array}\label{g_mn}\end{equation}
+
+\end_inset 
+
+
+\layout Standard
+
+Only the total symmetric 2nd order derivatives are presently calculated,
+ thus CPKS uquatins are solved only for total symmetric projections of the
+ 1st order derivatives.
+ Analitical calculations of second order derivatives would scale in the
+ same way as they numerical calculations as calculations of parametrization
+ matrix for each totalsymmetric gradient projection is operationaly similar
+ to calculation and assembling hamiltonian matrices in corresponding single
+ point calculations made for each of totalymetric nuclear dispacements of
+ the numerical sheme.
+\layout Paragraph
+
+
+\size large 
+To do such calculations the following steps are executed:
+\layout Enumerate
+
+In post-hoc module partial explicite 2nd order total symmetric and transformed
+ to Cartesian form derivatives of 
+\begin_inset Formula $E_{xc}^{(x)(y)}$
+\end_inset 
+
+ are calculated for prescribed portion of grid points.
+ For this complete nuclear displacements 2nd order density derivatives are
+ calculated.
+ No complete 2nd order density derivatives have been calculated up to now.
+ Also 2nd order weight derivatives are calculated.
+ Correction for moving grid applied
+\size large 
+
+\begin_inset Formula \begin{align}
+E_{xc}^{\left(\lambda\right)\left(\gamma\right)} & =\sum_{g}\omega_{g}^{\lambda\gamma}f_{xc}+\sum_{g}\omega_{g}^{\lambda}\left[\frac{\partial f_{xc}}{\partial\rho}\rho^{\left(\gamma\right)}+2\frac{\partial f_{xc}}{\partial\gamma}\left(\nabla\rho\right)\left(\nabla\rho\right)^{\left(\gamma\right)}\right]+\nonumber \\
+ & \sum_{g}\omega_{g}^{\gamma}\left[\frac{\partial f_{xc}}{\partial\rho}\rho^{\left(\lambda\right)}+2\frac{\partial f_{xc}}{\partial\gamma}\left(\nabla\rho\right)\left(\nabla\rho\right)^{\left(\lambda\right)}\right]+\nonumber \\
+ & \sum_{g}\omega_{g}[\frac{\partial^{2}f_{xc}}{\partial\rho^{2}}\rho^{\left(\lambda\right)}\rho^{\left(\gamma\right)}+2\frac{\partial^{2}f_{xc}}{\partial\rho\partial\gamma}\left(\nabla\rho\right)\left(\nabla\rho\right)^{\left(\gamma\right)}\rho^{\left(\lambda\right)}+\nonumber \\
+ & \frac{\partial f_{xc}}{\partial\rho}\rho^{\left(\lambda\right)\left(\gamma\right)}+2\frac{\partial^{2}f_{xc}}{\partial\gamma\partial\rho}\left(\nabla\rho\right)\left(\nabla\rho\right)^{\left(\lambda\right)}\rho^{\left(\gamma\right)}+\nonumber \\
+ & 4\frac{\partial^{2}f_{xc}}{\partial\gamma^{2}}\left(\nabla\rho\right)^{2}\left(\nabla\rho\right)^{\left(\lambda\right)}\left(\nabla\rho\right)^{\left(\gamma\right)}+2\frac{\partial f_{xc}}{\partial\gamma}\left(\nabla\rho\right)^{\left(\gamma\right)}\left(\nabla\rho\right)^{\left(\lambda\right)}+\nonumber \\
+ & 2\frac{\partial f_{xc}}{\partial\gamma}\left(\nabla\rho\right)\left(\nabla\rho\right)^{\left(\lambda\right)\left(\gamma\right)}],\end{align}
+
+\end_inset 
+
+
+\layout Enumerate
+
+On each host for prescribed list of quadruples explicite derivatives of
+ T and S matrices in basis of primitive functions are executed in old ss-,
+ ls- and ll- procedures.
+\layout Enumerate
+
+2nd order derivatives of nuclear attraction and Coulomb interactions are
+ calculated with new factorized Dunlap expressions using one only pice of
+ algorithm instead of 6 different pieces of code which would be required
+ with old technique.
+\layout Enumerate
+
+2nd order total symmetric derivatives of two center coulomb energy contributions
+ are calculated
+\layout Enumerate
+
+Above explicite second order derivatives integrals are transformed to integrals
+ in basis of contracted symmetrized functions and they contributions to
+ the total symmetric derivative projections are calculated.
+\layout Enumerate
+
+1st order total symmetric partial coulomb 2 and 3 center derivatives split
+ over fit functions index are calculated to be used in calculations of fit
+ coefficients derivatives
+\begin_inset Formula \begin{equation}
+a_{m}^{(y)}=\sum_{m}G_{mn}[f_{m}|\rho-\tilde{\rho}]^{(y)}\label{exp_fit_gr}\end{equation}
+
+\end_inset 
+
+
+\layout Enumerate
+
+Partial total-symmetric 1st order derivatives from the quadruples of given
+ host 
+\begin_inset Formula $S_{ij}^{1}$
+\end_inset 
+
+,
+\begin_inset Formula $h_{ij}^{1}$
+\end_inset 
+
+, 
+\begin_inset Formula $S_{ia}^{1}$
+\end_inset 
+
+, 
+\begin_inset Formula $h_{ia}^{1}$
+\end_inset 
+
+ for matrixes in MO basis are calculated, i,j - indexes of occupied orbitals,
+ a,(b) -indexes of the empty MO.
+ 
+\begin_inset Formula $h_{pq}^{1}={\mathcal{H}}_{pq}^{y}+{\displaystyle \sum_{k}a_{k}}[pq|f_{k}]^{(y)}$
+\end_inset 
+
+.
+ Required to construct CPKS matrices.
+\layout Enumerate
+
+Partial 
+\begin_inset Formula $S_{ij}^{1}$
+\end_inset 
+
+,
+\begin_inset Formula $h_{ij}^{1}$
+\end_inset 
+
+, 
+\begin_inset Formula $S_{ia}^{1}$
+\end_inset 
+
+, 
+\begin_inset Formula $h_{ia}^{1}$
+\end_inset 
+
+ are communicated to master to form complete 1st order derivative matrices
+ and then they broadcasted back to each slave host.
+ The same is done for 1st order total symmetric partial coulomb 2 and 3
+ center derivatives split over fit functions.
+\layout Enumerate
+
+
+\begin_inset Formula $G_{mn}$
+\end_inset 
+
+matrix is calculated on master and communicated to all slave hosts
+\layout Enumerate
+
+On each host belonging to it 
+\begin_inset Formula $[ai|f_{m}]$
+\end_inset 
+
+ integrals are calculated to be reused on CPKS iterations.
+\layout Enumerate
+
+Partial intemediate vectors 
+\begin_inset Formula $X_{n}$
+\end_inset 
+
+used to calculate coulomb parts of 
+\begin_inset Formula $Q_{ai}$
+\end_inset 
+
+ ,
+\begin_inset Formula \begin{equation}
+X_{n}^{(\lambda)}=-2\sum_{m}G_{mn}\sum_{kl}[kl|f_{m}]S_{kl}^{(\lambda)}\label{gvec_interm}\end{equation}
+
+\end_inset 
+
+ are calculated on each host, communicated to master to form complete vector
+ which is broadcasted to all slaves.
+\layout Enumerate
+
+Belonging to each host coulomb parts of 
+\begin_inset Formula $Q_{ai}$
+\end_inset 
+
+ matrix are calculated 
+\begin_inset Formula \begin{equation}
+Q_{ai}^{\left(\lambda\right),C}=\sum_{m}a_{m}[ai|f_{m}]^{(\lambda)}+\sum_{m}a_{m}^{(\lambda)}[ai|f_{m}]+\sum[ai|f_{n}]X_{n}^{(\lambda)}\label{coul_Qfactors}\end{equation}
+
+\end_inset 
+
+
+\layout Enumerate
+
+On each host partial 
+\begin_inset Formula $Q_{ai}$
+\end_inset 
+
+exchange contributions are calculated.
+ The required expressions are coded presently for vwn and x-alpha potentials
+\size large 
+
+\begin_inset Formula \begin{align}
+Q_{ai}^{\left(\lambda\right),XC} & \equiv\left\langle a|v_{xc}|i\right\rangle ^{\left(\lambda\right)}+\left\langle a|v_{xc}^{(\lambda)}|i\right\rangle -\nonumber \\
+ & 2\sum_{g}\omega_{g}\sum_{\mu\nu}C_{\mu a}C_{\nu i}\sum_{kl}^{occ}C_{\theta k}C_{\delta l}\left(A_{\mu\nu}\chi_{\theta}\chi_{\delta}+B_{\mu\nu}\nabla\left(\chi_{\theta}\chi_{\delta}\right)\right)\overline{S}_{kl}^{\lambda}.\end{align}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{align}
+\left\langle a|v_{xc}^{(\lambda)}|i\right\rangle  & =\sum_{g}\omega_{g}\sum_{\mu\nu}C_{\mu a}C_{\nu i}\left[A_{\mu\nu}\rho^{(\lambda)}+B_{\mu\nu}\left(\nabla\rho\right)^{(\lambda)}\right],\label{eq_xc_pot_derivative}\\
+A_{\mu\nu} & \equiv\frac{\partial^{2}f_{xc}}{\partial\rho^{2}}\chi_{\mu}\chi_{\nu}+2\frac{\partial^{2}f_{xc}}{\partial\rho\partial\gamma}\left(\nabla\rho\right)\left(\nabla\left(\chi_{\mu}\chi_{\nu}\right)\right),\\
+B_{\mu\nu} & \equiv2\frac{\partial^{2}f_{xc}}{\partial\rho\partial\gamma}\left(\nabla\rho\right)\chi_{\mu}\chi_{\nu}+4\frac{\partial^{2}f_{xc}}{\partial\gamma^{2}}\left(\nabla\rho\right)^{2}\left(\nabla\left(\chi_{\mu}\chi_{\nu}\right)\right)+\nonumber \\
+ & 2\frac{\partial f_{xc}}{\partial\gamma}\left(\nabla\left(\chi_{\mu}\chi_{\nu}\right)\right).\end{align}
+
+\end_inset 
+
+
+\size default 
+Partial 
+\begin_inset Formula $Q_{ai}$
+\end_inset 
+
+ contribution are communicated to master to form complete vector
+\layout Enumerate
+
+From now on matrices for an auxiliary set of linear CPKS equations begin
+ to be filled in.
+ It is considered that 
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+u=\sum_{k}c_{k}B_{k}\\
+B_{0}=u_{0}\\
+B_{n+1}=AB_{n}-\sum_{m=0}^{n}\beta_{mn}B_{m}\\
+\beta_{mn}=\frac{B_{m}^{+}AB_{n}}{\gamma_{m}}\\
+\gamma_{m}=B_{m}^{+}B_{m}\end{array}\label{int-aux}\end{equation}
+
+\end_inset 
+
+Coefficients 
+\begin_inset Formula $c_{k}$
+\end_inset 
+
+are solution of the following type linear equations
+\begin_inset Formula \begin{equation}
+\begin{array}{ccccc}
+(1-\beta_{00}) & -\beta_{01} & -\beta_{02} &  & 1\\
+-1 & (1-\beta_{11}) & -\beta_{12} & = & 0\\
+0 & -1 & (1-\beta_{22}) &  & 0\end{array}\label{aux_CPKS}\end{equation}
+
+\end_inset 
+
+
+\layout Enumerate
+
+To calculate Coulomb part of 
+\begin_inset Formula $AB_{n}$
+\end_inset 
+
+matrix on each host a partial vector 
+\begin_inset Formula \begin{equation}
+Z_{l}=\sum_{k}G_{kl}\sum_{bj}[bj|f_{k}]\left\{ B_{n}\right\} _{bj}\label{ini_ABi}\end{equation}
+
+\end_inset 
+
+is calculated and communicated to master to calculate complete vector.
+ Then it is broadcasted to all hosts to find partial 
+\begin_inset Formula $AB_{n}$
+\end_inset 
+
+contributions
+\begin_inset Formula \begin{equation}
+\left\{ AB_{n}\right\} _{ai}=\sum_{l}Z_{l}\sum_{ai}[ai|f_{l}]\label{fin-ABi}\end{equation}
+
+\end_inset 
+
+
+\layout Enumerate
+
+Partial exchange parts of 
+\begin_inset Formula $AB_{n}$
+\end_inset 
+
+ are calculated with numerical calculations of post-hoc grid
+\size large 
+
+\begin_inset Formula \begin{equation}
+\left\{ AB_{n}\right\} _{ai}^{xc}=\sum\left\{ B_{n}\right\} _{bj}4\sum_{g}\omega_{g}\sum_{\mu\nu\theta\delta}C_{\mu a}C_{\nu i}C_{\theta b}C_{\delta j}\left(A_{\mu\nu}\chi_{\theta}\chi_{\delta}+B_{\mu\nu}\nabla\left(\chi_{\theta}\chi_{\delta}\right)\right)\end{equation}
+
+\end_inset 
+
+
+\layout Enumerate
+
+Partial 
+\begin_inset Formula $AB_{n}$
+\end_inset 
+
+ contribution are communicated to master to calculate complete matrix and
+ matrix elements of auxiliary set of linear CPKS equations are determined.
+ Repeating last to steps CPKS matrix is filled.
+\layout Enumerate
+
+CPKS equations are solved and matrix 
+\begin_inset Formula $u$
+\end_inset 
+
+ is determined.
+\layout Enumerate
+
+With use of CPKS solutions partial 
+\begin_inset Formula $E_{xc}^{[y](x)}$
+\end_inset 
+
+ derivatives corrected on effects of moving grid are calculated and communicated
+ to master
+\begin_inset Formula \begin{equation}
+\rho^{[y]}=-2\sum_{jk}\psi_{j}\psi_{k}S_{kj}^{y}+4\sum_{bj}\psi_{j}\psi_{b}u_{bj}^{y}\label{rho_imp}\end{equation}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{equation}
+\left(\bigtriangledown\rho\right)^{[y]}=-2\sum_{jk}\sum_{\mu\nu}C_{\mu j}C_{\nu k}(\bigtriangledown(\chi_{\mu}\chi_{n}))S_{kj}^{y}+4\sum_{jk}\sum_{\mu\nu}C_{\mu j}C_{\nu k}(\bigtriangledown(\chi_{\mu}\chi_{n}))u_{kj}^{y}\label{gra_rho_imp}\end{equation}
+
+\end_inset 
+
+
+\size large 
+
+\begin_inset Formula \begin{align}
+E_{xc}^{\left(\lambda\right)[\gamma]} & =\sum_{g}\omega_{g}^{\lambda}\left[\frac{\partial f_{xc}}{\partial\rho}\rho^{[\gamma]}+2\frac{\partial f_{xc}}{\partial\gamma}\left(\nabla\rho\right)\left(\nabla\rho\right)^{[\gamma]}\right]+\nonumber \\
+ & \sum_{g}\omega_{g}[\frac{\partial^{2}f_{xc}}{\partial\rho^{2}}\rho^{\left(\lambda\right)}\rho^{[\gamma]}+2\frac{\partial^{2}f_{xc}}{\partial\rho\partial\gamma}\left(\nabla\rho\right)\left(\nabla\rho\right)^{[\gamma]}\rho^{\left(\lambda\right)}+\nonumber \\
+ & \frac{\partial f_{xc}}{\partial\rho}\rho^{\left(\lambda\right)[\gamma]}+2\frac{\partial^{2}f_{xc}}{\partial\gamma\partial\rho}\left(\nabla\rho\right)\left(\nabla\rho\right)^{\left(\lambda\right)}\rho^{[\gamma]}+\nonumber \\
+ & 4\frac{\partial^{2}f_{xc}}{\partial\gamma^{2}}\left(\nabla\rho\right)^{2}\left(\nabla\rho\right)^{\left(\lambda\right)}\left(\nabla\rho\right)^{[\gamma]}+2\frac{\partial f_{xc}}{\partial\gamma}\left(\nabla\rho\right)^{[\gamma]}\left(\nabla\rho\right)^{\left(\lambda\right)}+\nonumber \\
+ & 2\frac{\partial f_{xc}}{\partial\gamma}\left(\nabla\rho\right)\left(\nabla\rho\right)^{\left(\lambda\right)[\gamma]}].\end{align}
+
+\end_inset 
+
+
+\layout Enumerate
+
+Partial implicit contributions to derivatives of fitting coefficients are
+ calculated on each host and communicated to master to form complite derivatives
+\begin_inset Formula \begin{equation}
+a_{m}^{[y]}=\sum_{ai}[ai|f_{m}]u_{ai}^{y}\label{fit_c_imp}\end{equation}
+
+\end_inset 
+
+
+\layout Enumerate
+
+Analytical gradients of primitive matrix elements are again calculated and
+ partial implicit contributions to 2nd order total-symmetric derivatives
+ are evaluated.
+ Here the derivatives of the density matrix are calculated with
+\size large 
+
+\begin_inset Formula \begin{equation}
+{\mathcal{P}}_{ij}^{y}=-{\mathcal{S}}_{ij}^{y},\;\;\;{\mathcal{P}}_{ia}^{y}=U_{ia}^{y};\;\;\;{\mathcal{P}}_{ab}^{y}=0\label{d_CPC}\end{equation}
+
+\end_inset 
+
+and
+\begin_inset Formula \begin{equation}
+P_{\mu\nu}^{y}\equiv P_{\mu\nu}^{[y]}=\dsum{rs}C_{\mu r}^{*}(0)C_{\nu s}(0){\mathcal{P}}_{rs}^{y}.\label{grad_P_mn}\end{equation}
+
+\end_inset 
+
+The derivatives of energy weighted densyty matrix 
+\begin_inset Formula ${\mathcal{W}}_{rs}=\dsum{i}\varepsilon_{i}(y)U_{ri}^{*}U_{si}$
+\end_inset 
+
+ are
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+{\mathcal{W}}_{rs}^{y}=\varepsilon^{y}\delta_{rs}+\dsum{k}\varepsilon_{k}\delta_{rk}U_{sk}^{y}+\dsum{k}\varepsilon_{k}U_{rk}^{*y}\delta_{sk},\\
+{\mathcal{W}}_{ij}^{y}={\mathcal{F}}_{ji}^{y}-(\varepsilon_{i}+\varepsilon_{j}){\mathcal{S}}_{ij}^{y},\;\;\;{\mathcal{W}}_{ia}^{y}=\varepsilon_{i}U_{ai}^{y},\;\;\;{\mathcal{W}}_{ab}^{y}=0\end{array}\label{grad_W_mn}\end{equation}
+
+\end_inset 
+
+
+\layout Enumerate
+
+Partial 2nd order derivatives are communicated to master and complete 2nd
+ order derivatives in Cartesian form are stored to be used by optimizer
+ in geometry optimization and frequency calculations.
+\layout Enumerate
+
+Test calculations of two and three atomic systems in C1 symmetry are performed.
+\layout Enumerate
+
+Test calculations of two atom systems in 
+\begin_inset Formula $C_{2v}$
+\end_inset 
+
+ and 
+\begin_inset Formula $C_{3v}$
+\end_inset 
+
+ symmetry are performed to check functionality of code when irreducible
+ representations are degenerate and for the case of several equal atoms.
+\layout Enumerate
+
+Functionality of parallel calculations is tested.
+\layout Enumerate
+
+Test geometry optimizations with analytical 2nd order derivatives are performed.
+\layout Enumerate
+
+Test frequancy calculations with analytical 2nd order derivatives are perfomed
+\the_end

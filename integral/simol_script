@@ -1,0 +1,482 @@
+#!/bin/csh
+#
+# This version is an especially adpated form of the simol-script
+# Calculations do not take place in the $local any more
+# but in the directory $TTFSDATADIR
+# FN,2/97
+
+# unalias a few commands that the dear user might have set due
+# to security reasons
+#unalias rm
+#unalias mv
+#unalias cp
+
+# check if $machine is set
+if ( ! $?machine ) then
+ echo "ttfs / simol : Variable MACHINE is not set. Exit."
+ exit
+endif
+
+if ( $1 == "" ) then
+ echo "Parameter must be specified"
+ exit
+endif
+if ( $1 == "setup") then
+ goto simol_setup
+endif
+if ( $1 == "shutdown") then
+ goto simol_shutdown
+endif
+
+switch ( $machine )
+ case alpha
+        if ( $3 == "" ) then
+#        set SIMOL=/home/exe/simol_v180epe2.exe
+	set SIMOL=/home1/bin/simol_V2.1gtpsbAS.exe
+        else
+         set SIMOL=/home1/bin/simol"$3".exe
+        endif
+
+        breaksw
+ case linux
+	if ( $3 == "" ) then
+	set SIMOL=/users/paragau/bin/simol_V2.1gtpsbAS.exe	
+	else
+	set SIMOL=/users/paragau/bin/simol"$3".exe   
+	endif
+	breaksw
+ case sgi
+        if ( $3 == "" ) then
+         set SIMOL=/soft/pvm3/bin/SGIMP64/simol_V2.1gtpsbAS.exe
+        else
+         set SIMOL=/home/ttfs/bin.sgi/simol"$3".exe
+        endif
+        breaksw
+ case hp
+	if ( $3 == "" ) then
+	 set SIMOL=/users/hp4/ttfs/bin/simol_v180ttfs.exe
+	else
+	 set SIMOL=/users/hp4/ttfs/bin/simol"$3".exe
+	endif
+	breaksw
+ case sp2
+ 	if ( $3 == "" ) then
+	 set SIMOL=~t3831ak/bin/simol_v170.exe
+	else
+	 set SIMOL=~t3831ak/bin/simol"$3".exe
+	endif
+	breaksw
+ case vpp
+ 	if ( $3 == "" ) then
+	 set SIMOL=~t3831ak/bin/simol_V2.1devel.exe
+	else
+	 set SIMOL=~t3831ak/bin/simol"$3".exe
+	endif
+	breaksw
+ default
+	echo "ttfs / simol : ERROR  no simol version could be picked. Exit"
+	exit
+ endsw
+
+switch ( $machine )
+ case vpp
+	echo "ttfs/simol: start of simol-script, Version <VERS>" >> $TTFSOPTDIR/trace_simol
+	breaksw
+ default
+	echo "ttfs/simol: start of simol-script, Version <VERS>"
+endsw
+if ( ! -e $SIMOL ) then
+ echo "$SIMOL does not exist."
+ exit
+endif
+
+setenv base $TTFSINPUTDIR
+# This is just preliminary ########
+set infile = $1
+if ( $infile != $TTFSINPUT ) then
+ echo "ttfs/simol : Naming convention ERROR. Exit"
+ exit
+endif
+###################################
+
+
+######cp    $SIMOL $TTFSOUTPUTDIR/simol.exe
+if (-e $TTFSOPTDIR/$GXFILE) then
+ cp $TTFSOPTDIR/$GXFILE $TTFSDATADIR/"$FTN_PREFIX"92
+ switch ( $machine )
+  case vpp
+	echo "Input gxfile for this run of simol :" >> $TTFSOPTDIR/trace_simol
+	cat $TTFSDATADIR/"$FTN_PREFIX"92 >> $TTFSOPTDIR/trace_simol
+	cp $TTFSOPTDIR/$GXFILE $TTFSOPTDIR/$GXFILE.in.$2
+	breaksw
+  default
+ 	echo "Input gxfile for this run of simol :"
+	cat $TTFSDATADIR/"$FTN_PREFIX"92
+	cp $TTFSOPTDIR/$GXFILE $TTFSOPTDIR/$GXFILE.in.$2
+	breaksw
+ endsw
+else
+ switch ( $machine )
+  case vpp
+	echo "ttfs/simol: there is no $TTFSOPTDIR/$GXFILE " >> $TTFSOPTDIR/trace_simol
+	echo "            listing the simol-dir :"  >> $TTFSOPTDIR/trace_simol
+	ls -l  $TTFSOPTDIR >> $TTFSOPTDIR/trace_simol
+	breaksw
+  default
+	echo "ttfs/simol: there is no $TTFSOPTDIR/$GXFILE "
+	echo "            listing the simol-dir :"
+	ls -l  $TTFSOPTDIR
+ endsw
+ exit
+endif
+
+if ( -e $TTFSINPUTDIR/$TTFSINPUT.gsn ) then
+ switch ( $machine )
+  case vpp
+	echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.gsn to $TTFSDATADIR/gsn " >> $TTFSOPTDIR/trace_simol
+	breaksw
+  default
+	echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.gsn to $TTFSDATADIR/gsn "
+ endsw
+ cp $TTFSINPUTDIR/$TTFSINPUT.gsn $TTFSDATADIR/gsn
+endif
+
+if ( -e $TTFSINPUTDIR/$TTFSINPUT.fl9 ) then
+ switch ( $machine )
+  case vpp
+    echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.fl9 to $TTFSDATADIR/$FTN_PREFIX_Z 9 " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.fl9 to $TTFSDATADIR/$FTN_PREFIX_Z 9 "
+ endsw
+ cp $TTFSINPUTDIR/$TTFSINPUT.fl9 $TTFSDATADIR/"$FTN_PREFIX_Z"9
+endif
+
+if ( -e $TTFSINPUTDIR/$TTFSINPUT.fl10) then
+ switch ( $machine )
+   case vpp
+    echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.fl10 to $TTFSDATADIR/$FTN_PREFIX 10 " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.fl10 to $TTFSDATADIR/$FTN_PREFIX 10 "
+ endsw
+ cp $TTFSINPUTDIR/$TTFSINPUT.fl10 $TTFSDATADIR/"$FTN_PREFIX"10
+endif
+
+if ( -e $TTFSINPUTDIR/$TTFSINPUT.dipm ) then
+ switch ( $machine )
+   case vpp
+    echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.dipm to $TTFSDATADIR/dipmom.sav " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.dipm to $TTFSDATADIR/dipmom.sav "
+ endsw
+ cp $TTFSINPUTDIR/$TTFSINPUT.dipm $TTFSDATADIR/dipmom.sav
+endif
+
+if (-e $TTFSINPUTDIR/xo.$TTFSINPUT) then
+ switch ( $machine )
+   case vpp
+    echo "ttfs/simol: cp $TTFSINPUTDIR/xo.$TTFSINPUT to $TTFSDATADIR/xo " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo "ttfs/simol: cp $TTFSINPUTDIR/xo.$TTFSINPUT to $TTFSDATADIR/xo "
+ endsw
+cp $TTFSINPUTDIR/xo.$TTFSINPUT $TTFSDATADIR/xo
+endif
+
+if (-e $TTFSINPUTDIR/epe_simol_parameters) then
+ switch ( $machine )
+   case vpp
+    echo "ttfs/simol: cp $TTFSINPUTDIR/epe_simol_parameters to $TTFSDATADIR/epe_simol_parameters " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo "ttfs/simol: cp $TTFSINPUTDIR/epe_simol_parameters to $TTFSDATADIR/epe_simol_parameters "
+ endsw
+cp $TTFSINPUTDIR/epe_simol_parameters $TTFSDATADIR/epe_simol_parameters
+endif
+
+if (-e $TTFSINPUTDIR/epe.pcr) then
+ switch ( $machine )
+   case vpp
+    echo "ttfs/simol: cp $TTFSINPUTDIR/epe.pcr to $TTFSDATADIR/epe.pcr " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo "ttfs/simol: cp $TTFSINPUTDIR/epe.pcr to $TTFSDATADIR/epe.pcr "
+ endsw
+cp $TTFSINPUTDIR/epe.pcr $TTFSDATADIR/epe.pcr
+endif
+
+if ( ! -e $TTFSDATADIR/epe.pcs) then
+if (-e $TTFSINPUTDIR/epe.pcs) then
+ switch ( $machine )
+   case vpp
+    echo "ttfs/simol: cp $TTFSINPUTDIR/epe.pcs to $TTFSDATADIR/epe.pcs " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo "ttfs/simol: cp $TTFSINPUTDIR/epe.pcs to $TTFSDATADIR/epe.pcs "
+ endsw
+cp $TTFSINPUTDIR/epe.pcs $TTFSDATADIR/epe.pcs
+endif
+endif
+
+if (-e $TTFSINPUTDIR/$TTFSINPUT.gx_g) then
+ switch ( $machine )
+   case vpp
+    echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.gx_g to $TTFSDATADIR/gx_grad.sav " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo "ttfs/simol: cp $TTFSINPUTDIR/$TTFSINPUT.gx_g to $TTFSDATADIR/gx_grad.sav "
+ endsw
+cp $TTFSINPUTDIR/$TTFSINPUT.gx_g $TTFSDATADIR/gx_grad.sav
+endif 
+
+# This is the actual simol run ------------------------
+set actual_dir = `pwd`
+cd $TTFSDATADIR
+switch ( $machine )
+ case vpp
+	echo "ttfs/simol: cd to $TTFSDATADIR to run simol" >> $TTFSOPTDIR/trace_simol
+	ls -l >> $TTFSOPTDIR/trace_simol
+	echo "ttfs/simol: running $SIMOL " >> $TTFSOPTDIR/trace_simol
+	breaksw
+ default
+	echo "ttfs/simol: cd to $TTFSDATADIR to run simol"
+	ls -l 
+	echo "ttfs/simol: running $SIMOL "
+endsw 
+$SIMOL >& flepo.stat
+switch ( $machine )
+  case vpp
+	echo "ttfs/simol: $SIMOL done" >> $TTFSOPTDIR/trace_simol
+	ls -l  >> $TTFSOPTDIR/trace_simol
+	echo "ttfs/simol: cd back to actual directory"	>> $TTFSOPTDIR/trace_simol
+	breaksw
+  default
+	echo "ttfs/simol: $SIMOL done"
+	ls -l 
+	echo "ttfs/simol: cd back to actual directory"
+endsw
+cd $actual_dir
+# -----------------------------------------------------
+
+if (-e $TTFSDATADIR/xo)  then
+  switch ( $machine )
+   case vpp
+	echo "ttfs/simol: moving xo to $TTFSINPUTDIR/xo.$TTFSINPUT" >> $TTFSOPTDIR/trace_simol
+	breaksw
+   default
+	echo "ttfs/simol: moving xo to $TTFSINPUTDIR/xo.$TTFSINPUT"
+  endsw
+  mv $TTFSDATADIR/xo $TTFSINPUTDIR/xo.$TTFSINPUT 
+endif
+
+if ( -e $TTFSDATADIR/gx_grad.sav ) then
+ switch ( $machine )
+  case vpp
+	echo "ttfs/simol: copying gx_grad.sav to $TTFSINPUTDIR/$TTFSINPUT.gx_g" >> $TTFSOPTDIR/trace_simol
+	breaksw
+  default
+	echo "ttfs/simol: copying gx_grad.sav to $TTFSINPUTDIR/$TTFSINPUT.gx_g"
+ endsw
+ cp $TTFSDATADIR/gx_grad.sav $TTFSINPUTDIR/$TTFSINPUT.gx_g
+endif
+
+if ( -e $TTFSDATADIR/"$FTN_PREFIX"92) then
+ switch ( $machine )
+  case vpp
+	echo "ttfs/simol: moving "$FTN_PREFIX"92 to $TTFSOPTDIR/$GXFILE" >> $TTFSOPTDIR/trace_simol
+	mv $TTFSDATADIR/"$FTN_PREFIX"92 $TTFSOPTDIR/$GXFILE
+	echo "cp $TTFSOPTDIR/$GXFILE $TTFSOPTDIR/$GXFILE.$2" >> $TTFSOPTDIR/trace_simol
+	cp $TTFSOPTDIR/$GXFILE $TTFSOPTDIR/$GXFILE.$2
+	if ( ! -e $TTFSDATADIR/conv ) then
+	  echo "ttfs/simol: linking $TTFSOPTDIR/$GXFILE to $TTFSINPUTDIR" >> $TTFSOPTDIR/trace_simol
+	  if ( -e $TTFSINPUTDIR/$GXFILE ) then
+	    rm -f $TTFSINPUTDIR/$GXFILE 
+	  endif
+	  ln -s $TTFSOPTDIR/$GXFILE $TTFSINPUTDIR/$GXFILE
+	else	
+	  echo "ttfs/simol: removing the old gxfile " >> $TTFSOPTDIR/trace_simol
+	  rm $TTFSINPUTDIR/$GXFILE
+	endif
+	breaksw
+  default
+	echo "ttfs/simol: moving "$FTN_PREFIX"92 to $TTFSOPTDIR/$GXFILE"
+	mv $TTFSDATADIR/"$FTN_PREFIX"92 $TTFSOPTDIR/$GXFILE
+	echo "cp $TTFSOPTDIR/$GXFILE $TTFSOPTDIR/$GXFILE.$2"
+	cp $TTFSOPTDIR/$GXFILE $TTFSOPTDIR/$GXFILE.$2
+	if ( ! -e $TTFSDATADIR/conv ) then
+	  echo "ttfs/simol: linking $TTFSOPTDIR/$GXFILE to $TTFSINPUTDIR"
+	  if ( -e $TTFSINPUTDIR/$GXFILE ) then
+	    rm -f $TTFSINPUTDIR/$GXFILE 
+	  endif
+	  ln -s $TTFSOPTDIR/$GXFILE $TTFSINPUTDIR/$GXFILE
+	else	
+	  echo "ttfs/simol: removing the old gxfile "
+	  rm $TTFSINPUTDIR/$GXFILE
+	endif
+  endsw
+else
+ switch ( $machine )
+  case vpp
+      echo "ttfs/simol: Attention     NO $TTFSDATADIR/"ftn92 after execution of simol " >> $TTFSOPTDIR/trace_simol 
+      breaksw
+  default
+      echo "ttfs/simol: Attention     NO $TTFSDATADIR/"ftn92 after execution of simol "
+ endsw
+endif 
+
+if (-e $TTFSDATADIR/gsn ) then
+ switch ( $machine )
+  case vpp
+	echo "ttfs/simol: copying gsn to $TTFSINPUTDIR/$TTFSINPUT.gsn" >> $TTFSOPTDIR/trace_simol 
+	breaksw
+  default
+	echo "ttfs/simol: copying gsn to $TTFSINPUTDIR/$TTFSINPUT.gsn"
+ endsw
+ cp $TTFSDATADIR/gsn $TTFSINPUTDIR/$TTFSINPUT.gsn
+endif
+
+cat $TTFSDATADIR/flepo.stat >> $TTFSOPTDIR/dfp.$TTFSINPUT
+switch ( $machine )
+ case vpp
+	cat $TTFSDATADIR/flepo.stat >> $TTFSOPTDIR/trace_simol
+	breaksw
+ default
+	 cat $TTFSDATADIR/flepo.stat >> $TTFSOUTPUTDIR/trace_output
+	 cat $TTFSDATADIR/flepo.stat >> $TTFSOUT/output
+	 cat $TTFSDATADIR/flepo.stat
+endsw
+
+if (-e $TTFSDATADIR/flepo.out ) then
+ cat $TTFSDATADIR/flepo.out >> $TTFSOPTDIR/dfp.$TTFSINPUT
+ switch ( $machine )
+  case vpp
+	cat $TTFSDATADIR/flepo.out >> $TTFSOPTDIR/trace_simol	
+	breaksw
+  default
+	 cat $TTFSDATADIR/flepo.out >> $TTFSOUTPUTDIR/trace_output
+	 cat $TTFSDATADIR/flepo.out >> $TTFSOUT/output
+	 cat $TTFSDATADIR/flepo.out
+ endsw
+endif
+
+if (-e $TTFSDATADIR/"$FTN_PREFIX_Z"9)  then
+ switch ( $machine )
+  case vpp
+    echo " ttfs/simol: moving $TTFSDATADIR/"$FTN_PREFIX_Z"9 to $TTFSINPUTDIR/$TTFSINPUT.fl9 " >> $TTFSOPTDIR/trace_simol
+    breaksw
+  default
+    echo " ttfs/simol: moving $TTFSDATADIR/"$FTN_PREFIX_Z"9 to $TTFSINPUTDIR/$TTFSINPUT.fl9 "
+ endsw
+ mv $TTFSDATADIR/"$FTN_PREFIX_Z"9 $TTFSINPUTDIR/$TTFSINPUT.fl9
+endif
+
+if (-e $TTFSDATADIR/"$FTN_PREFIX"10)  then
+ switch ( $machine )
+  case vpp
+    echo " moving $TTFSDATADIR/"$FTN_PREFIX"10 to $TTFSINPUTDIR/$TTFSINPUT.fl10" >> $TTFSOPTDIR/trace_simol
+	breaksw
+  default
+   echo " moving $TTFSDATADIR/"$FTN_PREFIX"10 to $TTFSINPUTDIR/$TTFSINPUT.fl10"
+ endsw 
+ mv $TTFSDATADIR/"$FTN_PREFIX"10 $TTFSINPUTDIR/$TTFSINPUT.fl10
+endif
+
+if (-e $TTFSDATADIR/dipmom.sav)  then
+ switch ( $machine )
+  case vpp
+    echo " moving $TTFSDATADIR/dipmom.sav to $TTFSINPUTDIR/$TTFSINPUT.dipm" >> $TTFSOPTDIR/trace_simol
+	breaksw
+  default
+   echo " moving $TTFSDATADIR/dipmom.sav to $TTFSINPUTDIR/$TTFSINPUT.dipm"
+ endsw 
+ mv $TTFSDATADIR/dipmom.sav $TTFSINPUTDIR/$TTFSINPUT.dipm
+endif
+# weiss auch nicht, ob ich das brauche ...
+#if (-e $TTFSDATADIR/gx_grad)  then
+# cat gx_grad >> $TTFSOPTDIR/$TTFSINPUT.gx_g
+#endif
+
+exit
+
+########################### SETUP ###############################################
+simol_setup:
+ switch ( $machine )
+  case vpp
+	 if ( ! -e $TTFSOPTDIR/trace_simol ) then
+	  echo " SETUP creating  $TTFSOPTDIR/trace_simol "
+	  touch $TTFSOPTDIR/trace_simol
+	 endif
+ 	 echo " ttfs / simol_setup : start" >> $TTFSOPTDIR/trace_simol
+	 if ( -e $TTFSDATADIR/gxfile ) then
+ 	  echo " moving $TTFSDATADIR/gxfile to  $TTFSOPTDIR/$GXFILE" >> $TTFSOPTDIR/trace_simol
+	  mv  $TTFSDATADIR/gxfile $TTFSOPTDIR/$GXFILE
+	 else
+	  echo " ttfs / simol_setup : error - no gxfile " >> $TTFSOPTDIR/trace_simol
+	 endif
+	breaksw
+ default
+	echo " ttfs / simol_setup : start" 
+	 if ( -e $TTFSDATADIR/gxfile ) then
+ 	 echo " moving $TTFSDATADIR/gxfile to  $TTFSOPTDIR/$GXFILE"
+	  mv  $TTFSDATADIR/gxfile $TTFSOPTDIR/$GXFILE
+	  cp $TTFSOPTDIR/$GXFILE $TTFSOPTDIR/$GXFILE.in
+	 else
+	  echo " ttfs / simol_setup : error - no gxfile "
+	 endif
+ endsw
+
+ set time = `date`
+ switch ( $machine ) 
+   case vpp
+	 echo " Time before start of Simol: " >> $TTFSOPTDIR/trace_simol
+	 echo $time >> $TTFSOPTDIR/trace_simol
+	 breaksw
+   default
+	 echo " Time before start of Simol: " >> $TTFSOUTPUTDIR/trace_output
+	 echo " Time before start of Simol: " >> $TTFSTMP/outdir/output
+	 echo " Time before start of Simol: "
+	 echo $time >> $TTFSOUTPUTDIR/trace_output
+	 echo $time >> $TTFSTMP/outdir/output
+	 echo $time
+ endsw
+ exit
+
+###################### END OF SETUP ######################################
+
+###################### SHUTDOWN ##########################################
+simol_shutdown:
+ ## after the Simol run, the gxfile has to be copied to the TTFSDATADIR ##
+ ## where ParaGAU needs it to read in the new geometry                  ##
+ switch ( $machine )
+  case vpp
+	 echo " ttfs/simol_shutdown : start" >> $TTFSOPTDIR/trace_simol
+	 echo " ttfs/simol_aux : cp $TTFSINPUTDIR/$GXFILE to  $TTFSDATADIR/gxfile " >> $TTFSOPTDIR/trace_simol
+	 breaksw
+  default
+	 echo " ttfs/simol_shutdown : start"	
+	 echo " ttfs/simol_aux : cp $TTFSINPUTDIR/$GXFILE to  $TTFSDATADIR/gxfile "
+ endsw
+ cp $TTFSINPUTDIR/$GXFILE $TTFSDATADIR/gxfile 
+
+ set time = `date`
+ switch ( $machine )
+  case vpp
+	echo " Time after completion of Simol: " >> $TTFSOPTDIR/trace_simol
+        echo $time >> $TTFSOPTDIR/trace_simol
+	breaksw
+  default
+	 echo " Time after completion of Simol: " >> $TTFSOUTPUTDIR/trace_output
+	 echo " Time after completion of Simol: " >> $TTFSTMP/outdir/output
+	 echo " Time after completion of Simol: "
+	 echo $time >> $TTFSOUTPUTDIR/trace_output
+	 echo $time >> $TTFSTMP/outdir/output
+	 echo $time
+ endsw
+ exit
+############################# END OF SHUTDOWN ##################################
+
+
+#
+# end

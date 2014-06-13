@@ -1,0 +1,249 @@
+#!/bin/bash
+#
+# ParaGauss, a program package for high-performance computations
+# of molecular systems
+# Copyright (C) 2014
+# T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+# M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+# A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+# T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+# M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+# M. Roderus, N. Rösch
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as published
+# by the Free Software Foundation [1].
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Please see the accompanying LICENSE file for further information.
+#
+
+if [ -n "$MPIRUN" ]; then
+  mpirun="$MPIRUN"
+else
+  mpirun="mpirun"
+fi
+
+# process command-line options:
+while [[ "$1" == -* ]]; do
+	case "$1" in
+	-n|--num-proc|-np)
+		shift
+		# set global num proc:
+		NP=$1
+		shift
+		;;
+	--mpirun)
+		shift
+		# set alternative mpirun:
+		mpirun="$1"
+		shift
+		;;
+	*)
+		echo "$0: ERROR: command switch $1 not known"
+		exit 1
+		;;
+	esac
+done
+
+# the first (non-options) argument is the executable:
+exe="$1"
+shift
+if [ -z "$exe" -o ! -x "$exe" ]; then
+    echo "$0: $exe is not executable"
+    exit 1
+fi
+
+# guess default num proc:
+if [ -z "$NP" ]; then
+	# set global num proc:
+	NP=1
+fi
+
+# guess a proper scratch directory:
+if [ -z "$scratch" -a -n "$OPT_TMP" ]; then
+	scratch="$OPT_TMP"
+fi
+# use /scratch if it exists:
+if [ -z "$scratch" -a -d /scratch ]; then
+	scratch=/scratch/$USER
+fi
+# otherwise use /tmp:
+if [ -z "$scratch" ]; then
+	scratch=/tmp/$USER
+fi
+
+# use user-specified output dir if provided:
+if [ -n "$TTFSOUTPUTDIR" ]; then
+	ttfsoutputdir=$TTFSOUTPUTDIR
+fi
+
+function main(){
+	local inp name
+	# loop over inputs from the command line:
+	for inp in $*; do
+                if [ ! -f $inp ]; then
+                  echo "$0: no such file $inp"
+                  exit 1
+                fi
+		name=${inp/i./}
+		ttfs_run_input $name $inp
+	done
+}
+
+function ttfs_run_input(){
+	# expects NAME and INPUT as $1 and $2!
+	local name inp
+
+	name=$1
+	inp=$2
+
+	out=o.$name
+
+	ttfs_setenv $name $inp
+
+	if [ -n "$PBS_NODEFILE" ]; then
+		ttfs_mkfs_pbs "$PBS_NODEFILE"
+	else
+	if [ -n "$PE_HOSTFILE" ]; then
+		ttfs_mkfs_sge "$PE_HOSTFILE"
+	else
+		ttfs_mkfs_smp $NP
+	fi
+	fi
+
+	ttfs_init $name
+
+	# actual start of the executable:
+	case "$mpirun" in
+	*sh)
+		echo "Starting shell, execute $exe manually!"
+		$mpirun
+		RET=$?
+		;;
+	*mpirun)
+                $mpirun -np $NP $exe
+                RET=$?
+		;;
+	*)
+		$mpirun $exe
+		RET=$?
+		;;
+	esac
+
+	if [ $RET -ne 0 ]; then
+		echo "WARNING: return status is $RET"
+	fi
+
+	ttfs_finalize
+}
+
+function ttfs_setenv(){
+	local name
+	local inp
+
+	name=$1
+	inp=$2
+	export TTFSLIBS=~shor/lib
+	export TTFSINPUTDIR=$PWD
+	export TTFSINPUT=$inp
+
+	# to allow custom settings for the output directory,
+	# e.g. with a version number appended as in testsuite:
+	# ( user is assumed to know what he/she is doing
+	#   in case of *multiple* inputs on the command line )
+	if [ -z "$ttfsoutputdir" ]; then
+		export TTFSOUTPUTDIR=$PWD/$out
+	else
+		export TTFSOUTPUTDIR=$ttfsoutputdir
+	fi
+	# (base) scratch directories:
+	export TTFSTMP=$scratch/$name.$$
+}
+
+function ttfs_mkfs_smp(){
+	# $1 == num of procs
+	local np
+
+	np=$1
+
+	rm -rf $TTFSTMP
+	mkdir -p $TTFSTMP
+
+	# set global number of processors:
+	NP=$np
+}
+
+function ttfs_mkfs_pbs(){
+	# EXPECTS $PBS_NODEFILE as $1
+	ttfs_mkfs_smp `wc -l $1`
+}
+
+function ttfs_mkfs_sge(){
+	# EXPECTS CODINE-format $PE_HOSTFILE as $1
+	local pe_hostfile
+	local host nump
+	local drop1 drop2
+	local i p
+
+	pe_hostfile="$1"
+
+	p=0
+
+        # first delete tmp dirs, in case they exist:
+	while read host nump drop1 drop2; do
+		# < /dev/null is reqd because otherwise SSH intercepts STDIN from <$PE_HOSTFILE
+		ssh $host "rm -rf $TTFSTMP" < /dev/null
+	done < $pe_hostfile
+
+        # now create them:
+	while read host nump drop1 drop2; do
+		# echo PE x $host x $nump x
+		# < /dev/null is reqd because otherwise SSH intercepts STDIN from <$PE_HOSTFILE
+		ssh $host "mkdir -p $TTFSTMP" < /dev/null
+
+                # count number of workers:
+		p=$(($p + $nump))
+	done < $pe_hostfile
+
+	# set global number of processors:
+	NP=$p
+}
+
+function ttfs_init(){
+	# EXPECTS $name as $1
+	local name
+	name=$1
+
+	if [ ! -d $TTFSOUTPUTDIR ]; then
+		mkdir $TTFSOUTPUTDIR
+	fi
+
+	# compatibility for GXFILE:
+	if [ -f gx ]; then
+		cp -p gx $TTFSOUTPUTDIR/gx.start
+		mv gx gxfile
+	fi
+	if [ -f gx.$name ]; then
+		cp -p gx.$name $TTFSOUTPUTDIR/gx.start
+		mv gx.$name gxfile
+	fi
+}
+
+function ttfs_finalize(){
+	if [ $RET -ne 0 ]; then
+		echo "WARNING: dont forget to rm -rf $TTFSTMP"
+	else
+		# FIXME: shouldnt we do that also on remote nodes?
+		rm -rf $TTFSTMP
+	fi
+}
+
+# put everything into main() function:
+main $*

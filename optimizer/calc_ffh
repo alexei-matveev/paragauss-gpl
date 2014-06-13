@@ -1,0 +1,11 @@
+sed 's/optimization=f/optimization=t/g' optimizer.input \
+|sed 's/calc_hessian=f/calc_hessian=t/g' \
+|sed 's/calc_epeff_hessian=f/calc_epeff_hessian=t/g' \
+|sed 's/epe_forces=f/epe_forces=t/g' \
+|sed 's/estimate_hessian=t/estimate_hessian=f/g' \
+|sed 's/epeparameters = f/epeparameters = t/g' \
+|sed 's/epe_interfaced_mode=f/epe_interfaced_mode=t/g' \
+|sed 's/save_epe_r=t/save_epe_r=f/g' > optimizer.inputT
+mv optimizer.inputT optimizer.input
+
+

@@ -1,0 +1,80 @@
+#Only Basis set for border silicon atom (Si*) (used for bsse)
+
+#General parameters
+ &UNIQUE_ATOM_BASISSET # unique atom  F
+    LMAX_OB        =   0
+    LMAX_PSEUDO    =  -1
+    LMAX_CH        =   1
+    LMAX_XC        =   1
+    N_GLOB_CONS_CH =   0
+    N_GLOB_CONS_XC =   0
+    ZC             =   0
+ /UNIQUE_ATOM_BASISSET
+
+#Valence electrons basis set 
+ &UNIQUE_ATOM_BASIS # unique atom   Mg, orbital basis set : l = 0
+    N_EXPONENTS         =     1
+    N_UNCONTRACTED_FCTS =     1
+    N_CONTRACTED_FCTS   =     0
+    AUTOMATIC           = FALSE
+ /UNIQUE_ATOM_BASIS
+    1.000000000000000E+03
+
+#Charge and exchange-correlation basis set
+ &UNIQUE_ATOM_BASIS # unique atom  Mg , charge fit basis set : r**2
+    N_EXPONENTS         =     2
+    N_UNCONTRACTED_FCTS =     2
+    N_CONTRACTED_FCTS   =     0 # (the default)
+    AUTOMATIC           = FALSE # (the default)
+ /UNIQUE_ATOM_BASIS
+  # exponents
+    7.724000000000000E-02    2.394020000000000E-01
+
+ &UNIQUE_ATOM_BASIS # unique atom  Mg , charge fit basis set : l =  0
+    N_EXPONENTS         =     4
+    N_UNCONTRACTED_FCTS =     4
+    N_CONTRACTED_FCTS   =     0 # (the default)
+    AUTOMATIC           = FALSE # (the default)
+ /UNIQUE_ATOM_BASIS
+  # exponents
+    7.897000000000000E-02    2.154980000000000E-01    1.645250000000000E+00  %
+    4.851438000000000E+00
+
+ &UNIQUE_ATOM_BASIS # unique atom  Mg , charge fit basis set : l =  1
+    N_EXPONENTS         =     5
+    N_UNCONTRACTED_FCTS =     5
+    N_CONTRACTED_FCTS   =     0 # (the default)
+    AUTOMATIC           = FALSE # (the default)
+ /UNIQUE_ATOM_BASIS
+  # exponents
+    1.000000000000000E-01    2.500000000000000E-01    6.250000000000000E-01  %
+    1.562500000000000E+00    3.906250000000000E+00
+
+ &UNIQUE_ATOM_BASIS # unique atom  Mg , exchange fit basis set : r**2
+    N_EXPONENTS         =     2
+    N_UNCONTRACTED_FCTS =     2
+    N_CONTRACTED_FCTS   =     0 # (the default)
+    AUTOMATIC           = FALSE # (the default)
+ /UNIQUE_ATOM_BASIS
+  # exponents
+    2.574666666666667E-02    7.980066666666667E-02
+
+ &UNIQUE_ATOM_BASIS # unique atom  Mg , exchange fit basis set : l =  0
+    N_EXPONENTS         =     4
+    N_UNCONTRACTED_FCTS =     4
+    N_CONTRACTED_FCTS   =     0 # (the default)
+    AUTOMATIC           = FALSE # (the default)
+ /UNIQUE_ATOM_BASIS
+  # exponents
+    2.632333333333333E-02    7.183266666666667E-02    5.484166666666667E-01  %
+    1.617146000000000E+00
+
+ &UNIQUE_ATOM_BASIS # unique atom  Mg , exchange fit basis set : l =  1
+    N_EXPONENTS         =     5
+    N_UNCONTRACTED_FCTS =     5
+    N_CONTRACTED_FCTS   =     0 # (the default)
+    AUTOMATIC           = FALSE # (the default)
+ /UNIQUE_ATOM_BASIS
+  # exponents
+    1.000000000000000E-01    2.500000000000000E-01    6.250000000000000E-01  %
+    1.562500000000000E+00    3.906250000000000E+00

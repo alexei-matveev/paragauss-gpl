@@ -1,0 +1,978 @@
+#LyX 1.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 218
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 1
+\use_amsmath 0
+\paperorientation portrait
+\leftmargin 2.5cm
+\rightmargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+Program 
+\series bold 
+make_zeo
+\layout Section
+
+Introduction
+\layout Standard
+
+The program 
+\series bold 
+make_zeo
+\series default 
+ was written to simplify a preparation of aluminium containing zeolite structure
+s and corresponded input files for the molecular mechanics program 
+\series bold 
+Gulp
+\series default 
+.
+ Even for relatively simple shell model force fields, like derived by Sierka
+ and Sauer, preparing correct data is not trivial task because of difficulty
+ to define positions of hydrogen atoms.
+ Using for modeling zeolite structures more complex force fields increases
+ problems in many times.
+ Our intention is to use the force field derived as joint work of Krasnoyarsk,
+ Munich and Sofia scientific group (unofficially called 
+\series bold 
+Extended-FF3
+\series default 
+).
+ This force field bases on eight different atom types (Al, Si1, Si2, O1,
+ O2, O3, O4 and H).
+ Defining positions of all centers can take lot of time and hardly can be
+ done without numerous errors.
+ It may seem there are many molecular visualizing programs which can be
+ used to modify full zeolite lattice to get desirable result.
+ But generally it is not true.
+ Small number of programs can used to modify molecular structure.
+ And no one of them can prepared input file for 
+\series bold 
+Gulp
+\series default 
+ program especially if 
+\series bold 
+Extended-FF3 
+\series default 
+force field used.
+ The authors of the program 
+\series bold 
+make_zeo
+\series default 
+ aimed to fill existed gap and help any user to do his work simple.
+ 
+\layout Section
+
+Main features of make_zeo program
+\layout Enumerate
+
+
+\series bold 
+make_zeo
+\series default 
+ is not graphical program but produced result can be controlled by any,
+ in principal, molecular visualizing program.
+\layout Enumerate
+
+
+\series bold 
+To prepare aluminium containing zeolite an user has to define positions
+ only Al atoms and oxygen ones forming bridging OH groups
+\layout Enumerate
+
+
+\series bold 
+make_zeo
+\series default 
+ uses as input file 
+\series bold 
+Gulp
+\series default 
+ output file corrected by an user.
+\layout Enumerate
+
+A result produced is a file what can be used without any modification as
+ input file for 
+\series bold 
+Gulp
+\series default 
+ molecular mechanics program.
+ 
+\layout Enumerate
+
+Two variants of 
+\series bold 
+Gulp
+\series default 
+ input files can be produced to use 
+\series bold 
+Sierka-Sauer
+\series default 
+ force field or 
+\series bold 
+Extended-FF3
+\series default 
+ one.
+\layout Section
+
+Tutorial (how to get aluminium containing zeolite)
+\layout Subsection
+
+Installation
+\layout Enumerate
+
+Gunzip the gziped tar archive file 
+\series bold 
+make_zeo_prog.tar.gz
+\series default 
+: 
+\newline 
+
+\emph on 
+ginzip make_zeo_prog.tar.gz
+\layout Enumerate
+
+Extract files from the tar archive 
+\series bold 
+make_zeo_prog.tar
+\series default 
+:
+\newline 
+
+\emph on 
+tar xvf make_zeo_prog.tar
+\layout Enumerate
+
+You should get the directory 
+\series bold 
+make_zeo_prog
+\series default 
+ which contains program make_zeo and tutorial files.
+ The full list of files in the directory 
+\series bold 
+make_zeo_prog
+\series default 
+:
+\newline 
+
+\series bold 
+make_zeo.ps
+\series default 
+ - this document,
+\newline 
+
+\series bold 
+make_zeo.f90
+\series default 
+ - the program source code,
+\newline 
+
+\series bold 
+make_zeo
+\series default 
+ - executable file for Linux,
+\newline 
+
+\series bold 
+chbs.i
+\series default 
+ - 
+\series bold 
+Gulp
+\series default 
+ input file for full silicon chabasite,
+\newline 
+
+\series bold 
+chbs.o
+\series default 
+ - 
+\series bold 
+Gulp
+\series default 
+ output file for full silicon chabasite,
+\newline 
+
+\series bold 
+chbs.o1
+\series default 
+ - user corrected 
+\series bold 
+chbs.o
+\series default 
+ file - input file for 
+\series bold 
+make_zeo
+\series default 
+ program,
+\newline 
+
+\series bold 
+zeolite_c.dat
+\series default 
+ and 
+\series bold 
+zeolite_f.dat
+\series default 
+ - files produced 
+\series bold 
+make_zeo
+\series default 
+ program to be read in by 
+\series bold 
+viewmol
+\series default 
+ visualizing program (in Cartesian and fractional coordinates, correspondingly),
+\newline 
+
+\series bold 
+zeoilte.xyz
+\series default 
+ - the same as previous files (
+\series bold 
+zeolite_c.dat
+\series default 
+, 
+\series bold 
+zeolite_f.dat
+\series default 
+) but in XYZ format,
+\newline 
+
+\series bold 
+gulp_inp.ff3
+\series default 
+ - Gulp input file of aluminium containing chabasite produced by 
+\series bold 
+make_zeo
+\series default 
+ program
+\newline 
+
+\series bold 
+gulp_inp.ff3.o
+\series default 
+ - the result of optimization of Al-chabasite.
+\layout Enumerate
+
+If your operating system is Linux you can use executable file 
+\series bold 
+make_zeo
+\series default 
+ to start to work.
+\layout Enumerate
+
+To prepare executable file from source code you should have f90 compiler.
+ Just perform the next command in 
+\series bold 
+make_zeo_prog
+\series default 
+ directory:
+\newline 
+
+\emph on 
+f90 -o make_zeo make_zeo.f90
+\layout Enumerate
+
+Make sure that 
+\series bold 
+make_zeo 
+\series default 
+location is in your 
+\emph on 
+$path
+\emph default 
+ variable to be run from any place.
+\layout Subsection
+
+Program using
+\layout Standard
+
+Create 
+\series bold 
+test
+\series default 
+ directory in any convenient place: 
+\newline 
+
+\emph on 
+mkdir test
+\emph default 
+
+\newline 
+This directory will be used as a place for tutorial work:
+\newline 
+
+\emph on 
+cd test
+\emph default 
+
+\newline 
+Copy here 
+\series bold 
+chbs.i
+\series default 
+ file from 
+\series bold 
+make_zeo_prog
+\series default 
+ directory:
+\newline 
+
+\emph on 
+cp 
+\begin_inset Quotes eld
+\end_inset 
+
+path
+\begin_inset Quotes erd
+\end_inset 
+
+/make_zeo_prog/chbs.i chbs.i
+\layout Subsubsection
+
+Optimization of silica zeolite by means 
+\begin_inset Quotes eld
+\end_inset 
+
+FF3
+\begin_inset Quotes erd
+\end_inset 
+
+ (unofficial name) force field
+\layout Standard
+
+The file 
+\series bold 
+chbs.i
+\series default 
+ contains symmetric chabasite unit cell, but optimization has to be done
+ without symmetry.
+ To avoid problem an user has to name silicon as 
+\begin_inset Quotes eld
+\end_inset 
+
+Si
+\begin_inset Quotes erd
+\end_inset 
+
+ and oxygen as 
+\begin_inset Quotes eld
+\end_inset 
+
+O
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ Execute command
+\newline 
+
+\emph on 
+gulp < chbs.i > chbs.o
+\emph default 
+
+\newline 
+The file 
+\series bold 
+chbs.o
+\series default 
+ has been already located in 
+\series bold 
+make_zeo_prog
+\series default 
+ directory and you can compare your obtained result.
+\layout Subsubsection
+
+Modification of chbs.o file
+\layout Standard
+
+The 
+\series bold 
+Gulp
+\series default 
+ output file 
+\series bold 
+chbs.o
+\series default 
+ has to be corrected to be used as input for 
+\series bold 
+make_zeo
+\series default 
+ program.
+ Lets imagine you want to insert into chabasite lattice two Al atoms and
+ put OH groups in O1 and O2 crystallographic positions
+\begin_float footnote 
+\layout Standard
+
+To define locations of Al and O atoms you should use an visualizing program.
+ We recommend to use 
+\series bold 
+viewmol
+\series default 
+.
+ This program can read in directly a 
+\series bold 
+Gulp
+\series default 
+ output file: 
+\newline 
+
+\emph on 
+viewmol -gulp chbs.o
+\emph default 
+
+\newline 
+The advantage of
+\series bold 
+ viewmol
+\series default 
+ is that it can duplicate an unit cell.
+ Very often it is necessary to define correctly atomic positions.
+ Of course, you can use any other preferred visualizing program.
+ But in this case you should save Gulp result in XYZ file
+\end_float 
+.
+ For example, we decided Al atoms should be located in silicon positions
+ number 6 and 10 (in non symmetric unit cell) and OH groups in oxygen position
+ 13 (O1 crystallographic type in first AlO4 tetrahedra) and 20 (O2 type
+ in second AlO4 tetrahedra).
+\newline 
+Open 
+\series bold 
+chbs.o
+\series default 
+ file by any text editor and find the block of optimized fractional coordinates.
+ It follows just after the line 
+\emph on 
+
+\begin_inset Quotes eld
+\end_inset 
+
+Final fractional coordinates of atoms
+\begin_inset Quotes erd
+\end_inset 
+
+
+\emph default 
+ (or 
+\emph on 
+
+\begin_inset Quotes eld
+\end_inset 
+
+Final asymmetric unit coordinates
+\begin_inset Quotes erd
+\end_inset 
+
+
+\emph default 
+).
+ To get a desirable input file just rename atoms 
+\noun on 
+Si
+\noun default 
+ (numbers 6 and 10) by 
+\series bold 
+Al
+\series default 
+ and atoms 
+\series bold 
+O
+\series default 
+ (numbers 13 and 20) by 
+\series bold 
+F
+\series default 
+.
+ Please remember, you have to rename atoms only in core coordinate block.
+ The atom name 
+\series bold 
+F
+\series default 
+ is used only by 
+\series bold 
+make_zeo
+\series default 
+ program to recognise oxygens forming OH groups among regular O atoms.
+ Your corrected 
+\series bold 
+chbs.o
+\series default 
+ file has to look like 
+\series bold 
+chbs.o1
+\series default 
+ file in 
+\series bold 
+make_zeo_prog
+\series default 
+ directory and now can be use as input file for 
+\series bold 
+make_zeo
+\series default 
+ program.
+\layout Subsubsection
+
+Running make_zeo
+\layout Standard
+
+To run 
+\series bold 
+make_zeo
+\series default 
+ program just type in a command line:
+\newline 
+
+\emph on 
+make_zeo
+\emph default 
+
+\newline 
+or
+\newline 
+
+\emph on 
+
+\begin_inset Quotes eld
+\end_inset 
+
+full_path
+\begin_inset Quotes erd
+\end_inset 
+
+/make_zeo
+\emph default 
+
+\newline 
+If program has started successfully you get two messages inviting to specify
+ name of input file: 
+\newline 
+
+\emph on 
+Name Gulp output file:
+\emph default 
+
+\newline 
+
+\emph on 
+chbs.o
+\emph default 
+ 
+\newline 
+and choose the type of force field:
+\newline 
+
+\emph on 
+What does Force fields have to be applied for?
+\newline 
+Either Sierka-Sauer DFT (1) or our FF3 extended (2):
+\newline 
+2
+\emph default 
+
+\newline 
+
+\series bold 
+make_zeo
+\series default 
+ will perform checking correctness of locations of all specified atoms and
+ if everything is ok prepare the input file 
+\series bold 
+gulp_input.ff3
+\series default 
+ which can be used without any modifications (if you wish) by 
+\series bold 
+Gulp
+\series default 
+ molecular mechanics program.
+ To check your result you can compare this file with the similar one in
+ 
+\series bold 
+make_zeo_prog
+\series default 
+ directory.
+\newline 
+Also 
+\series bold 
+make_zeo
+\series default 
+ will produce three additional files: 
+\series bold 
+zeolite_f.dat
+\series default 
+, 
+\series bold 
+zeolite_c.dat
+\series default 
+ and 
+\series bold 
+zeolite.xyz
+\series default 
+.
+ These files can help you to control the 
+\series bold 
+make_zeo
+\series default 
+ work.
+ Two first files are fractional and Cartesian coordinates of zeolite unit
+ cell prepared in internal 
+\series bold 
+viewmol
+\series default 
+ format.
+ The last one is zeolite Cartesian coordinates in standard XYZ format.
+ To use two first files just execute command:
+\newline 
+
+\emph on 
+viewmol zeolite_f.dat
+\emph default 
+
+\newline 
+To recognize positions of all different atoms each atom type has different
+ name which in general is not coincided with atom types into 
+\series bold 
+Gulp
+\series default 
+ input file (tables 
+\begin_inset LatexCommand \ref{t1}
+
+\end_inset 
+
+).
+\begin_float tab 
+\layout Caption
+
+
+\begin_inset LatexCommand \label{t1}
+
+\end_inset 
+
+Relations between atom types applied in 
+\series bold 
+Extended-FF3
+\series default 
+ force field and atom names used to visualize zeolite structures
+\layout Standard
+\align center 
+
+\begin_inset  Tabular
+<lyxtabular version="2" rows="9" columns="3">
+<features rotate="false" islongtable="false" endhead="0" endfirsthead="0" endfoot="0" endlastfoot="0">
+<column alignment="center" valignment="top" leftline="true" rightline="false" width="" special="">
+<column alignment="center" valignment="top" leftline="true" rightline="false" width="" special="">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="" special="">
+<row topline="true" bottomline="true" newpage="false">
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="false" rotate="false" usebox="none" width="3cm" special="">
+\begin_inset Text
+
+\layout Standard
+
+Atom types of 
+\series bold 
+Extended-FF3
+\end_inset 
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="false" rotate="false" usebox="none" width="3cm" special="">
+\begin_inset Text
+
+\layout Standard
+
+Atom types applied into 
+\series bold 
+Gulp
+\series default 
+ input file
+\end_inset 
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" rotate="false" usebox="none" width="3cm" special="">
+\begin_inset Text
+
+\layout Standard
+
+Atom names used for visualising
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="false" newpage="false">
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+Al1
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+Al1
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+Al
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="false" newpage="false">
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+Si1
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+Si1
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+Si
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="false" newpage="false">
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+Si2
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+Cl2
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+P
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="false" newpage="false">
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+O1
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+O1
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+O
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="false" newpage="false">
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+O2
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+P2
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+N
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="false" newpage="false">
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+O3
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+P3
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+F
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="false" newpage="false">
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+O4
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+O4
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+B
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true" newpage="false">
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+H1
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="false" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+H1
+\end_inset 
+</cell>
+<cell multicolumn="0" alignment="center" valignment="top" topline="true" bottomline="false" leftline="true" rightline="true" rotate="false" usebox="none" width="" special="">
+\begin_inset Text
+
+\layout Standard
+
+H
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\end_float 
+\layout Subsubsection
+
+Optimization of aluminium containing zeolite
+\layout Standard
+
+To have your tutorial completed you can perform optimization of chabasite
+ with two Al atoms per unit cell:
+\newline 
+
+\emph on 
+gulp < gulp_input.ff3 > gulp_input.ff3.o
+\emph default 
+
+\newline 
+Compare your Gulp output file 
+\series bold 
+gulp_input.ff3.o 
+\series default 
+with the same file in 
+\series bold 
+make_zeo_prog
+\series default 
+ directory.
+ If you have the similar result we can guarantee that you carried out all
+ steps without mistakes.
+\layout Section
+
+Conclusion
+\layout Standard
+
+
+\series bold 
+make_zeo
+\series default 
+ program can be also used to optimize zeolite with help of 
+\series bold 
+Sierka-Sauer
+\series default 
+ force field.
+ There are no special steps to produce 
+\series bold 
+Gulp
+\series default 
+ input file.
+ Again, everything what you need is to define positions of Al atoms and
+ O forming hydroxyl groups.
+ Also the program can be very easy extended to use other alumino-silicate
+ shell model force fields.
+ 
+\the_end

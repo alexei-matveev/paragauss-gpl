@@ -1,0 +1,175 @@
+
+  end subroutine se_timefunction_init
+  !*************************************************************
+
+
+  !*************************************************************
+  subroutine timefunction_allocate( timeFunctions, nFunctions, polyDegr )
+    !  Purpose: allocate timeFunctions
+    implicit none
+    !------------ Declaration of formal parameters ---------------
+    type(se_timefunction_type), allocatable, intent(inout)  :: timeFunctions(:)
+    integer,                                 intent(in)     :: nFunctions
+    integer,                                 intent(in)     :: polyDegr
+   !** End of interface *****************************************
+    !------------ Declaration of local variables -----------------
+    integer :: i
+    !------------ Executable code --------------------------------
+
+    allocate( timeFunctions(nFunctions) )
+
+    do i=1, nFunctions
+      allocate( timeFunctions(i)%coefficients(polyDegr+1) )
+    end do
+
+  end subroutine timefunction_allocate
+  !*************************************************************
+
+
+  !*************************************************************
+  subroutine se_timefunction_dealloc( timeFunctions )
+    !  Purpose: deallocate the memory, allocated by se_timefunction_init.
+    implicit none
+    !------------ Declaration of formal parameters ---------------
+    type(se_timefunction_type), allocatable, intent(inout) :: timeFunctions(:)
+    !** End of interface *****************************************
+    !------------ Declaration of local variables -----------------
+    integer(kind=i4_kind)   :: i
+    !------------ Executable code --------------------------------
+
+    if( allocated(timeFunctions) ) then
+      do i=1, size(timeFunctions)
+        if( allocated(timeFunctions(i)%coefficients) ) deallocate(timeFunctions(i)%coefficients)
+      end do
+
+      deallocate(timeFunctions)
+    end if
+
+  end subroutine se_timefunction_dealloc
+  !*************************************************************
+
+
+  !*************************************************************
+  subroutine getfunctioninfo( filename, nFunctions, polyDegr, iostatus )
+    !  Purpose: read header from file and retrieve the following information:
+    !           the total number of functions and the polynomial degree of a function.
+    implicit none
+    !------------ Declaration of formal parameters ---------------
+    character(len=*),      intent(in)  :: filename
+    integer(kind=i4_kind), intent(out) :: nFunctions
+    integer(kind=i4_kind), intent(out) :: polyDegr
+    integer(kind=i4_kind), intent(out) :: iostatus
+    !** End of interface *****************************************
+    !------------ Declaration of local variables -----------------
+    integer(kind=i4_kind)   :: ios
+    character(len=dummyLen) :: stringDummy
+    !------------ Executable code --------------------------------
+
+	!fileUnit = openget_iounit( trim(filename), status='old' ) !!FIXME: in paragauss ersetzen
+    open(unit=fileUnit, file=trim(filename), status='old', iostat=iostatus)!!!FIXME: zeile loeschen
+    if( iostatus .ne. 0 ) then    !# I/O error handling FIXME: Stderr von Paragauss???
+      write(*,*) '[SchedEig] Error opening file: ', trim(filename)
+      return
+    end if
+
+    ios = 0
+    do while (ios .eq. 0)
+      read( unit=fileUnit, fmt='(A)', iostat=ios ) stringDummy
+      if( stringDummy(:2)=='N:' ) exit
+    end do
+
+    read( stringDummy(3:), fmt='(I5)' ) nFunctions
+
+    rewind( fileUnit )
+
+    ios = 0
+    do while (ios .eq. 0)
+      read( unit=fileUnit, fmt='(A)', iostat=ios ) stringDummy
+      if( stringDummy(:4)=='DEG:' ) exit
+    end do
+
+    read( stringDummy(5:), fmt='(I5)' ) polyDegr
+
+    rewind( fileUnit )
+    close( fileUnit )
+    !call returnclose_iounit( fileUnit )
+
+  end subroutine getfunctioninfo
+  !*************************************************************
+
+
+  !*************************************************************
+  subroutine readcoefficients( filename, timeFunctions, iostatus )
+    !  Purpose: read the coefficients from the file
+    implicit none
+    !------------ Declaration of formal parameters ---------------
+    character(len=*),           intent(in)    :: filename
+    type(se_timefunction_type), intent(inout) :: timeFunctions(:)
+    integer(kind=i4_kind),      intent(out)   :: iostatus
+    !** End of interface *****************************************
+    !------------ Declaration of local variables -----------------
+    integer(kind=i4_kind)   :: i, j, ios
+    character(len=dummyLen) :: stringDummy
+    !------------ Executable code --------------------------------
+
+    open(unit=fileUnit, file=trim(filename), status='old', iostat=iostatus)
+    if( iostatus .ne. 0 ) then    ! I/O error handling FIXME: Stderr von Paragauss???
+      write(*,*) '[SchedEig] Error opening file: ', trim(filename)
+      return
+    end if
+
+    ios = 0; i=1
+    do  while (ios .eq. 0)
+      read( unit=fileUnit, fmt='(A)', iostat=ios ) stringDummy
+      if( stringDummy(:2)=='P:' ) then
+        j=1
+        read( stringDummy(3:), fmt='(I5)' ) timeFunctions(i)%procCount
+        read( unit=fileUnit, fmt='(A3)', iostat=ios, advance='no' ) stringDummy
+        do j=1, timeFunctions(i)%polyDegr + 1
+          read( unit=fileUnit, fmt='(D13.6)', advance='no' ) timeFunctions(i)%coefficients(j)
+          if(   .not.   j .eq. timeFunctions(i)%polyDegr + 1 ) then
+            read( unit=fileUnit, fmt='(A4)', advance='no' ) stringDummy
+          end if
+        end do
+        timeFunctions(i)%scaleFactor = 1.
+        timeFunctions(i)%minSize = getMinSize( timeFunctions(i)%procCount )
+
+        i = i+1
+      end if
+    end do
+
+    close( fileUnit )
+
+  end subroutine readcoefficients
+  !*************************************************************
+
+
+  !*************************************************************
+  integer function getMinSize( procCount )
+    !  Purpose: return a defined minimum size of a matrix which a
+    !           given number of processors can compute
+    implicit none
+    !------------ Declaration of formal parameters ---------------
+    integer(kind=i4_kind), intent(in) :: procCount
+    !** End of interface *****************************************
+    !------------ Declaration of local variables -----------------
+    integer(kind=i4_kind), parameter :: blocksize=64
+    !------------ Executable code --------------------------------
+
+
+    if( .not. procCount .eq. 1 ) then
+      if( procCount .le. 9 ) then
+        getMinSize = procCount*blocksize
+      else
+        getMinSize = sqrt( real(procCount) )*blocksize
+      end if
+    else
+      getMinSize = 20
+    end if
+
+  end function getMinSize
+  !*************************************************************
+
+
+  !--------------- End of module ----------------------------------
+end module se_timefunction_module

@@ -1,0 +1,5 @@
+sed 's/Pt\//Pt-ps\//g' input \
+|sed 's/46.000/ 0.000/g' \
+|sed 's/78.000/ 0.000/g' \
+|sed 's/Pd_pseudo/Pd_pseudo-ps/g' > inputT
+mv inputT input

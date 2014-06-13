@@ -1,0 +1,40 @@
+&COORDINATES delocalized_coordinates=f zmat_coordinates=t/
+&INPUT_FORMAT zmat_format=t free_format=f valence_format=f atomic_units=t alpha_valence=1.2
+	epe_interfaced_mode=t /
+&OPERATIONS 
+	optimization=t, 
+	ts_search=f, 
+	calc_hessian=f, 
+        calc_epeff_hessian=f,
+	print_hesse=t, 
+        stop_after_epe_relaxation=t
+	print_internals=t, 
+	print_xmol=f, 
+	print_bmat=f, 
+	print_debug=f,
+	print_gmat=f, 
+	convert_internals=f, 
+	estimate_hessian=f
+	frequency_calculation=f, 
+	epe_forces=t
+	epeparameters=t
+	save_epe_r=f
+	gx_test=f /
+&METHOD line_search=f  /
+&HESSE_METHOD 
+	update_dfp=t 
+	update_bfgs=t 
+	update_direct=t, 
+	estimate=f, 
+	single_step=t /
+&STEP_PARAMETERS step_max=0.20 /
+&CONVERGENCE 
+	rms_grad=1.0e-4, 
+	rms_step=1.0e-3, 
+	max_comp_grad=3.0e-4, 
+	max_comp_step=3.0e-3 /
+&TS_PARAMETERS /
+&FREQUENCY_PARAMETERS calculate_intensities=f/
+&ORIENTATION  fixed_orientation = t fixed_atom_1 = 1 fixed_atom_2 = 2 fixed_atom_3 = 3/
+
+

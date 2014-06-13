@@ -1,0 +1,2 @@
+perl -p -e 's/MAX_ITERATION\s*=\s*\d+/MAX_ITERATION = 30 /i' input>inputT
+mv inputT input

@@ -1,0 +1,3 @@
+sed '/&OPERATIONS/a\
+stop_after_epe_relaxation   =  t' optimizer.input>inputT
+mv inputT optimizer.input

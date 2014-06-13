@@ -1,0 +1,11 @@
+echo 'creating epe.r with optimizer'
+sed 's/save_epe_r=f/save_epe_r=t/g' optimizer.input \
+|sed 's/epe_interfaced_mode=f/epe_interfaced_mode=t/g' \
+|sed 's/optimization=t/optimization=f/g' \
+|sed 's/epeparameters = f/epeparameters = t/g' \
+|sed 's/epe_forces=f/epe_forces=t/g'> optimizer.inputT
+mv optimizer.inputT optimizer.input
+cp gx.$1 gxfile
+optimizer_V2.1develFFH V2.1develFFH V2.1develFFH V2.1develFFH
+sed 's/save_epe_r=t/save_epe_r=f/g' optimizer.input >optimizer.inputT
+mv optimizer.inputT optimizer.input

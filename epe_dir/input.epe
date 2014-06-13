@@ -1,0 +1,124 @@
+ &work_options
+  lgopt=.true.
+  lcell_a=.false.
+  iescp=0
+  shake_lattice_impurities=1
+  output_level=3
+  n_iterations=10
+  iter_start_print_energy=0
+  read_configuration=.false.
+  write_configuration=.false.
+  write_config_to_lcgto_format=.false.
+  print_deform=.false.
+  print_gradients=.true.
+  print_ions_from_first_sphere=.false.
+  n_print_additional_ions=0
+  step_of_displacement=200
+ /end
+ &rotation_shift 
+  xx=1.,0.,0., yy=0.,1.,0., zz=0.,0.,1., 
+  shft_gto_to_hds=0.,0.,0.
+ /end
+ &n_gener_ions
+  n_gen_ions=700
+ /end
+c     translation vectors
+            13.000  0.000  0.00000 
+            0.000  4.7600  2.38000
+            0.0000 0.0000  4.12228
+ &n_ions_in_primitive_cell  
+  n_ions_cell=30
+ /end
+c number, type, name and coordinates of ions in the primitive cell
+  1 1 Al   8.18132   0.00001  -2.74818
+  2 1 Al   6.50000   4.76000   0.00000
+  3 1 Al   6.01466   2.37998  -1.37410
+  4 1 Al   4.33333   0.00001  -2.74818
+  5 1 Al   3.84799   0.00000   0.00000
+  6 1 Al   2.16666   2.37998  -1.37410
+  7 1 Al   1.68132   0.00001  -2.74817
+  8 1 Al   0.00000   0.00000   0.00000
+  9 1 Al  -0.48534   2.37998  -1.37410
+ 10 1 Al  -2.16667   0.00001  -2.74817
+ 11 1 Al  -2.65201   0.00000   0.00000
+ 12 3 Al  -4.33334   2.37998  -1.37410
+ 13 2 O    7.34066  -0.92343  -1.37409
+ 14 2 O    7.34066   1.65170  -0.11269
+ 15 2 O    7.34066  -0.72828   1.48677
+ 16 2 O    5.17399   0.72830  -1.26141
+ 17 2 O    5.17400   0.72828   1.26142
+ 18 2 O    5.17400  -1.45656   0.00000
+ 19 2 O    3.00733   1.65172   0.11268
+ 20 2 O    3.00733  -0.92344   1.37409
+ 21 2 O    3.00733  -0.72828  -1.48677
+ 22 2 O    0.84066  -1.65172  -0.11268
+ 23 2 O    0.84066   0.92344  -1.37409
+ 24 2 O    0.84066   0.72828   1.48677
+ 25 2 O   -1.32600  -0.72828  -1.26142
+ 26 2 O   -1.32600   1.45656   0.00000
+ 27 2 O   -1.32600  -0.72828   1.26142
+ 28 2 O   -3.49267   0.72826  -1.48678
+ 29 2 O   -3.49267   0.92344   1.37410
+ 30 2 O   -3.49267  -1.65172   0.11268
+ &n_translation_of_primitive_cell 
+   n_trans_primitive_cell=9,9,9
+ /end
+ &parameters_of_generation
+  n_centres_of_generation=2
+ /end
+ &centres_of_generation
+  xyz_center_gener=0.,0.,0.
+  xyz_step_of_shift=0.,0.,0.
+ /end
+ &centres_of_generation
+  xyz_center_gener=6.01466,2.37998,-1.37410
+  xyz_step_of_shift=0.,0.,0.
+ /end
+ &main_parameters
+  radius_first_sphere=5.5
+  radius_2A_sphere=22.0
+  radius_first_short_interact=10.
+  radius_second_short_interact=10.
+  radius_long_interact=100.
+  error_function_parameter=2.9177190
+ /end
+ &vacancy_impurity
+   n_vacancies=0
+   n_impurities=0
+ /end
+c after these two lines you have to include NAMELIST "impurities"
+c if n_impurities > 0
+c after these two lines you have to include NAMELIST's
+c "imp_param_of_potential" if n_impurities > 0
+
+
+# &impurities
+#   type_imp=4
+#   Q_imp=3.0
+#   Q_shell_imp=0.
+#   PK_imp=1.0e10
+#   X_imp=0.
+#   Y_imp=0.
+#   Z_imp=0.
+#  /end
+#
+# &imp_param_of_potential
+#   bim=1275.20
+#   roim=0.301200
+#   cim=0.
+#   dim=0.
+# /end
+#
+# &dvmhds_impurities
+#  type_imp=
+#  Q_imp=
+#  Q_shell_imp=
+#  PK_imp=
+# /end
+# &dvmhds_imp_param_of_potential
+#   bim=
+#   roim=
+#   cim=
+#   dim=
+# /end
+

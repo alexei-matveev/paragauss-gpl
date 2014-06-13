@@ -1,0 +1,252 @@
+#
+# ParaGauss, a program package for high-performance computations
+# of molecular systems
+# Copyright (C) 2014
+# T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+# M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+# A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+# T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+# M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+# M. Roderus, N. Rösch
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as published
+# by the Free Software Foundation [1].
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Please see the accompanying LICENSE file for further information.
+#
+### To obtain working Makefile, type: mpp <machine>; makedependent -d
+### To obtain script ewa ,type: make ewas 
+### To obtain executable , type: make
+### To obtain EXE2 executable   , type: make EXE2
+
+VERS =  V_kr_last
+
+#### Home Directory ####
+
+#MPP:LINUX# HOME = /users/ttfs
+#MPP:DEC# HOME = /home1
+#MPP:SGI# HOME = /home/ttfs
+
+#### Directory where Sources are stored ####
+#MPP:DEC# BASEDIR = /vobs/ttfs
+#MPP:SGI#  BASEDIR =    /vobs/ttfs
+#MPP:LINUX# BASEDIR = $(HOME)/pg_linux
+#### Directory where Scripts are stored #####
+BINDIR =        $(BASEDIR)/bin
+
+#### Directory where executables are installed #####
+#=========================================================
+#MPP:DEC# INSTALLDIRDIR =    $(HOME)/bin
+#=========================================================
+
+#===============================================
+#MPP:DEC# BASEDIR = /vobs/ttfs
+#===============================================
+#MPP:SGI:SGI_SER:SGI_SER#  BASEDIR =    /vobs/ttfs
+
+
+#### Directory where Scripts are stored #####
+BINDIR =        $(BASEDIR)/bin
+
+#### Directory where executables are installed #####
+#IPP NOT:SGI_THEO:SP2_MAUI#INSTALLDIRDIR =    $(HOME)/bin
+#IPP:SGI_THEO:SGI_BAR:SGI_BOL#INSTALLDIRDIR =    $(HOME)/bin.sgi
+#IPP:SP2_MAUI#INSTALLDIRDIR =    $(HOME)/paragau/tools
+
+#MPP:DEC# MACH = DEC
+#MPP:SGI#  MACH =       SGI
+#MPP:LINUX#  MACH =       LINUX
+
+#### NAME OF EXECUTABLES ####
+EXE    = $(INSTALLDIRDIR)/ewald_$(VERS).exe
+EXE2   = $(INSTALLDIRDIR)/ewald2_$(VERS).exe
+EWA    = $(INSTALLDIRDIR)/ewa_$(VERS)
+
+#===============================================
+ALL_EXE = $(EXE)
+#===============================================
+
+
+
+#### COMPILER ####
+#MPP:SGI# FC = f90
+#MPP:DEC# FC = f95
+#MPP:LINUX# FC =    /usr/absoft/bin/f90
+#MPP:VPP# FC =  frt
+
+#### COMPILER FLAGS ####
+## F90BASEFLAGS free  form Fortran 90 flags (always used)
+## FBASEFLAGS   fixed form Fortran 90 flags (always used)
+## F90FLAGS    additonal Fortran 90 flags
+## F90ALTFLAGS additonal Fortran 90 alternate flags (see makro ALTFLAGS below to see for which files)
+## Additional flags can also be included in a file termed <sourcefile>.flags .
+## In this case, neither F90FLAGS nor F90ALTFLAGS are used.
+## CCFLAGS  C compiler flags
+## F77FLAGS Fortran 77
+
+#MPP:DEC# F90BASEFLAGS = -arch host -O4 -tune host 
+#MPP:DEC# F90ALTFLAGS = -arch host -O0 -tune host
+#MPP:DEC# F90FLAGS = -O4
+
+#MPP:SGI## -O3 aggressive optimization that might affect floating point results.
+#MPP:SGI## -O2 (-O) turns on global optimizations. This is the default
+#MPP:SGI## --fullwarn -extend_source -nocpp
+#MPP:SGI## F90FLAGS = -g2 -DEBUG:subscript_check
+#MPP:SGI## F90ALTFLAGS = -g2 -DEBUG:subscript_check
+#MPP:SGI## LINKFLAGS = -64  -g2 -r10000 -fullwarn -nocpp
+##MPP:SGI# F90FLAGS = -O2 -OPT:Olimit=0
+#MPP:SGI# F90FLAGS = -O2 -extend_source  -OPT:Olimit=0
+#MPP:SGI# F90ALTFLAGS = -O3 -OPT:Olimit=0
+#MPP:SGI# LINKFLAGS = -64 -r10000 -fullwarn
+#MPP:SGI# CCFLAGS = -64 -r10000
+
+#MPP:LINUX# CCFLAGS = -c
+#MPP:LINUX#   F90BASEFLAGS =
+#MPP:LINUX#   FBASEFLAGS = -W132
+#MPP:LINUX#   F90FLAGS = -O -B100 -YEXT_NAMES=LCS -YEXT_SFX=_
+#MPP:LINUX#   F90ALTFLAGS = -O -B100 -YEXT_NAMES=LCS -YEXT_SFX=_
+#MPP:LINUX#   F77FLAGS = -O -B100 -YEXT_NAMES=LCS -YEXT_SFX=_
+#MPP:LINUX#   LINKFLAGS = -YEXT_NAMES=LCS -YEXT_SFX=_
+
+#MPP:VPP## -Of full optimization
+#MPP:VPP## -Wv,-m3 extended Vectorisation messages
+#MPP:VPP## -Eeilmpu -Post extent of compiler messages
+#MPP:VPP## -NI no external procedure inlining
+#MPP:VPP## -Z <file> output file for compiler listings
+#MPP:VPP## -Fixed -w fixed form sources with extended lines
+#MPP:VPP## -X9 f90 language level
+#MPP:VPP## -Am generate .mod file
+#MPP:VPP## Emergency strategy: change optimization flags as follows:
+#MPP:VPP## Normal : -Of -Wv,-m3 -Wv,-m3     -NI
+#MPP:VPP## 1. Step: -Oe,-P,-E   -Wv,-qs,-m3
+#MPP:VPP## 2. Step: -Ob
+#MPP:VPP## 3, Step: -On
+#MPP:VPP#  F90BASEFLAGS = -Eeilmp -Posta -NI -Am
+#MPP:VPP#  FBASEFLAGS = -Eeilmp -Posta -NI -Fixed -w -X9 -Am
+#MPP:VPP#  F90FLAGS = -Of -Wv,-m3,-noalias
+#MPP:VPP#  F90ALTFLAGS = -On,-P,-E -Wv,-qs,-m3
+
+#### LDFLAGS, LIBRARY-PATH ####
+#===============================================
+#MPP:LINUX#LIBS = -lfpvm3 -lpvm3 -lU77 -lV77  -latlas -L$(HOME)/atlas/ATLAS/lib/Linux_PIII
+#MPP:DEC#LIBS    =
+#MPP:DEC#INCLUDE    = 
+#MPP:VPP#  LIBS    =
+#===============================================
+
+#MPP:SGI#LIBS    = -L/soft/pvm3/lib -L/soft/pvm3/lib/SGIMP64 -lfpvm3 -lpvm3 -lcomplib.sgimath -lblas
+#MPP:SGI#INCLUDE        = -I$(BASEDIR)/modules -I$(BASEDIR)/comm/pvm_dir -I/soft/pvm3/include
+
+#MPP:DEC#LIBS    =
+#MPP:DEC#INCLUDE    = -I$(BASEDIR)/modules -I$(BASEDIR)/comm/serial_dir # -I$(BASEDIR)
+# for makedependent:   OBJS MODOBJS
+
+OBJS =  
+
+MODOBJS =  evald.o  latt_module.o	\
+	sar_module.o	\
+	ew_grid_module.o	\
+	scr_module.o	\
+	matinv.o \
+	mesh_module.o proj_rest_module.o \
+	erfc.o
+
+
+.SUFFIXES: .f .fp .f90  .f90p  .o .mod .compile .c
+#### implicit rules ####
+#MPP NOT:VPP:VPP_MPI:VPP_SER START#
+.f.o:
+	$(BINDIR)/compile $(@D) $(<F)  $(MACH) \
+	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.fp.o:
+	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f.mod:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.fp.mod:
+	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90.o:
+	$(BINDIR)/compile $(@D) $(<F)  $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+
+.f90.mod:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f90p.o:
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f90 $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+#MPP END#
+#MPP:IBM:IBM_PVM:IBM_SER:IBM_MPI START#
+.f.o:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.fp.o:
+	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f.mod:
+	$(BINDIR)/compile $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.fp.mod:
+	$(BINDIR)/compile -pp $(BINDIR)/fpp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(FBASEFLAGS) -Z $(*F).list' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f90.o:
+	$(BINDIR)/compile -cp $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f90p.o:
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+.f90p.mod:
+	$(BINDIR)/compile -pp $(BINDIR)/f90pp $(MACH) $(*F).f $(@D) $(<F) $(MACH) \
+	$(FC) '$(F90BASEFLAGS)' '$(F90FLAGS)' '$(F90ALTFLAGS)' '$(INCLUDE)'
+#MPP END#
+
+# makedependent start insert
+# makedependent end insert
+
+##### SPECIAL COMMANDS #####
+$(EXE):
+	$(ALTFLAGS) $(MODOBJS)
+	rm -f $(MODOBJS:.o=.newmod)
+	$(FC) $(LINKFLAGS) -o   $(EXE)  $(MODOBJS)  $(LIBS) 
+	chmod 777 $(EXE)
+
+EXE2:
+	$(FC) $(LINKFLAGS) -o   $(EXE2)  $(LIBS)	Ewald.f90 
+	chmod 777 $(EXE2)
+input2:
+#MPP:LINUX#	cp ewald_input /users/paragau/nasluzov/ewald_input
+#MPP:LINUX#	chmod 644 /users/paragau/nasluzov/ewald_input
+#MPP:SGI#	cp ewald_input /h/ttfs/nasluzov/ewald_input
+#MPP:SGI#	chmod 644 /h/ttfs/nasluzov/ewald_input
+ewas: 
+#MPP:DEC#	sed '/instal/r dec_install' ewa |sed 's/<VERS>/$(VERS)/' > $(EWA)
+#MPP:SGI#	sed '/instal/r sgi_install' ewa |sed 's/<VERS>/$(VERS)/' > $(EWA)
+#MPP:LINUX#	sed '/instal/r linux_install' ewa |sed 's/<VERS>/$(VERS)/' > $(EWA)
+	chmod 755 $(EWA)
+#MPP:SGI:LINUX#	chgrp theochem $(EWA)
+#MPP:DEC#	chgrp users $(EWA)
+clean:          modclean  #rm all objects
+	rm -f $(OBJS)
+	rm -f $(MODOBJS)
+
+modclean:
+	rm -f $(MODOBJS:.o=.mod)
+
+depclean:
+	rm -f *.dep
+
+backupclean: #rm backup files automatically created by emacs, merges, makedependent
+	rm -f *~ */*~ *.contrib* */*.contrib* *.merge* */*.merge* *.old */*.old findmerge.* *.oldmod */*.oldmod
+

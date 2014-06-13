@@ -1,0 +1,310 @@
+%% LyX 1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{setspace}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Bold symbol macro for standard LaTeX users
+\newcommand{\boldsymbol}[1]{\mbox{\boldmath $#1$}}
+
+
+\usepackage{babel}
+\makeatother
+\begin{document}
+
+\title{EFP/DFT method for water as solvent}
+
+
+\author{Aleksey M. Shor}
+
+\maketitle
+\begin{onehalfspace}
+
+\section{Overview of the method}
+\end{onehalfspace}
+
+\begin{onehalfspace}
+The effective fragment method (EFM) belong to the wide family of hybrid
+QM/MM methods, but differs from most part of them by rather complex
+potential acting between quantum mechanical (QM) part and molecular
+mechanical (MM) solvent and MM solvent molecules themselves. The method
+was derived in two versions. Originally the first variant of EFM was
+implemented within framework of Hartree-Fock (HF) approach \cite{Day 1996}.
+Later the variant of EFM for running QM/MM calculations at density
+functional (DFT) QM scheme was derived \cite{Adamovic 2003}.
+
+In its DFT variant the effective fragment potential (EFP/DFT) is represented
+by set of one-electron potentials that are included to the \emph{ab
+initio} electronic Hamiltonian. The EFP/DFT contains three energy
+terms:
+\end{onehalfspace}
+
+\begin{enumerate}
+\begin{onehalfspace}
+\item Coulombic interactions between solvent molecules (fragment - fragment)
+and fragments with QM solute molecules (QM - fragment). This interaction
+also accounts for charge penetration effect;
+\item Polarization interaction between fragments and fragments with QM solute
+molecules;
+\item Repulsion terms acting again between fragments and fragments with
+QM solute molecules.\end{onehalfspace}
+
+\end{enumerate}
+\begin{onehalfspace}
+Electrostatic interactions as the Coulomb, polarization and charge
+penetration (or screening) contributions are defined exclusively from
+DFT calculations on the single water molecule. The repulsion terms
+are determined by a fitting procedure to reproduce the QM potential
+of the water dimer \cite{Day 1996,Adamovic 2003}.
+
+As typical for hybrid QM/MM methods the system is divided into two
+subsystems: a QM part which can include besides the solute molecules
+also some of the solvent molecules, and the fragment part which consists
+of the solvent molecules represented as fragment potential described
+above. Therefore the total Hamiltonian of the whole system is defined
+as\begin{equation}
+H_{total}=H_{QM}+V_{ef}\label{eq:1}\end{equation}
+and here \begin{equation}
+V_{ef}=\sum_{i=1}^{N}\left(\sum_{k=1}^{K}V_{k,i}^{elec}+\sum_{l=1}^{L}V_{l,i}^{pol}+\sum_{m=1}^{M}V_{m,i}^{rep}\right).\label{eq:2}\end{equation}
+For $i$th fragment all contributions are over a number ($K$, $L$,
+$M$) of expansion points and include electron-fragment, nuclei-fragment
+and fragment-fragment interactions. 
+\end{onehalfspace}
+
+\begin{onehalfspace}
+
+\section{Electrostatic interactions}
+\end{onehalfspace}
+
+\begin{onehalfspace}
+The Coulomb potential of the fragment is presented by multicenter,
+multipolar expansion of the molecular density. For the water molecule
+the expansion is performed upto octopole moments at $K=5$ points
+which are \textbf{nuclear centers} and \textbf{bond midpoints}. The
+general expression for the electrostatic potential of $i$th fragment
+can be written as follows:\begin{equation}
+V_{i}^{elec}=\sum_{k}^{K}\left(q_{k}V_{QM}-\sum_{\alpha}^{x,y,z}\mu_{k}^{\alpha}F_{QM}^{\alpha}-\frac{1}{3}\sum_{\alpha,\beta}^{x,y,z}\Theta_{k}^{\alpha\beta}F_{QM}^{\alpha\beta}-\frac{1}{15}\sum_{\alpha,\beta,\gamma}^{x,y,z}\Omega_{k}^{\alpha\beta\gamma}F_{QM}^{\alpha\beta\gamma}\right),\label{eq:3}\end{equation}
+where $q$, $\mu$, $\Theta$ and $\Omega$ are charges and dipole,
+quadrupole, and octopole moments for the fragments, respectively,
+and $V_{QM}$, $F_{QM}^{\alpha}$, $F_{QM}^{\alpha\beta}$, and $F_{QM}^{\alpha\beta\gamma}$
+are the QM (or fragment, in case of fragment-fragment interaction)
+electrostatic potential, field, field gradient and field Hessian.
+\end{onehalfspace}
+
+\begin{onehalfspace}
+
+\section{Charge penetration}
+\end{onehalfspace}
+
+\begin{onehalfspace}
+The multipolar presentation of the charge density cannot account for
+the overlap of the electron charge density between two molecules.
+For long distances the multipolar expansion gives good description
+of the electrostatic interaction, but needs to be corrected at short
+distances when electron charge densities overlap significantly. In
+EFP method to correct effect of overlapping a screening function is
+used. In EFP/DFT approach only the electronic part of the charge-charge
+interaction is screened. The QM Coulomb term is multiplied by a damping
+function in the following form:\begin{equation}
+\left[1-c_{k}\cdot e^{-a_{k}r_{k,QM}^{2}}\right]q_{k}V_{QM},\label{eq:4}\end{equation}
+where $r_{k,QM}$ is the distance between $k$th point of fragment
+and QM charge density and $V_{QM}$ is the electrostatic potential
+produced by electron density and nuclei. 
+
+The charge-charge interaction between two fragments also is screened.
+Here more general expression \cite{Freitag 2000}, which can be applied
+to any solvent, is used. For the general case of two different fragments
+the energy of their interaction is written as follow:\begin{equation}
+E^{ef-ef}=-\frac{q_{1}q_{2}}{\left|r_{12}\right|}\cdot\frac{\left(a_{1}^{2}e^{-a_{2}r_{12}}-a_{2}^{2}e^{-a_{1}r_{12}}\right)}{\left(a_{1}^{2}-a_{2}^{2}\right)}.\label{eq:5}\end{equation}
+For the same fragments $\left(a_{1}=a_{2}\right)$ the energy expression
+becomes:\begin{equation}
+E^{ef-ef}=-\frac{q_{1}q_{2}}{\left|r_{12}\right|}\cdot\left(1+\frac{a_{1}r_{12}}{2}\right)e^{-a_{1}r_{12}}.\label{eq:6}\end{equation}
+And for the specific case when one of two charges is not screened
+we can write:\begin{equation}
+E^{ef-ef}=-\frac{q_{1}q_{2}}{\left|r_{12}\right|}e^{-a_{1}r_{12}}.\label{eq:7}\end{equation}
+
+\end{onehalfspace}
+
+\begin{onehalfspace}
+
+\section{Polarization}
+\end{onehalfspace}
+
+\begin{onehalfspace}
+The EFP/DFT approach is used the linear polarizability model:\begin{equation}
+\vec{\mu}_{i}=\tilde{\alpha}_{i}\vec{F}_{i}.\label{eq:8}\end{equation}
+Here, $\vec{\mu}_{i}$ is the induced dipole vector a point $i$,
+$\vec{F}_{i}$is the electric field vector at point $i$, and $\tilde{\alpha}_{i}$
+is the corresponding tensor of the polarizability. The molecular polarizability
+tensor is expressed as a tensor sum of the localized molecular orbital
+polarizabilities (LMO) \cite{Boys 1966}, centered at the LMO centroids.
+For water molecule, there are five such LMOs: \textbf{oxygen inner
+shell, two oxygen lone pairs, two oxygen-hydrogen bonds}.
+
+The total energy of the QM-EFP system due to polarization is\begin{equation}
+E_{pol}=E_{int}+E_{ind},\label{eq:9}\end{equation}
+$E_{int}$ is the energy of interaction of the induced dipoles with
+the electrostatic field produced by the QM part, EFP multipoles and
+induced dipoles:\begin{equation}
+E_{int}=\sum_{i=1}^{N}\left(-\sum_{l=1}^{L}\vec{\mu}_{l}\vec{F}_{l}^{QM}-\sum_{l=1}^{L}\vec{\mu}_{l}\vec{F}_{l}^{mp}-\frac{1}{2}\sum_{l=1}^{L}\vec{\mu}_{l}\vec{F}_{l}^{\mu}\right),\label{eq:10}\end{equation}
+where $\vec{F}_{l}^{QM}$ is the field at point $l$ from the QM part
+of the system, $\vec{F}_{l}^{mp}$ and $\vec{F}_{l}^{\mu}$ are the
+fields due to the static multipoles and induced dipoles in the other
+fragments. The total electric field at point $l$ is given by \begin{equation}
+\vec{F}_{l}^{tot}=\vec{F}_{l}^{QM}+\vec{F}_{l}^{mp}+\vec{F}_{l}^{\mu},\label{eq:11}\end{equation}
+and Eq. \ref{eq:10} can be rewritten as\begin{equation}
+E_{int}=-\sum_{i=1}^{N}\left(\sum_{l=1}^{L}\vec{\mu}_{l}\left[\vec{F}_{l}^{tot}-\frac{1}{2}\vec{F}_{l}^{\mu}\right]\right)=-\sum_{i=1}^{N}\left(\sum_{l=1}^{L}\left[\tilde{\alpha}_{i}\vec{F}_{l}^{tot}\right]\cdot\left[\vec{F}_{l}^{tot}-\frac{1}{2}\vec{F}_{l}^{\mu}\right]\right).\label{eq:12}\end{equation}
+$E_{ind}$ is the energy required to induced the dipoles in the fragments.
+It was shown \cite{Debye 1945} that\begin{equation}
+E_{ind}=\sum_{i=1}^{N}\left(\frac{1}{2}\sum_{l=1}^{L}\vec{\mu}_{l}\vec{F}_{l}^{tot}\right)=\sum_{i=1}^{N}\left(\frac{1}{2}\sum_{l=1}^{L}\vec{\mu}_{l}\left[\vec{F}_{l}^{QM}+\vec{F}_{l}^{mp}+\vec{F}_{l}^{\mu}\right]\right).\label{eq:13}\end{equation}
+Therefore the total polarization energy is\begin{equation}
+\begin{array}{ccl}
+E_{pol} & = & \sum_{i=1}^{N}\left(-\sum_{l=1}^{L}\vec{\mu}_{l}\cdot\left[\vec{F}_{l}^{tot}-\frac{1}{2}\vec{F}_{l}^{\mu}\right]+\frac{1}{2}\sum_{l=1}^{L}\vec{\mu}_{l}\vec{F}_{l}^{tot}\right)\\
+ & = & \sum_{i=1}^{N}\left(\frac{1}{2}\sum_{l=1}^{L}\vec{\mu}_{l}\cdot\left[\vec{F}_{l}^{tot}-\vec{F}_{l}^{\mu}\right]\right)\\
+ & = & \sum_{i=1}^{N}\left(\frac{1}{2}\sum_{l=1}^{L}\left[\tilde{\alpha}_{i}\vec{F}_{l}^{tot}\right]\cdot\left[\vec{F}_{l}^{QM}+\vec{F}_{l}^{mp}\right]\right).\end{array}\label{eq:14}\end{equation}
+
+
+The last step is to add the contribution coming from the polarization
+energy of fragments to the Kohn-Shem (KS) Hamiltonian in the QM self-consistent-field
+(SCF) procedure. The corrected total KS Hamiltonian can be written
+as\begin{equation}
+H=H_{0}-\frac{1}{2}\sum_{i=1}^{N}\sum_{l=1}^{l}\left(\vec{\mu}_{l}+\vec{\mu}_{l}^{\clubsuit}-\vec{\mu}_{l}^{\prime}\right)\cdot\vec{f}_{l}^{el}.\label{eq:15}\end{equation}
+Here, $\vec{\mu}_{l}^{\clubsuit}=\tilde{\alpha}_{i}^{T}\vec{F}_{l}^{tot^{\prime}}$,
+$\vec{\mu^{\prime}}_{l}=\tilde{\alpha}_{i}^{T}\vec{F}_{l}^{\mu}$
+and $\vec{f}_{l}^{el}$ is the electronic field operator $\left(\vec{F}_{l}^{el}=\left\langle \psi\left|\vec{f}_{l}^{el}\right|\psi\right\rangle \right)$.
+$\vec{F}_{l}^{tot^{\prime}}$ here is writen as\begin{equation}
+\vec{F}_{l}^{tot^{\prime}}=\vec{F}_{l}^{QM}+\vec{F}_{l}^{mp}+\vec{F}_{l}^{\mu^{\prime}},\label{eq:16}\end{equation}
+$\vec{F}_{l}^{\mu^{\prime}}$ is the electic field produced by dipoles
+$\vec{\mu}_{l}^{\clubsuit}$.
+\end{onehalfspace}
+
+\begin{onehalfspace}
+
+\section{Repulsion terms}
+\end{onehalfspace}
+
+\begin{onehalfspace}
+For the QM-fragment interaction $V^{rep}$term is represented by linear
+combination of two Gaussian functions, expanded at \textbf{the atomic
+centers}:\begin{equation}
+V_{i}^{rep}=\sum_{m=1}^{M}\left(\sum_{j=1}^{2}c_{mj}e^{-a_{mj}r_{m,QM}^{2}}\right),\label{eq:17}\end{equation}
+where $r_{m,QM}$is the distance between $m$th fragment points and
+the electronic charge density.
+
+For the fragment-fragment interaction instead of two Gaussian functions,
+a single exponential is used expanded at \textbf{the atomic centers
+and the center of mass}, in order to better capture the angular dependence
+of the charge transfer contribution.
+\end{onehalfspace}
+
+\begin{onehalfspace}
+
+\section{Water parameters}
+\end{onehalfspace}
+
+\begin{onehalfspace}
+The EFP method is used a fixed water model. That is, during geometry
+optimization structural parameters of water fragment are kept fixed
+at 0.9439 angstrom (O-H bond) and 106.7 degree (H-O-H angle).
+\end{onehalfspace}
+
+\begin{onehalfspace}
+
+\section{Geometry optimization}
+\end{onehalfspace}
+
+\begin{onehalfspace}
+In order to include fragment molecules in the geometry optimization
+the forces have to be calculated on them. The energy derivatives are
+calculated with respect to each multipole expansion point, each polarizability
+point and each repulsion point. But these derivatives cannot be used
+directly in geometry optimization due to fixed structure of the fragment.
+Therefore we must constrain the points within a fragment to avoid
+their moving relatively each other. This is accomplished by combination
+of the forces on the fragment to give a three components of a net
+force on the fragment and a three components of a net torque around
+the fragment center-of-mass. The net force on a fragment is obtained
+by summing the forces on each fragment point:\begin{equation}
+F_{x}=\sum_{j}\left(-\frac{\partial E}{\partial x_{j}}\right),\label{eq:18}\end{equation}
+where $j$ denotes a fragment point.
+
+Calculation of the torque on the fragment is done in general as following:\begin{equation}
+\overrightarrow{\tau}=\sum_{j}\left(\overrightarrow{r_{j}}\times\overrightarrow{F_{j}}\right),\label{eq:19}\end{equation}
+where $\overrightarrow{r_{j}}$ is a vector from the center of mass
+to the point of application of the force, and $\overrightarrow{F_{j}}$
+is the force vector for this interaction. To get full torque of the
+fragment the contributions coming from dipoles, quadrupoles and octopoles
+have to contain additional corrections. For example, for dipole the
+completed expression for torque is given by\begin{equation}
+\vec{\tau}_{j}=\vec{r}_{j}\times\vec{F}_{j}+\vec{\mu}_{j}\times\vec{\epsilon}_{j}.\label{eq:20}\end{equation}
+Here $\vec{\epsilon}_{j}$ is the electrostatic field at the $j$th
+position of dipole $\vec{\mu}_{j}$.
+
+The additional term $\vec{\tau}_{ad}$ contributes to the torques
+on a quadrupole is written as follow:\begin{equation}
+\begin{array}{ccl}
+\tau_{ad}^{x} & = & \frac{1}{3}\sum_{\alpha}^{x,y,z}\left(\Theta^{y,\alpha}\epsilon_{\alpha,z}^{\prime}-\Theta^{z,\alpha}\epsilon_{\alpha,y}^{\prime}\right)\\
+\tau_{ad}^{y} & = & \frac{1}{3}\sum_{\alpha}^{x,y,z}\left(\Theta^{z,\alpha}\epsilon_{\alpha,x}^{\prime}-\Theta^{x,\alpha}\epsilon_{\alpha,z}^{\prime}\right)\\
+\tau_{ad}^{z} & = & \frac{1}{3}\sum_{\alpha}^{x,y,z}\left(\Theta^{x,\alpha}\epsilon_{\alpha,y}^{\prime}-\Theta^{y,\alpha}\epsilon_{\alpha,x}^{\prime}\right)\end{array}.\label{eq:21}\end{equation}
+$\epsilon^{\prime}$ is the field gradient at the position of quadrupole
+$\Theta$. The correction to the torque on an octupole is given in
+\cite{PAPS 1996}.
+\end{onehalfspace}
+
+\begin{onehalfspace}
+
+\section{Energy derivatives}
+\end{onehalfspace}
+
+\begin{onehalfspace}
+Derivation of the gradients of the energy of the QM part is well known.
+Also standard procedures are used to derive the gradients of the interaction
+energy between the QM part and EFP multypole and repulsive centers
+and between these fragment centers themselves. The special attention
+has to be paid to derive the gradients of the polarization energy
+(Eq.\ref{eq:14}). EFM is used asymmetric anisotropic polarizability
+tensors \cite{Adamovic 2003}. For symmetric isotropic polarizability
+tensors, the forces can be derived based on a variational treatment
+of the polarization energy, which leads to vanishing induced dipole
+derivatives \cite{Day 1996}. But for anisotropic polarizability tensor
+a variational method cannot lead to the correct expressions for the
+forces and torques at the polarizability points, since the derivatives
+of the induced dipoles have to be explicitly evaluated. To avoid evaluation
+of the induced dipole derivatives in \cite{Li 2006} the forces and
+torques acting on polarizability points were derived via a direct
+differentiation approach in the form of matrix equations. As formulated
+in \cite{Li 2006} the gradients of the polarization energy can be
+written as\begin{equation}
+g_{\alpha_{i}}=-\frac{1}{2}\left[\left(\vec{F}^{tot^{\prime}}\right)_{\alpha_{i}}^{T}\cdot\vec{\mu}_{i}+\left(\vec{F}^{tot}\right)_{\alpha_{i}}^{T}\cdot\vec{\mu}_{i}^{\clubsuit}\right].\label{eq:22}\end{equation}
+Here $\alpha$ are $x$, $y$ and $z$. The Eq. \ref{eq:22} can be
+rewritten in more suitable form for implementing:\begin{equation}
+g_{\alpha_{i}}=-\frac{1}{2}\left[\left(\vec{F}^{QM}\right)_{\alpha_{i}}^{T}\cdot\left(\vec{\mu}_{i}+\vec{\mu}_{i}^{\clubsuit}\right)+\left(\vec{F}^{mp}\right)_{\alpha_{i}}^{T}\cdot\left(\vec{\mu}_{i}+\vec{\mu}_{i}^{\clubsuit}\right)+\left(\vec{F}^{\mu^{\prime}}\right)_{\alpha_{i}}^{T}\cdot\vec{\mu}_{i}+\left(\vec{F}^{\mu}\right)_{\alpha_{i}}^{T}\cdot\vec{\mu}_{i}^{\clubsuit}\right].\label{eq:23}\end{equation}
+Similarly, the torques at polarizability points can be presented:\begin{equation}
+\begin{array}{ccl}
+\tau_{i} & = & \frac{1}{2}\left(\vec{F}^{tot^{\prime}}\times\vec{\mu}_{i}+\vec{F}^{tot}\times\vec{\mu}_{i}^{\clubsuit}\right)\\
+ & = & \frac{1}{2}\left(\vec{F}^{QM}\times\left[\vec{\mu}_{i}+\vec{\mu}_{i}^{\clubsuit}\right]+\vec{F}^{mp}\times\left[\vec{\mu}_{i}+\vec{\mu}_{i}^{\clubsuit}\right]\right.\\
+ & + & \left.\vec{F}^{\mu^{\prime}}\times\vec{\mu}_{i}+\vec{F}^{\mu}\times\vec{\mu}_{i}^{\clubsuit}\right).\end{array}\label{eq:23}\end{equation}
+ 
+\end{onehalfspace}
+
+\begin{thebibliography}{5}
+\bibitem{Day 1996}P. N. Day, J. H. Jensen, M. S. Gordon, S. P. Webb, W. J. Stevens,
+M. Krauss, D. Garmer, H. Basch, D. Cohen, J. Phys. Chem. 105 (1996)
+1968.
+\bibitem{Adamovic 2003}I. Adamovic, M. A. Freitag, M. S. Gordon, J. Phys. Chem. 118 (2003)
+6725.
+\bibitem{Freitag 2000}M. A. Freitag, M. S. Gordon, J. H. Jensen, W. J. Stevens, J. Phys.
+Chem. 112 (2000) 7300.
+\bibitem{Boys 1966}S. F. Boys, in P. O. Lowdin (Eds.), Quantum Science of Atoms, Molecules
+Solids, Academ Press, NY, 1966, pp. 253-262. 
+\bibitem{Debye 1945}P. Debye, Polar Molecules, Dover, Mineola, NY, 1945, p. 30.
+\bibitem{PAPS 1996}See AIP document no. PAPS JCPSA-105-1968-20.
+\bibitem{Li 2006}H. Li, H. M. Netzloff, M. S. Gordon, J. Phys. Chem. 125 (2006) 194103.\end{thebibliography}
+
+\end{document}

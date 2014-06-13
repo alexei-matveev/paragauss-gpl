@@ -1,0 +1,9 @@
+sed 's/OPERATIONS_GEO_OPT = t/OPERATIONS_GEO_OPT = f/g' input \
+|sed 's/OPERATIONS_Epe_lattice = t/OPERATIONS_EPE_LATTICE = f/g' \
+|sed 's/OPERATIONS_EPE_LATTICE = t/OPERATIONS_EPE_LATTICE = f/g' \
+|sed 's/OPERATIONS_epe_lattice = t/OPERATIONS_EPE_LATTICE = f/g' \
+|sed 's/OPERATIONS_POST_HOC =t/OPERATIONS_POST_HOC =f/g' \
+|sed 's/OPERATIONS_POST_HOC = t/OPERATIONS_POST_HOC = f/g' \
+|sed 's/OPERATIONS_GRADIENTS = t/OPERATIONS_GRADIENTS = f/g' \
+|sed 's/OPERATIONS_GRADIENTS =t/OPERATIONS_GRADIENTS =f/g' >temp_input
+cp temp_input input

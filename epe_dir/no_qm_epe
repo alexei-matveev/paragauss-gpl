@@ -1,0 +1,2 @@
+perl -p -e 's/operations_qm_epe\s*=\s*(true|t)/OPERATIONS_QM_EPE = FALSE/i' input > input.temp
+mv input.temp input

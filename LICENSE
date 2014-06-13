@@ -1,0 +1,64 @@
+ParaGauss, a program package for high-performance computations
+of molecular systems
+Copyright (C) 2014
+T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+M. Roderus, N. Rösch
+
+with contributions from
+
+A. Deka, S. Parker, and D. Tittle.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 as published
+by the Free Software Foundation [1].
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+[1] http://www.gnu.org/licenses/gpl-2.0.html
+
+
+When using this program for any purpose you should cite it as
+
+T. Belling, T. Grauschopf, S. Krüger, M. Mayer, F. Nörtemann, M. Staufer,
+C. Zenger, N. Rösch in High Performance Scientific and Engineering Computing,
+Proceedings of the International FORTWIHR Conference on HPSEC, Munich,
+H.-J. Bungartz, F. Durst, und Chr. Zenger (eds.), Lecture Notes in
+Computational Science and Engineering, Vol. 8, Springer Verlag,
+Heidelberg, 1999, 441-455.
+
+
+as well as one of the following for specific extensions:
+
+* Covalent EPE:
+A. M. Shor, E. A. Ivanova Shor, V. A. Nasluzov, G. N. Vayssilov, N. Rösch;
+J. Chem. Theor. Comput. 3 (2008), 2290-2300.
+
+* Relativistic corrections:
+N. Rösch, A. V. Matveev, V. A. Nasluzov, K. M. Neyman,
+L. V, Moskaleva, S. Krüger in Relativistic Electronic Structure Theory -
+Applications, P. Schwerdtfeger (ed.),Theoretical and Computational
+Chemistry Series, Vol. 14, Elsevier, Amsterdam, 2004, 656-722.
+
+* Solvation:
+M. Fuchs, A. M. Shor, N. Rösch; Int. J. Quantum Chem. 86 (2002), 487-501.
+
+* QM/MM:
+T. Kerdcharoen, U. Birkenheuer, S. Krüger, A. Woiterski, N. Rösch;
+Theor. Chem. Acc. 109 (2003), 285-297.
+
+together with the version reference
+
+ParaGauss Version 3.21
+T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+M. Roderus, N. Rösch

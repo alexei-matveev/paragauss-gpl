@@ -1,0 +1,69 @@
+ &EPE_PARAMETERS
+ ITEM%L       =   8.02000022888184     ,
+ ITEM%U       =   13.0200002288818     ,
+ ITEM%b =0.0 ITEM%r= 0.3118
+  ITEM%c =0.0 ITEM%d=0.0
+ ITEM%cutoff = 10.0
+ ITEM%N       =          -1
+ /
+ &EPE_PARAMETERS
+ ITEM%L       =   8.02000022888184     ,
+ ITEM%U       =   13.0300002288818     ,
+ITEM%b =   3.206265E+02
+ITEM%r=  2.921884E-01
+ITEM%c=  4.854256E+00
+ITEM%cutoff = 10.0
+ ITEM%N       =          -1
+ /
+ &EPE_PARAMETERS
+ ITEM%L       =   8.01000022888184     ,
+ ITEM%U       =   13.0200002288818     ,
+ ITEM%b =1114.9
+ ITEM%r= 0.3118
+ ITEM%cutoff = 10.0
+ ITEM%N       =          -1
+ /
+ &EPE_PARAMETERS
+ ITEM%L       =   8.01000022888184     ,
+ ITEM%U       =   13.0300002288818     ,
+ ITEM%b =1114.9    
+ ITEM%r= 0.3118
+ ITEM%cutoff =10.0
+ ITEM%N       =          -1
+ /
+
+&EPE_PARAMETERS
+ ITEM%L       =   8.0100002288818     ,
+ ITEM%U       =   8.02000022888184     ,
+ ITEM%b = 22764.3
+ ITEM%r= 0.1490
+ ITEM%c= 20.37
+ ITEM%cutoff = 10.0
+ ITEM%N       =          -1
+ /
+ &EPE_PARAMETERS
+ ITEM%L       =   8.02000022888184     ,
+ ITEM%U       =   13.0100002288818     ,
+ ITEM%b =1114.9
+ ITEM%r= 0.3118
+ ITEM%cutoff = 10.0
+ ITEM%N       =          -1
+ /
+ &EPE_PARAMETERS
+ ITEM%L       =   13.0100002288818     ,
+ ITEM%U       =   13.0200002288818     ,
+ITEM%b =0.0 ITEM%r=1.0
+ITEM%c =0.0 ITEM%d=0.0
+ITEM%cutoff = 10.0
+ ITEM%N       =          -1
+ /
+ &EPE_PARAMETERS
+ ITEM%L       =   13.0100002288818     ,
+ ITEM%U       =   13.0300002288818     ,
+ITEM%b =0.0 ITEM%r=1.0
+ITEM%c =0.0 ITEM%d=0.0
+ITEM%cutoff = 10.0
+	FIXED_ORIENTATION = t n_types_central_atoms_3body=0
+	max_type_ions=5 name_of_type =  13.01 8.01 8.02 13.02 13.03
+ ITEM%N       =           0 /
+ &orientation fixed_atom_1=1, fixed_atom_2 =2, fixed_atom_3 =3 /            

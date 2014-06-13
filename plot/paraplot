@@ -1,0 +1,86 @@
+#!/usr/local/bin/tcsh
+#
+# ParaGauss, a program package for high-performance computations
+# of molecular systems
+# Copyright (C) 2014
+# T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+# M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+# A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+# T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+# M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+# M. Roderus, N. Rösch
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as published
+# by the Free Software Foundation [1].
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
+# Please see the accompanying LICENSE file for further information.
+#
+
+
+set vers = <VERS>
+set bindir = /home/ttfs/bin.sgi/
+
+# reading of input switches
+while ( $#argv != 0 )
+   switch ($1)
+
+     case -batch
+        set batch
+        breaksw
+
+     default
+       echo "ttfs: error: the option $1 is not known"
+       exit 1
+       breaksw
+
+   endsw   # end of input switch
+
+   shift
+
+end  # end of while loop
+
+# check existence of input file
+if ( ! -e orb_plot.input ) then
+ echo "ERROR: there is no input file orb_plot.input for the plot program"
+ echo "       For an input description you may look at "
+ echo "       /users/hp4/ttfs/DOCUMENTATION/DOCS/paraplot.dvi"
+ exit
+endif
+
+# actual call to plot program
+$bindir/plot_<VERS>.exe
+
+# check if there is a plot file - this can be either fort.67 or ZZZG67
+if ( -e fort.67 && ! -e ZZZG67 ) then
+ mv  fort.67 ZZZG67
+ echo "Taking file fort.67 as input to plot prgram"
+else if ( -e ZZZG67 && ! -e fort.67 ) then
+ echo "Taking file ZZZG67 as input to the plot program"
+else if ( -e ZZZG67 && -e fort.67 ) then
+ echo "ATTENTION : there are both files in your directory   ZZZG67 and fort.67"
+ echo "            I will proceed with fort.67"
+ mv  fort.67 ZZZG67
+else
+ echo "ATTENTION: there is neither a file ZZZG657 nor a file fort.67"
+ echo "Exit"
+ exit
+endif
+
+if (! $?batch ) then
+# check if DISPLAY variable is set.
+if ( ! $?DISPLAY ) then
+ echo "ATTENTION : your display variable is not set. Please set it properly"
+ echo "            and call this script again or call GRAPHIK by yourself. "
+ exit
+else
+ $bindir/paragrafik_<VERS> -n xprev
+endif
+endif

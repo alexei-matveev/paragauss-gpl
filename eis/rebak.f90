@@ -1,0 +1,68 @@
+! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!
+      SUBROUTINE REBAK(NM,N,B,DL,M,Z)
+      use type_module
+        implicit real(kind=r8_kind) (a-h,o-z)
+!
+      INTEGER(kind=i4_kind) I,J,K,M,N,I1,II,NM
+      real(kind=r8_kind) B(NM,N),DL(N),Z(NM,M)
+      real(kind=r8_kind) X
+!
+!     THIS SUBROUTINE IS A TRANSLATION OF THE ALGOL PROCEDURE REBAKA,
+!     NUM. MATH. 11, 99-110(1968) BY MARTIN AND WILKINSON.
+!     HANDBOOK FOR AUTO. COMP., VOL.II-LINEAR ALGEBRA, 303-314(1971).
+!
+!     THIS SUBROUTINE FORMS THE EIGENVECTORS OF A GENERALIZED
+!     SYMMETRIC EIGENSYSTEM BY BACK TRANSFORMING THOSE OF THE
+!     DERIVED SYMMETRIC MATRIX DETERMINED BY  REDUC.
+!
+!     ON INPUT
+!
+!        NM MUST BE SET TO THE ROW DIMENSION OF TWO-DIMENSIONAL
+!          ARRAY PARAMETERS AS DE!LARED IN THE CALLING PROGRAM
+!          DIMENSION STATEMENT.
+!
+!        N IS THE ORDER OF THE MATRIX SYSTEM.
+!
+!        B CONTAINS INFORMATION ABOUT THE SIMILARITY TRANSFORMATION
+!          (CHOLESKY DECOMPOSITION) USED IN THE REDUCTION BY  REDUC
+!          IN ITS STRICT LOWER TRIANGLE.
+!
+!        DL CONTAINS FURTHER INFORMATION ABOUT THE TRANSFORMATION.
+!
+!        M IS THE NUMBER OF EIGENVECTORS TO BE BACK TRANSFORMED.
+!
+!        Z CONTAINS THE EIGENVECTORS TO BE BACK TRANSFORMED
+!          IN ITS FIRST M COLUMNS.
+!
+!     ON OUTPUT
+!
+!        Z CONTAINS THE TRANSFORMED EIGENVECTORS
+!          IN ITS FIRST M COLUMNS.
+!
+!     QUESTIONS AND COMMENTS SHOULD BE DIRECTED TO BURTON S. GARBOW,
+!     MATHEMATICS AND COMPUTER SCIENCE DIV, ARGONNE NATIONAL LABORATORY
+!
+!     THIS VERSION DATED AUGUST 1983.
+!
+!     ------------------------------------------------------------------
+!
+      IF (M .EQ. 0) GO TO 200
+!
+      DO 100 J = 1, M
+!     .......... FOR I=N STEP -1 UNTIL 1 DO -- ..........
+         DO 100 II = 1, N
+            I = N + 1 - II
+            I1 = I + 1
+            X = Z(I,J)
+            IF (I .EQ. N) GO TO 80
+!
+            DO 60 K = I1, N
+   60       X = X - B(K,I) * Z(K,J)
+!
+   80       Z(I,J) = X / DL(I)
+  100 CONTINUE
+!
+  200 RETURN
+      END
+!

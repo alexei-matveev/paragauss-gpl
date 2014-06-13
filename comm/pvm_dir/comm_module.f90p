@@ -1,0 +1,1215 @@
+!
+! ParaGauss, a program package for high-performance computations
+! of molecular systems
+! Copyright (C) 2014
+! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
+! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
+! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
+! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
+! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
+! M. Roderus, N. Rösch
+!
+! This program is free software; you can redistribute it and/or modify it
+! under the terms of the GNU General Public License version 2 as published
+! by the Free Software Foundation [1].
+!
+! This program is distributed in the hope that it will be useful, but
+! WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! General Public License for more details.
+!
+! [1] http://www.gnu.org/licenses/gpl-2.0.html
+!
+! Please see the accompanying LICENSE file for further information.
+!
+!===============================================================
+! Public interface of module
+!===============================================================
+module comm_module
+!---------------------------------------------------------------
+!comm_module.f90
+!  Purpose: This  module contains all the necessary entities
+!           to deal with comm in the new lcgto including the
+!           variable SPVM. Data on all running threads are
+!           kept und methods are defined that make the pvm user
+!           interface more convenient, taking away the necessity
+!           of external variables and error checks, for instance
+!           comm_send_master() and comm_mcast_slaves(). Direct calls
+!           to comm routines are no longer necessary.
+!           The handling of error conditions with the necessity
+!           to display the error on the master and to terminate
+!           all running threads is done by the external subroutine
+!           error_handler that cooperates with the internal
+!           routine comm_save_recv. This routine should be called
+!           for any receive.
+!           See the list of public subroutines and functions below!
+!
+!  Contents:
+!           
+!     - Public types: comm
+!
+!     - Public interfaces:  commpack  -> 'Wrappers' for original
+!                                        commpack routines
+!                           communpack->  dito for unpacking
+!          (both defined in commpack_module)
+!
+!  Prerequesits for using the module:
+!      The program should enrol to comm by calling comm_enroll()
+!      Next, comm_read_init can be called to define the slaves to be spawned.
+!      Then comm_spawn slaves must be  called to spawn slaves.
+!      The information on comm must be present in the slave threads
+!      as well, thus it must be send from master to slave; use
+!      comm_pack and comm_unpack. Only after these steps, the other
+!      methods of the module will work.
+!      The slaves should have a main loop that tries to receive
+!      any message from the master and executes different tasks
+!      depending on the received message tag and exits if message
+!      msgtag_finito id received. 
+!       
+!
+!
+!  Module called by: all routines dealing with comm
+!
+!
+!  References: Pvm man pages etc.
+!
+!  Author: TB, FN
+!  Date: 10/95
+!
+!----------------------------------------------------------------
+!== Interrupt of public interface of module =====================
+!----------------------------------------------------------------
+! Modifications
+!----------------------------------------------------------------
+!
+! Modification (Please copy before editing)
+! Author: AS
+! Date:   6/98
+! Description: ...
+!
+! Modification (Please copy before editing)
+! Author: ...
+! Date:   ...
+! Description: ...
+!
+!----------------------------------------------------------------
+
+!------------ Modules used --------------------------------------
+use type_module ! type specification parameters
+use commpack_module ! interface for packing and unpacking of comm data
+use commparameter_module ! includes standard pvm fortran header file
+use msgtag_module 
+use operations_module
+
+implicit none
+save ! save all variables defined in this module
+!== Interrupt end of public interface of module =================
+
+
+!------------ Declaration of public constants and variables----------
+
+integer(kind=i4_kind), parameter, public :: comm_master_host=	1
+integer(kind=i4_kind), parameter, public :: comm_all_other_hosts=	-1
+integer(kind=i4_kind), parameter, public :: comm_all_slave_hosts=	-2
+integer(kind=i4_kind), parameter, public :: comm_any_message=	-1
+integer(kind=i4_kind), public :: buf_err_hand
+
+public :: pvm_print_msgtag, df_pvm_print_msgtag ! see namelist OUTPUT_TRACE
+
+public :: pvm_master_interrupt_nbr, pvm_slave_interrupt_nbr
+          ! parameters for integral part: the interrupt functions called
+          ! are really executed every pvm_XXX_interrupt_nbr time
+          ! the parameters are included in input namelist pvmoptions
+
+!------------ public functions and subroutines ------------------
+  public comm_enroll, &
+         comm_stop_slaves, comm_spawn_slaves, comm_kill_others, &
+         comm_get_n_processors, comm_get_n_slaves, &
+         comm_i_am_master, comm_i_am_slave, comm_hostname, comm_myindex, &
+         comm_init_slaves, comm_unpack_data, comm_msgtag, &
+         comm_parallel, &
+         comm_end, comm_print_conf, comm_check_config, &
+         comm_read, comm_write, comm_sendinghost, &
+         comm_interface_readnames, comm_myname, &
+	 comm_init_send, comm_send, comm_save_recv, &
+         comm_save_recv_nonblocking 
+
+!================================================================
+! End of public interface of module
+!================================================================
+
+!------------ Declaration of types ------------------------------
+type, private  :: comm
+     integer(kind=i4_kind)    :: n_procs
+        ! number of processors
+     character*30, pointer    :: name(:)
+        ! hostnames of processors; name(1) master
+     integer(kind=i4_kind)    :: kappa  ! kappa=nbch/(n+1)
+        ! obsolent, will be removed
+     integer(kind=i4_kind)    :: kappa_rest   ! modulo(nbch/n+1)
+        ! obsolent, will be removed
+     integer(kind=i4_kind),pointer  :: tids(:)
+        ! tids of processors; tids(1) master, other slaves
+     logical                  ::  parallel
+        ! master work : master joins parallel
+        ! parallel : 0 serial processing
+        !            1 parallel processing
+end type comm
+
+integer(kind=i4_kind), parameter, public :: pvm_msgtag_post_dens_slave=      117
+!------------ Declaration of private constants and variables ----
+type(comm)            ,private :: scomm
+integer(kind=i4_kind),private :: bufid
+    ! for comm_save_recv
+integer(kind=i4_kind),private :: bufid_send
+    ! for sending
+integer(kind=i4_kind),private, allocatable :: other_tids(:)
+    ! for comm_mcast_others()
+integer(kind=i4_kind),private :: my_index
+integer(kind=i4_kind),private :: mytid,parenttid
+logical,              private :: i_am_master
+logical,              private :: i_am_initialised = .false. 
+logical,              private :: slaves_initialised = .false.
+logical,              private :: slaves_given = .false.
+
+integer(kind=i4_kind),private :: destination
+integer(kind=i4_kind),private :: source
+integer(kind=i4_kind),private :: tag_of_message
+
+! pvm_timeout, pvm_timestep, and pvm_print_msgtag are used  b e f o r e 
+! being read in and/or sent to the slaves. Therfore, they  m u s t  be
+! initialized from th very beginning (df_<values> must be parameters).
+
+! The same defaults should be specified in the programs
+! echo_pvm_config, read_pvm_config and get_pvm_config!
+integer(kind=i4_kind), private, parameter :: df_pvm_timeout   = 900, &
+                                             df_pvm_timestep  =  10
+          ! for comm_save_recv: trying to receive pvm_timestep seconds
+          ! before performing checks, ending program after pvm_timeout sec.
+          ! the parameters are included in input namelist pvmoptions
+integer(kind=i4_kind), private :: df_pvm_master_interrupt_nbr =   1, &
+                                  df_pvm_slave_interrupt_nbr  =   5, &
+                                  df_n_procs                  =   0
+logical, parameter :: df_pvm_print_msgtag = .false.
+logical, private   :: df_catch_slaveout   = .false.
+
+private :: pvmoptions, n_procs, catch_slaveout
+
+integer(kind=i4_kind) :: pvm_timeout  = df_pvm_timeout , &
+                         pvm_timestep = df_pvm_timestep, &
+                         pvm_master_interrupt_nbr      , &
+                         pvm_slave_interrupt_nbr       , &
+                         n_procs
+logical :: pvm_print_msgtag = df_pvm_print_msgtag, &
+           catch_slaveout
+    
+namelist /PVMOPTIONS/ n_procs                 , &
+                      pvm_timeout             , &
+                      pvm_timestep            , &
+                      catch_slaveout          , &
+                      pvm_master_interrupt_nbr, &
+                      pvm_slave_interrupt_nbr
+
+
+!FPP:VPP!real*8, private :: tod_start, tod_trecv, tod_nrecv, tod_send, tod_tasks, &
+!FPP:VPP!     tod_mcast, tod_now, tod_before, tod_total
+
+!------------ Declaration of private functions and subroutines --
+private  comm_pack_data, comm_calc_other_tids,comm_mastertid,comm_tid,comm_determine_hostnames
+
+!private  comm_pack_data
+
+!----------------------------------------------------------------
+!------------ Subroutines ---------------------------------------
+contains
+
+
+ !*************************************************************
+
+ subroutine comm_enroll
+   !  Purpose: enrol to pvm and set private tid vars.
+   !
+   !      This subroutine must be called before module
+   !      is beeing used !!!!
+   !
+   !** End of interface *****************************************
+   call pvmfmytid ( mytid )
+   call pvmfparent ( parenttid )
+   i_am_master = parenttid .eq. pvmnoparent
+   ! print*, "comm_enroll: mytid, parenttid: ",mytid, parenttid
+!FPP:VPP!   call gettod(tod_start)
+!FPP:VPP!   tod_trecv = 0.0_r8_kind
+!FPP:VPP!   tod_nrecv = 0.0_r8_kind
+!FPP:VPP!   tod_send = 0.0_r8_kind
+!FPP:VPP!   tod_tasks = 0.0_r8_kind
+!FPP:VPP!   tod_mcast = 0.0_r8_kind
+ end subroutine comm_enroll
+
+
+ !*************************************************************
+
+ subroutine comm_print_conf(io_u)
+   !  Purpose: prints pvm configuration
+   !------------ Declaration of formal parameters ---------------
+   integer(kind=i4_kind),intent(in)  :: io_u
+   !** End of interface *****************************************
+   !------------ Declaration of local variables ----------------
+   integer(kind=i4_kind)    :: nhost,narch,speed,info,i,dtid
+   character*12             :: name,arch    
+   ! ----------- Declaration of other subroutines ---------------
+   external pvmfconfig
+   !------------ Executable code --------------------------------
+   write(io_u,*)
+   write(io_u,*) 'pvm configuration:'
+   write(io_u,*)
+
+   !FPP NOT:VPP!call pvmfconfig( nhost, narch, dtid, name, arch, speed, info)
+   !FPP NOT:VPP!
+   !FPP NOT:VPP!write(io_u,*) '       host        nhost :',nhost
+   !FPP NOT:VPP!write(io_u,*) '                   narch :',narch
+   !FPP NOT:VPP!write(io_u,*) '                   dtid  :',dtid
+   !FPP NOT:VPP!write(io_u,*) '                   name  :',name
+   !FPP NOT:VPP!write(io_u,*) '                   info  :',info
+
+   !FPP NOT:VPP!do i = 2, nhost
+   !FPP NOT:VPP!   call pvmfconfig( nhost, narch, dtid, name, arch, speed, info)
+   !FPP NOT:VPP!   write(io_u,*) '       host        nhost :',nhost
+   !FPP NOT:VPP!   write(io_u,*) '                   narch :',narch
+   !FPP NOT:VPP!   write(io_u,*) '                   dtid  :',dtid
+   !FPP NOT:VPP!   write(io_u,*) '                   name  :',name
+   !FPP NOT:VPP!   write(io_u,*) '                   info  :',info
+   !FPP NOT:VPP!enddo
+
+   write(io_u,*)'The MASTER processor is :',scomm%name(1)
+   write(io_u,*)' and the slaves in their correct order according to'
+   write(io_u,*)' the splitted integral tapes are:'
+   write(io_u,*)(scomm%name(i),i=2,scomm%n_procs)
+
+   write(io_u,*)
+ end subroutine comm_print_conf
+
+ !*************************************************************
+
+
+ subroutine comm_init_slaves
+   ! purpose : seending private information scomm to slaves
+   !** End of interface *****************************************
+   call comm_init_send(comm_all_slave_hosts,msgtag_commdata)
+   call comm_pack_data()
+   call comm_send() 
+   slaves_initialised = .true.
+ end subroutine comm_init_slaves
+   
+ !***************************************************************
+
+ subroutine comm_pack_data
+   ! purpose : packs the (private) piece of information scomm
+   ! and pvm_timestep and pvm_timeout
+   !** End of interface *****************************************
+   integer(kind=i4_kind) info,i
+   call commpack(scomm%n_procs,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   do i=1,scomm%n_procs
+      call commpack(scomm%name(i),info)
+      if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   enddo
+   call commpack(scomm%kappa,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   call commpack(scomm%kappa_rest,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   call commpack(scomm%tids,scomm%n_procs,1,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   call commpack(scomm%parallel,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   call commpack(pvm_timestep,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   call commpack(pvm_timeout,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   call commpack(pvm_master_interrupt_nbr,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+   call commpack(pvm_slave_interrupt_nbr,info)
+   if ( info .ne. 0 ) call error_handler("comm_pack: packing failed")
+ end subroutine comm_pack_data
+   
+ !***************************************************************
+
+ subroutine comm_unpack_data
+   ! purpose : unpacks the (private) piece of information scomm
+   ! and comm_timestep and comm_timeout
+   !** End of interface *****************************************
+   integer(kind=i4_kind) info,i
+   call communpack(scomm%n_procs,info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   allocate(scomm%name(scomm%n_procs),scomm%tids(scomm%n_procs),stat=info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: allocate failed")
+   do i=1,scomm%n_procs
+      call communpack(scomm%name(i),info)
+      if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   enddo
+   call communpack(scomm%kappa,info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   call communpack(scomm%kappa_rest,info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   call communpack(scomm%tids,scomm%n_procs,1,info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   call communpack(scomm%parallel,info)
+   if ( info .ne. 0 ) call error_handler("comm_punack: unpacking failed at parallel")
+   call communpack(pvm_timestep,info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   call communpack(pvm_timeout,info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   call communpack(pvm_master_interrupt_nbr,info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   call communpack(pvm_slave_interrupt_nbr,info)
+   if ( info .ne. 0 ) call error_handler("comm_unpack: unpacking failed")
+   call comm_calc_other_tids()
+   i_am_initialised = .true.
+ end subroutine comm_unpack_data
+   
+ !***************************************************************
+
+ integer(kind=i4_kind) function comm_get_n_processors()
+   ! purpose : returns number of processors
+   !** End of interface *****************************************
+   comm_get_n_processors = scomm%n_procs
+ end function comm_get_n_processors
+   
+ !***************************************************************
+
+ integer(kind=i4_kind) function comm_get_n_slaves()
+   ! purpose : returns number of slaves
+   !** End of interface *****************************************
+   comm_get_n_slaves = scomm%n_procs - 1
+ end function comm_get_n_slaves
+   
+ !***************************************************************
+
+ subroutine comm_spawn_slaves(prog_name)
+   !  Purpose: spawn the slaves processes according
+   !           to the contents of scomm
+   !  if no hosts were defined by a call to comm_read_init()
+   !  any slaves are spawned
+   use iounitadmin_module, only : write_to_output_units
+   !------------ Declaration of formal parameters ---------------
+   character(len=*),      intent(in) :: prog_name
+   !** End of interface *****************************************
+   !           The variable scomm%tids is filled in this
+   !           routine.
+   !------------ Declaration of local variables -----------------
+   integer(kind=i4_kind)               :: info,i
+   external pvmfmytid,pvmfspawn
+   !------------ Executable code --------------------------------
+
+   if ( catch_slaveout ) then
+     call pvmfcatchout(1,info)
+     if (info .ne. 0) stop "Error: comm_enroll: can't catch child's output"
+   endif
+
+   call pvmfmytid (scomm%tids(1))
+
+   if ( .not. slaves_given) then
+      call pvmfspawn(prog_name,pvmtaskdefault,' ',scomm%n_procs - 1,scomm%tids(2),info )
+      if (info .ne. scomm%n_procs - 1) then
+         call write_to_output_units( &
+              'Error: comm_spawn_slaves: spawn any slaves failed - info :',int=info)
+         call last_will
+         stop
+      endif
+      !FPP NOT:VPP!call comm_determine_hostnames
+   else
+      call pvmfmytid (scomm%tids(1))
+      do i=2,scomm%n_procs
+         call pvmfspawn( prog_name,pvmtaskhost,scomm%name(i), &
+              1,scomm%tids(i),info )
+         if (info .ne. 1) then
+            call write_to_output_units&
+                 ('Error: comm_spawn_slaves: spawn failed - info :',int=info)
+            call last_will
+            stop
+         endif
+      enddo
+   endif
+   call comm_calc_other_tids()
+   i_am_initialised = .true.
+
+ end subroutine comm_spawn_slaves
+   
+ !***************************************************************
+
+ subroutine comm_spawn_anyslaves(prog_name,n_slaves,_work,parallel)
+   !  Purpose: spawn n_proc slaves processes of programprog_name
+   !           on any host. The contents of scomm are filled.
+   !           Presently only used for testing purposes.
+   use iounitadmin_module, only : write_to_output_units
+   !------------ Declaration of formal parameters ---------------
+   character(len=*),                intent(in) :: prog_name
+   integer(kind=i4_kind), optional, intent(in) :: n_slaves
+   logical,               optional, intent(in) :: master_work
+   logical,               optional, intent(in) :: parallel
+   !** End of interface *****************************************
+   integer(kind=i4_kind)             :: info
+   external pvmfmytid,pvmfspawn
+   !------------ Executable code --------------------------------
+   if ( present(n_slaves) ) scomm%n_procs = n_slaves + 1
+   allocate (scomm%tids(scomm%n_procs),scomm%name(scomm%n_procs))
+   call pvmfmytid (scomm%tids(1))
+   call pvmfspawn(prog_name,pvmtaskdefault,' ',scomm%n_procs - 1,scomm%tids(2),info )
+   if (info .ne. scomm%n_procs - 1) then
+      call write_to_output_units('Error: comm_spawn_anyslaves: spawn failed')
+      call last_will
+      stop
+   endif
+   call comm_determine_hostnames
+   if ( present(master_work) ) scomm%master_work = master_work
+   if ( present(parallel) ) scomm%parallel = parallel
+   call comm_calc_other_tids()
+   i_am_initialised = .true.
+ end subroutine comm_spawn_anyslaves
+
+ !***************************************************************
+
+ subroutine comm_determine_hostnames
+   !  Purpose: scomm%name(:) is filled.
+   !           This routine is currently called by
+   !           'comm_spawn_anyslaves' only
+   !           27.12.95 FN
+   !** End of interface *****************************************
+   integer(kind=i4_kind)             :: nhost,narch,dtid1,speed, &
+        info,i,j,alloc_stat
+   integer(kind=i4_kind),allocatable :: dtid(:)
+   character*50                      :: arch,name1
+   character*50,allocatable          :: name(:)
+   external pvmfmytid,pvmfspawn,pvmfparent
+   !------------ Executable code --------------------------------
+   call pvmfconfig( nhost, narch, dtid1, name1, arch, speed, info)
+   allocate(dtid(nhost),name(nhost),STAT=alloc_stat)
+   if (alloc_stat /= 0) call error_handler &
+        ("comm_determine_hostnames: allocation failed")
+   dtid(1) = dtid1
+   name(1) = name1
+
+   if (nhost .lt. scomm%n_procs) &
+        call error_handler("comm_determine_hostnames: wrong number of hosts")
+
+   do i=2,nhost
+      call pvmfconfig( nhost, narch, dtid(i), name(i), arch, speed, info)
+   enddo
+
+   do i=1,scomm%n_procs
+      call pvmftidtohost(scomm%tids(i),dtid1)
+      do j=1,nhost
+         if ( dtid(j) .eq. dtid1 ) then
+            scomm%name(i) = name(j)
+            exit
+         endif
+      enddo
+   enddo
+   deallocate(dtid,name,STAT=alloc_stat)
+   if (alloc_stat /= 0 ) call error_handler &
+        ("comm_determine_hostnames: deallocation failed")
+
+   slaves_given = .TRUE.
+
+ end subroutine comm_determine_hostnames
+
+ !***************************************************************
+
+ subroutine comm_calc_other_tids()
+   ! purpose: calculate tids of other tids and store them in
+   ! private variable other_tids(:)
+   ! determine my own index to be stored as my_index
+   ! passes the own index to filename_module
+   !** End of interface *****************************************
+   use filename_module, only: filename_set_hostindex
+   integer(kind=i4_kind) :: status,i,j
+   !------------ Executable code --------------------------------
+   allocate( other_tids(scomm%n_procs-1) , stat=status)
+   if ( status .ne. 0 ) call error_handler( &
+        "comm_calc_other_tids: allocate failed" )
+   j = 1
+   my_index = 0
+   do i = 1, scomm%n_procs
+      if ( scomm%tids(i) .ne. mytid ) then
+         other_tids(j) = scomm%tids(i)
+         j = j + 1
+      else
+         my_index = i
+      endif
+   enddo
+   if (my_index .eq. 0) call error_handler( &
+        "comm_calc_other_tids: mytid not found" )
+   call filename_set_hostindex(my_index,scomm%n_procs)
+ end subroutine comm_calc_other_tids
+
+ !***************************************************************
+
+ subroutine comm_stop_slaves
+   ! purpose: Stop the slaves by sending the appropriate
+   !          msgtag  (msgtag_finito). It is assumed
+   !          the slaves are able to receive this tag at
+   !          any time.
+   !** End of interface *****************************************
+   if ( i_am_initialised ) then
+      if ( slaves_initialised ) then
+         call comm_init_send(comm_all_slave_hosts,msgtag_finito)  
+         call comm_send()  
+      else
+         call comm_kill_others()
+      endif
+      i_am_initialised = .false.
+   endif
+ end subroutine comm_stop_slaves
+
+ !***************************************************************
+
+ !***************************************************************
+ !==============================================================
+ subroutine comm_init_send(index_of_host,msgtag)
+   ! purpose: pass to "comm_send" message address and tag and
+   ! call "pvmfinitsend" for initialization of send buffer
+   !  checking for errors
+   !------------ Declaration of formal parameters ---------------
+   integer(kind=i4_kind), intent(in) :: index_of_host, msgtag
+   !** End of interface *****************************************
+   destination=index_of_host
+   tag_of_message=msgtag
+   call pvmfinitsend(PvmDataRaw,bufid_send)
+   buf_err_hand=bufid_send
+   if ( bufid_send .lt. 0 ) then
+      call error_handler("comm_init_send failed")
+   endif
+ end subroutine comm_init_send
+ !===============================================================
+ !*************************************************************** 
+
+ !***************************************************************
+ !==============================================================
+ subroutine comm_send
+  ! purpose: send data from any of hosts to any of one or all 
+  ! except itself, checking for errors
+  use iounitadmin_module, only : write_to_output_units
+  !** End of interface *****************************************
+  integer(kind=i4_kind) :: info,tid
+  character*500	:: message
+
+  if( .not. i_am_initialised ) call error_handler( "comm_send: &
+	&	trying to send without initialilisation")
+ 
+  if(pvm_print_msgtag) call write_to_output_units ("comm_send: &
+	&	sending data with msgtag",tag_of_message)
+  if(pvm_print_msgtag) call write_to_output_units ("comm_send: &
+	&	sending data to host",destination)
+
+  select case (destination)
+        case default
+  		tid = comm_tid(destination) !!!scomm%tids(destination)
+  !FPP:VPP!        call gettod(tod_before)
+  		call pvmfsend(tid,tag_of_message,info)
+  !FPP:VPP!        call gettod(tod_now)
+  !FPP:VPP!        tod_mcast=tod_mcast+tod_now-tod_before
+  		if(info .ne. 0) then 
+                        write(message,*)"comm_send: sending of msgtag " &
+                             ,tag_of_message," to host nbr ",destination," failed"
+                        call error_handler(message)
+                endif
+  	case (comm_all_other_hosts, comm_all_slave_hosts)
+  		if(scomm%n_procs .gt. 1) then
+  !FPP:VPP!        call gettod(tod_before)
+  			call pvmfmcast(scomm%n_procs-1,other_tids,tag_of_message,info)
+  !FPP:VPP!        call gettod(tod_now)
+  !FPP:VPP!        tod_mcast=tod_mcast+tod_now-tod_before
+  			if(info .ne. 0) then
+                                write(message,*)"comm_send: sending of msgtag ", &
+                                     tag_of_message," to all host except itself failed"
+                                call error_handler(message)
+                        endif
+                endif        
+  end select
+ end subroutine comm_send
+ !===============================================================
+ !***************************************************************
+
+ !***************************************************************
+ !==============================================================
+ subroutine comm_save_recv(index_of_host,msgtag,bufid_out)
+  !purpose:
+  use iounitadmin_module 
+  !------------ Declaration of formal parameters ---------------
+  integer(kind=i4_kind), intent(in) :: index_of_host,msgtag
+  integer(kind=i4_kind), optional, intent(out) :: bufid_out
+  !** End of interface *****************************************
+  !------------ Declaration of local variables------------------
+  integer(kind=i4_kind) :: time,info,real_msgtag,tid
+  character*500	:: message
+  !------------ executable code -------------------------------
+  if(pvm_print_msgtag) call write_to_output_units ("comm_save_recv: &
+	&	receiving data with msgtag",msgtag)
+  if(pvm_print_msgtag) call write_to_output_units ("comm_save_recv: &
+	&	receiving data from host",index_of_host)
+  if(index_of_host .eq. comm_all_other_hosts) then
+	tid=-1
+  else
+        if(index_of_host .eq. comm_master_host) then
+           tid=comm_mastertid()
+        else
+           tid=comm_tid(index_of_host)
+        endif
+  endif
+  do time=0, pvm_timeout, pvm_timestep
+  !FPP:VPP!        call gettod(tod_before)
+	!FPP NOT:VPP!call pvmftrecv(tid,msgtag,pvm_timestep,0,bufid)
+	!FPP:VPP!call pvm_trecv(tid,msgtag,pvm_timestep,0,bufid)
+  !FPP:VPP!        call gettod(tod_now)
+  !FPP:VPP!        tod_mcast=tod_mcast+tod_now-tod_before
+	if( present(bufid_out)) bufid_out=bufid
+	if(i_am_master) then
+		if(bufid .gt. 0) then
+			if(msgtag .eq. comm_any_message) then
+				real_msgtag=comm_msgtag() 
+				if(pvm_print_msgtag) then
+                                        write(message,*) "comm_save_recv: real &
+                                &         received msgtag ",real_msgtag              
+                                        call write_to_output_units (message)
+                                endif        
+				if(real_msgtag .eq. msgtag_error) then
+					call communpack (message, info)
+					if(info .ne. 0) call error_handler( &
+						"comm_save_recv: unpacking of error &
+					&	message failed")
+					call error_handler(message)
+				endif
+			endif
+			return
+		else
+  !FPP:VPP!        call gettod(tod_before)
+			call pvmfnrecv(-1,msgtag_error,bufid)
+  !FPP:VPP!        call gettod(tod_now)
+  !FPP:VPP!        tod_mcast=tod_mcast+tod_now-tod_before
+			if (bufid .gt. 0) then
+				call communpack(message,info)
+				if(info .ne. 0) call error_handler("comm_save_recv_ &
+				&	nonblocking:unpacking of error message failed")
+				call error_handler(message)
+			endif 
+		endif
+	else
+		if(bufid .gt. 0) then
+			if(pvm_print_msgtag .and. msgtag .eq. comm_any_message) &
+				call write_to_output_units ("comm_save_recv: &
+				&	real received msgtag ",comm_msgtag())
+			return
+		endif
+	endif
+  !check if all processes are alive
+	call comm_check_config()
+  enddo
+
+  write(message,*) 'Error on ' // trim(comm_hostname()) // ' : ' // &
+	"comm_save_recv: timeout when trying to receive msgtag ",msgtag
+  call write_to_output_units(trim(message))
+  call comm_kill_others()
+  call pvmfexit(info)
+  if(info .lt. 0) call write_to_output_units("Error: comm_save_recv: exiting pvm &
+  &	failed")
+  call close_special_units
+  stop
+
+ end subroutine comm_save_recv
+ !===============================================================
+ !***************************************************************
+ 
+ !***************************************************************
+ !===============================================================
+ logical function comm_save_recv_nonblocking(index_of_host,msgtag,bufid_out)
+   ! purpose: Trying to receive msgtag and then in case of being
+   ! master trying to receive error message (tag msgtag_error).
+   ! If an error_handler is received an errormessage is written
+   ! and the calculation is terminatedon all hosts.
+   ! Note that the configuration is not checked (i.e. it is not
+   ! controlled if all hosts are alive). Call comm_check_config()
+   ! manually in case you want that.
+   ! Returns if msgtag was received.
+   use iounitadmin_module
+   !------------ Declaration of formal parameters ---------------
+   integer(kind=i4_kind), intent(in)            :: index_of_host,msgtag
+   integer(kind=i4_kind), optional, intent(out) :: bufid_out
+   !** End of interface *****************************************
+   !------------ Declaration of local variables -----------------
+   integer(kind=i4_kind)              :: info,tid
+   character*500                      :: message
+   !------------ Executable code --------------------------------
+
+   if (pvm_print_msgtag) call write_to_output_units( &
+        "comm_save_recv_nonblocking: receiving msgtag",msgtag)
+   if (pvm_print_msgtag) call write_to_output_units( &
+        "comm_save_recv_nonblocking: receiving from host",index_of_host)
+  if(index_of_host .eq. comm_all_other_hosts) then
+	tid=-1
+  else
+        if(index_of_host .eq. comm_master_host) then
+           tid=comm_mastertid()
+        else
+           tid=comm_tid(index_of_host)
+        endif
+  endif
+
+   ! try to receive msgtag
+!FPP:VPP!   call gettod(tod_before)
+   call pvmfnrecv(tid,msgtag,bufid)
+!FPP:VPP!   call gettod(tod_now)
+!FPP:VPP!   tod_nrecv = tod_nrecv + tod_now - tod_before
+   if ( present(bufid_out) ) bufid_out = bufid
+   comm_save_recv_nonblocking = bufid .gt. 0
+
+   if (msgtag .eq. -1) then
+      if (comm_save_recv_nonblocking .and. i_am_master) then
+         if ( comm_msgtag() .eq. msgtag_error ) then
+            call communpack( message, info )
+            if ( info .ne. 0 ) &
+                 call error_handler( &
+                 "comm_save_recv_nonblocking: unpacking of error message failed" )
+            call error_handler( message )
+         endif
+      endif
+      return
+   else
+      if ( comm_save_recv_nonblocking .or. .not. i_am_master ) return
+      ! in case of being master try to receive error message
+!FPP:VPP!      call gettod(tod_before)
+      call pvmfnrecv(-1,msgtag_error,bufid)
+!FPP:VPP!      call gettod(tod_now)
+!FPP:VPP!      tod_nrecv = tod_nrecv + tod_now - tod_before
+      if ( bufid .gt. 0 ) then
+         call communpack( message, info )
+         if ( info .ne. 0 ) &
+              call error_handler( &
+              "comm_save_recv_nonblocking: unpacking of error message failed" )
+         call error_handler( message )
+      endif
+   endif
+
+ end function comm_save_recv_nonblocking
+
+ !===============================================================
+ !***************************************************************
+
+
+ !***************************************************************
+
+ subroutine comm_kill_others
+   ! purpose: kill all other pvm processes belonging to the run
+   !** End of interface *****************************************
+   use iounitadmin_module
+   integer(kind=i4_kind) :: i,info
+   if ( i_am_initialised ) then
+      do i=1,scomm%n_procs
+         if (scomm%tids(i) .ne. mytid) then
+            call pvmfkill(scomm%tids(i),info)
+         endif
+      enddo
+   else
+      call write_to_output_units( &
+           "Warning: pvm_kill_other: trying to kill others before being initialised")
+   endif
+ end subroutine comm_kill_others
+
+ !***************************************************************
+
+ subroutine comm_end()
+   ! purpose: exits pvm
+   !** End of interface *****************************************
+   use iounitadmin_module, only : write_to_output_units
+   integer(kind=i4_kind)   :: info
+   i_am_initialised = .false.
+!FPP:VPP!   call gettod(tod_now)
+!FPP:VPP!   tod_total = tod_now - tod_start
+!FPP:VPP!   print *, "pvm_end: time [sec] for pvmftrecv: ", tod_trecv * 1.0E-6_r8_kind
+!FPP:VPP!   print *, "pvm_end: time [sec] for pvmfnrecv: ", tod_nrecv * 1.0E-6_r8_kind
+!FPP:VPP!   print *, "pvm_end: time [sec] for pvmfsend : ", tod_send * 1.0E-6_r8_kind
+!FPP:VPP!   print *, "pvm_end: time [sec] for pvmftasks: ", tod_tasks * 1.0E-6_r8_kind
+!FPP:VPP!   print *, "pvm_end: time [sec] for pvmfmcast: ", tod_mcast * 1.0E-6_r8_kind
+!FPP:VPP!   print *, "pvm_end: total run time time [sec]: ", tod_total * 1.0E-6_r8_kind
+   call pvmfexit(info)
+   if (info .lt. 0) call write_to_output_units( &
+        "Warning: exiting pvm failed")
+ end subroutine comm_end
+
+ !***************************************************************
+
+ !FPP:VPP!subroutine pvm_trecv(tid,msgtag,sec,usec,bufid)
+ !FPP:VPP!  ! purpose: a own implementation of standard pvm routine not
+ !FPP:VPP!  ! available on SP2
+ !FPP:VPP!  !------------ Declaration of formal parameters ---------------
+ !FPP:VPP!  integer(kind=i4_kind), intent(in)  :: tid,msgtag,sec,usec
+ !FPP:VPP!  integer(kind=i4_kind), intent(out) :: bufid
+ !FPP:VPP!  !** End of interface *****************************************
+ !FPP:VPP!  !------------ Declaration of local variables -----------------
+ !FPP:VPP!  integer(kind=i4_kind)              :: info, time, timeout, usleep
+ !FPP:VPP!  integer(kind=i4_kind),parameter :: wait_time = 1000 ! microsec
+ !FPP:VPP!  external usleep
+ !FPP:VPP!  ! internal timesetep : sec/1000
+ !FPP:VPP!  timeout = 0
+ !FPP:VPP!  timeout = timeout + usec / 1000
+ !FPP:VPP!  timeout = timeout + sec * 1000
+ !FPP:VPP!  do time = 1,timeout
+ !FPP:VPP!     call pvmfnrecv(tid,msgtag,bufid)
+ !FPP:VPP!     if ( bufid .gt. 0 ) exit
+ !FPP:VPP!     info = usleep(wait_time)
+ !FPP:VPP!  enddo
+ !FPP:VPP!end subroutine pvm_trecv
+
+ !***************************************************************
+ 
+ 
+ !***************************************************************
+
+ subroutine comm_check_config()
+   ! purpose:  a check is performed if all processes
+   ! are alive. In case of error, the program is terminated.
+   !** End of interface *****************************************
+   use iounitadmin_module
+   implicit none
+   !------------ Declaration of local variables -----------------
+   integer(kind=i4_kind) :: i_tid,ntask,info,tid,ptid,dtid,flag
+   character*50 :: name
+   if(i_am_initialised) then
+      do i_tid = 1, scomm%n_procs
+!FPP:VPP!         call gettod(tod_before)
+         call pvmftasks(scomm%tids(i_tid),ntask,tid,ptid,dtid,flag,name,info)
+!FPP:VPP!         call gettod(tod_now)
+!FPP:VPP!         tod_tasks = tod_tasks + tod_now - tod_before
+         ! print*, "config check",i_tid,scomm%tids(i_tid),ntask,tid,ptid,dtid,flag,name,info
+         if ( info .lt. 0 ) then
+            if (i_tid .eq. 1) then ! master dead
+               call comm_kill_others
+               call write_to_output_units( "Error: comm_check_config: master died" )
+               call pvmfexit(info)
+               if (info .lt. 0) call write_to_output_units( "Error: comm_check_config: exiting pvm failed" )
+               call last_will
+               stop
+            else
+               call error_handler( &
+                    "comm_check_config: looking up task on " // &
+                    trim(scomm%name(i_tid)) // " failed." )
+            endif
+         endif
+         if ( tid .ne. scomm%tids(i_tid) .or. flag .lt. 0 ) then
+            ! those criteria are based on non documented features 
+            ! and might be machine dependent !!!
+            if (i_tid .eq. 1) then ! master dead
+               call comm_kill_others
+               call write_to_output_units( "Error: comm_check_config: master died" )
+               call pvmfexit(info)
+               if (info .lt. 0) call write_to_output_units( "Error: comm_check_config: exiting comm failed" )
+               call last_will
+               stop
+            else
+               call error_handler( &
+                    "comm_check_config: looking up task on " // &
+                    trim(scomm%name(i_tid)) // " failed." )
+            endif
+         endif
+      enddo
+   endif
+ end subroutine comm_check_config
+
+ !***************************************************************
+ 
+ logical function comm_i_am_master()
+   ! purpose:  returns .true. if master
+   !** End of interface *****************************************
+   comm_i_am_master = i_am_master
+ end function comm_i_am_master
+
+ !***************************************************************
+
+ logical function comm_i_am_slave()
+   ! purpose:  returns .true. if slave
+   !** End of interface *****************************************
+   comm_i_am_slave = .not. i_am_master
+ end function comm_i_am_slave
+
+ !***************************************************************
+ 
+ logical function comm_parallel()
+   ! purpose:  returns .true. if parallel run
+   !** End of interface *****************************************
+   comm_parallel = scomm%parallel
+ end function comm_parallel
+
+
+ !***************************************************************
+ 
+ logical function comm_master_work()
+   ! purpose:  returns .true. if master joins slaves work
+   !** End of interface *****************************************
+   comm_master_work = .true.
+ end function comm_master_work
+ 
+ !***************************************************************
+ 
+ integer(kind=i4_kind) function comm_mastertid()
+   ! purpose:  returns master tid
+   !** End of interface *****************************************
+   comm_mastertid = parenttid
+ end function comm_mastertid
+
+ !***************************************************************
+ 
+ integer(kind=i4_kind) function comm_msgtag(bufid_in)
+   ! purpose:  returns msgtag of currently received buffer by
+   ! comm_save_recv or of buffer bufid_in
+   !------------ Declaration of formal parameters ---------------
+   integer(kind=i4_kind), optional, intent(in) :: bufid_in
+   !** End of interface *****************************************
+   integer(kind=i4_kind) :: length,from,info
+   if ( present(bufid_in) ) then
+      call pvmfbufinfo(bufid_in,length,comm_msgtag,from,info)
+   else
+      call pvmfbufinfo(bufid,length,comm_msgtag,from,info)
+   endif
+   if (info .ne. 0) call error_handler('comm_msgtag: getting bufinfo failed')
+ end function comm_msgtag
+
+ !***************************************************************
+ 
+ integer(kind=i4_kind) function comm_sendinghost(bufid_in)
+   ! purpose:  returns index of sending host currently received
+   ! buffer by comm_save_recv or of buffer bufid_in
+   !------------ Declaration of formal parameters ---------------
+   integer(kind=i4_kind), optional, intent(in) :: bufid_in
+   !** End of interface *****************************************
+   integer(kind=i4_kind) :: length,msgtag,info,from,i
+   if ( present(bufid_in) ) then
+      call pvmfbufinfo(bufid_in,length,msgtag,from,info)
+   else
+      call pvmfbufinfo(bufid,length,msgtag,from,info)
+   endif
+   if (info .ne. 0) call error_handler('comm_sendinghost: getting bufinfo failed')
+   do i = 1, scomm%n_procs
+      if ( scomm%tids(i) .eq. from ) then
+         comm_sendinghost = i
+         return
+      endif
+   enddo
+   call error_handler('comm_sendinghost: wrong sender-tid')
+ end function comm_sendinghost
+
+ !***************************************************************
+ 
+ integer(kind=i4_kind) function comm_tid(index)
+   ! purpose:  returns tid belonging to index
+   !------------ Declaration of formal parameters ---------------
+   integer(kind=i4_kind), intent(in)  :: index
+   !** End of interface *****************************************
+   if (index .le. 0 .or. index .gt. scomm%n_procs) then
+      call error_handler("comm_tid: illegal index")
+   endif
+   comm_tid = scomm%tids(index)
+ end function comm_tid
+
+ !***************************************************************
+
+ character*30 function comm_hostname()
+   ! purpose:  returns hostname
+   !** End of interface *****************************************
+   integer(kind=i4_kind)              :: i_tid
+   if ( i_am_initialised ) then
+      do i_tid = 1, scomm%n_procs
+         if ( scomm%tids(i_tid) .eq. mytid ) then
+            comm_hostname = scomm%name(i_tid)
+            return
+         endif
+      enddo
+   endif
+   comm_hostname = ' '
+ end function comm_hostname
+
+ !***************************************************************
+
+ integer function comm_myindex()
+   ! purpose:  returns index of present host
+   ! ( between 1 and comm_get_n_processors )
+   !** End of interface *****************************************
+   if ( .not. i_am_initialised ) call error_handler( &
+        "comm_myindex: called without initialisation" )
+   comm_myindex = my_index
+ end function comm_myindex
+
+ !***************************************************************
+
+ subroutine comm_interface_readnames(io_u)
+   ! purpose: read the hostnames from the file 'slavelist'
+   !          This is needed because of the following reason:
+   !          The integraltapes are splitted up such that each host
+   !          gets a certain range of fitcoefficients.
+   !          Each host is assigned its own range, i.e. we have to
+   !          know which host has which files.
+   !          That means that the slaves have to be spawned
+   !          in exactly the right order:
+   !          scomm%tids(1)  = scomm%name(1) : file_1
+   !          scomm%tids(2)  = scomm%name(2) : file_2
+   !          ...
+   !          We can only spawn a task on a specified host
+   !          if we want to keep an order: read in the hostnames
+   !          in the order in which they will appear in
+   !          scomm%tids.
+   ! ---------------------------------------------------------
+   integer(kind=i4_kind), intent(in)  :: io_u
+   !** End of interface *****************************************
+   integer(kind=i4_kind)              :: i
+   
+   do i=1,scomm%n_procs
+      read(io_u,*)scomm%name(i)
+   enddo
+
+   !FPP NOT:VPP!slaves_given = .true.
+   
+ end subroutine comm_interface_readnames
+
+ !***************************************************************
+
+ subroutine comm_read(unit)
+   ! purpose:  read from io_u
+   !           and perform a cross check with pvmfconfig
+   ! ---------------------------------------------------------
+   integer(kind=i4_kind), intent(in)  :: unit
+   !** End of interface *****************************************
+   !------------ Declaration of local variables -----------------
+   integer(kind=i4_kind)    :: status,narch,speed,info,i,mytid,dtid
+   character*12             :: name,arch 
+
+   external pvmfconfig,error_handler
+   !------------ Executable code --------------------------------
+   n_procs                  = df_n_procs
+   pvm_timeout              = df_pvm_timeout
+   pvm_timestep             = df_pvm_timestep
+   pvm_master_interrupt_nbr = df_pvm_master_interrupt_nbr
+   pvm_slave_interrupt_nbr  = df_pvm_slave_interrupt_nbr
+   master_work              = df_master_work
+   catch_slaveout           = df_catch_slaveout
+   read(unit, nml=PVMOPTIONS, iostat=status)
+   if (status .gt. 0) call error_handler( &
+        "comm_read: namelist pvmoptions")
+   scomm%master_work = master_work
+   scomm%parallel = n_procs .gt. 1
+ 
+   !FPP NOT:SGI:VPP:LINUX!! perform a little security check
+   !FPP NOT:SGI:VPP:LINUX!call pvmfconfig( scomm%n_procs, narch, mytid, name, arch, speed, info)
+   !FPP NOT:SGI:VPP:LINUX!do i = 2, scomm%n_procs
+   !FPP NOT:SGI:VPP:LINUX!   call pvmfconfig( scomm%n_procs, narch, dtid, name, arch, speed, info)
+   !FPP NOT:SGI:VPP:LINUX!enddo
+
+   !FPP NOT:SGI:VPP:LINUX!if (n_procs.lt.scomm%n_procs) then
+   !FPP NOT:SGI:VPP:LINUX!   write(*,*) ' ATTENTION: there are more hosts in the virtual machine'
+   !FPP NOT:SGI:VPP:LINUX!   write(*,*) '            than you have chosen in the input.'
+   !FPP NOT:SGI:VPP:LINUX!   write(*,*)'             I hope this is ok ...'
+   !FPP NOT:SGI:VPP:LINUX!   scomm%n_procs = n_procs
+   !FPP NOT:SGI:VPP:LINUX!elseif ( n_procs.gt.scomm%n_procs) then
+   !FPP NOT:SGI:VPP:LINUX!   call error_handler &
+   !FPP NOT:SGI:VPP:LINUX!        ("comm_READ : too many n_procs specified in input")
+   !FPP NOT:SGI:VPP:LINUX!else
+   !FPP NOT:SGI:VPP:LINUX!   scomm%n_procs = n_procs
+   !FPP NOT:SGI:VPP:LINUX!endif
+
+   !FPP:VPP:LINUX!scomm%n_procs = n_procs
+
+   !FPP:SGI!if(n_procs.gt.10) call error_handler( &
+   !FPP:SGI!     'comm_READ: Sorry, we have only 10 CPUs')
+   !FPP:SGI!scomm%n_procs = n_procs
+
+   !FPP:DEC!if(n_procs.gt.2) call error_handler( &
+   !FPP:DEC!     'comm_READ: Sorry, we have only 10 CPUs')
+   !FPP:DEC!scomm%n_procs = n_procs
+      
+   call comm_alloc()
+
+   if ( .not. scomm%parallel ) then
+      call pvmfmytid (scomm%tids(1))
+      call comm_determine_hostnames()
+      call comm_calc_other_tids()
+      i_am_initialised = .true.
+   endif
+
+ end subroutine comm_read
+
+ !***************************************************************
+
+ subroutine comm_write(iounit)
+   ! purpose:  write to output file
+   !------------ Modules used -----------------------------------
+   use echo_input_module
+!   use operations_module, only: operations_echo_input_level
+   !------------ Declaration of formal parameters ---------------
+   integer, intent(in) :: iounit
+   !** End of interface *****************************************
+   !------------ Executable code --------------------------------
+!  << system dependent namelist format >>
+!  !------------ Declaration of local variables ----------------
+!  integer(kind=i4_kind) :: status
+!  !------------ Executable code --------------------------------
+!  external error_handler
+!  write(iounit, fmt=*, iostat=status)
+!  if (status .gt. 0) call error_handler( &
+!       "pvn_write")
+!  write(iounit, nml=pvmoptions, iostat=status)
+!  if (status .gt. 0) call error_handler( &
+!       "pvn_write: namelist pvmoptions")
+!  write(iounit, fmt=*, iostat=status)
+!  if (status .gt. 0) call error_handler( &
+!       "pvn_write")
+!
+   master_work = scomm%master_work
+   n_procs = scomm%n_procs
+
+   flag_format = '("    ",a," = ",1x,a5:" # ",a)'
+   intg_format = '("    ",a," = ",   i6:" # ",a)'
+
+   call start("PVMOPTIONS","PVM_WRITE",iounit,operations_echo_input_level)
+   call intg("N_PROCS                 ",&
+              n_procs                 ,df_n_procs                 )
+   call flag("MASTER_WORK             ",&
+              master_work             ,df_master_work             )
+   call intg("PVM_TIMEOUT             ",&
+              pvm_timeout             ,df_pvm_timeout             )
+   call intg("PVM_TIMESTEP            ",&
+              pvm_timestep            ,df_pvm_timestep            )
+   call flag("CATCH_SLAVEOUT          ",&
+              catch_slaveout          ,df_catch_slaveout          )
+   call intg("PVM_MASTER_INTERRUPT_NBR",&
+              pvm_master_interrupt_nbr,df_pvm_master_interrupt_nbr)
+   call intg("PVM_SLAVE_INTERRUPT_NBR ",&
+              pvm_slave_interrupt_nbr ,df_pvm_slave_interrupt_nbr )
+   call stop()
+
+ end subroutine comm_write
+
+ !***************************************************************
+
+ subroutine comm_alloc()
+   ! purpose: allocate the appropriate space for the
+   !          non-scalar components of 'scomm'
+   !** End of interface *****************************************
+   integer(kind=i4_kind) :: alloc_stat
+   external error_handler
+   allocate(scomm%name(scomm%n_procs),STAT=alloc_stat)
+   if (alloc_stat /= 0) call error_handler &
+        ("comm_alloc : allocation (1) failed")
+   allocate (scomm%tids(scomm%n_procs),STAT=alloc_stat) 
+   if (alloc_stat /= 0) call error_handler &
+        ("comm_alloc : allocation (2) failed")  
+ end subroutine comm_alloc
+
+ !***************************************************************
+
+ character*12 function comm_myname()
+   ! same as comm_hostname, obsolete
+   !** End of interface *****************************************
+    comm_myname = comm_hostname()
+ end function comm_myname
+
+!--------------- End of module ----------------------------------
+end module comm_module
+
+
+

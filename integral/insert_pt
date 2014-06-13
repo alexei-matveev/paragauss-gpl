@@ -1,0 +1,3 @@
+sed '/&MAIN_OPTIONS/a\
+PERTURBATION_THEORY   =  t' input>inputT
+mv inputT input

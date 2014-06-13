@@ -1,0 +1,5 @@
+sed 's/save_scfstate=t/save_scfstate=f/g' input \
+|sed 's/read_scfstate=t/read_scfstate=f/g' \
+|sed 's/save_eigenvec=t/save_eigenvec=f/g' \
+|sed 's/read_eigenvec=t/read_eigenvec=f/g' >temp_input
+mv temp_input input

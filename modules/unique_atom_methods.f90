@@ -413,9 +413,6 @@ contains
         operations_post_scf
 #endif
    use options_module, only: options_relativistic
-#ifdef WITH_EPE
-   use ewaldpc_module, only: gxepe_array, EX_GXEPE, gxepe_impu, n_epe_r
-#endif
    use unique_atom_module, only: GLOB_n_unique_atoms => n_unique_atoms
    !^^^^ make it visible with another name, see comment below
    use atom_data_module, only: nuc_radius
@@ -425,10 +422,6 @@ contains
 
    type(unique_atom_type), pointer :: ua
    integer ::  i, k, status, unit
-#ifdef WITH_EPE
-   integer :: io_gxepe
-   real(kind=r8_kind), dimension(3) :: r_gxepe
-#endif
    !
    ! FIXME: Does this still affect us?  Somehow
    ! UNIQUE_ATOM_MODULE::N_UNIQUE_ATOMS is not changed by
@@ -568,6 +561,9 @@ contains
 #ifdef WITH_MOLMECH
      use qmmm_interface_module, only: gx, gx_qm, imomm, qm_mm, read_qmmm_input
 #endif
+#ifdef WITH_EPE
+     use ewaldpc_module, only: gxepe_array, EX_GXEPE, gxepe_impu, n_epe_r
+#endif
      use unique_atom_module, only: unique_atom_iwork
      implicit none
      integer, intent (in) :: loop
@@ -580,6 +576,10 @@ contains
      integer :: ieq_dummy, indexes(7), impu
      integer :: i, i_ua, io_u, status, counter_equal, gx_count
      logical :: ex_gx
+#ifdef WITH_EPE
+     integer :: io_gxepe
+     real (r8_kind), dimension(3) :: r_gxepe
+#endif
 
 #ifdef WITH_MOLMECH
       nqm_mm_new: if (.not. operations_qm_mm_new) then

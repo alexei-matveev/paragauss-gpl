@@ -133,8 +133,11 @@ FFLAGS      += $(if $(altflags), $(F90ALTFLAGS), $(F90FLAGS)) $(extraflags)
 # -C: must  be there, otherwise everything  after string concatenation
 #   operator // gets discarded.
 #
+# -ffreestanding:  Disable  stdc-predef.h  preinclude.  Otherwise  the
+#   preprocessed files will contain C-sources such as /**/-comments.
+#
 CPP = /lib/cpp
-CPPOPTIONS = -traditional-cpp -C -I$(BASEDIR)/include
+CPPOPTIONS = -traditional-cpp -C -I$(BASEDIR)/include -ffreestanding
 
 FPP = $(CPP)
 FPPOPTIONS += $(CPPOPTIONS) -D_$(MACH)

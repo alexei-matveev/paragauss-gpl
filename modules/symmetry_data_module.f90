@@ -484,9 +484,8 @@ contains
   integer(IK) function symmetry_data_n_spin()
     ! purpose: returns n_spin ( 1: closed shell, 2: open shell)
     !** End of interface ***************************************
-    if ( .not. n_spin_set ) then
-       ssym%n_spin = 1
-       n_spin_set = .true.
+    if (.not. n_spin_set) then
+       error stop "set n_spin first!"
     endif
     symmetry_data_n_spin = ssym%n_spin
    end function symmetry_data_n_spin

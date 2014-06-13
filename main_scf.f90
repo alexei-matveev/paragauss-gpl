@@ -116,7 +116,7 @@ subroutine main_scf()
 #endif
   use density_data_module, only: print_densmat, gendensmat_occ1, save_densmat, densmat
   use overlap_module, only: overlap
-  use filename_module, only: outfile, filename_outextension, recover_dir
+  use filename_module, only: outfile, recover_dir
   use hamiltonian_module, only: ham_tot, hamiltonian_store, hamiltonian_recover
   use eigen_data_module, only: eigen_data_solve1, eigen_hole_shutdown, &
        build_lvsft_hamiltonian, make_level_shift
@@ -898,17 +898,17 @@ contains
     end select
     if (recover) then
        inquire (&
-            file=trim (recover_dir)//"/"//trim (rec_file)//trim (filename_outextension)//".dat", &
+            file=trim (recover_dir) // "/" // trim (rec_file) // ".dat", &
             exist=recover)
        if (.not. recover) then
           if (operations_geo_opt .or. operations_qm_mm) then
-             call say ('Warning: No Recover File "'//trim (rec_file)//trim (filename_outextension)//".dat"//'"')
+             call say ('Warning: No Recover File "' // trim (rec_file) // ".dat"//'"')
              recover_mode = recover_nothing
              recover = .false.
              call say ('         "'//trim (rec_option)//'" temporarily turned off !')
           else
              call error_handler &
-                  ('Recover File "'//trim (rec_file)//trim (filename_outextension)//".dat"//'" not found !')
+                  ('Recover File "' // trim (rec_file) // ".dat" // '" not found !')
           endif
        endif
     endif
@@ -944,7 +944,7 @@ contains
 
     if (recover_mode == recover_fragment) then
        call readwriteblocked_startread (&
-            trim (recover_dir)//"/"//trim (frg_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (frg_file) // ".dat", &
             th, variable_length=.true.)
        call eigenstates_recover (n_vir, th)
 
@@ -959,7 +959,7 @@ contains
     endif
 
     call readwriteblocked_startread (&
-         trim (recover_dir)//"/"//trim (rec_file)//trim (filename_outextension)//".dat", &
+         trim (recover_dir) // "/" // trim (rec_file) // ".dat", &
          th, variable_length=.true.)
     call fit_coeff_recover (th)
     call fit_coeff_normalize (spin_coeff=options_reset_scfcycle())
@@ -1043,7 +1043,7 @@ contains
     type (readwriteblocked_tapehandle) :: th
     if (store_now) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (fit_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (fit_file) // ".dat", &
             th, variable_length=.true.)
        call fit_coeff_store (th)
        call convergence_state_store (th)
@@ -1072,7 +1072,7 @@ contains
     type (readwriteblocked_tapehandle) :: th
     if (store_now) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (scf_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (scf_file) // ".dat", &
             th, variable_length=.true.)
        call fit_coeff_store (th)
        call convergence_state_store (th)
@@ -1104,7 +1104,7 @@ contains
 
     if (store_now) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (ham_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (ham_file) // ".dat", &
             th, variable_length=.true.)
        call fit_coeff_store (th)
        call convergence_state_store (th)
@@ -1132,7 +1132,7 @@ contains
 
     if (store_now) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (eig_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (eig_file) // ".dat", &
             th, variable_length=.true.)
        call fit_coeff_store (th)
        call convergence_state_store (th)
@@ -1173,7 +1173,7 @@ contains
 
     if (save_fitcoeff) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (fit_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (fit_file) // ".dat", &
             th, variable_length=.true., append=.true.)
        call readwriteblocked_write ((/tot_en/), th)
        call readwriteblocked_stopwrite (th)
@@ -1185,7 +1185,7 @@ contains
     endif
     if (save_scfstate) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (scf_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (scf_file) // ".dat", &
             th, variable_length=.true., append=.true.)
        call readwriteblocked_write ((/tot_en/), th)
        call readwriteblocked_stopwrite (th)
@@ -1232,7 +1232,7 @@ contains
     if ((save_fitcoeff .and. .not. stored_curr) .or. &
          (options_save_fitcoeff() .and. .not. save_fitcoeff)) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (fit_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (fit_file) // ".dat", &
             th, variable_length=.true.)
        call fit_coeff_store (th)
        if (save_fitcoeff) then
@@ -1250,7 +1250,7 @@ contains
        endif
        if (.not. save_fitcoeff) then
           write (output_unit, '(/a)') 'Convergence State Data stored on file "' &
-               //trim (fit_file)//trim (filename_outextension)//".dat"// &
+               // trim (fit_file) // ".dat"// &
                '" may be inconsistent'
        endif
     endif
@@ -1258,7 +1258,7 @@ contains
     if ((save_scfstate .and. .not. stored_curr) .or. &
          (options_save_scfstate() .and. .not. save_scfstate)) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (scf_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (scf_file) // ".dat", &
             th, variable_length=.true.)
        call fit_coeff_store (th)
        if (save_scfstate) then
@@ -1278,7 +1278,7 @@ contains
        endif
        if (.not. save_scfstate) then
           write (output_unit, '(/a)') 'Convergence State Data stored on file "' &
-               //trim (scf_file)//trim (filename_outextension)//".dat"// &
+               // trim (scf_file) // ".dat"// &
                '" may be inconsistent'
        endif
     endif
@@ -1286,7 +1286,7 @@ contains
     if ((save_ksmatrix .and. .not. stored_curr) .or. &
          (options_save_ksmatrix() .and. .not. save_ksmatrix)) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (ham_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (ham_file) // ".dat", &
             th, variable_length=.true.)
        call fit_coeff_store (th)
        call convergence_state_store (th, recover_nothing)
@@ -1298,7 +1298,7 @@ contains
     if ((save_eigenvec .and. .not. stored_prev) .or. &
          (options_save_eigenvec() .and. .not. save_eigenvec)) then
        call readwriteblocked_startwrite (&
-            trim (recover_dir)//"/"//trim (eig_file)//trim (filename_outextension)//".dat", &
+            trim (recover_dir) // "/" // trim (eig_file) // ".dat", &
             th, variable_length=.true.)
        if (save_eigenvec) then
           call fit_coeff_store (th, recover_eigenvec)           ! reset mode
@@ -1322,7 +1322,7 @@ contains
        call readwriteblocked_stopwrite (th)
        if (.not. save_eigenvec) then
           write (output_unit, '(/a)') 'Data stored on file "' &
-               //trim (eig_file)//trim (filename_outextension)//".dat"// &
+               // trim (eig_file) // ".dat"// &
                '" may be inconsistent'
        endif
     endif
@@ -1330,7 +1330,7 @@ contains
     if (options_save_as_fragment()) then
        call say ("do_save_as_fragment")
        call readwriteblocked_startwrite (trim (recover_dir)//"/"//&
-            trim (frg_file)//trim (filename_outextension)//".dat", th, variable_length=.true.)
+            trim (frg_file) // ".dat", th, variable_length=.true.)
        call eigenstates_store (th=th)
        call readwriteblocked_stopwrite (th)
     endif

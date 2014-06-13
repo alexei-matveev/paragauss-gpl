@@ -171,8 +171,8 @@ INTEGER_T :: msgtag_resp_3Clb_tmptape_2=  113
 !NTEGER_T :: msgtag_properties_main =     116
 !NTEGER_T :: msgtag_prescf_finalize =     117
 !NTEGER_T :: msgtag_eigen_data_send=      118
-INTEGER_T :: msgtag_free_eigen=           119
-INTEGER_T :: msgtag_alloc_eigen=          120
+!NTEGER_T :: msgtag_free_eigen=           119
+!NTEGER_T :: msgtag_alloc_eigen=          120
 INTEGER_T :: msgtag_density_data_free =   121
 INTEGER_T :: msgtag_grid_send_n_points =  122
 INTEGER_T :: msgtag_grid_send_points=     123
@@ -432,8 +432,8 @@ contains
 
 !   CMP(msgtag_properties_main)
 !   CMP(msgtag_eigen_data_send)
-    CMP(msgtag_free_eigen)
-    CMP(msgtag_alloc_eigen)
+!   CMP(msgtag_free_eigen)
+!   CMP(msgtag_alloc_eigen)
     CMP(msgtag_density_data_free)
 !   CMP(msgtag_prescf_finalize)
     CMP(msgtag_grid_send_n_points)

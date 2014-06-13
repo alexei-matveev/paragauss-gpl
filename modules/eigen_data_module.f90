@@ -39,7 +39,7 @@ module eigen_data_module
   !           (i) PUBLIC
   !               - eigen_data_solve: decides which of the
   !                                   solving strategies is used
-  !               - alloc_eigen    -> if necessary, called by
+  !               - eigen_data_alloc: if necessary, called by
   !                                   the above routines
   !
   !          - print_eigendata     -> prints out eigenvectors
@@ -141,7 +141,6 @@ module eigen_data_module
 
   public :: &
        & build_lvsft_hamiltonian,&
-       & alloc_eigen, free_eigen,&
        & print_eigendata, &
        & eigen_hole_setup,eigen_hole_shutdown,&
        & eigvec_write, eigvec_read
@@ -1009,32 +1008,6 @@ contains
 
   end subroutine solve_legacy
 
-  !*************************************************************
-
-  subroutine alloc_eigen()
-    use comm_module, only: comm_parallel, comm_i_am_master &
-                         , comm_init_send, comm_all_other_hosts &
-                         , comm_send
-    use msgtag_module, only: msgtag_alloc_eigen
-    implicit none
-    ! *** end of interface ***
-
-    WARN("call eigen_data_alloc() instead")
-    !
-    ! Tell slaves to call alloc_eigen().
-    ! Yet better call eigen_data_alloc() from parallel context
-    ! directly.
-    !
-    if(comm_parallel()) then
-       if(comm_i_am_master())then
-          call comm_init_send(comm_all_other_hosts, msgtag_alloc_eigen)
-          call comm_send()
-       endif
-    end if
-
-    ! this does the real work:
-    call eigen_data_alloc()
-  end subroutine alloc_eigen
 
   subroutine eigen_data_alloc()
     !
@@ -1134,36 +1107,13 @@ contains
     EIGDATA_ALLOCATED = .true.
   end subroutine eigen_data_alloc
 
-  subroutine free_eigen()
-    use comm_module, only: comm_parallel, comm_i_am_master &
-                         , comm_init_send, comm_all_other_hosts &
-                         , comm_send
-    use msgtag_module, only: msgtag_free_eigen
-    implicit none
-    ! *** end of interface ***
-
-    WARN("call eigen_data_free() instead")
-    !
-    ! Tell slaves to call free_eigen().
-    ! Yet better call eigen_data_free() from parallel context
-    ! directly.
-    !
-    if(comm_parallel()) then
-       if(comm_i_am_master())then
-          call comm_init_send(comm_all_other_hosts, msgtag_free_eigen)
-          call comm_send()
-       endif
-    end if
-
-    ! this does the real work:
-    call eigen_data_free()
-  end subroutine free_eigen
 
   subroutine eigen_data_free()
     !
-    ! Purpose: contrary of 'alloc_eigen': it deallocates
-    !          the eigen_data where necessary
-    ! Subroutine called by: main_master
+    ! Purpose:  complimentary to eigen_data_alloc().   Deallocates the
+    ! eigenvectors where necessary.
+    !
+    ! Subroutine called by: finalize_geometry() at least.
     !
     implicit none
     ! *** end of interface ***

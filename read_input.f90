@@ -588,8 +588,10 @@ endif
 ! write read data as desired
 if (output_read_input) call write_to_output_units("read input: writing")
 if (output_operations) then
-   write(output_unit,'()')
-   call operations_write(output_unit,full=.true.)
+   if (output_unit > 0) then
+      write (output_unit, '()')
+      call operations_write (output_unit, full=.true.)
+   endif
 endif
 
 ! consistency checks

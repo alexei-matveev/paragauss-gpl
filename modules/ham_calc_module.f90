@@ -319,8 +319,6 @@ contains
                                       , ham_xc_arr_real                        &
                                       , ham_xc_arr_imag
     use hamiltonian_module,       only: print_hamiltonian
-    use bounds_module,            only: bounds_ch                              &
-                                      , bounds_xc
     use iounitadmin_module,       only: output_unit                            &
                                       , stdout_unit
     use energy_calc_module,       only: set_energy                             &
@@ -771,9 +769,7 @@ contains
     !
     !------------ Modules ----------------------------------------
     use comm,                 only: comm_reduce                                &
-                                  , comm_rank                                  &
-                                  , comm_bcast
-    use error_module,         only: MyID
+                                  , comm_rank
     use iounitadmin_module,   only: output_unit                                &
                                   , stdout_unit
     use spin_orbit_module,    only: whatis                                     &
@@ -781,11 +777,7 @@ contains
     use dimensions,           only: IrrBasDim                                  &
                                   , IrrBasDimSpor
     use symmetry_data_module, only: symmetry_data_n_spin
-    use fit_coeff_module,     only: fit_coeff_n_ch                             &
-                                  , coeff_charge                               &
-                                  , coeff_charge_veff                          &
-                                  , sp_initialized                             &
-                                  , xc_initialized
+    use fit_coeff_module, only: fit_coeff_n_ch, coeff_charge, coeff_charge_veff
     use energy_calc_module,   only: energ_coul_2z                              &
                                   , set_energy                                 &
                                   , write_energy                               &
@@ -1528,7 +1520,6 @@ ASSERT(n_fit==fit_coeff_n_ch())
     !
     !------------ Modules ----------------------------------------
     use comm, only: comm_reduce, comm_rank, comm_size, comm_scatter
-    use error_module, only: MyID
     use msgtag_module
     use symmetry_data_module
     use dimensions,         only: IrrBasDim                                    &

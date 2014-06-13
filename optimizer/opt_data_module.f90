@@ -47,7 +47,6 @@ module opt_data_module
   ! Description: ...
   !----------------------------------------------------------------
 # include "def.h"
-# define WARN(x) ! dont warn about x
   use type_module ! type specification parameters
   use coortype_module
   use atom_data_module, only :dummy_charge, nuc_mass
@@ -415,14 +414,12 @@ contains
     ! ask environment variable "TTFSINPUTDIR" that should describe
     ! directory where input data are originally stored
     if ( .not. env("TTFSINPUTDIR", opt_data_dir) ) then
-       WARN("TTFSINPUTDIR not set, using ." )
        opt_data_dir = "."
     endif
 
     ! ask environment variable "TTFSOUTPUTDIR" that should describe
     ! directory where output data will finally be copied to
     if ( .not. env("TTFSOUTPUTDIR", opt_dir) ) then
-       WARN("TTFSOUTPUTDIR not set, using "//opt_data_dir )
        opt_dir = opt_data_dir
     endif
 

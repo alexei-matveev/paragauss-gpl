@@ -111,7 +111,6 @@ module grid_module
   use type_module
   use unique_atom_module
   use comm_module
-  use commpack_module
   use msgtag_module
   use datatype
   use iounitadmin_module
@@ -1191,62 +1190,14 @@ contains
 
   !-----------------------------------------------------------------------
 
-  subroutine grid_bcast(post_scf)
-    !---------------------------------------------------------------------------
+  subroutine grid_bcast (post_scf)
+    !
     ! Purpose: broadcast structure grid_par to the slaves
-    !---------------------------------------------------------------------------
-    use comm, only: comm_bcast                                                 &
-                  , comm_rank
+    !
     implicit none
-    logical, optional  :: post_scf
+    logical, optional, intent (in) :: post_scf
     !** End of interface *******************************************************
-    !
-    integer(i4_kind)   :: alloc_stat
-    !
-    !** Executable code ********************************************************
-    if ( comm_rank() /= 0 ) then
-      ! slaves have not allocated grid_par_scf yet
-      allocate(grid_par_scf(n_unique_atoms), stat=alloc_stat)
-      ASSERT(alloc_stat.eq.0)
-    endif
-    !
-    grid_par => grid_par_scf
-    call bcast()
-    call comm_bcast( sym_reduce_scf )
-    call comm_bcast( weight_grads_scf )
-    !
-    if (present(post_scf)) then
-      if(post_scf) then
-        if ( comm_rank() /= 0 ) then
-          ! slaves have not allocated grid_par_ph yet
-          allocate(grid_par_ph(n_unique_atoms), stat=alloc_stat)
-          ASSERT(alloc_stat.eq.0)
-        endif
-        grid_par => grid_par_ph
-        call bcast()
-        call comm_bcast( sym_reduce_ph )
-      end if
-    end if
-    !
-    ! to be able to ensure compatibility with older versions
-    ! send weight_grads_ph also for the SCF part
-    call comm_bcast( weight_grads_ph )
-    ! for compatibility with older versions
-    weight_grads = weight_grads_ph ! not weight_grads_scf
 
-    contains
-
-    subroutine bcast()
-      implicit none
-      integer(kind=i4_kind) :: i
-      !
-      do i=1,n_unique_atoms
-        call comm_bcast( grid_par(i)%nrad   )
-        call comm_bcast( grid_par(i)%nang   )
-        call comm_bcast( grid_par(i)%radius )
-        call comm_bcast( grid_par(i)%npart  )
-      end do
-    end subroutine bcast
   end subroutine grid_bcast
 
   !-----------------------------------------------------------------------

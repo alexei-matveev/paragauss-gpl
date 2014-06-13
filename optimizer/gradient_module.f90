@@ -66,7 +66,6 @@ module  gradient_module
   real(kind=r8_kind),allocatable,public,target    :: grad_cartes(:,:)
   real(kind=r8_kind),allocatable,public,target    :: dervs_cartes(:,:,:,:)
   real (r8_kind), allocatable, public, target :: grad_intern(:)
-  real (r8_kind), allocatable, target :: grad_prim(:)
   real(kind=r8_kind),allocatable,public           :: grad_sphere(:)
   real(kind=r8_kind),public                :: energy,energy_ph,&
        grad_mean_square,grad_max_comp
@@ -454,6 +453,7 @@ contains
     !** End of interface ****************************************
 
     integer (i4_kind) :: k, i, start, alloc_stat
+    real (r8_kind), allocatable, target :: grad_prim(:)
     real (r8_kind), pointer :: grad(:)
 
     allocate (grad_intern(n_internal), grad_prim(n_primitive), STAT=alloc_stat)
@@ -589,28 +589,16 @@ contains
         if (alloc_stat/=0) call error_handler&
          ("gradient_alloc : deallocation (1) failed")
     endif
-    if(allocated(grad_prim)) then
-        deallocate(grad_prim, STAT=alloc_stat)
-        if (alloc_stat/=0) call error_handler&
-         ("gradient_alloc : deallocation (1+) failed")
-    endif
-    if (zmat_coordinates.and.zmat_format) then
-!       deallocate(grad,STAT=alloc_stat)
-!       if (alloc_stat/=0) call error_handler&
-!            ("grad_cart_to_internal: deallocation (1) failed")
-    else
-!       deallocate(grad,STAT=alloc_stat)
-!       if (alloc_stat/=0) call error_handler&
-!            ("grad_cart_to_internal: deallocation (2) failed")
-    endif
-
   end subroutine dealloc_grad_cart_to_internal
 
   !*************************************************************
-  subroutine grad_cart_for_opt()
+  subroutine grad_cart_for_opt ()
     use math_module, only: zero
+    implicit none
     !** End of interface ****************************************
+
     integer(kind=i4_kind)   :: i,alloc_stat
+    real (r8_kind), allocatable, target :: grad_prim(:)
 
     allocate(grad_intern(n_internal),grad_prim(n_primitive), STAT=alloc_stat)
     ASSERT(alloc_stat.eq.0)

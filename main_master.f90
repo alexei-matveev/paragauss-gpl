@@ -193,8 +193,8 @@ subroutine main_master()
   integer (i4_kind) :: tasks=0  ! Number of tasks LEFT to be done
   integer (i4_kind) :: loop, max_geo_loop ! loop -- Laufvariable fuer Runs
   logical :: geometry_converged = .false. ! determines if Simol is converged or not
-  real (r8_kind) :: energy
 #ifdef WITH_EPE
+  real (r8_kind) :: energy
   real (r8_kind) :: energy2, epe_latt_energy, cluster_regI
   real (r8_kind) :: eshort
   logical :: epe_side_energy_converged
@@ -700,13 +700,13 @@ subroutine main_master()
         call main_epe_block()
 
       call get_energy (tot=energy)
-      energy2=energy
-         call get_epe_energies (&
-              lattice_energy=epe_latt_energy, epg_cluster_reg_I=cluster_regI, eshort_coupling_au=eshort)
-         energy=energy+epe_latt_energy
+      energy2 = energy
+         call get_epe_energies (lattice_energy=epe_latt_energy, &
+              epg_cluster_reg_I=cluster_regI, eshort_coupling_au=eshort)
+         energy = energy + epe_latt_energy
          print*,'energy, energy2, eshort', energy, energy2, eshort
          print*,'epe_side_optimized_energy', energy+eshort
-         epe_side_optimized_energy=energy+eshort
+         epe_side_optimized_energy = energy + eshort
          print*,'cluster_regI', cluster_regI
          print*,'epe_latt_energy', epe_latt_energy
 

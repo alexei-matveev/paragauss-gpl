@@ -170,8 +170,7 @@ subroutine main_gradient(loop)
                                operations_qm_mm_new, &
 #endif
                                operations_qm_mm, operations_integral
-  use gradient_data_module, only : gradient_data_n_gradients                   &
-                                 , gradient_totalsym                           &
+  use gradient_data_module, only: gradient_totalsym &
                                  , gradient_cartesian                          &
                                  , gradient_ob_pulay                           &
                                  , gradient_ch_pulay                           &
@@ -1852,6 +1851,7 @@ end subroutine add_solv_grads
     use eri_main,             only : erg_blk_main
     use symm_positions,       only : symm_mapping_shells
     use group_module,         only : group_num_el
+    use gradient_data_module, only: n_grad => gradient_data_n_gradients
     use symmetry_data_module, only : symmetry_data_n_spin                      &
                                    , symmetry_data_n_irreps
     use comm,                 only : comm_bcast                                &
@@ -1875,13 +1875,15 @@ end subroutine add_solv_grads
                 * ( unique_atoms(:)%lmax_ob + 1 ) )
     n_irr  = symmetry_data_n_irreps()
     n_spin = symmetry_data_n_spin()
-if(gradient_data_n_gradients/=size(gradient_totalsym))stop 'gradient_data_n_gradients/=size(gradient_totalsym'
+    if (n_grad /= size (gradient_totalsym)) then
+       stop 'n_grad /= size(gradient_totalsym)'
+    endif
     !
     ! GET SYMMETRY MAPPING INDICES FOR INDIVIDUAL SHELLS
     n_sym = group_num_el
     call comm_bcast( n_sym )
     !
-    allocate( kexact_grad(gradient_data_n_gradients) )
+    allocate (kexact_grad(n_grad))
     kexact_grad = 0.0_r8_kind
     IF ( K_exact .and. J_exact ) THEN
       !
@@ -1890,7 +1892,7 @@ if(gradient_data_n_gradients/=size(gradient_totalsym))stop 'gradient_data_n_grad
     ELSEIF ( K_exact .and. .not. J_exact ) THEN
       !
       call erg_blk_main( QQP_tol, n_sym, n_atm, n_ua1                          &
-                       , gradient_data_n_gradients                             &
+                       , n_grad &
                        , n_spin, n_shl, n_irr, -1,                 kexact_grad &
                        , unique_atom_grad_info, densmat                        &
                        , gradient_index, unique_atoms                          )

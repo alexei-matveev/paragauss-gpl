@@ -404,27 +404,30 @@ contains
      ! N_moving_unique_atoms.   Also allocates  and  reads gxepe_array
      ! and gxepe_impu for epe treatment
      !
-   use input_module
-   use iounitadmin_module
-   use filename_module
+   use input_module, only: input_line_is_namelist, &
+        input_intermediate_unit, input_error, input_read_to_intermediate
+   use iounitadmin_module, only: openget_iounit, return_iounit, &
+        write_to_output_units, write_to_trace_unit
+   use filename_module, only: inpfile
    use operations_module, only: operations_geo_opt, operations_core_density, &
-                                operations_read_gx, &
+        operations_read_gx, operations_qm_mm, operations_gx_epeformat, &
+        operations_transit
 #ifdef WITH_MOLMECH
-                                operations_qm_mm_new, & !!!!!!!!!AS qmmm
+   use operations_module, only: operations_qm_mm_new
 #endif
 #ifdef WITH_EFP
-                                operations_integral, operations_scf, operations_post_scf, &
+   use operations_module, only: operations_integral, operations_scf, &
+        operations_post_scf
 #endif
-                                operations_qm_mm,   operations_gx_epeformat, operations_transit
    use options_module, only: options_relativistic
 #ifdef WITH_EPE
-   use ewaldpc_module,only: gxepe_array,EX_GXEPE,gxepe_impu,n_epe_r
+   use ewaldpc_module, only: gxepe_array, EX_GXEPE, gxepe_impu, n_epe_r
 #endif
    use unique_atom_module, GLOB_n_unique_atoms => n_unique_atoms
    !^^^^ make it visible with another name, see comment below
    use atom_data_module, only: nuc_radius
 #ifdef WITH_MOLMECH
-   use qmmm_interface_module
+   use qmmm_interface_module, only: gx, gx_qm, imomm, qm_mm, read_qmmm_input
 #endif
    implicit none
    integer(kind=i4_kind), intent(in):: loop

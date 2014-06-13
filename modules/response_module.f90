@@ -115,8 +115,8 @@ module response_module
   use eigen_data_module, only : eigval, eigen_data_bcast
   use occupied_levels_module
   use occupation_module, only: occ_num,n_occo
-  use grid_module, only: more_grid_atom, atomicweight,grid_main1,&
-       grid_close1,atomicweight_and_grad,weight_grads
+  use grid_module, only: more_grid_atom, atomicweight, grid_main, &
+       grid_close, atomicweight_and_grad, weight_grads
   use grid_module, only: grid_loop_setup_atom
   use orbitalstore_module
   use orbital_module
@@ -724,19 +724,19 @@ contains
 
   !*************************************************************
   subroutine response_main()
+    !
+    ! Main routine of this module. Executed by all workers. FIXME: may
+    ! need  some  work,  as  it  was previousely  executed  by  master
+    ! only. Controls  PostSCF calculation of data  needed for response
+    ! calculations.
+    !
     USE int_send_2c_resp, only: int_send_2c_resp_rewrite
     USE int_resp_module,  only: int_resp_Clb_3c
     USE resp_dipole_module
     USE noRI_module,      only: noRI_2c
-    !  Purpose:
-    !  Main routine of this module; used by master only
-    !  Controls PostSCF calculation of data needed for
-    !  response calculations.
-    !------------ Modules used ------------------- ---------------
-
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     real(r8_kind) :: tt
 
     !------------ Executable code --------------------------------
@@ -815,7 +815,7 @@ contains
 
        ! setup the grid and divide into parts and send those to slaves
        call write_to_output_units("response_main: grid_main")
-       call grid_main1(post_scf=.true.)
+       call grid_main (post_scf=.true.)
 
        FPP_TIMER_STOP (RESPONSE_SETUP)
        FPP_TIMER_START(COULOMB_2C)
@@ -890,7 +890,7 @@ contains
 
        ! Shutdown the grid which was distributed among processors
        call write_to_output_units("response_main: grid_close")
-       call grid_close1(.false.)
+       call grid_close (.false.)
 
        ! now we are finished
        call write_to_trace_unit  ("Exit response part")

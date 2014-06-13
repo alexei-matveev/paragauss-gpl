@@ -73,17 +73,17 @@ INTEGER_T :: msgtag_debugorbitals=         13
 INTEGER_T :: msgtag_SendBackEig=           15
 INTEGER_T :: msgtag_occ_levels=            16
 INTEGER_T :: msgtag_eigvec=                17
-INTEGER_T :: msgtag_gr_send=               18
+!NTEGER_T :: msgtag_gr_send=               18
 INTEGER_T :: msgtag_xcham_send=            19
 INTEGER_T :: msgtag_build_xc=              20
-INTEGER_T :: msgtag_xc_setup=              21
+!NTEGER_T :: msgtag_xc_setup=              21
 INTEGER_T :: msgtag_SendBackHam=           22
 INTEGER_T :: msgtag_xcfitham_send=         23
 INTEGER_T :: msgtag_build_xcfit=           24
-INTEGER_T :: msgtag_xcfit_setup=           25
+!NTEGER_T :: msgtag_xcfit_setup=           25
 !NTEGER_T :: msgtag_send_slavetiming=      26
 INTEGER_T :: msgtag_slavetiming=           27
-INTEGER_T :: msgtag_grid_close=            28
+!NTEGER_T :: msgtag_grid_close=            28
 ! do not use 29 and 30 for msgtags, - because of compiler bugs:
 ! INTEGER_T :: msgtag_int_setup=             29
 ! INTEGER_T :: msgtag_int_setup=             30
@@ -107,7 +107,7 @@ INTEGER_T :: msgtag_int_rel_shutdown=      47
 INTEGER_T :: msgtag_int_2cob3c_filesize=   48
 !NTEGER_T :: msgtag_post_scf=              50
 INTEGER_T :: msgtag_ph_send=               51
-INTEGER_T :: msgtag_gridph_close=          53
+!NTEGER_T :: msgtag_gridph_close=          53
 !NTEGER_T :: msgtag_main_gradient=         54
 !NTEGER_T :: msgtag_gradient_send_3c=      55
 INTEGER_T :: msgtag_grad_3c=               56
@@ -116,8 +116,8 @@ INTEGER_T :: msgtag_grad_ch=               58
 INTEGER_T :: msgtag_occ_levels_eigval=     59
 INTEGER_T :: msgtag_fit_coeff_send=        60
 !NTEGER_T :: msgtag_fit_coeff_shutdown=    61
-INTEGER_T :: msgtag_xc_close=              62
-INTEGER_T :: msgtag_xcfit_close=           63
+!NTEGER_T :: msgtag_xc_close=              62
+!NTEGER_T :: msgtag_xcfit_close=           63
 !NTEGER_T :: msgtag_openspecialunits=      64
 !NTEGER_T :: msgtag_gradinfo_dealloc=      65
 !NTEGER_T :: msgtag_grad_datashutdown=     66
@@ -137,12 +137,12 @@ INTEGER_T :: msgtag_SendBackTrafomat=      78
 INTEGER_T :: msgtag_rel_gradient_send=     80
 INTEGER_T :: msgtag_xcmdaham_send=         81
 INTEGER_T :: msgtag_build_xcmda=           82
-INTEGER_T :: msgtag_xcmda_setup=           83
+!NTEGER_T :: msgtag_xcmda_setup=           83
 !NTEGER_T :: msgtag_pre_dens_slave=        84
 INTEGER_T :: msgtag_vir_levels=            85
 INTEGER_T :: msgtag_eigvec_vir_dealloc=    86
 INTEGER_T :: msgtag_rot_levels=            87
-INTEGER_T :: msgtag_xcmda_close=           88
+!NTEGER_T :: msgtag_xcmda_close=           88
 !INTEGER_T :: msgtag_int_dipole_setup=      89
 !INTEGER_T :: msgtag_int_dipole_shutdown=   90
 !INTEGER_T :: msgtag_int_dipole_do=         91
@@ -169,7 +169,7 @@ INTEGER_T :: msgtag_resp_3Clb_tmptape_2=  113
 !NTEGER_T :: msgtag_orb_plot_send_start=  114
 !NTEGER_T :: msgtag_orbital_plot_send=    115
 !NTEGER_T :: msgtag_properties_main =     116
-INTEGER_T :: msgtag_prescf_finalize =     117
+!NTEGER_T :: msgtag_prescf_finalize =     117
 !NTEGER_T :: msgtag_eigen_data_send=      118
 INTEGER_T :: msgtag_free_eigen=           119
 INTEGER_T :: msgtag_alloc_eigen=          120
@@ -181,7 +181,7 @@ INTEGER_T :: msgtag_space_point=          125
 !NTEGER_T :: msgtag_bounds_poten=         126
 INTEGER_T :: msgtag_start_poten=          127
 INTEGER_T :: msgtag_finish_poten=         128
-INTEGER_T :: msgtag_prescf_init =         129
+!NTEGER_T :: msgtag_prescf_init =         129
 INTEGER_T :: msgtag_geom_grad=            130
 !NTEGER_T :: msgtag_Q_elec=               131
 INTEGER_T :: msgtag_solv_ham=             132
@@ -320,17 +320,17 @@ contains
     CMP(msgtag_SendBackEig)
     CMP(msgtag_occ_levels)
     CMP(msgtag_eigvec)
-    CMP(msgtag_gr_send)
+    !MP(msgtag_gr_send)
     CMP(msgtag_xcham_send)
     CMP(msgtag_build_xc)
-    CMP(msgtag_xc_setup)
+    !MP(msgtag_xc_setup)
     CMP(msgtag_SendBackHam)
     CMP(msgtag_xcfitham_send)
     CMP(msgtag_build_xcfit)
-    CMP(msgtag_xcfit_setup)
+    !MP(msgtag_xcfit_setup)
     !CMP(msgtag_send_slavetiming)
     CMP(msgtag_slavetiming)
-    CMP(msgtag_grid_close)
+    !CMP(msgtag_grid_close)
     CMP(msgtag_int_shutdown)
     !CMP(msgtag_int_2cff_setup)
     !CMP(msgtag_int_2cff_shutdown)
@@ -351,15 +351,15 @@ contains
     CMP(msgtag_int_2cob3c_filesize)
     !CMP(msgtag_post_scf)
     CMP(msgtag_ph_send)
-    CMP(msgtag_gridph_close)
+    !CMP(msgtag_gridph_close)
     !CMP(msgtag_main_gradient)
     CMP(msgtag_grad_3c)
     CMP(msgtag_grad_ch)
     CMP(msgtag_occ_levels_eigval)
     CMP(msgtag_fit_coeff_send)
 !   CMP(msgtag_fit_coeff_shutdown)
-    CMP(msgtag_xc_close)
-    CMP(msgtag_xcfit_close)
+!   CMP(msgtag_xc_close)
+!   CMP(msgtag_xcfit_close)
 !   CMP(msgtag_openspecialunits)
 !   CMP(msgtag_gradinfo_dealloc)
 !   CMP(msgtag_eigvec_occ_dealloc)
@@ -376,12 +376,12 @@ contains
     CMP(msgtag_rel_gradient_send)
     CMP(msgtag_xcmdaham_send)
     CMP(msgtag_build_xcmda)
-    CMP(msgtag_xcmda_setup)
+    !MP(msgtag_xcmda_setup)
     !MP(msgtag_pre_dens_slave)
     CMP(msgtag_vir_levels)
     CMP(msgtag_eigvec_vir_dealloc)
     CMP(msgtag_rot_levels)
-    CMP(msgtag_xcmda_close)
+    !MP(msgtag_xcmda_close)
     !CMP(msgtag_int_dipole_setup)
     !CMP(msgtag_int_dipole_shutdown)
     !CMP(msgtag_int_dipole_do)
@@ -435,7 +435,7 @@ contains
     CMP(msgtag_free_eigen)
     CMP(msgtag_alloc_eigen)
     CMP(msgtag_density_data_free)
-    CMP(msgtag_prescf_finalize)
+!   CMP(msgtag_prescf_finalize)
     CMP(msgtag_grid_send_n_points)
     CMP(msgtag_grid_send_points)
     CMP(msgtag_int_setup)
@@ -443,7 +443,7 @@ contains
 !   CMP(msgtag_bounds_poten)
     CMP(msgtag_start_poten)
     CMP(msgtag_finish_poten)
-    CMP(msgtag_prescf_init)
+!   CMP(msgtag_prescf_init)
     CMP(msgtag_geom_grad)
 !   CMP(msgtag_Q_elec)
     CMP(msgtag_solv_ham)

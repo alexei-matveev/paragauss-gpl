@@ -38,8 +38,8 @@ module xc_hamiltonian
 !
 !           The module is organized as follows:
 !
-!           There is one startup routine called xc_setup, which is wrapped
-!           by xc_setup_main. This routine is called by the master.
+!           There  is  one startup  routine  called xc_setup().   This
+!           routine is by every worker.
 !
 !           There are routines available for reading and writing the input
 !           and packing and unpacking this data (xc_input_read,
@@ -153,9 +153,7 @@ module xc_hamiltonian
   real(kind=r8_kind),public  :: s_average
 
 !------------ public functions and subroutines ------------------
-  public ::&
-       & xc_setup_main, xc_setup, build_xc_main, build_xc,&
-       & xc_close_main, xc_close, &
+  public :: xc_setup, build_xc_main, build_xc, xc_close, &
        & xc_hamiltonian_store, xc_hamiltonian_recover,&
        & xc_get_exc
 
@@ -233,23 +231,6 @@ module xc_hamiltonian
 
 contains
 
-  subroutine xc_setup_main()
-    ! purpose : wrapper for xc_setup; it runs only on the master and sends
-    !           the message "execute xc_setup" to the slaves. Subsequently
-    !           xc_setup is called.
-    use msgtag_module, only: msgtag_xc_setup
-    implicit none
-    !** End of interface *****************************************
-
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts,msgtag_xc_setup)
-       call comm_send()
-    endif
-
-    call xc_setup()
-  end subroutine xc_setup_main
-
-  !*************************************************************
 
   subroutine build_xc_main(loop)
     ! purpose : wrapper for build_xc; it runs only on the master and sends
@@ -610,20 +591,6 @@ contains
     end if
 #endif
    end subroutine xc_setup
-
-   !***************************************************************
-
-   subroutine xc_close_main()
-     ! Purpose: cause MATER and SLAVE to call xc_close
-     use msgtag_module, only: msgtag_xc_close
-     implicit none
-     !** End of interface *****************************************
-     if ( comm_parallel() ) then
-        call comm_init_send(comm_all_other_hosts,msgtag_xc_close)
-        call comm_send()
-     endif
-     call xc_close()
-   end subroutine xc_close_main
 
    !***************************************************************
 

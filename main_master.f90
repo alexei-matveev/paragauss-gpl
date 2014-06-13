@@ -676,8 +676,9 @@ subroutine main_master()
      ! response calculations with tdfrt response program
      if (operations_response) then
 #ifdef WITH_RESPONSE
-        call say ("response_main")
-        call response_main()
+        call say ("call response_main()")
+        call response_main ()
+        call say ("done response_main()")
 #else
         ABORT ('recompile -DWITH_RESPONSE')
 #endif

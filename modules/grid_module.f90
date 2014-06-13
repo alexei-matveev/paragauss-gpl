@@ -137,9 +137,6 @@ module grid_module
   public :: equal_scf_and_ph_grids
   public :: atomicweight_and_dervs
 
-  public :: grid_main1
-  public :: grid_close1 ! for call from master-only context
-
   !
   ! For SCF:
   !
@@ -291,23 +288,10 @@ module grid_module
 
 contains
 
-  subroutine grid_main1 (post_scf)
-    use comm_module, only: comm_init_send, comm_all_other_hosts, comm_send, &
-         comm_i_am_master
-    use msgtag_module, only: msgtag_gr_send
-    implicit none
-    logical, intent( in  ) :: post_scf
-    ! *** end of interface ***
-
-    if (comm_i_am_master()) then
-      call comm_init_send (comm_all_other_hosts, msgtag_gr_send)
-      call comm_send()
-    end if
-
-    call grid_main (post_scf)
-  end subroutine grid_main1
-
-  subroutine grid_main(post_scf)
+  subroutine grid_main (post_scf)
+    !
+    ! Runs on all workers.
+    !
     use output_module, only: output_module_output_grid => output_grid
     implicit none
     logical, optional, intent(in) :: post_scf
@@ -3124,35 +3108,13 @@ contains
     FPP_TIMER_STOP(mkgrd)
   end subroutine mkgrid
 
-  !-------------------------------------------------------------------------
-  subroutine grid_close1(keep_grid_par_ph)
-    ! Purpose: wrapper around grid_close for using it in a master-only context
-    use comm_module, only: comm_init_send, comm_all_other_hosts, comm_send, &
-         comm_i_am_master
-    use msgtag_module, only: msgtag_gridph_close, msgtag_grid_close
-    implicit none
-    logical, intent(in) :: keep_grid_par_ph
-    !** End of interface *****************************************
 
-    if (comm_i_am_master()) then
-      if (keep_grid_par_ph) then
-        call comm_init_send(comm_all_other_hosts, msgtag_gridph_close)
-      else
-        call comm_init_send(comm_all_other_hosts, msgtag_grid_close)
-      endif
-      call comm_send()
-    endif
-
-    call grid_close(keep_grid_par_ph)
-  end subroutine grid_close1
-
-  subroutine grid_close(keep_grid_par_ph)
+  subroutine grid_close (keep_grid_par_ph)
     !
     ! Purpose:  deallocate  variables,  cleans   up  the  module  state.  This
     ! subroutine is called from
     !
     !     main_scf
-    !     main_slave
     !     post_scf_module
     !     response_module
     !     modules/initialization.f90

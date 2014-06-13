@@ -202,9 +202,8 @@ contains
     use comm, only: comm_rank
     use energy_calc_module, only: core_interaction_calc
     use options_module, only: options_integrals_on_file
-    use fit_coeff_module, only: fit_coeff_normalize, &
-         fit_coeff_initialize, fit_coeff_calc_chargefitnorm &
-         , fit, get_fit
+    use fit_coeff_module, only: fit_coeff_normalize, fit_coeff_initialize, &
+         fit_coeff_calc_chargefitnorm, fit, get_fit
     use operations_module, only: operations_integral, &
          operations_solvation_effect
     use symmetry_data_module, only: ssym
@@ -212,8 +211,6 @@ contains
     use mat_charge_module, only: read_mat_charge
     use eigen_data_module, only: eigen_data_alloc
     use bounds_module, only: bounds_calc
-    use comm_module, only: comm_init_send, comm_all_other_hosts, comm_send
-    use msgtag_module, only: msgtag_prescf_init
     use solv_electrostat_module, only: const_part_of_ham_and_energy
     use induced_dipoles_module, only: calc_Pol_centers
     use elec_static_field_module, only: get_field_nuc
@@ -233,17 +230,6 @@ contains
     integer(i4_kind) :: rank
 
     rank = comm_rank()
-
-    !
-    ! Tell slaves to call prescf(). FIXME: yet better call from a
-    ! parallel context ...
-    !
-    if ( rank == 0 ) then
-      ! FIXME: legacy communication primitives here:
-      call comm_init_send(comm_all_other_hosts, msgtag_prescf_init)
-      ! ... the corresponding tag receive in main_slave
-      call comm_send()
-    endif
 
     !
     ! Moved from main_scf():
@@ -377,9 +363,6 @@ contains
     ! MODULES
     !--------------------------------------------------------------
     use density_data_module, only: density_data_free
-    use comm_module, only: comm_init_send, comm_all_other_hosts, comm_send &
-                         , comm_i_am_master
-    use msgtag_module, only: msgtag_prescf_finalize
     use operations_module, only: operations_potential
 #ifdef WITH_MOLMECH
     use operations_module, only: operations_qm_mm_new
@@ -399,15 +382,6 @@ contains
     ! *** end of interface ***
 
     logical :: do_post_dens
-
-    !
-    ! Tell slaves to call prescf_finialize(). FIXME: yet better
-    ! call from a parallel context.
-    !
-    if ( comm_i_am_master() ) then
-      call comm_init_send(comm_all_other_hosts, msgtag_prescf_finalize)
-      call comm_send()
-    endif
 
 #ifdef WITH_DFTPU
     !

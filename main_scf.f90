@@ -93,15 +93,14 @@ subroutine main_scf()
        output_eigendata, output_densmat, output_chargefit
   use iounitadmin_module, only: get_iounit, return_iounit, output_unit, stdout_unit, &
        write_to_trace_unit, write_to_output_units, openget_iounit, returnclose_iounit
-  use grid_module, only: grid_main1, grid_close1
+  use grid_module, only: grid_main, grid_close
   use xc_cntrl, only: xc_is_on=>is_on, xc_ANY
-  use xc_hamiltonian, only: xc_setup_main, build_xc_main, &
-       xc_hamiltonian_store, xc_hamiltonian_recover, xc_close_main, s_average
-  use xcfit_hamiltonian, only: xcfit_setup_main, build_xcfit_main, &
-       xcfit_close_main
-  use xcmda_hamiltonian, only: xcmda_setup_main, xcmda_coeff_store, &
-       build_xcmda_main, xcmda_coeff_recover, &
-       xcmda_close_main, rho_exact, comp_exact
+  use xc_hamiltonian, only: xc_setup, build_xc_main, &
+       xc_hamiltonian_store, xc_hamiltonian_recover, xc_close, s_average
+  use xcfit_hamiltonian, only: xcfit_setup, build_xcfit_main, xcfit_close
+  use xcmda_hamiltonian, only: xcmda_setup, xcmda_coeff_store, &
+       build_xcmda_main, xcmda_coeff_recover, xcmda_close, &
+       rho_exact, comp_exact
   use convergence_module, only: convergence_abort_calculation, convergence, &
        convergence_check_density_dev, convergence_max_iterations, &
        convergence_state_store, convergence_check_coulomb_dev, &
@@ -199,8 +198,6 @@ subroutine main_scf()
   !
   call say ("start")
 
-  do while (toggle_legacy_mode ())
-
   ! We are called once again, remember that:
   scf_count = scf_count + 1
 
@@ -229,20 +226,22 @@ subroutine main_scf()
      ! Set up grid
      call say ("grid setup")
      call start_timer (timer_grid_setup)
-     call say ("grid send")
-     call grid_main1 (.false.)
+     call say ("call grid_main()")
+     call grid_main (.false.)
+     call say ("done grid_main()")
      call stop_timer (timer_grid_setup)
 
      ! Call xc setup:
-     call say ("xc_setup")
+     call say ("call xc_setup()")
      select case (xcmode)
      case (xcmode_model_density, xcmode_extended_mda)
-        call xcmda_setup_main()
+        call xcmda_setup ()
      case (xcmode_numeric_exch)
-        call xc_setup_main()
+        call xc_setup ()
      case (xcmode_exchange_fit)
-        call xcfit_setup_main()
+        call xcfit_setup ()
      end select
+     call say ("done xc_setup()")
   endif
 
   if (output_chargefit) then
@@ -273,6 +272,8 @@ subroutine main_scf()
   call stop_timer (timer_scf_preparations)
   call say ("preparations done")
   call write_to_trace_unit ("SCF preparations done")
+
+  do while (toggle_legacy_mode ())
 
   ! load current state of the save_data options
   save_fitcoeff = options_save_fitcoeff()
@@ -430,9 +431,9 @@ subroutine main_scf()
      call ham_calc_main (loop - first_loop + 1) ! relative cycle number
 
      if (operations_solvation_effect .and. &
-          loop >= first_loop+sol_start_cycle) then
+          loop >= first_loop + sol_start_cycle) then
         call dealloc_ham_solv()
-        call solv_energy_el()
+        call solv_energy_el ()
      endif
 
      if (calc_Pol_centers() .and.loop >= first_loop+1) then
@@ -678,30 +679,39 @@ subroutine main_scf()
   !
   call diis_fock_module_close()
 
+  enddo                         ! while (toggle_legacy_mode())
+
+  !
+  ! The  rest is  executed  on all  workers.  Except where  explicitly
+  ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
+  !
+
   ! Clean up the XC part:
   if (xc_is_on (xc_ANY)) then
-     call say ("grid_close")
-     call grid_close1 (.true.)
+     call say ("call grid_close()")
+     call grid_close (.true.)
+     call say ("done grid_close()")
 
+     call say ("call xc_close()")
      select case (xcmode)
      case (xcmode_model_density, xcmode_extended_mda)
-        call say ("xcmda_close_main ")
-        call xcmda_close_main()
+        call xcmda_close ()
      case (xcmode_numeric_exch)
-        call say ("xc_close ")
-        call xc_close_main()
+        call xc_close ()
      case (xcmode_exchange_fit)
-        call say ("xcfit_close_main ")
-        call xcfit_close_main()
+        call xcfit_close ()
      end select
+     call say ("done xc_close()")
   endif
 
   ! Write final calculated energies
   call say ("write final calculated energies")
   if (operations_solvation_effect) then
-     call calc_Q_e()
-     call solv_energy_el()
-     call Q_dealloc()
+     do while (toggle_legacy_mode ())
+        call calc_Q_e ()
+        call solv_energy_el ()
+        call Q_dealloc ()
+     enddo
   endif
 
   if (calc_Pol_centers()) then
@@ -760,15 +770,14 @@ subroutine main_scf()
 
   if (options_save_densmatrix()) call save_densmat !!!!!!!!!!!!AS
 
-  call say ("prescf_finalize")
-  !
-  ! This sub is executed on all workers, put the code that is common
-  ! to all workers inside (or rather call from there):
-  !
+  call say ("call prescf_finalize()")
   call prescf_finalize()
+  call say ("done prescf_finalize()")
 
-  call say ("mixing_close")
+  call say ("call mixing_close()")
   call mixing_close (loop, xcmode == xcmode_exchange_fit)
+  call say ("done mixing_close()")
+
 
   if (fixed_hole) then
      call say ("shutdown hole information in eigen_data_module")
@@ -776,8 +785,9 @@ subroutine main_scf()
   endif
 
   ! Print occupation of orbitals:
-  call say ("occupation_print_spectrum()")
-  call occupation_print_spectrum()
+  call say ("call occupation_print_spectrum()")
+  call occupation_print_spectrum ()
+  call say ("done occupation_print_spectrum()")
 
   call stop_timer (timer_scf)
 
@@ -795,7 +805,6 @@ subroutine main_scf()
   call say ("convergence_shutdown")
   call convergence_shutdown()
 
-  enddo                         ! while (toggle_legacy_mode())
   call say ("end")
 
 contains

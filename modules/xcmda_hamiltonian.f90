@@ -70,11 +70,10 @@ module xcmda_hamiltonian
   !== Interrupt end of public interface of module =================
 
   !------------ public functions and subroutines ------------------
-  public :: xcmda_setup_main
+
   public :: xcmda_setup
   public :: build_xcmda_main
   public :: build_xcmda
-  public :: xcmda_close_main
   public :: xcmda_close
   public :: mda_options_read
   public :: mda_options_write
@@ -211,20 +210,6 @@ module xcmda_hamiltonian
 
 contains
 
-  subroutine xcmda_setup_main()
-    ! purpose : wrapper for xcmda_setup; it runs only on the master and sends
-    !           the message "execute xcmda_setup" to the slaves. Subsequently
-    !           xcmda_setup is called.
-    !** End of interface *****************************************
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts,msgtag_xcmda_setup)
-       call comm_send()
-    endif
-    call xcmda_setup()
-  end subroutine xcmda_setup_main
-
-  !*************************************************************
-
   subroutine build_xcmda_main(lh)
     ! purpose : wrapper for build_xcmda; it runs only on the master and sends
     !           the message "execute build_xcmda" to the slaves. Subsequently
@@ -265,21 +250,6 @@ contains
   end subroutine build_xcmda_main
 
   !***********************************************************
-
-  subroutine xcmda_close_main()
-    ! Purpose: cause MATER and SLAVE to call xcmda_close
-    ! ------- Modules -------------------------------------------
-    use comm_module, only : comm_init_send,comm_send,comm_all_other_hosts,comm_parallel
-    use msgtag_module, only : msgtag_xcmda_close
-    !** End of interface *****************************************
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts,msgtag_xcmda_close)
-       call comm_send()
-    endif
-    call xcmda_close()
-  end subroutine xcmda_close_main
-
-  !***************************************************************
 
   subroutine xcmda_allocate(soft_truncation)
     use machineparameters_module, only: machineparameters_veclen

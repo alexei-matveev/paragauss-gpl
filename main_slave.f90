@@ -60,14 +60,13 @@ subroutine main_slave()
 
 #include "def.h"
 use type_module
-use iounitadmin_module, only: write_to_output_units
 use ham_calc_module, only: ham_calc_main
-use comm_module
+use comm_module, only: comm_save_recv, comm_msgtag, &
+     comm_master_host, comm_any_message
 use msgtag_module
-use grid_module, only: grid_main1, grid_close1
-use xc_hamiltonian, only: xc_setup, build_xc, xc_close
-use xcfit_hamiltonian, only: xcfit_setup, build_xcfit, xcfit_close
-use xcmda_hamiltonian, only: xcmda_setup, build_xcmda, xcmda_close
+use xc_hamiltonian, only: build_xc
+use xcfit_hamiltonian, only: build_xcfit
+use xcmda_hamiltonian, only: build_xcmda
 use density_data_module, only: gendensmat_occ1, density_data_free, open_densmat
 use occupied_levels_module, only: sndrcv_eigvec_occ1
 use virtual_levels_module, only: eigvec_vir_dealloc
@@ -85,7 +84,6 @@ use fit_coeff_module, only: fit_coeff_receive
   use global_module, only: global_dealloc_M
   use int_send_2c_resp, only: int_send_2c_resp_rewrite
   use noRI_module, only: noRI_2c
-!!$  use eigenblock_module, only: eigenblock_mult
 #endif
 
 #ifdef WITH_EPE
@@ -102,7 +100,6 @@ use main_epe_module, only : main_epe,                      &
 #endif
 use potential_module, only: bounds_free_poten, &
      read_poten_e_3, send_receive_poten
-use prescf_module, only: prescf_init, prescf_finalize
 use solv_electrostat_module, only: build_solv_ham
 use elec_static_field_module, only: receive_surf_point, &
      surf_points_gradinfo_dealloc,surf_points_grad_information,read_field_e,send_receive_field, &
@@ -172,24 +169,12 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       call chargefit(UNUSED_INT, UNUSED_REAL_1, UNUSED_REAL_2)
    case (msgtag_commdata)
       ABORT('is handled by comm_enroll()')
-   case (msgtag_gr_send)
-      call say("grid_main")
-      call grid_main1(.false.)
-   case (msgtag_xc_setup)
-      call say("xc_setup")
-      call xc_setup()
    case (msgtag_build_xc)
       call say("build_xc")
       call build_xc()
-   case (msgtag_xcfit_setup)
-      call say("xcfit_setup")
-      call xcfit_setup()
    case (msgtag_build_xcfit)
       call say("build_xcfit")
       call build_xcfit()
-   case (msgtag_xcmda_setup)
-      call say("xcmda_setup")
-      call xcmda_setup()
    case (msgtag_build_xcmda)
       call say("build_xcmda")
       call build_xcmda()
@@ -199,24 +184,9 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    case (msgtag_open_densmat)
       call say("msgtag_open_densmat")
       call open_densmat()
-   case (msgtag_grid_close)
-      call say("grid_close")
-      call grid_close1(.false.)
-   case (msgtag_gridph_close)
-      call say("grid_close(post_scf=.true.)")
-      call grid_close1(.true.)
    case(msgtag_fit_coeff_send)
       call say("fit_coeff_receive")
       call fit_coeff_receive()
-   case(msgtag_xc_close)
-      call say("xc_close")
-      call xc_close()
-   case(msgtag_xcfit_close)
-      call say("xcfit_close")
-      call xcfit_close()
-   case(msgtag_xcmda_close)
-      call say("xcmda_close")
-      call xcmda_close()
 #ifdef WITH_RESPONSE
      case(msgtag_response_setup)
         call say("response_setup")
@@ -289,12 +259,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
      call epe_finish_slave()
 !AG ========================= end of EPE-distribution ======================
 #endif
-  case (msgtag_prescf_init)
-     call say("prescf_init")
-     call prescf_init()
-  case (msgtag_prescf_finalize)
-     call say("prescf_finalize")
-     call prescf_finalize()
   case (msgtag_solv_ham)
      call say("build_solv_ham")
      call build_solv_ham()

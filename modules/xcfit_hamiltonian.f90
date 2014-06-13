@@ -80,8 +80,7 @@ module xcfit_hamiltonian
   !== Interrupt end of public interface of module =================
 
   !------------ public functions and subroutines ------------------
-  public :: xcfit_setup_main,build_xcfit_main,xcfit_close_main,&
-       xcfit_setup,build_xcfit,xcfit_close
+  public :: build_xcfit_main, xcfit_setup, build_xcfit, xcfit_close
 
 !================================================================
 ! End of public interface of module
@@ -105,20 +104,6 @@ module xcfit_hamiltonian
 
 contains
 
-  subroutine xcfit_setup_main()
-    ! purpose : wrapper for xcfit_setup; it runs only on the master and sends
-    !           the message "execute xcfit_setup" to the slaves. Subsequently
-    !           xcfit_setup is called.
-    !** End of interface *****************************************
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts,msgtag_xcfit_setup)
-       call comm_send()
-    endif
-    call xcfit_setup()
-  end subroutine xcfit_setup_main
-
-  !*************************************************************
-
   subroutine build_xcfit_main(loop)
     ! purpose : wrapper for build_xcfit; it runs only on the master and sends
     !           the message "execute build_xcfit" to the slaves. Subsequently
@@ -132,18 +117,6 @@ contains
     endif
     call build_xcfit(loop)
   end subroutine build_xcfit_main
-
-  !***********************************************************
-
-  subroutine xcfit_close_main()
-    ! Purpose: cause MASTER and SLAVE to call xc_close
-    !** End of interface *****************************************
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts,msgtag_xcfit_close)
-       call comm_send()
-    endif
-    call xcfit_close()
-  end subroutine xcfit_close_main
 
   !***********************************************************
 

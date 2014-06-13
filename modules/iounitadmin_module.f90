@@ -360,11 +360,14 @@ contains
     logical, parameter :: append_local = .false.
     !------------ Executable code --------------------------------
 
-    ! FIXME: we used  to have unit numbers on all  slave workers to be
-    ! negative.  This helps enforcing  the master-only  IO. Re-enforce
-    ! this by uncommenting:
+    ! We  used  to have  slaves  do some  output  too.   At many,  but
+    ! possibly not all  places IO to output_unit will  only be done if
+    ! the unit  number is positive.   An early return here  makes sure
+    ! the  unit numbers on  all slave  workers remain  negative.  This
+    ! helps enforcing  the master-only IO.  Comment this,  if you want
+    ! all slave to do IO too:
     !
-    ! if (rank /= 0) return
+    if (rank /= 0) return
 
     ! Output and trace unit numbers remains negative on slaves that do
     ! not call this subroutine:

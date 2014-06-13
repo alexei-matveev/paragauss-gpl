@@ -28,18 +28,9 @@
 module shgi_common
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Holds global variables used in several modules.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

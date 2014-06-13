@@ -28,18 +28,10 @@
 module shgi_relfit
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Nuclear   attraction,  fit   integrals,  and   their  relativistic
+  ! correction terms.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

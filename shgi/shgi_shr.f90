@@ -28,36 +28,37 @@
 module shgi_shr
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
-  !
-  !  1) Computing harmonic derivatives of F(w^2/2), given tailor series FL for F:
+  !  1) Computing harmonic derivatives of F(w^2/2), given tailor
+  !     series FL for F:
   !
   !  * Example:
   !
   !      call SHR_D3Fv(N, LA, LB, LC, W, FL, D3F)
   !                    |-------  in -------| ^- out
   !
-  !    executed with N vectors W(N, 3) and Tailor expansion FL(N, 1+LA+LB+LC)
-  !    gives triple harmonic derivatives wrt W:
+  !    executed with N vectors W(N, 3) and Tailor expansion FL(N,
+  !    1+LA+LB+LC) gives triple harmonic derivatives wrt W:
   !
   !      D3F(:N,lma,lmb,lmc) = D(lma)D(lmb)D(lmc) F(W^2/2)
   !
-  !    for all "lma", "lmb", and "lmc" up to respective limits (LA+1)^2, (LB+1)^2,
-  !    and (LC+1)^2
+  !    for all "lma", "lmb", and "lmc" up to respective limits
+  !    (LA+1)^2, (LB+1)^2, and (LC+1)^2
   !
   !  * Call Tree:
   !
-  !    SHR_DxFv           ( x = 2, 3, 4, 5, 6 )
-  !       |----- SHR_DyFv ( y = x - 1, called eventualy if some of angular momenta are zero )
+  !    SHR_DxFv           (x = 2, 3, 4, 5, 6)
+  !       |----- SHR_DyFv (y = x - 1, called eventualy if some of
+  !       |      angular momenta are zero )
   !       |----- XDxFv
-  !                |------ SHR_DyC  ( precomputes derivatives of SH )
-  !                |------ ZDxFv    ( actually computes harmonic derivatives )
+  !                |------ SHR_DyC (precomputes derivatives of SH)
+  !                |------ ZDxFv (actually computes harmonic derivatives)
   !                          |------ ZDyFv ( y = x - 1 )
   !                        .....
   !
   !  2) Computing the angular part of harmonic derivatives. If output
-  !     is later convoluted with a tailor expansion for a specific F(w^2/2)
-  !     the result is the harmonic derivative as given by "SHR_DxFv".
+  !     is later convoluted with a tailor expansion for a specific
+  !     F(w^2/2) the result is the harmonic derivative as given by
+  !     "SHR_DxFv".
   !
   !  * Example
   !
@@ -79,15 +80,8 @@ module shgi_shr
   !      ... in complete analogy to SHR_DxFv.
   !
   !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  ! 
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
+  ! Copyright (c) 2007-2011 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

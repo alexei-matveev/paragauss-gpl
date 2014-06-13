@@ -28,18 +28,11 @@
 module shgi_dip
   !---------------------------------------------------------------
   !
-  !  Purpose: for dipole integral of ll, ls and ss type
+  ! For  dipole integral of  LL, LS  and SS  type.  Module  called by:
+  ! integral_calc_quad_dipole.f90
   !
-  !
-  !  Module called by: integral_calc_quad_dipole.f90
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: A Matveev and G Dixit
-  !  Date:  5/02/09
-  !
+  ! Copyright (c) 2009 Gopal Dixit
+  ! Copyright (c) 2009 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

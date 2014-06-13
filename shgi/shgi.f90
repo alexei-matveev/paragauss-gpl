@@ -28,18 +28,13 @@
 module shgi
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Drivers for one-electron and relativistic density fitting integral
+  ! evaluation.  Module   called  by  integral_calc_quad_2cob3c()  and
+  ! friends.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
+  ! Copyright (c) 2006 Vladimir Nasluzov
+  ! Copyright (c) 2006-2008 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

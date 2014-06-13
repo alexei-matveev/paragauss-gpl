@@ -28,18 +28,10 @@
 module shgi_ang
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! For  integrals  involving the  third  center  C precompute  common
+  ! (angular) quantities.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

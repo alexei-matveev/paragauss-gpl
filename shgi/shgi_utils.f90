@@ -28,18 +28,17 @@
 module shgi_utils
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Coupling harmonic derivarives of F and  S to those of FS, also for
+  ! gradients,  also  for  second  derivatives.  Coupling  radial  and
+  ! angular parts. Conversion from harmonic derivatives wrt W and D to
+  ! those wrt  A, B, and C. Packing/unpacking  screened integrals. And
+  ! more ...
   !
+  ! Kitchen sink for everithing without a better place to go.
   !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
+  ! Copyright (c) 2006 Vladimir Nasluzov
+  ! Copyright (c) 2006-2008 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

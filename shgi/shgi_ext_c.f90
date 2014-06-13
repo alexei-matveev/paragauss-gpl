@@ -28,20 +28,10 @@
 module shgi_ext_c
   !---------------------------------------------------------------
   !
-  !  Purpose: _ext_c == external centers module 
-  !                     (dipoles, octupoles, quadrupoles, induced
-  !                      dipoles)
+  ! Here _ext_c == external centers module (dipoles, octupoles,
+  ! quadrupoles, induced dipoles)
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2007-2011 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

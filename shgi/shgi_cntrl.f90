@@ -28,18 +28,11 @@
 module shgi_cntrl
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Handling integral settings as a bitmap.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
+  ! Copyright (c) 2006 Vladimir Nasluzov
+  ! Copyright (c) 2006-2008 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

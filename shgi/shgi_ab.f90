@@ -28,18 +28,9 @@
 module shgi_ab
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Computes integral preliminaries for a pair of shells.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

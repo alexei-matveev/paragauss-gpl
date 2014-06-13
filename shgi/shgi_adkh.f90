@@ -28,26 +28,16 @@
 module shgi_adkh
   !---------------------------------------------------------------
   !
-  !  Purpose: Performs Atomic DKH in each subspace with
-  !           different angular momenta
+  ! Performs  Atomic  DKH  in  each subspace  with  different  angular
+  ! momenta.
   !
-  !  Performs DKH transformations of primitive
-  !  integrals in so that electrons inside of
-  !  heavy atoms become relativistic, but inter-atomic
-  !  forces are not affected.
+  ! Performs  DKH transformations  of primitive  integrals in  so that
+  ! electrons   inside  of  heavy   atoms  become   relativistic,  but
+  ! inter-atomic forces are not affected.
   !
-  !  Master sources in modules/relgrads.f90
+  ! See also modules/relgrads.f90
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2006-2013 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

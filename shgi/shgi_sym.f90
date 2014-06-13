@@ -28,18 +28,11 @@
 module shgi_sym
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Convert  derivatives to  those with  respect to  totally symmetric
+  ! modes.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
+  ! Copyright (c) 2006-2008 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

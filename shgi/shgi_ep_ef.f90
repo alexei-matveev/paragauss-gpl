@@ -28,18 +28,10 @@
 module shgi_ep_ef
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Maybe  used for  many point  charges  in PCM  and other  embedding
+  ! models.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2007-2011 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

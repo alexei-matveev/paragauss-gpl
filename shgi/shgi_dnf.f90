@@ -28,18 +28,13 @@
 module shgi_dnf
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Computes harmonic derivatives
   !
+  !   D(lma) ... D(lme) S(x^2/2)
   !
-  !  Module called by: ...
+  ! of a scalar function.
   !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

@@ -28,18 +28,11 @@
 module shgi_pcm
   !---------------------------------------------------------------
   !
-  !  Purpose: _pcm == Point Charge Module
+  ! Here _pcm  == Point Charge  Module. Computes the integrals  of the
+  ! field of point charge collection.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2006-2009 Alexey Shor
+  ! Copyright (c) 2006-2013 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

@@ -28,18 +28,11 @@
 module shgi_pseudo
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! One-electron  integrals for  local and  non-local pseudo-potential
+  ! terms.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
+  ! Copyright (c) 2006 Vladimir Nasluzov
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

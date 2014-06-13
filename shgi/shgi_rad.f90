@@ -28,18 +28,10 @@
 module shgi_rad
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Radial part for various integrals.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2013 Alexei Matveev
+  ! Copyright (c) 2007 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

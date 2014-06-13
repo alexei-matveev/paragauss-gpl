@@ -28,18 +28,10 @@
 module shgi_slv
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Integrals due to the charges of the solvation shell.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2006-2008 Alexey Shor
+  ! Copyright (c) 2007-2013 Alexei Matveev
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

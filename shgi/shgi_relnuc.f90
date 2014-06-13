@@ -28,18 +28,10 @@
 module shgi_relnuc
   !---------------------------------------------------------------
   !
-  !  Purpose: ...
+  ! Nuclear attraction and its relativitstic correction terms.
   !
-  !
-  !  Module called by: ...
-  !
-  !
-  !  References: ...
-  !
-  !
-  !  Author: ...
-  !  Date: ...
-  !
+  ! Copyright (c) 2005-2010 Alexei Matveev
+  ! Copyright (c) 2011 Alexey Shor
   !
   !----------------------------------------------------------------
   !== Interrupt of public interface of module =====================

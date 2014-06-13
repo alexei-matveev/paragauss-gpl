@@ -162,8 +162,7 @@ subroutine main_gradient(loop)
   use output_module        ! defines amount of output
   use iounitadmin_module   ! to open output units
   ! comm related information and routines
-  use comm, only: comm_rank, comm_reduce
-  use comm_module, only: comm_parallel
+  use comm, only: comm_rank, comm_size, comm_reduce
   use integralpar_module   ! steering information for integral part
   use operations_module, only: operations_geo_opt,operations_post_scf, &
                                operations_core_density,operations_solvation_effect, &
@@ -399,13 +398,15 @@ subroutine main_gradient(loop)
   ! ================ CONTEXT: ALL PROCESSORS ===============
   if(.not. operations_integral) goto 1000 ! not to calculate QM gradients
 
-     if (comm_parallel()) then
-        call say ("fit_coeff_send")
-        ! MDA : update coeff_xcmda must be sent to each slave
-        ! else: coeff_charge has not yet been send to the slaves
+     ! FIXME:  yet better, make  sure that  fit_coeff_sndrcv() handles
+     ! the serial case gracefully:
+     if (comm_size () > 1) then
+        call say ("fit_coeff_sndrcv")
+        ! MDA:  update coeff_xcmda must  be sent  to each  slave else:
+        ! coeff_charge has not yet been send to the slaves
         IFIT = ICHFIT
-        if(model_density) IFIT = IFIT + IXCFIT
-        call fit_coeff_sndrcv(IFIT)
+        if (model_density) IFIT = IFIT + IXCFIT
+        call fit_coeff_sndrcv (IFIT)
      endif
 
      call say ("main_integral(1)")
@@ -569,7 +570,11 @@ subroutine main_gradient(loop)
               call charge_solv_2nd_deriv()
            end if
 #endif
-           if (comm_parallel()) call send_receive_Q_grads()
+           ! FIXME: better  yet make sure  that send_receive_Q_grads()
+           ! handles the serial case:
+           if (comm_size () > 1) then
+              call send_receive_Q_grads ()
+           endif
            call matrix_2nd_deriv()
            call potential_calculate ('SolvDervs')
         end if

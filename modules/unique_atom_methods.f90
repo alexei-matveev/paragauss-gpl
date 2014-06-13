@@ -591,9 +591,7 @@ contains
 #endif
          do i_ua = 1, N_unique_atoms
             counter_equal = 1
-
-            do
-               if (counter_equal > unique_atoms(i_ua) % n_equal_atoms) exit
+            do while (counter_equal <= unique_atoms(i_ua) % n_equal_atoms)
 
                gx_count = gx_count + 1
                if (operations_gx_epeformat) then
@@ -681,8 +679,7 @@ contains
              i = 0
              do i_ua = 1, N_unique_atoms
                 counter_equal = 1
-                do
-                   if (counter_equal > unique_atoms(i_ua) % n_equal_atoms) exit
+                do while (counter_equal <= unique_atoms(i_ua) % n_equal_atoms)
                    i = i + 1
                    if (gx(i) % i_unique .ne. 0) then
                       if (counter_equal == 1) then

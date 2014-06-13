@@ -90,7 +90,7 @@ WITH_OPTIMIZER = 1
 #
 # Guile is a Scheme implementation intended as a GNU extension language:
 #
-WITH_GUILE = 0
+WITH_GUILE = 1
 
 #
 # Use memlog facility:

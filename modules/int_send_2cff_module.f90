@@ -1628,6 +1628,7 @@ contains
   !*************************************************************
 
 
+#if 0
   !*************************************************************
   subroutine expand_integral_index(flag,i_rec, &
                                    i_ua1,i_bas1,i_exp1,i_ind1,i_gc1, &
@@ -1735,6 +1736,7 @@ contains
 
   end subroutine expand_integral_index
   !*************************************************************
+#endif
 
 !--------------- End of module ----------------------------------
 end module int_send_2cff_module

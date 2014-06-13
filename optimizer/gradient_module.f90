@@ -447,7 +447,6 @@ contains
     !          grad_intern = B**-1 * grad_cartes
     !          B**-1 = bmat_inv
     use coordinates_module, only: bmat_inv, tmat, reduc_mat
-    use math_module, only: zero, round, invert_matrix
     USE_DEBUG
     implicit none
     !** End of interface ****************************************
@@ -458,8 +457,8 @@ contains
 
     allocate (grad_intern(n_internal), grad_prim(n_primitive), STAT=alloc_stat)
     ASSERT(alloc_stat.eq.0)
-    grad_intern = zero
-    grad_prim = zero
+    grad_intern = 0.0
+    grad_prim = 0.0
     if (zmat_coordinates .and. zmat_format) then
        grad => grad_prim
     else
@@ -475,7 +474,7 @@ contains
                bmat_inv(start + 2, i) * grad_cartes(k, 3)
        enddo
        ! FIXME: hm, what is this?
-       if (abs(grad(i)) <= 1.0e-10_r8_kind) grad(i) = zero
+       if (abs(grad(i)) <= 1.0e-10_r8_kind) grad(i) = 0.0
     enddo
     if (zmat_coordinates .and. zmat_format) then
        grad_intern = matmul (reduc_mat, grad_prim)

@@ -153,7 +153,7 @@ subroutine main_master()
   use convergence_module, only: convergence_max_geo_iteration
   use properties_module, only: properties_main
 #ifdef WITH_DFTPU
-  use dft_plus_u_module, only: dft_plus_u_in_use, dft_plus_u_output
+  use dft_plus_u_module, only: dft_plus_u_output
 #endif
 #ifdef WITH_EPE
   use epecom_module, only: get_epe_energies, &
@@ -622,13 +622,9 @@ subroutine main_master()
 
 #ifdef WITH_DFTPU
      !
-     ! DFT+U output:
+     ! DFT+U output, does nothing if not in use:
      !
-     if (dft_plus_u_in_use) then
-        do while (toggle_legacy_mode ())
-           call dft_plus_u_output ()
-        enddo
-     endif
+     call dft_plus_u_output ()
 #endif
 
      ! Do  properties   before  deallocating  the   integral  storage.

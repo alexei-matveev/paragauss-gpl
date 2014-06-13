@@ -754,17 +754,13 @@ subroutine main_master()
         MEMSET (0)
 
      !
-     ! Various shutdown and deallocation work.
-     !
-     ! One of the first things this sub does is telling slaves
-     ! to also call itself. It is a convenient place to put
-     ! the code to be executed on all workers ...
+     ! Various shutdown and deallocation work:
      !
      call finalize_geometry()
 
 1112 continue
 
-     ! Otherwsie there will be multiple copies printed:
+     ! Otherwise there will be multiple copies printed:
      if (output_unit > 0 .and. stdout_unit > 0) then ! yes, AND!
         call write_to_output_units (" ------------------------------------")
         call write_to_output_units (" -                                  -")

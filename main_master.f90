@@ -278,11 +278,14 @@ subroutine main_master()
 
      call start_timer (timer_initialisation)
 
-     call write_to_output_units (" ------------------------------------")
-     call write_to_output_units (" -                                  -")
-     call write_to_output_units (" - main_master: Run No. ", inte=loop)
-     call write_to_output_units (" -                                  -")
-     call write_to_output_units (" ------------------------------------")
+     ! Otherwise there will be multiple copies printed:
+     if (output_unit > 0 .and. stdout_unit > 0) then ! yes, AND!
+        call write_to_output_units (" ------------------------------------")
+        call write_to_output_units (" -                                  -")
+        call write_to_output_units (" - main_master: Run No. ", inte=loop)
+        call write_to_output_units (" -                                  -")
+        call write_to_output_units (" ------------------------------------")
+     endif
 
 
      ! TODO: move call read_input() and
@@ -759,13 +762,16 @@ subroutine main_master()
      !
      call finalize_geometry()
 
-1112 call write_to_output_units (" ------------------------------------")
-     call write_to_output_units (" -                                  -")
-     call write_to_output_units (" -                                  -")
-     call write_to_output_units (" - main_master: End of Run No. ", inte=loop)
-     call write_to_output_units (" -                                  -")
-     call write_to_output_units (" -                                  -")
-     call write_to_output_units (" ------------------------------------")
+1112 continue
+
+     ! Otherwsie there will be multiple copies printed:
+     if (output_unit > 0 .and. stdout_unit > 0) then ! yes, AND!
+        call write_to_output_units (" ------------------------------------")
+        call write_to_output_units (" -                                  -")
+        call write_to_output_units (" - main_master: End of Run No. ", inte=loop)
+        call write_to_output_units (" -                                  -")
+        call write_to_output_units (" ------------------------------------")
+     endif
 
      !
      ! If max_geo_iteration was set to zero in the input,

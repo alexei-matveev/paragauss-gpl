@@ -116,10 +116,8 @@ contains
     !
     ! Only master is supposed to use output_unit/trace_unit:
     !
-    if ( rank == 0 ) then
-       DPRINT 'initialize_environment: call open_special_units()'
-       call open_special_units()
-    endif
+    DPRINT 'initialize_environment: call open_special_units()'
+    call open_special_units (rank)
     DPRINT 'initialize_environment: .'
   end subroutine initialize_environment
 
@@ -675,12 +673,10 @@ contains
     call orbital_shutdown()
 
     !
-    ! Close   output  file,  only   on  master.    See  the   call  to
-    ! corresponding open_special_units() above:
+    ! Close   output    file.   See   the    call   to   corresponding
+    ! open_special_units() above:
     !
-    if ( comm_rank() == 0 ) then
-       call close_special_units()
-    endif
+    call close_special_units()
 
     !
     ! Free structs of solhrules_module:

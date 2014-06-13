@@ -344,11 +344,12 @@ contains
 
 #ifndef FPP_OPTIMIZER
   !*************************************************************
-  subroutine open_special_units()
+  subroutine open_special_units (rank)
     !  Purpose: special purpose units that should stay open all
     !           the program run are opened
     use filename_module, only: outfile
     implicit none
+    integer, intent (in) :: rank
     !** End of interface *****************************************
 
     !------------ Declaration of subroutines used ----------------
@@ -358,6 +359,12 @@ contains
     character(len=120) :: message
     logical, parameter :: append_local = .false.
     !------------ Executable code --------------------------------
+
+    ! FIXME: we used  to have unit numbers on all  slave workers to be
+    ! negative.  This helps enforcing  the master-only  IO. Re-enforce
+    ! this by uncommenting:
+    !
+    ! if (rank /= 0) return
 
     ! Output and trace unit numbers remains negative on slaves that do
     ! not call this subroutine:

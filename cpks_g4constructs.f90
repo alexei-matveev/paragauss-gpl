@@ -207,14 +207,8 @@ subroutine cpks_g4constructs()
      ! Then start the master
      ! pert_vec actually holds the charge density projections [rho_spin|f_k]
 
-     if( comm_parallel() ) then
-        ilower = 1
-        iupper = bounds_ch(1)
-     else
-ASSERT(n_ch==bounds_ch(1))
-        ilower=1
-        iupper=n_ch
-     endif
+     ilower = 1
+     iupper = bounds_ch(1)
 
      call calc_cpks_gvec(ilower, iupper) ! now on master,  depends on cpks%s1
 

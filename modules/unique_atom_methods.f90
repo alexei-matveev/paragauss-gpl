@@ -634,7 +634,8 @@ contains
 
                ! Ignore dummy  atoms which  are identified not  by the
                ! value of Z, but rather  by zero index of the group of
-               ! equivalent atoms:
+               ! equivalent atoms. Note how  the value of Z is ignored
+               ! altogether, not only for dummy atoms.
                if (ieq_dummy == 0) cycle
 
                ! Note  how the xyz  coordinates of  all but  the first

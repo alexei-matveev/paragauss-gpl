@@ -1,2 +1,14 @@
 _darcs
 *~
+guile/*.d
+*.dep
+*.mod
+*.F90
+*.o
+*.a
+autodiff/ad?x?.f90
+include/mpif.h
+machine.mk
+guile-qm
+baslib/bin/qm-find-basis
+runqm

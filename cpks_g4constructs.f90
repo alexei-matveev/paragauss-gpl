@@ -211,6 +211,7 @@ subroutine cpks_g4constructs()
         ilower = 1
         iupper = bounds_ch(1)
      else
+ASSERT(n_ch==bounds_ch(1))
         ilower=1
         iupper=n_ch
      endif

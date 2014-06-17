@@ -415,7 +415,6 @@ contains
       !        How do "events" diis_step = T/F and beta = 1.0/not 1.0 correlate?
       !        If they do, why isnt it made explicit?
       !
-      print *, "mixing_ch: diis beta=", b, "diis_step =", diis_step
       if ( .not. diis_step ) then
         ASSERT(b==1.0)
       endif
@@ -513,8 +512,6 @@ contains
     ! Mix old and new into new:
     !
     call fit_coeff_set_ch(mix(BETACHOLD, coeff_charge_old, coeff_charge))
-
-    print *, "mixing_ch: legacy mixing, beta =", BETACHOLD
 
     if ( spin_coeff_also ) then
       if ( spin_separate ) then
@@ -736,11 +733,9 @@ contains
 
     if (discard) then
        ! nothing
-       print *, "mixing_ham: BETA XC = 1.0 (skip mixing)"
        if (output_scfloops) write(output_unit,'(A40)') &
             'Mixing for numerical Hamiltonian, Skip'
     else
-       print *, "mixing_ham: BETA XC = ", betachold, "(do mixing)"
        ham_xc_arr = ham_xc_arr * betachold + (one - betachold) * ham_xc_arr_old
 
        if (output_scfloops) write(output_unit,'(A40, F8.3)') &

@@ -68,6 +68,8 @@ module  iounitadmin_module
 # include "def.h"
   use type_module
   use filename_module, only: max_length => filename_namelengthmax
+  use iso_fortran_env, only: stdin_unit => input_unit, &
+       stdout_unit => output_unit
   implicit none
   private         ! by default, all names are private
   save
@@ -85,8 +87,8 @@ module  iounitadmin_module
   !
   integer, public, protected :: output_unit = -1 ! == 1 after opening
   integer :: trace_unit = -3                     ! == 3 after opening
-  integer, parameter, public :: stdin_unit = 5
-  integer, parameter, public :: stdout_unit = 6
+  public :: stdin_unit                ! == 5
+  public :: stdout_unit               ! == 6
 
 #ifdef WITH_EFP
   logical, public :: no_trace_output=.false.

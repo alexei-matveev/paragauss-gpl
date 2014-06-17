@@ -55,6 +55,7 @@ This  produces an executable  "guile-qm" in  the top  directory (where
 this  README file resides)  that can  be used  as a  standalone Scheme
 interpreter.  You may try to execute it in serial ...
 
+    $ export GUILE_LOAD_PATH=.
     $ ./guile-qm
     guile> (+ 1 2)
     3

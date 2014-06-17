@@ -269,7 +269,7 @@ contains
     !          default values to the input.out
     !          file.
     use echo_input_module, only: start, real, flag, intg, strng, stop, &
-         echo_level_full, word_format
+         echo_level_full
     use operations_module, only: operations_echo_input_level
     implicit none
     integer, intent(in) :: iounit
@@ -376,7 +376,6 @@ contains
 
   subroutine mixing_ch(iter, b, metric)
     ! Purpose: Mixing of charge coefficients
-    use output_module, only: output_scfloops
     use options_module, only: options_n_spin, options_xcmode, &
                               xcmode_model_density, xcmode_extended_mda
     use diis_fock_module, only: diis_charge_coeff, diis_step, diis_charge_mixing &
@@ -387,9 +386,8 @@ contains
     real(r8_kind),    intent(in)  :: metric(:) ! the metric tensor
     !** End of interface ***************************************
 
-    real(r8_kind)                 :: BETA, BETACH, BETASP, s
-    integer         ::  ALLOC_ERROR
-    logical         ::  spin_coeff_also
+    integer   :: ALLOC_ERROR
+    logical   :: spin_coeff_also
     external error_handler
 
     !
@@ -411,6 +409,16 @@ contains
       !
       call fit_coeff_set_ch( diis_charge_coeff( coeff_charge, coeff_charge_old &
                                               , metric,                     b) )
+
+      !
+      ! FIXME: Is it so? We are getting "beta" from diis_charge_coeff() ...
+      !        How do "events" diis_step = T/F and beta = 1.0/not 1.0 correlate?
+      !        If they do, why isnt it made explicit?
+      !
+      print *, "mixing_ch: diis beta=", b, "diis_step =", diis_step
+      if ( .not. diis_step ) then
+        ASSERT(b==1.0)
+      endif
 
       if (spin_separate) then
         WARN('WARNING: DIIS not adapted for the spin_separate')
@@ -459,125 +467,153 @@ contains
       return
     endif
 
+    !
+    ! FRACTION MIXING (several ways to define the fraction)
+    !
+
     spin_coeff_also = options_n_spin() > 1 .and. &
                       ( options_xcmode() == xcmode_model_density .or. &
                         options_xcmode() == xcmode_extended_mda )
 
-    ! diis_step belongs to the DIIS routine, which could switch off charge mixing, see comment below
-    if (ITER<=IDYSTR-1) then
-       !
-       !  FIXED MIXING
-       !
-       if (ITER==IDYSTR-1)  then
-          !
-          !  PREPARATION FOR DYNAMIC MIXING IN NEXT ITERATION
-          !
-          ! PREPARE FOR DYNAMICAL MIXING IN NEXT CYCLE
-          allocate( CHOLDIN(fit_coeff_n_ch())                                  &
-                  , CHOLDOUT(fit_coeff_n_ch()), STAT=ALLOC_ERROR )
-          if(ALLOC_ERROR/=0) call error_handler&
-               ('Allocation failed in subroutine mixing')
-          CHOLDIN=coeff_charge_old
-          CHOLDOUT=coeff_charge
-          if (spin_separate) then
-             allocate( SPOLDIN(fit_coeff_n_ch())                               &
-                     , SPOLDOUT(fit_coeff_n_ch()), STAT=ALLOC_ERROR)
-             if(ALLOC_ERROR/=0) call error_handler&
-                  ('Allocation failed in subroutine mixing')
-             SPOLDIN=coeff_spin_old
-             SPOLDOUT=coeff_spin
-          endif
-       endif
-       if (chold_initialized .and. discard_init) then
-          b=one
-       else
-          call fit_coeff_set_ch( coeff_charge*CHMIX                            &
-                               +(one-CHMIX)*coeff_charge_old                   )
-          b=chmix
-       endif
-       BETACHOLD=b
-       if (spin_coeff_also) then
-          if (spold_initialized .and. discard_init) then
-             s=one
-          else
-             coeff_spin=coeff_spin*SPMIX+(one-SPMIX)*coeff_spin_old
-             s=spmix
-          endif
-          BETASPOLD=s
-       endif
-       method = 'Fixed'
-    else
-       !
-       ! DYNAMIC MIXING
-       !
-       if ( global_mixing ) then
-          BETA=GLOBAL(coeff_charge_old,coeff_charge,CHOLDIN,CHOLDOUT,metric, &
-                      default=chmix,text='Charge coefficients: ')
-          method = 'Global'
-       else
-          if (output_scfloops) &
-               write(output_unit,'(A)')'Dynamic damping of charge coefficients:'
-          BETACH=DYNDAMP(coeff_charge_old,coeff_charge,CHOLDIN,CHOLDOUT)
-          if (BETACH==-one) then
-             BETACH=CHMIX
-             BETA=(BETACH+BETACHOLD)/2
-             if (output_scfloops) &
-                  write(output_unit,'(1X,A25,F8.3)') 'RESULTING BETA = ',BETA
-          else
-             BETA=(BETACH+BETACHOLD)/2
-          endif
-          method = 'Dynamic'
-       endif
-       CHOLDIN=coeff_charge_old
-       CHOLDOUT=coeff_charge
-       DPRINT 'coeff_charge mix done'
+    !
+    ! FIXME: find a better blace for initialization:
+    !
+    if ( .not. allocated(CHOLDIN) ) then
+      allocate(CHOLDIN(fit_coeff_n_ch()), CHOLDOUT(fit_coeff_n_ch()), STAT=ALLOC_ERROR)
+      if(ALLOC_ERROR/=0) call error_handler&
+           ('Allocation failed in subroutine mixing')
 
-       ! TODO: merge with the above fixed mixing since this one differs only
-       !       in the way beta is set
-       call fit_coeff_set_ch( coeff_charge*BETA+(one-BETA)*coeff_charge_old )
-       b=beta
-       BETACHOLD=beta
-
-       if (spin_separate) then
-          ! compute new beta for the spin coefficients
-          ! else simply take the beta of the charge coefficients
-          if ( global_mixing ) then
-             BETA=GLOBAL(coeff_spin_old,coeff_spin,SPOLDIN,SPOLDOUT,metric, &
-                         default=spmix,text='Spin coefficients:')
-          else
-          if (output_scfloops) &
-               write(output_unit,'(A)')'Dynamic damping of spin coefficients:'
-          BETASP=DYNDAMP(coeff_spin_old,coeff_spin,SPOLDIN,SPOLDOUT)
-          if (BETASP==-one) then
-             BETASP=SPMIX
-             BETA=(BETASP+BETASPOLD)/2
-             if (output_scfloops) &
-                  write(output_unit,'(1X,A25,F8.3)') 'RESULTING BETA = ',BETA
-          else
-             BETA=(BETASP+BETASPOLD)/2
-          endif
-          endif
-          SPOLDIN=coeff_spin_old
-          SPOLDOUT=coeff_spin
-       endif
-       if (spin_coeff_also) then
-          coeff_spin=coeff_spin*BETA+(one-BETA)*coeff_spin_old
-          s=beta
-          BETASPOLD=beta
-       endif
-    endif
-    if (output_scfloops) then
-       write(output_unit,'(1X,A,1X,A,F8.3)')&
-            trim(method),'mixing for charge coefficients, Beta:',b
-       if (spin_separate) then
-          write(output_unit,'(1X,A,1X,A,F8.3)')&
-               trim(method),'mixing for spin coefficients, Beta:',s
-       endif
+      if (spin_separate) then
+         allocate(SPOLDIN(fit_coeff_n_ch()), SPOLDOUT(fit_coeff_n_ch()), STAT=ALLOC_ERROR)
+         if(ALLOC_ERROR/=0) call error_handler&
+              ('Allocation failed in subroutine mixing')
+      endif
     endif
 
+    !
+    ! Determine the fraction:
+    !
+    if ( ITER < IDYSTR ) then
+      if ( ITER <= 1 ) then
+        !
+        ! Initial coefficients may not even be normalized, discard:
+        !
+        BETACHOLD = ONE
+      else
+        BETACHOLD = CHMIX
+      endif
+    else ! if ITER >= IDYSTR
+      !
+      ! Update BETACHOLD in place:
+      !
+      BETACHOLD = legacy_beta(coeff_charge_old, coeff_charge, CHOLDIN, CHOLDOUT, metric, CHMIX, BETACHOLD)
+    endif
+
+    !
+    ! Mix old and new into new:
+    !
+    call fit_coeff_set_ch(mix(BETACHOLD, coeff_charge_old, coeff_charge))
+
+    print *, "mixing_ch: legacy mixing, beta =", BETACHOLD
+
+    if ( spin_coeff_also ) then
+      if ( spin_separate ) then
+        !
+        ! Analogously to BETACHOLD
+        !
+        if ( ITER < IDYSTR ) then
+          if ( ITER <= 1 ) then
+            BETASPOLD = ONE
+          else
+            BETASPOLD = SPMIX
+          endif
+        else ! if ITER >= IDYSTR
+          !
+          ! Update BETASPOLD in place:
+          !
+          BETASPOLD = legacy_beta(coeff_spin_old, coeff_spin, SPOLDIN, SPOLDOUT, metric, SPMIX, BETASPOLD)
+        endif
+      else
+        !
+        ! use same as for charge:
+        !
+        BETASPOLD = BETACHOLD
+      endif
+
+      coeff_spin = mix(BETASPOLD, coeff_spin_old, coeff_spin)
+    endif
+
+    !
+    !  PREPARATION FOR DYNAMIC MIXING IN NEXT ITERATION
+    !
+    ! PREPARE FOR DYNAMICAL MIXING IN NEXT CYCLE
+    CHOLDIN = coeff_charge_old
+    CHOLDOUT = coeff_charge
+
+    if ( spin_separate ) then
+       SPOLDIN = coeff_spin_old
+       SPOLDOUT = coeff_spin
+    endif
+
+    ! used for orbital mixing in PT:
+    b = BETACHOLD
   end subroutine mixing_ch
 
-  !***********************************************************
+  subroutine legacy(ain, aout, aoldin, aoldout, metric, beta0, beta)
+    !
+    ! DYNAMIC MIXING
+    !
+    implicit none
+    real(r8_kind), intent(in) :: ain(:)
+    real(r8_kind), intent(inout) :: aout(:)
+    real(r8_kind), intent(inout) :: aoldin(:), aoldout(:)
+    real(r8_kind), intent(in) :: metric(:)
+    real(r8_kind), intent(in) :: beta0
+    real(r8_kind), intent(inout) :: beta
+    ! *** end of interface ***
+
+    ! update beta in place:
+    beta = legacy_beta(ain, aout, aoldin, aoldout, metric, beta0, beta)
+
+    aoldin = ain
+    aoldout = aout
+
+    aout = mix(beta, ain, aout)
+  end subroutine legacy
+
+  function legacy_beta(ain, aout, aoldin, aoldout, metric, beta0, betaold) result(beta)
+    !
+    ! DYNAMIC MIXING
+    !
+    implicit none
+    real(r8_kind), intent(in) :: ain(:), aout(:)
+    real(r8_kind), intent(in) :: aoldin(:), aoldout(:)
+    real(r8_kind), intent(in) :: metric(:)
+    real(r8_kind), intent(in) :: beta0, betaold
+    real(r8_kind)             :: beta ! result
+    ! *** end of interface ***
+
+    if ( global_mixing ) then
+      beta = GLOBAL(ain, aout, aoldin, aoldout, metric, beta0, "coefficients:")
+    else
+      beta = DYNDAMP(ain, aout, aoldin, aoldout)
+
+      if ( beta == -one ) beta = beta0
+
+      beta = (beta + betaold) / 2
+    endif
+  end function legacy_beta
+
+  function mix(beta, aold, acur) result(aout)
+    implicit none
+    real(r8_kind), intent(in) :: beta
+    real(r8_kind), intent(in) :: aold(:)
+    real(r8_kind), intent(in) :: acur(:)
+    real(r8_kind) :: aout(size(acur))
+    ! *** end of interface ***
+
+    aout = acur * beta + (one - beta) * aold
+  end function mix
 
   subroutine mixing_xc(ITER,metric)
     ! Purpose: mixing of the xc-coefficients
@@ -679,7 +715,10 @@ contains
     logical, optional, intent(in)    :: matold_initialized
     !** End of interface ***************************************
 
+    integer, save :: loop = 0
     logical :: discard
+
+    loop = loop + 1
 
     if (present(matold_initialized)) then
        discard = matold_initialized .and. discard_init
@@ -690,11 +729,18 @@ contains
     ! no additional mixing if DIIS mixes the Fock_matrix:
     discard = discard .or. diis_step
 
+    if ( loop <= 1 ) then
+        WARN('FIXME: skip xc mixing in first SCF')
+        discard = .true.
+    endif
+
     if (discard) then
        ! nothing
+       print *, "mixing_ham: BETA XC = 1.0 (skip mixing)"
        if (output_scfloops) write(output_unit,'(A40)') &
             'Mixing for numerical Hamiltonian, Skip'
     else
+       print *, "mixing_ham: BETA XC = ", betachold, "(do mixing)"
        ham_xc_arr = ham_xc_arr * betachold + (one - betachold) * ham_xc_arr_old
 
        if (output_scfloops) write(output_unit,'(A40, F8.3)') &
@@ -1205,8 +1251,7 @@ contains
     !------------ Modules ----------------------------------------
     use options_module
     use iounitadmin_module, only: write_to_output_units, output_unit
-    use output_module, only: output_timing_scfloops, output_scfloops, &
-                             output_main_scf, output_data_read
+    use output_module, only: output_main_scf, output_data_read
     use readwriteblocked_module
     !------------ Declaration of formal paramaters ---------------
     integer(kind=i4_kind), intent(out) :: loop

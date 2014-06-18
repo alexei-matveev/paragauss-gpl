@@ -1,0 +1,112 @@
+ &TASKS
+    TASK = 'GeoOpt'
+    ECHO_INPUT_LEVEL = "default"
+    GX_HIGHPREC       =  TRUE
+ /TASKS
+
+ &MAIN_OPTIONS
+   MAX_GEO_ITERATION = 2
+   INTEGRALS_ON_FILE = T
+   RELATIVISTIC = 'TRUE'
+   SPIN_ORBIT   = F
+   READ_DENSMAT = F
+   NUMERIC_EXCH = T
+   SPIN_RESTRICTED = F
+   SAVE_XCKS_NBR = 100000
+   ENERGIES_ALWAYS = F
+ /MAIN_OPTIONS
+
+ &RECOVER_OPTIONS
+    SAVE_KSMATRIX      =     TRUE
+    READ_KSMATRIX      =     TRUE
+    SAVE_SCFSTATE      =     FALSE
+    READ_SCFSTATE      =     FALSE
+ /RECOVER_OPTIONS
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C8V "
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    3
+ /UNIQUE_ATOM_NUMBER
+
+ # << Geometry >>
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = "C           "
+    Z             =         6.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = "Ni          "
+    Z             =        28.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00   -3.123599325134270E+00
+
+ &UNIQUE_ATOM # unique atom   2
+    NAME          = "O           "
+    Z             =         8.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00    2.131611676439640E+00
+
+ &MIXING
+    CHMIX         = 0.5000
+    SPMIX         = 0.5000
+    XCMIX         = 0.3000
+    START_AFTER_CYCLE =      5
+ /MIXING
+
+ &FERMI
+    FERMI_COMMON_EF       =     FALSE
+ /FERMI
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =        20
+    ENERGY_CRITERION      = 1.000E-9
+    COEFF_CRITERION       = 5.000E-5
+    MAX_GEO_ITERATION     =        2
+ /CONVERGENCE_LIST
+
+ &GRID
+    SYM_REDUCE = TRUE   # exploit local atom symmetry
+ /GRID
+
+ &GRIDATOM # unique atom   1
+    NRAD    =         65
+    NANG = 171
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         65
+    NANG = 171
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   3
+    NRAD    =         65
+    NANG = 171
+ /GRIDATOM
+
+ &XC_CONTROL
+    XC = 'PBEN'
+ /XC_CONTROL
+
+ &DFT_PLUS_U
+    UNIQUE_ATOM_NUMBER     = 2
+    U_EFFECTIVE            = 5.3
+    L_ORBITAL_BASIS_SET    = 2
+    CONTRACTION_NUMBER     = 1
+    DFTPU_LEVEL            = 2
+    OCCUPATION_LEVEL       = 3
+ /DFT_PLUS_U
+
+ # << Basis Sets >>
+
+~/home/matveev/LCGTO/paragau/convert/Roos-bases/carbon-dz.bas.para
+~/home/matveev/LCGTO/paragau/convert/Roos-bases/nickel-dz.bas.para
+~/home/matveev/LCGTO/paragau/convert/Roos-bases/oxygen-dz.bas.para
+

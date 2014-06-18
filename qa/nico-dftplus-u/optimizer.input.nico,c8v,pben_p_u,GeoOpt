@@ -1,0 +1,18 @@
+&COORDINATES zmat_coordinates=t /
+&INPUT_FORMAT zmat_format=t /
+&OPERATIONS print_internals=t
+            optimization=t
+            estimate_hessian=t
+            calc_hessian=f
+            frequency_calculation=f
+            ts_search=f /
+&METHOD line_search=f dynamic=f /
+&HESSE_METHOD single_step=f update_dfp=t update_bfgs=t  /
+&STEP_PARAMETERS step_restrict=t step_max=0.1/
+&CONVERGENCE rms_step=0.00001
+             max_comp_step=0.00001
+             rms_grad=0.00002
+             max_comp_grad=0.00002 /
+&TS_PARAMETERS /
+&FREQUENCY_PARAMETERS calculate_intensities=f /
+&ORIENTATION fixed_orientation=t fixed_atom_1=2 fixed_atom_2=1 fixed_atom_3=3 /

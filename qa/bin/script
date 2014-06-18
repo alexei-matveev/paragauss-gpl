@@ -147,25 +147,36 @@ for vers in $versions; do
 if [ -n "$delete" ]; then
 	# delete existing direcories:
 	rm -rf $out
+	# delete existing summaries:
+	rm -rf $smr
 fi
 
+# if directory already exists, re-generate the summary:
 if [ -d $out ]; then
-	echo -n " (exists)."
-else
-	echo -n " ..."
-        # move incomplete output out of the way on SIGINT (Cntrl-C):
-        trap "clean_and_exit $out" INT
-	run_test $name $inp $out $vers
-        trap INT
-	test -d $out && echo -n " done."
-fi
-
-if [ -d $out ]; then
+        echo -n " (exists)."
 	make_summary $out > $smr
 else
 	if [ -f $smr ]; then
 		echo -n "(summary)."
 	fi
+fi
+
+if [ ! -f $smr ]; then
+	# no summary, then invoke the test ...
+	echo -n " ..."
+        # move incomplete output out of the way on SIGINT (Cntrl-C):
+        trap "clean_and_exit $out" INT
+	run_test $name $inp $out $vers
+        trap INT
+        if [ -d $out ]; then
+          echo -n " done."
+        else
+          echo -n " ????."
+        fi
+fi
+
+if [ -d $out ]; then
+	make_summary $out > $smr
 fi
 
 if [ "$vers" != "$vers_cmp" ]; then

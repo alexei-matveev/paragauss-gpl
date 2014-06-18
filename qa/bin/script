@@ -20,6 +20,9 @@ if [ -z "$PE_HOSTFILE" ]; then
    export PE_HOSTFILE=$dir/hostfile
 fi
 
+failed_cmp=""
+failed_num=0
+
 for name in $*; do
 	echo -n -e "Running $name\t"
 for vers in $versions; do
@@ -53,21 +56,39 @@ fi
 
 make_summary $out > $smr
 
+#    \033[31m      switch on red
+#    \033[32m      switch on green
+rc_ok="\033[32mok\033[m\017"
+rc_failed="\033[31mFAILED\033[m\017"
+
 if [ "$vers" != "$vers_cmp" ]; then
 	echo -n " Compare to $vers_cmp"
-	ok="ok"
+	ok=""
+	ps=""
 	for p in 8 6 4; do
 		diff_prec $smr_cmp $smr $p #> diff$p
 		retval=$?
 		#echo -n " prec $p ret $retval"
 		if [ $retval != 0 ]; then
-			echo -en "\nFAILED at precision $p! ($smr)"
-			ok="\nFAILED! ($smr)"
+			echo -e "\n$rc_failed test $name at precision $p!"
+			ps="$ps@$p"
+			ok="FAILED"
+			failed_cmp="$failed_cmp $name@$p"
 		fi
 	done
-	echo -e "$ok"
+	if [ -z "$ok" ]; then
+		echo -e " -- $rc_ok"
+	else
+		echo -e "$rc_failed test $name$ps"
+		failed_num=$(($failed_num + 1))
+	fi
 fi
 
 done # foreach version
 done # foreach $*
+
+if [ -n "$failed_cmp" ]; then
+	echo -e "$rc_failed $failed_cmp!"
+	echo -e "$rc_failed $failed_num tests!"
+fi
 

@@ -91,6 +91,14 @@ if [ -f hesse_cartesian.dat ]; then
   mv hesse_cartesian.dat $out
 fi
 
+if [ -f HESS.cart ]; then
+  mv HESS.cart $out
+fi
+
+if [ -f grads ]; then
+  mv grads $out
+fi
+
 if [ -f optimizer.input ]; then
   mv optimizer.input $out
 fi

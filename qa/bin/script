@@ -187,14 +187,16 @@ if [ "$vers" != "$vers_cmp" ]; then
 		rm -f tmpdiff
 	done
 	if [ -z "$ok" ]; then
-		echo -e " -- $rc_ok"
+		echo -n -e " -- $rc_ok"
 	else
-		echo -e "$rc_failed test $name$ps"
+		echo -n -e "$rc_failed test $name$ps"
 		failed_num=$(($failed_num + 1))
 	fi
 fi
 
 done # foreach version
+# new line:
+echo ""
 done # foreach $*
 
 #[[=== print summary of failed tests ===

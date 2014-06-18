@@ -106,7 +106,7 @@
 
  # << Basis Sets >>
 
-~/home/matveev/LCGTO/paragau/convert/Roos-bases/carbon-dz.bas.para
-~/home/matveev/LCGTO/paragau/convert/Roos-bases/nickel-dz.bas.para
-~/home/matveev/LCGTO/paragau/convert/Roos-bases/oxygen-dz.bas.para
+~carbon-dz.bas.para
+~nickel-dz.bas.para
+~oxygen-dz.bas.para
 

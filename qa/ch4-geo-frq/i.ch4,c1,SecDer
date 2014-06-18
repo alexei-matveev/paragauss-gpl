@@ -1,0 +1,387 @@
+#              12345678901
+# &tasks task ="GeoOpt" /
+ &OPERATIONS
+    OPERATIONS_SYMM              = true
+    OPERATIONS_INTEGRAL          = true
+    OPERATIONS_SCF               = true
+    OPERATIONS_POST_HOC          = true
+    OPERATIONS_GRADIENTS         = true
+    OPERATIONS_GEO_OPT           = f
+    OPERATIONS_READ_GX           = f
+    OPERATIONS_MAKE_GX           = f
+    OPERATIONS_DIPOLE            = f
+    OPERATIONS_PROPERTIES        = f
+ /OPERATIONS
+
+ &OUTPUT
+    OUTPUT_LEVEL =  1 # (the default)
+ /OUTPUT (namelist may be dropped)
+
+ &OUTPUT_TIMING
+    OUTPUT_TIMING_SUMMARY           =  TRUE
+    OUTPUT_TIMING_DETAILEDSUMMARY   =  TRUE
+    OUTPUT_TIMING_INTEGRALS         =  TRUE
+    OUTPUT_TIMING_DETAILEDINTEGRALS =  TRUE
+    OUTPUT_TIMING_SCFLOOPS          =  TRUE
+    OUTPUT_TIMING_SCF               =  TRUE
+    OUTPUT_TIMING_DETAILEDSCF       =  TRUE
+    OUTPUT_TIMING_POSTHOC           =  TRUE
+    OUTPUT_TIMING_DETAILEDPOSTHOC   =  TRUE
+    OUTPUT_TIMING_SLAVES            =  TRUE
+ /OUTPUT_TIMING
+
+ &OUTPUT_TRACE
+    OUTPUT_SLAVEOPERATIONS = FALSE # (the default)
+    OUTPUT_MAIN_MASTER     = FALSE # (the default)
+    OUTPUT_MAIN_SYMM       = FALSE # (the default)
+    OUTPUT_MAIN_SCF        =  TRUE
+    OUTPUT_PROPERTIES      = FALSE
+    OUTPUT_READ_INPUT      = FALSE # (the default)
+    OUTPUT_WRITE_INPUT     = FALSE # (the default)
+    OUTPUT_PVM_MSGTAGS     = FALSE # (the default)
+    OUTPUT_MAIN_DIPOLE     = FALSE # (the default)
+    OUTPUT_EFIELD_CALC     = FALSE # (the default)
+ /OUTPUT_TRACE
+
+ &OUTPUT_CONFIG
+    OUTPUT_PVMCONFIG  =  TRUE # (the default)
+    OUTPUT_OPERATIONS =  TRUE # (the default)
+ /OUTPUT_CONFIG (namelist may be dropped)
+
+ &OUTPUT_UNIQUE_ATOMS
+    OUTPUT_ATOMS              =  TRUE # (the default)
+    OUTPUT_SYMADAPT           = FALSE # (the default)
+    OUTPUT_RENORM             = FALSE # (the default)
+    OUTPUT_ORBITALPROJECTIONS = FALSE # (the default)
+ /OUTPUT_UNIQUE_ATOMS (namelist may be dropped)
+
+ &OUTPUT_SCF
+    OUTPUT_SCFLOOPS       =  TRUE # (the default)
+    OUTPUT_REOCCUP        = FALSE # (the default)
+    OUTPUT_FERMI          =  TRUE # (the default)
+    OUTPUT_CHARGEFIT      = FALSE # (the default)
+    OUTPUT_CONDITION      =  TRUE # (the default)
+    OUTPUT_HAMILTONIAN    = FALSE # (the default)
+    OUTPUT_EIGENDATA      = FALSE # (the default)
+    OUTPUT_EACH_EIGENDATA = FALSE # (the default)
+    OUTPUT_EIGEN_STRATEGY = FALSE # (the default)
+    OUTPUT_DENSMAT        = FALSE # (the default)
+    OUTPUT_GRID           =  TRUE # (the default)
+    OUTPUT_OCCLEVELS      = FALSE # (the default)
+    OUTPUT_OVERLAP        = FALSE # (the default)
+    OUTPUT_DATA_SAVED     = FALSE # (the default)
+    OUTPUT_DATA_READ      = FALSE # (the default)
+    OUTPUT_SPECTRUM       = FALSE # (the default)
+    OUTPUT_N_DENSITY_DEV  =     5 # (the default)
+    OUTPUT_N_COEFF_DEV    =     5 # (the default)
+ /OUTPUT_SCF (namelist may be dropped)
+
+ &OUTPUT_SYM
+    OUTPUT_SYMMETRY        =  TRUE # (the default)
+    OUTPUT_NONSYMEQUIVVECS = FALSE # (the default)
+ /OUTPUT_SYM (namelist may be dropped)
+
+ &OUTPUT_INTEGRAL
+    OUTPUT_INT_FITCONTRACT      = FALSE # (the default)
+    OUTPUT_INT_2C_FIT           = FALSE # (the default)
+    OUTPUT_INT_SOLHRULES        = FALSE # (the default)
+    OUTPUT_INT_PARAMETERS       =  TRUE # (the default)
+    OUTPUT_INT_PROGRESS         = FALSE # (the default)
+    OUTPUT_INT_DETAILEDPROGRESS = FALSE # (the default)
+    OUTPUT_INT_TASKDISTRIBUTION = FALSE # (the default)
+    OUTPUT_INT_QUADRUPELSTORE   = FALSE # (the default)
+    OUTPUT_INT_LOOPS            = FALSE # (the default)
+    OUTPUT_INT_DEEPLOOPS        = FALSE # (the default)
+    OUTPUT_INT_DATA             = FALSE # (the default)
+ /OUTPUT_INTEGRAL (namelist may be dropped)
+
+ &OUTPUT_POST_HOC
+    OUTPUT_POST_HOC_MAIN = FALSE # (the default)
+    OUTPUT_MAIN_GRADIENT = FALSE # (the default)
+ /OUTPUT_POST_HOC (namelist may be dropped)
+
+ &OUTPUT_DIPOLE
+    OUTPUT_DIPOLE_DETAILED       =  TRUE # (the default)
+    OUTPUT_DIPOLE_TRANSITIONM_F  = FALSE # (the default)
+    OUTPUT_DIPOLE_TRANSITIONM_UF = FALSE # (the default)
+    OUTPUT_DIPOLE_SIMOL          = FALSE # (the default)
+    OUTPUT_DIPOLE_OPTIMIZER      = FALSE # (the default)
+ /OUTPUT_DIPOLE (namelist may be dropped)
+
+ &OUTPUT_RESPONSE
+    OUTPUT_RESPONSE_GENERAL  =  TRUE # (the default)
+    OUTPUT_RESPONSE_DETAILED = FALSE # (the default)
+    OUTPUT_RESPONSE_DEBUG    = FALSE # (the default)
+ /OUTPUT_RESPONSE (namelist may be dropped)
+
+ &OUTPUT_IOUNITADMIN
+    IOUNITADMIN_USE_STDOUT =  TRUE # (the default)
+    IOUNITADMIN_USE_DEBUG  = FALSE # (the default)
+    IOUNITADMIN_USE_BUGGY  = FALSE # (the default)
+ /OUTPUT_IOUNITADMIN (namelist may be dropped)
+
+ &POPULATION
+    POPULATION_LEVEL =          1
+    N_COLUMNS        =          0 # (the default)
+    DOS_PLOT         =      FALSE # (the default)
+    IRREP            =          0 # (the default)
+    SPIN             =          0 # (the default)
+    OCCUPATION       =      FALSE # (the default)
+    EIG_MIN          = -1.000E+02 # (the default)
+    EIG_MAX          =  1.000E+01 # (the default)
+ /POPULATION (namelist may be dropped)
+
+ &PVMOPTIONS
+    N_PROCS                  =      1
+    MASTER_WORK              =   TRUE # (the default)
+    PVM_TIMEOUT              =    900 # (the default)
+    PVM_TIMESTEP             =     10 # (the default)
+    CATCH_SLAVEOUT           =  FALSE # (the default)
+    PVM_MASTER_INTERRUPT_NBR =      1 # (the default)
+    PVM_SLAVE_INTERRUPT_NBR  =      5 # (the default)
+ /PVMOPTIONS
+
+ &MAIN_OPTIONS
+    NUMERIC_EXCH        =      TRUE # (the default)
+    SPIN_RESTRICTED     =     true
+    ENERGIES_ALWAYS     =     FALSE # (the default)
+    RELATIVISTIC        =     f
+    SPIN_ORBIT          =     f
+    INTEGRALS_ON_FILE   =     true
+    USE_MODEL_DENSITY   =     FALSE # (the default)
+    USE_EXTENDED_MDA    =     FALSE # (the default)
+    DIRECT_ENERGY_CALC  =     FALSE # (the default)
+    PERTURBATION_THEORY =     true
+    INTEGRAL_EXPMAX     = 5.000E+01 # (the default)
+    SPLIT_GRADIENTS     =     FALSE # (the default)
+    orbitals_in_memory  = f
+    update_hessian_iteration = 1
+    debug_key           = 1
+ /MAIN_OPTIONS
+
+ &SPIN_ORBIT
+   #LEVEL = "SpinOrbit,BackTrafo,FitTrafo,RelFit,NoPFsP,EIS=LAPACK"
+   #LEVEL = "SpinOrbit,FitTrafo,RelFit"
+   #LEVEL = "NoPVxP"
+    LEVEL = "none"
+#   VC    = 1.0E+10
+ /SPIN_ORBIT
+
+ &RECOVER_OPTIONS
+    SAVE_SCFSTATE      =     true
+    READ_SCFSTATE      =     f
+#   SAVE_EIGENVEC      =     true
+#   SAVE_EIGENVEC_ALL  =     true
+    READ_EIGENVEC      =     f
+    RESET_SCFCYCLE     =     true
+ /RECOVER_OPTIONS
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C1"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    5
+ /UNIQUE_ATOM_NUMBER
+
+ # << Geometry >>
+
+ &UNIQUE_ATOM NAME = "C", Z = 6.000, N_equal_atoms =  1 /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+
+ &UNIQUE_ATOM NAME = "H", Z = 1.000, N_equal_atoms =  1 /UNIQUE_ATOM
+    1.186  1.186  1.186
+ &UNIQUE_ATOM NAME = "H", Z = 1.000, N_equal_atoms =  1 /UNIQUE_ATOM
+   -1.186 -1.186  1.186
+ &UNIQUE_ATOM NAME = "H", Z = 1.000, N_equal_atoms =  1 /UNIQUE_ATOM
+    1.186 -1.186 -1.186
+ &UNIQUE_ATOM NAME = "H", Z = 1.000, N_equal_atoms =  1 /UNIQUE_ATOM
+   -1.186  1.186 -1.186
+
+ &POINTCHARGE_NUMBER
+    N_TIMPS =     0 # (the default)
+    POINTCHARGE_N =     0 # (the default)
+ /POINTCHARGE_NUMBER (namelist may be dropped)
+
+ &MIXING
+    CHMIX             = 0.8500
+    SPMIX             = 0.8500
+    XCMIX             = 0.0300 # (the default)
+    START_AFTER_CYCLE =      2
+    DISCARD_INIT      =  FALSE
+    SPIN_SEPARATE     =  FALSE # (the default)
+    GLOBAL_MIXING     =  FALSE # (the default)
+ /MIXING
+
+ &FERMI
+    FERMI_GAUSS           =     FALSE # (the default)
+    FERMI_FERMI           =     FALSE # (the default)
+    FERMI_SINUS           =     FALSE # (the default)
+    FERMI_ENERGY_RANGE    =   0.00000 # (the default)
+    FERMI_SIGMA           =   0.00000 # (the default)
+    FERMI_CUTOFF          =   5.00000 # (the default)
+    FERMI_FIX_UP_AND_DOWN =     FALSE # (the default)
+    FERMI_COMMON_EF       =     FALSE
+    FERMI_UNPAIRED        =         0 # (the default)
+    FERMI_NEWTON_MAX      =       100 # (the default)
+    FERMI_ACCURACY        = 1.000E-10 # (the default)
+ /FERMI
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =       50
+    ENERGY_CRITERION      = 1.000E-08
+    ENERGY_DEV_CHECKED    =         4 # (the default)
+    COEFF_CRITERION       = 1.000E-06
+    COEFF_DEV_CHECKED     =         1 # (the default)
+    COULOMB_CRITERION     = 1.000E-05 # (the default)
+    COULOMB_DEV_CHECKED   =         0 # (the default)
+    DENSITY_CRITERION     = 1.000E-08
+    DENSITY_DEV_CHECKED   =         1 # (the default)
+    MAX_GEO_ITERATION     =        31
+    STOP_IF_NOT_CONVERGED =     FALSE # (the default)
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XC="vwn,spatial"
+ /XC_CONTROL (namelist may be dropped)
+
+ &OCCUPATION
+    CHARGE             =   0.0
+    MAGN_MOMENT        =   0.000000 # (the default)
+    MIN_SPIN_DIFF      =  1.000E-03 # (the default)
+    DIAG_OFFSET_EV     =   1.000000 # (the default)
+    FIXED              =      FALSE # (the default)
+    N_NONEMPTY_IRREPS  =          0 # (the default)
+    HOLE_LOCALIZATION  =      f
+    HOLE_UPDATE        =      FALSE # (the default)
+    N_HOLES            =          0
+ /OCCUPATION (namelist may be dropped)
+ #    Fixed Occupation Numbers      #
+
+#   9     7   A'    1  1    0.0000          2.477544
+#                                                8     6   A'    1  2    0.0000          2.449116
+#   8     6   A'    1  1    0.0000          2.449116
+#                                                7     2   A"    2  2    0.0000          2.435545
+#   7     2   A"    2  1    0.0000          2.435545
+#                                                6     5   A'    1  2    0.0000          0.788992
+#   6     5   A'    1  1    0.0000          0.788992
+#   5     4   A'    1  1    1.0000         -9.298363
+#                                                5     4   A'    1  2    1.0000         -9.298363
+#   4     3   A'    1  1    1.0000         -9.359182
+#                                                4     3   A'    1  2    1.0000         -9.359182
+#   3     1   A"    2  1    1.0000         -9.503928
+#                                                3     1   A"    2  2    1.0000         -9.503928
+#    List of Holes                 #
+# index   irrep   spin    occ 
+#     1       1       1    0.000  # Hole No.   1
+# ALPHA:
+#4 1 1 0.9000
+#5 1 1 0.1000
+# BETA:
+#4 1 2 0.9000
+#5 1 2 0.1000
+
+
+
+ &MDA_OPTIONS
+    CONSTRAIN_RHOSPIN =      TRUE # (the default)
+    RHO_EXACT         =     FALSE # (the default)
+    RHO_SHAPE_EPS     = 1.000E-12 # (the default)
+    RHO_CUTOFF        = 1.000E-50 # (the default)
+    ATOMIC_RADIUS     = 0.000E+00 # (the default)
+ /MDA_OPTIONS (namelist may be dropped)
+
+ &PROPERTIES
+    MULLIKEN          = FALSE # (the default)
+    PLOT_ORBITALS     = f
+    FRAG_ORB_ANALYSIS = FALSE # (the default)
+    DIPOLE            = FALSE # (the default)
+ /PROPERTIES (namelist may be dropped)
+
+ &ORBITAL_PLOT
+    N_INPUT_LINES   =      0
+    DENSITY_PLOT    =      f
+    DENSITY_TOT     =      f
+    SPIN_DIFFERENCE =      f
+    CALC_RHO        =      FALSE # (the default)
+    CALC_RHO_FIT    =      FALSE # (the default)
+    CALC_XC_POT     =      f
+    CALC_XC_POT_MDA =      FALSE # (the default)
+    X0 = -3.0, -3.0, -3.0,
+    X1 =  3.0, -3.0, -3.0,
+    X2 = -3.0,  3.0, -3.0,
+    X3 = -3.0, -3.0,  3.0,
+    RES = 20 ,  20 ,   20,
+ /ORBITAL_PLOT (namelist may be dropped)
+#   &orbital_list irrep=1, partner=1, spin=1, n_orb=4 /
+#    1 2 3 4
+#   &orbital_list irrep=2, partner=1, spin=1, n_orb=2 /
+#    1 2
+# the origin
+# 0.00000000   0.00000000   0.00000000
+# 1. direction
+# 1.00000000   0.00000000   0.00000000
+# 2. direction
+# 0.00000000   1.00000000   0.00000000
+#   7     2   A"    2    0.0000          2.435299
+#   6     5   A'    1    0.0000          0.787053
+#   5     4   A'    1    2.0000         -9.296919
+#   4     3   A'    1    2.0000         -9.357765
+#   3     1   A"    2    2.0000         -9.502522
+#   2     2   A'    1    2.0000        -16.831189
+#   1     1   A'    1    2.0000       -265.906655
+
+
+ &DIPOLE_TRANSITIONMOMENTS
+    SHOW_VALENCE_EXCITATIONS      =         TRUE # (the default)
+    SHOW_CORE_EXCITATIONS         =        FALSE # (the default)
+    MAX_VALENCE_EXCITATION_ENERGY =     10.00000 # (the default)
+    CORE_EXCITATION_FROM_E_MIN    =      0.00000 # (the default)
+    CORE_EXCITATION_FROM_E_MAX    =      0.00000 # (the default)
+    CORE_EXCITATION_TO_E_MIN      =      0.00000 # (the default)
+    CORE_EXCITATION_TO_E_MAX      =      0.00000 # (the default)
+    MAKE_XES_SPECTRA              =        FALSE # (the default)
+    CORE_HOLE_IRREP               =            0 # (the default)
+    CORE_HOLE_SPIN                =            0 # (the default)
+    CORE_HOLE_PARTNER             =            0 # (the default)
+    I_CORE_HOLE                   =            0 # (the default)
+    X                             =      0.00000 # (the default)
+    Y                             =      0.00000 # (the default)
+    Z                             =      0.00000 # (the default)
+ /DIPOLE_TRANSITIONMOMENTS (namelist may be dropped)
+
+ &EFIELD
+    APPLY              = FALSE # (the default)
+    REVERSE_FOR_SPINS  = FALSE # (the default)
+ /EFIELD (namelist may be dropped)
+       0.000000       0.000000       0.000000
+
+ &MACHINEPARAMETERS
+    MACHINEPARAMETERS_VECLEN     =      128 # (the default)
+    MACHINEPARAMETERS_PH_VECLEN  =      128 # (the default)
+    MACHINEPARAMETERS_DIMCHECK   =     TRUE # (the default)
+    MACHINEPARAMETERS_CHECKPRECI = 1.00E-06 # (the default)
+ /MACHINEPARAMETERS (namelist may be dropped)
+
+ &GRID
+    SYM_REDUCE       =     TRUE
+    WEIGHT_GRADS     =     TRUE
+ /GRID
+
+ &GRIDATOM NRAD = 30, NANG = 131 /GRIDATOM
+ &GRIDATOM NRAD = 30, NANG = 131 /GRIDATOM
+ &GRIDATOM NRAD = 30, NANG = 131 /GRIDATOM
+ &GRIDATOM NRAD = 30, NANG = 131 /GRIDATOM
+ &GRIDATOM NRAD = 30, NANG = 131 /GRIDATOM
+
+ &GRID_PH
+    SYM_REDUCE   =  TRUE # (the default)
+    WEIGHT_GRADS =  TRUE # (the default)
+ /GRID_PH (namelist may be dropped)
+
+## Basis Sets from current directory
+~C.bas.para
+~H.bas.para
+~H.bas.para
+~H.bas.para
+~H.bas.para

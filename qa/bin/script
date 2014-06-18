@@ -189,25 +189,33 @@ if [ "$vers" != "$vers_cmp" ]; then
 	echo -n " Compare to $vers_cmp"
 	ok=""
 	ps=""
+        echo "" > tmpdiff
 	for p in $precisions; do
-		diff_prec $smr_cmp $smr $p > tmpdiff
+		echo "Test $name at precision $p. diff output:" >> tmpdiff
+		diff_prec $smr_cmp $smr $p                      >> tmpdiff
 		retval=$?
 		#echo -n " prec $p ret $retval"
 		if [ $retval != 0 ]; then
-			echo -e "\n$rc_failed test $name at precision $p! diff output:"
-			cat tmpdiff
-			ps="$ps@$p"
+			echo -n -e " $rc_no@$p"
+                        # signal the overall failure:
 			ok="FAILED"
+                        # append info of the failed tests:
+			ps="$ps@$p"
 			failed_cmp="$failed_cmp $name@$p"
+                else
+			echo -n -e " $rc_ok@$p"
 		fi
-		rm -f tmpdiff
 	done
 	if [ -z "$ok" ]; then
 		echo -n -e " -- $rc_ok"
 	else
-		echo -n -e "$rc_failed test $name$ps"
+		echo -n -e " -- $rc_failed"
+                if [ -z "$terse" ]; then
+                        cat tmpdiff
+                fi
 		failed_num=$(($failed_num + 1))
 	fi
+	rm -f tmpdiff
 fi
 
 done # foreach version

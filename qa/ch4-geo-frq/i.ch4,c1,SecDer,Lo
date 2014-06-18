@@ -153,7 +153,6 @@
     PERTURBATION_THEORY =     true
     INTEGRAL_EXPMAX     = 5.000E+01 # (the default)
     SPLIT_GRADIENTS     =     FALSE # (the default)
-    orbitals_in_memory  = f
     update_hessian_iteration = 1
     debug_key           = 1
  /MAIN_OPTIONS

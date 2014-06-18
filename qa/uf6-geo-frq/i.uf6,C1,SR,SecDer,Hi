@@ -24,7 +24,6 @@
     RELATIVISTIC        =  "true"
     update_hessian_iteration = 1
     integrals_on_file   = f
-    orbitals_in_memory  = true
  /MAIN_OPTIONS
 
  &PVMOPTIONS

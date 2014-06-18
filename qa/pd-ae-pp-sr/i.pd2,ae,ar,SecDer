@@ -38,7 +38,7 @@
     RELATIVISTIC        =  "ADKH"
     SPIN_ORBIT          =  f # (the default)
     INTEGRALS_ON_FILE   =  true   
-    orbitals_in_memory  = true
+    orbitals_in_memory  = false
     INTEGRAL_EXPMAX     = 5.000E+30
     update_hessian_iteration = 1
   /MAIN_OPTIONS

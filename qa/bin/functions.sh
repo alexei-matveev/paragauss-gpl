@@ -38,6 +38,9 @@ make_summary(){
 	grads $out
 	echo "FREQUENCIES:"
 	freq.pl $out/output
+	if [ -f $out/optimizer/flepo.1 ]; then
+	freq.pl $out/optimizer/flepo.*
+	fi
 	echo "POTENTIAL-DERIVED CHARGES:"
 	pdc.pl $out/output
 }

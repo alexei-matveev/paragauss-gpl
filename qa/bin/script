@@ -113,9 +113,23 @@ fi
 }
 #]]=================================================================
 
+clean_and_exit(){
+  # Cntrl-C interrupt handler:
+  #  renames incomplete output dir $out to $out,Interrupted
+  local out
+  out=$1
+  echo Interrupted at $out
+  rm -rf $out,Interrupted
+  if [ -d $out ]; then
+    mv $out $out,Interrupted
+  fi
+  exit 1
+}
+
 failed_cmp=""
 failed_num=0
 total_num=0
+
 
 for name in $*; do
 	name=`echo $name | sed s/^i\.//`
@@ -137,7 +151,10 @@ if [ -d $out ]; then
 	echo -n " (exists)."
 else
 	echo -n " ..."
+        # move incomplete output out of the way on SIGINT (Cntrl-C):
+        trap "clean_and_exit $out" INT
 	run_test $name $inp $out $vers
+        trap -
 	test -d $out && echo -n " done."
 fi
 

@@ -19,12 +19,14 @@ if [ -z "$ttfs" ]; then
 	ttfs=~ttfs/bin/ttfs_V3.0
 fi
 
-if [ -z "$vers_cmp" ]; then
-	vers_cmp="V3.0.40b12-32"
+if [ -z "$versions" ]; then
+	versions="V3.0.40b12-32 V3.1pre5-32"
 fi
 
-if [ -z "$versions" ]; then
-	versions="$vers_cmp V3.1pre5-32"
+if [ -z "$vers_cmp" ]; then
+	# use the first of them for comparision
+	vers_cmp=${versions%% *}
+	#ers_cmp="V3.0.40b12-32"
 fi
 
 if [ -z "$precisions" ]; then

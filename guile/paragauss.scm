@@ -68,6 +68,8 @@
             qm-vdw-dft-phi
             qm-vdw-dft-phi/asy
             qm-write-gxfile!
+            qm-run-path-sxp
+            qm-run-path-nml
             pople-radius
             slater-radius
             ionic-radius
@@ -187,7 +189,7 @@
 ;;; This runs an input stored in a namelist format in a file. Input is
 ;;; the name of that file:
 ;;;
-(define (run-path-nml world input)
+(define (qm-run-path-nml world input)
   (let ((temp-dir
          (comm-bcast world 0 (guess-temp-dir input))) ; prefer the value at rank 0
         (output-dir
@@ -222,7 +224,7 @@
 ;;; NOTE: for a path-sexp such as base.scm or i.base the file base.nml
 ;;; will be overwritten!
 ;;;
-(define (run-path-sxp world path-sxp)
+(define (qm-run-path-sxp world path-sxp)
   (let ((path-nml (string-append (input-base-name path-sxp) ".nml"))
         (input (with-input-from-file path-sxp read)))
     ;;
@@ -238,7 +240,7 @@
     ;; master has finished writing. Cross the barrer together.
     ;;
     (comm-barrier world)
-    (run-path-nml world path-nml)))
+    (qm-run-path-nml world path-nml)))
 
 ;;;
 ;;; Invoke  (program world)  with the  world communicator  privided by
@@ -265,8 +267,8 @@
          (run-path
           (lambda (world path)
             (if (string-suffix? ".scm" path)
-                (run-path-sxp world path)
-                (run-path-nml world path))))
+                (qm-run-path-sxp world path)
+                (qm-run-path-nml world path))))
          ;;
          ;; A program that  takes a communicator, processes all inputs
          ;; each specified by a path and returns a list of results:

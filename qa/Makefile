@@ -1,7 +1,8 @@
+#
+# FIXME: this isnt a Makefile, but a shell script ..
+#
 
-ifndef SUBDIRS
-SUBDIRS = $(shell cat manifest)
-endif
+SUBDIRS ?= $(shell cat manifest)
 
 all:
 	for dir in $(SUBDIRS); do \

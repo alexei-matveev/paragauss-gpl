@@ -1,15 +1,9 @@
 
-ifndef versions
-date = $(shell date +%Y%m%d)
-versions = V3.0.40b13-32 V3.1cvs$(date)-32
-endif
-
 ifndef SUBDIRS
 SUBDIRS = $(shell cat manifest)
 endif
 
 all:
-	export versions="$(versions)"; \
 	for dir in $(SUBDIRS); do \
 		echo === Descending into $$dir ===; \
 		cd $$dir; \
@@ -17,6 +11,7 @@ all:
 		cd ..; \
 	done
 
+# will not work because "versions" are now in "local.conf":
 summaries:
 	for dir in $(SUBDIRS); do \
 		echo === Descending into $$dir ===; \

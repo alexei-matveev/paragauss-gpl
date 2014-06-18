@@ -39,9 +39,15 @@ make_summary(){
 	echo "GRADIENTS:"
 	grads $out
 	echo "FREQUENCIES:"
+	# frequencies from cartesian analytica hessian go to output:
 	freq.pl $out/output
+	# freqs from numerical differentiation go to flepo files:
 	if [ -f $out/optimizer/flepo.1 ]; then
 	freq.pl $out/optimizer/flepo.*
+	fi
+	# with newer version flepo files are located in output directory:
+	if [ -f $out/flepo.1 ]; then
+	freq.pl $out/flepo.*
 	fi
 	echo "POTENTIAL-DERIVED CHARGES:"
 	pdc.pl $out/output

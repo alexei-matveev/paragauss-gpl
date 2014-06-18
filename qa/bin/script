@@ -57,6 +57,10 @@ if [ -f x.$nam ]; then
   cp x.$nam gx.$nam
 fi
 
+if [ -f optimizer.input.$nam ]; then
+  cp optimizer.input.$nam optimizer.input
+fi
+
 cmd="
 $ttfs $nam \
  -newinput $inp \
@@ -85,6 +89,10 @@ fi
 
 if [ -f hesse_cartesian.dat ]; then
   mv hesse_cartesian.dat $out
+fi
+
+if [ -f optimizer.input ]; then
+  mv optimizer.input $out
 fi
 
 if [ -f saved_scfstate.dat ]; then

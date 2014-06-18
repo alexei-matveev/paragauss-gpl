@@ -41,6 +41,7 @@ if [ -z "$PE_HOSTFILE" ]; then
    export PE_HOSTFILE=$dir/hostfile
 fi
 
+#[[=== run a single job by ``runtest NAME INPUT OUTDIR VERSION'' ===
 run_test(){
 local nam
 local inp
@@ -90,6 +91,7 @@ if [ -f saved_scfstate.dat ]; then
   mv saved_scfstate.dat $out
 fi
 }
+#]]=================================================================
 
 failed_cmp=""
 failed_num=0
@@ -150,6 +152,7 @@ fi
 done # foreach version
 done # foreach $*
 
+#[[=== print summary of failed tests ===
 if [ -n "$failed_cmp" ]; then
 	#echo -e "$rc_failed$failed_cmp!"
 	for p in $precisions; do
@@ -165,4 +168,5 @@ if [ -n "$failed_cmp" ]; then
 	done
 	echo -e "$rc_failed $failed_num of $total_num tests!"
 fi
+#]]=====================================
 

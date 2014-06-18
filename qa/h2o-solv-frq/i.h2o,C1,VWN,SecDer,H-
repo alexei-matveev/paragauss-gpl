@@ -1,0 +1,148 @@
+ &OPERATIONS
+    OPERATIONS_SYMM              =  TRUE # (the default)
+    OPERATIONS_SCF               =  TRUE # (the default)
+    OPERATIONS_INTEGRAL          =  TRUE # (the default)
+    OPERATIONS_WRITE_INPUT       =  TRUE # (the default)
+    OPERATIONS_POST_HOC          =  TRUE # (the default)
+    OPERATIONS_GRADIENTS         =  TRUE # (the default)
+    OPERATIONS_GEO_OPT           =  f
+    OPERATIONS_READ_GX           =  F
+    OPERATIONS_GX_HIGHPREC       =  TRUE # (the default)
+    OPERATIONS_SOLVATION_EFFECT  =  t
+ /OPERATIONS
+
+ &OUTPUT_SOLVATION
+    OUTPUT_CAVITY_DATA     = FALSE # (the default)
+    OUTPUT_CAVITY_LONG     = FALSE # (the default)
+    OUTPUT_SOLV_GRADS      =  TRUE
+ /OUTPUT_SOLVATION
+
+ &MAIN_OPTIONS
+    NUMERIC_EXCH        =      TRUE # (the default)
+    SPIN_RESTRICTED     =      TRUE # (the default)
+    INTEGRALS_ON_FILE   =      TRUE # (the default)
+    UPDATE_HESSIAN_ITERATION  =         1
+    PERTURBATION_THEORY =      TRUE # (the default)
+ /MAIN_OPTIONS
+
+ &RECOVER_OPTIONS
+    SAVE_SCFSTATE      =      f
+    READ_SCFSTATE      =      f
+ /RECOVER_OPTIONS
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C1  " # (the default)
+ /SYMMETRY_GROUP (namelist may be dropped)
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    3
+ /UNIQUE_ATOM_NUMBER
+
+ # << Geometry >>
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = "O           "
+    Z             =         8.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    1.39519760000000     4.81387440000000     0.000000000000000
+
+ &UNIQUE_ATOM # unique atom   2
+    NAME          = "H           "
+    Z             =         1.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.385137300000         5.262917800000         1.508005900000
+
+ &UNIQUE_ATOM # unique atom   3
+    NAME          = "H           "
+    Z             =         1.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.385137300000         5.262917800000        -1.508005900000
+
+~O_9.5.1_9.5.1
+~H_6.1_4.1
+~H_6.1_4.1
+
+ &MIXING
+    CHMIX             = 0.5000
+    SPMIX             = 0.5000
+    XCMIX             = 0.3000
+    START_AFTER_CYCLE =      5
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =        50
+    ENERGY_CRITERION      = 1.000E-08
+    ENERGY_DEV_CHECKED    =         4 # (the default)
+    COEFF_CRITERION       = 1.000E-06
+    COEFF_DEV_CHECKED     =         1 # (the default)
+    COULOMB_CRITERION     = 1.000E-06
+    COULOMB_DEV_CHECKED   =         0 # (the default)
+    DENSITY_CRITERION     = 1.000E-05 # (the default)
+    DENSITY_DEV_CHECKED   =         1 # (the default)
+    MAX_GEO_ITERATION     =         100
+    STOP_IF_NOT_CONVERGED =     FALSE # (the default)
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XALPHA         =  TRUE # (the default)
+    VWN            =  TRUE # (the default)
+ /XC_CONTROL (namelist may be dropped)
+
+ &PHXC_CONTROL
+    XALPHA_PH         =  TRUE # (the default)
+    VWN_PH            =  TRUE # (the default)
+ /PHXC_CONTROL
+
+ &OCCUPATION
+    CHARGE             =   0.000000 # (the default)
+ /OCCUPATION (namelist may be dropped)
+
+ &SOLVATION
+    SOLVATION_MODEL     =         "COSMO" # (the default)
+    CAVITATION_ENERGY   =    f
+    DISP_REP_ENERGY     =    f
+    NO_HYDROGEN_SPHERE  =    t
+ /SOLVATION
+
+ &GRID
+    SYM_REDUCE       =    FALSE # (the default)
+    WEIGHT_GRADS     =     TRUE
+ /GRID
+
+ &GRIDATOM # unique atom   1
+    NRAD    =         70
+    NANG    =        171
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         70
+    NANG    =        171
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   3
+    NRAD    =         70
+    NANG    =        171
+ /GRIDATOM
+
+ &GRID_PH
+    SYM_REDUCE   = FALSE # (the default)
+    WEIGHT_GRADS =  TRUE # (the default)
+ /GRID_PH (namelist may be dropped)
+
+ &GRIDATOM_PH # unique atom   1
+    NRAD    =         70 # (the default)
+    NANG    =        171 # (the default)
+ /GRIDATOM_PH (empty namelist must be dropped)
+
+ &GRIDATOM_PH # unique atom   2
+    NRAD    =         70 # (the default)
+    NANG    =        171 # (the default)
+ /GRIDATOM_PH (empty namelist must be dropped)
+
+ &GRIDATOM_PH # unique atom   3
+    NRAD    =         70 # (the default)
+    NANG    =        171 # (the default)
+ /GRIDATOM_PH (empty namelist must be dropped)

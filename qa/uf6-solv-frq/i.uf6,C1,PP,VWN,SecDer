@@ -1,0 +1,216 @@
+ &OPERATIONS
+    OPERATIONS_SYMM              =  TRUE # (the default)
+    OPERATIONS_SCF               =  t
+    OPERATIONS_INTEGRAL          =  t
+    OPERATIONS_WRITE_INPUT       =  TRUE # (the default)
+    OPERATIONS_POST_HOC          = t
+    OPERATIONS_GRADIENTS         = t
+    OPERATIONS_GEO_OPT           = f
+    OPERATIONS_READ_GX           = f
+    OPERATIONS_SOLVATION_EFFECT  = t
+ /OPERATIONS
+
+ &MAIN_OPTIONS
+    NUMERIC_EXCH        =      TRUE # (the default)
+    SPIN_RESTRICTED     =      TRUE # (the default)
+    RELATIVISTIC        =      F
+    INTEGRALS_ON_FILE   =      TRUE # (the default)
+    PERTURBATION_THEORY =      TRUE # (the default)
+    UPDATE_HESSIAN_ITERATION  =         1
+ /MAIN_OPTIONS
+
+ &RECOVER_OPTIONS
+    SAVE_SCFSTATE      =      f
+    READ_SCFSTATE      =      f
+ /RECOVER_OPTIONS
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C1  "
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    7
+ /UNIQUE_ATOM_NUMBER
+
+ # << Geometry >>
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = " U          "
+    Z             =        92.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+
+ &UNIQUE_ATOM # unique atom   2
+    NAME          = " F          "
+    Z             =         9.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.000000000000         0.000000000000         3.803414215596
+
+ &UNIQUE_ATOM # unique atom   3
+    NAME          = " F          "
+    Z             =         9.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.000000000000         0.000000000000        -3.803414215596
+
+ &UNIQUE_ATOM # unique atom   4
+    NAME          = " F          "
+    Z             =         9.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    3.803414212159         0.000000000000         0.000000000000
+
+ &UNIQUE_ATOM # unique atom   5
+    NAME          = " F          "
+    Z             =         9.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+   -3.803414212159         0.000000000000         0.000000000000
+
+ &UNIQUE_ATOM # unique atom   6
+    NAME          = " F          "
+    Z             =         9.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.000000000000         3.803414212376         0.000000000000
+
+ &UNIQUE_ATOM # unique atom   7
+    NAME          = " F          "
+    Z             =         9.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+    0.000000000000        -3.803414212376         0.00000000000
+
+ ~U-ECP78MWB.bas_lanl
+ ~F_9.5.1_4.3.1
+ ~F_9.5.1_4.3.1
+ ~F_9.5.1_4.3.1
+ ~F_9.5.1_4.3.1
+ ~F_9.5.1_4.3.1
+ ~F_9.5.1_4.3.1
+
+ &MIXING
+    CHMIX             = 0.5000
+    SPMIX             = 0.5000
+    XCMIX             = 0.0300 # (the default)
+    LVSHIFT_ENERGY    = 0.0000 # (the default)
+    START_AFTER_CYCLE =      5
+    DISCARD_INIT      =   TRUE # (the default)
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =       150
+    ENERGY_CRITERION      = 1.000E-07
+    ENERGY_DEV_CHECKED    =         4 # (the default)
+    COEFF_CRITERION       = 2.000E-05
+    COEFF_DEV_CHECKED     =         1 # (the default)
+    COULOMB_CRITERION     = 1.000E-05 # (the default)
+    COULOMB_DEV_CHECKED   =         0 # (the default)
+    DENSITY_CRITERION     = 5.000E-07
+    DENSITY_DEV_CHECKED   =         1 # (the default)
+    MAX_GEO_ITERATION     =       100
+    STOP_IF_NOT_CONVERGED =     FALSE # (the default)
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XALPHA         =  TRUE # (the default)
+    VWN            =  TRUE # (the default)
+ /XC_CONTROL
+
+ &PHXC_CONTROL
+    XALPHA_PH         =  TRUE # (the default)
+    VWN_PH            =  TRUE # (the default)
+ /PHXC_CONTROL
+
+ &OCCUPATION
+    CHARGE             =   0.000000 # (the default)
+ /OCCUPATION (namelist may be dropped)
+
+ &SOLVATION
+    SOLVATION_MODEL     =         "COSMO" # (the default)
+    CAVITATION_ENERGY   =    f
+    DISP_REP_ENERGY     =    f
+    FIX_NUMBER_ADD      =    t
+ /SOLVATION
+
+ &GRID
+    SYM_REDUCE       =     TRUE
+    WEIGHT_GRADS     =     TRUE
+ /GRID
+
+ &GRIDATOM # unique atom   1
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM
+
+ &GRID_PH
+    SYM_REDUCE   =  TRUE # (the default)
+    WEIGHT_GRADS =  TRUE # (the default)
+ /GRID_PH (namelist may be dropped)
+
+ &GRIDATOM_PH # unique atom   1
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM_PH (empty namelist must be dropped)
+
+ &GRIDATOM_PH # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM_PH (empty namelist must be dropped)
+
+ &GRIDATOM_PH # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM_PH (empty namelist must be dropped)
+
+ &GRIDATOM_PH # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM_PH (empty namelist must be dropped)
+
+ &GRIDATOM_PH # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM_PH (empty namelist must be dropped)
+
+ &GRIDATOM_PH # unique atom   2
+    NRAD    =         70
+    NANG    =        191
+ /GRIDATOM_PH (empty namelist must be dropped)
+
+ &GRIDATOM_PH # unique atom   2
+    NRAD    =         70 
+    NANG    =        191 
+ /GRIDATOM_PH (empty namelist must be dropped)

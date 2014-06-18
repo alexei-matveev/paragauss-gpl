@@ -118,6 +118,16 @@ Count namelists."
                  count))))
     (fold-input f 0 input)))
 
+
+(define (nml-get-all nml input)
+  "(nml-get-all nml input) => list"
+  (let ((f (lambda (x all)
+             (if (equal? nml (car x))
+                 (cons x all)
+                 all))))
+    (reverse (fold-input f '() input))))
+
+
 (define *atomic-symbols*
   '("H"                                "He" ; 1st
     "Li" "Be" "B"  "C"  "N"  "O"  "F"  "Ne" ; 2nd

@@ -30,6 +30,8 @@ make_summary(){
 	out=$1
 	# extract energies and gradients:
 	#echo "========================= $out ============================="
+	echo "GEOMETRY:"
+	geom.pl $out/output
 	echo "ENERGY:"
 	Esum  $out
 	echo "GRADIENTS:"

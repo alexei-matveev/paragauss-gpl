@@ -22,7 +22,7 @@
     SPIN_RESTRICTED     =  T # UKS
     DIRECT_ENERGY_CALC  =  TRUE # calculate all contributions to energy
                                 # separately without extra cost.
-    RELATIVISTIC        =  ADKH
+    RELATIVISTIC        =  true
  /MAIN_OPTIONS
 
  &OUTPUT

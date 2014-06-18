@@ -1,9 +1,9 @@
-i.h2o,NR,gas,BP
-i.h2o,NR,gas,VWN
 i.h2o,NR,gas,VWN,PDC
-i.h2o,NR,sol,BP
+i.h2o,NR,gas,VWN
+i.h2o,NR,gas,BP
 i.h2o,NR,sol,VWN
-i.h2o,SR,gas,BP
+i.h2o,NR,sol,BP
 i.h2o,SR,gas,VWN
-i.h2o,SR,sol,BP
+i.h2o,SR,gas,BP
 i.h2o,SR,sol,VWN
+i.h2o,SR,sol,BP

@@ -1,4 +1,4 @@
-i.ch4,c1,NumHess,Lo
-i.ch4,c1,SecDer,Lo
 i.ch4,td,GeoOpt,Lo
 i.ch4,td,SecDer,Lo
+i.ch4,c1,SecDer,Lo
+i.ch4,c1,NumHess,Lo

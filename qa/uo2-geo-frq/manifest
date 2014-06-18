@@ -1,9 +1,9 @@
-i.uo22+,C1,NR,SecDer,Lo
-i.uo22+,C1,PP,SecDer,Lo
-i.uo22+,C1,SR,SecDer,Lo
-i.uo22+,D8H,NR,GeoOpt,Lo
-i.uo22+,D8H,NR,SecDer,Lo
 i.uo22+,D8H,PP,GeoOpt,Lo
 i.uo22+,D8H,PP,SecDer,Lo
+i.uo22+,D8H,NR,GeoOpt,Lo
+i.uo22+,D8H,NR,SecDer,Lo
 i.uo22+,D8H,SR,GeoOpt,Lo
 i.uo22+,D8H,SR,SecDer,Lo
+i.uo22+,C1,PP,SecDer,Lo
+i.uo22+,C1,NR,SecDer,Lo
+i.uo22+,C1,SR,SecDer,Lo

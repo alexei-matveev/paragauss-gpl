@@ -35,7 +35,7 @@
 #include "libguile-comm.h"
 
 #ifdef WITH_BGY3D
-#  include "bgy3d-guile.h"      /* bgy3d_guile_init */
+#  include "libbgy3d.h"         /* bgy3d_guile_init */
 #endif
 
 /*

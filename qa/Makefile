@@ -35,6 +35,7 @@ clean:
 	for dir in $(SUBDIRS); do \
 		echo === Descending into $$dir ===; \
 		cd $$dir; \
+		rm -rf tty core saved_scfstate.dat; \
 		for entry in o.* s.*; do \
 			echo deleting $$entry; \
 			rm -rf $$entry; \

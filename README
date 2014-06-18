@@ -1,5 +1,45 @@
 
-Start ParaGauss serially as in
+=== Running ParaGauss ===
+
+For parallel calculation in batch mode use the Scheme script
+
+    ./runqm
+
+derived  from  ./guile/runqm.scm  by  inserting specific  search  path
+during  build  process. This  script  does  its  best to  emulate  the
+behaviour of the traditional "runpg" bash script. Use it as in
+
+    mpirun -np 8 $(PWD)/runqm [INPUTS...]
+
+Note that if neither "runqm"  script nor "guile-qm" interpreter are in
+your $PATH you will need to  specify the path in full occasionally. In
+case of troubles,  check the "shebang" line (first  line starting with
+#!)  at the top of "runqm" and the "%load-path" a few lines below.
+
+There is  a possibility  to run ParaGauss  from a  Scheme interpreter.
+The default (WITH_GUILE=1) buile  produces an executable "guile-qm" in
+the top directory (where this README file resides) that can be used as
+a standalone Scheme interpreter.  You may try to execute it in serial:
+
+    $ export GUILE_LOAD_PATH=.
+    $ ./guile-qm
+    guile> (+ 1 2)
+    3
+
+and run PG from within it:
+
+    guile> (copy-file "some-input" "input")
+    guile> (define world (qm-init))
+    guile> (qm-run world)
+    guile> (qm-finalize world)
+
+Or write your own interpreted scripts ...
+
+
+=== Fallback operation mode ===
+
+If you have troubles with Scheme, set WITH_GUILE=0 in the Makefile and
+recompile. Start ParaGauss serially as in
 
     ./mainscf_VX.Y.Z
 
@@ -40,42 +80,3 @@ attempts  to guess  execution nodes  and create  directories  prior to
 invoking  ParaGauss. However,  the startup  procedure varies  from one
 setup to  another so that  the startup script  may or may not  work on
 your platform.
-
-
-=== Extending GNU Guile Scheme interpreter by QM calculations ===
-
-There is a  possibility to run PG from a  Scheme interpreter. For that
-set
-
-    WITH_GUILE = 1
-
-in the Makefile and recompile ("make -r" may suffice).
-
-This  produces an executable  "guile-qm" in  the top  directory (where
-this  README file resides)  that can  be used  as a  standalone Scheme
-interpreter.  You may try to execute it in serial ...
-
-    $ export GUILE_LOAD_PATH=.
-    $ ./guile-qm
-    guile> (+ 1 2)
-    3
-
-... and run PG from within it:
-
-    guile> (copy-file "some-input" "input")
-    guile> (define world (qm-init))
-    guile> (qm-run world)
-    guile> (qm-finalize world)
-
-For parallel calculation in batch mode use the Scheme script
-
-    ./guile/runqm.scm
-
-that does its best to emulate the behaviour of the traditional "runpg"
-bash script mentioned above. Use it as in
-
-    mpirun -np 8 runqm.scm [INPUTS...]
-
-Note that if neither "runqm.scm"  nor "guile-qm" are in your $PATH you
-will  need to specify  them by  hand and/or  adapt the  "shebang" line
-(first line starting with #!) at the top of "runqm.scm".

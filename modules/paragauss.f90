@@ -313,7 +313,7 @@ contains
     use vdw_dft, only: vdw_dft_phi
     use grid_module, only: guile_pople_radius, guile_slater_radius, &
          guile_ionic_radius
-#ifdef WITH_BGY3D
+#ifdef WITH_BGY3D_NON_GPL
     use bgy3d, only: bgy3d_init_scheme
 #endif
     implicit none
@@ -346,7 +346,7 @@ contains
     fun = c_funloc (guile_ionic_radius)
     proc = scm_define_gsubr ("ionic-radius", 1, 0, 0, fun)
 
-#ifdef WITH_BGY3D
+#ifdef WITH_BGY3D_NON_GPL
     call bgy3d_init_scheme()
 #endif
   end subroutine qm_init_scheme

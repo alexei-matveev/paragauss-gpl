@@ -375,7 +375,7 @@ contains
     use dft_plus_u_module, only: dft_plus_u_in_use, dft_plus_u_mo_in_use
 #endif
     use overlap_module, only: dealloc_overlap
-#ifdef WITH_BGY3D
+#ifdef WITH_BGY3D_NON_GPL
     use bgy3d, only: bgy3d_finalize
 #endif
     implicit none
@@ -427,7 +427,7 @@ contains
       call density_data_free()
     endif
 
-#ifdef WITH_BGY3D
+#ifdef WITH_BGY3D_NON_GPL
     call bgy3d_finalize ()
 #endif
   end subroutine prescf_finalize

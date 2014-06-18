@@ -156,7 +156,7 @@ contains
     use bounds_module, only: bounds_ch, bounds_xc
     use hamiltonian_module, only: ham_tot, ham_tot_real, ham_tot_imag
     use density_data_module, only: densmat, densmat_real, densmat_imag
-#ifdef WITH_BGY3D
+#ifdef WITH_BGY3D_NON_GPL
     use bgy3d, only: bgy3d_term
 #endif
     implicit none
@@ -234,7 +234,7 @@ contains
       endif
     endif
 
-#ifdef WITH_BGY3D
+#ifdef WITH_BGY3D_NON_GPL
     if (.not. options_spin_orbit) then
         !
         ! STANDARD SCF

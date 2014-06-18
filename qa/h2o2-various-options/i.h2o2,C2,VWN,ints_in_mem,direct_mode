@@ -1,0 +1,85 @@
+&TASKS
+    TASK              = "SinglePoint"
+    GX_HIGHPREC       =  TRUE
+ /TASKS
+
+ &MAIN_OPTIONS
+    NUMERIC_EXCH        =      TRUE
+    SPIN_RESTRICTED     =      TRUE
+    INTEGRALS_ON_FILE   =     FALSE
+    ENERGIES_ALWAYS     =     FALSE
+    DIRECT_ENERGY_CALC  =      TRUE
+ /MAIN_OPTIONS
+
+ &RECOVER_OPTIONS
+    SAVE_SCFSTATE      =      f
+    READ_SCFSTATE      =      f
+ /RECOVER_OPTIONS
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C2  " # (the default)
+ /SYMMETRY_GROUP (namelist may be dropped)
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    2
+ /UNIQUE_ATOM_NUMBER
+
+ # << Geometry >>
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = "O           "
+    Z             =         8.000
+    N_equal_atoms =             2
+ /UNIQUE_ATOM
+    1.359963634436        -0.006034827484         0.183302441833
+
+ &UNIQUE_ATOM # unique atom   2
+    NAME          = "H           "
+    Z             =         1.000
+    N_equal_atoms =             2
+ /UNIQUE_ATOM
+    1.700001971824         1.542629257080         1.141759529283
+
+~O_9.5.1_9.5.1
+~H_6.1_4.1
+
+ &MIXING
+    CHMIX             = 0.5000
+    SPMIX             = 0.5000
+    XCMIX             = 0.3000
+    START_AFTER_CYCLE =      5
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =        50
+    ENERGY_CRITERION      = 1.000E-08
+    ENERGY_DEV_CHECKED    =         4 # (the default)
+    COEFF_CRITERION       = 1.000E-06
+    COEFF_DEV_CHECKED     =         1 # (the default)
+    COULOMB_CRITERION     = 1.000E-07
+    COULOMB_DEV_CHECKED   =         0 # (the default)
+    DENSITY_CRITERION     = 1.000E-05 # (the default)
+    DENSITY_DEV_CHECKED   =         1 # (the default)
+    STOP_IF_NOT_CONVERGED =     FALSE # (the default)
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XALPHA         =  TRUE # (the default)
+    VWN            =  TRUE # (the default)
+ /XC_CONTROL (namelist may be dropped)
+
+ &GRID
+    SYM_REDUCE       =    FALSE # (the default)
+    WEIGHT_GRADS     =     TRUE
+ /GRID
+
+ &GRIDATOM # unique atom   1
+    NRAD    =         70
+    NANG    =        171
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         70
+    NANG    =        171
+ /GRIDATOM
+

@@ -19,8 +19,16 @@ while [[ "$1" == --* ]]; do
 	shift
 done
 
-if [ -z "$ttfs" ]; then
-	ttfs=~ttfs/bin/ttfs_V3.0
+#if [ -z "$ttfs" ]; then
+#	ttfs=~ttfs/bin/ttfs_V3.0
+#fi
+
+if [ -z "$runpg" ]; then
+	runpg=runpg
+fi
+
+if [ -z "$exedir" ]; then
+	exedir=~/darcs/ttfs-v314
 fi
 
 if [ -z "$versions" ]; then
@@ -61,18 +69,29 @@ if [ -f optimizer.input.$nam ]; then
   cp optimizer.input.$nam optimizer.input
 fi
 
-cmd="
-$ttfs $nam \
- -newinput $inp \
- -inputdir . -outputdir $out \
- -vers $vers -mpi \
- -verbose -restartable \
- -keep_datadir"
+# for running a test remove (eventually) existing output directory:
+rm -rf o.$nam
+
+if [ -n "$ttfs" ]; then
+  cmd="
+  $ttfs $nam \
+   -newinput $inp \
+   -inputdir . -outputdir $out \
+   -vers $vers -mpi \
+   -verbose -restartable \
+   -keep_datadir"
+else
+  cmd="$runpg $exe $inp"
+fi
 
 if [ "$tty" = "tty" ]; then
 	$cmd | tee tty
 else
 	$cmd > tty
+fi
+
+if [ -d o.$nam ]; then
+  mv o.$nam $out
 fi
 
 if [ -d $out ]; then
@@ -138,6 +157,7 @@ for name in $*; do
 	inp=i.$name
 	echo -n -e "Running $inp$rc_tab"
 for vers in $versions; do
+        exe=$exedir/mainscf_$vers
 	out=o.$name,$vers
 	smr=s.$name,$vers
 	smr_cmp=s.$name,$vers_cmp

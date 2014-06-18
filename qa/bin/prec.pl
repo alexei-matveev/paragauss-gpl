@@ -7,7 +7,7 @@ if($ARGV[0] =~ /-(\d+)/){
 }
 $DD =$D+1;
 
-warn("## all numbers will be cut off to $D digits\n");
+#warn("## all numbers will be cut off to $D digits\n");
 
 while(<>){
 	while(/\d+\.\d{$DD,}/o){

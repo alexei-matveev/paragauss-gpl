@@ -11,7 +11,7 @@
 
  &MAIN_OPTIONS
     SPIN_RESTRICTED     =      TRUE 
-    RELATIVISTIC        =     FALSE # (the default)
+    RELATIVISTIC        =     "FALSE" # (the default)
  /MAIN_OPTIONS (namelist may be dropped)
 
  &RECOVER_OPTIONS

@@ -19,7 +19,7 @@
     SPIN_RESTRICTED     =   F # UKS
     DIRECT_ENERGY_CALC  =  TRUE # calculate all contributions to energy
                                 # separately without extra cost.
-    RELATIVISTIC        =  f
+    RELATIVISTIC        =  "f"
     UPDATE_HESSIAN_ITERATION  =         1
  /MAIN_OPTIONS
 

@@ -13,7 +13,7 @@
  &MAIN_OPTIONS
     NUMERIC_EXCH        =      TRUE # (the default)
     SPIN_RESTRICTED     =      TRUE # (the default)
-    RELATIVISTIC        =      F
+    RELATIVISTIC        =      "F"
     INTEGRALS_ON_FILE   =      TRUE # (the default)
     PERTURBATION_THEORY =      TRUE # (the default)
     UPDATE_HESSIAN_ITERATION  =         1

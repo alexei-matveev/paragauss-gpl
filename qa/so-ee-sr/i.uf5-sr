@@ -28,7 +28,7 @@
 
  &MAIN_OPTIONS
     SPIN_RESTRICTED     =  true
-    RELATIVISTIC        =  true 
+    RELATIVISTIC        =  "true"
     SPIN_ORBIT                =  f
  /MAIN_OPTIONS
 

@@ -144,7 +144,7 @@
     NUMERIC_EXCH        =      TRUE # (the default)
     SPIN_RESTRICTED     =     true
     ENERGIES_ALWAYS     =     FALSE # (the default)
-    RELATIVISTIC        =     f
+    RELATIVISTIC        =     "f"
     SPIN_ORBIT          =     f
     INTEGRALS_ON_FILE   =     true
     USE_MODEL_DENSITY   =     FALSE # (the default)

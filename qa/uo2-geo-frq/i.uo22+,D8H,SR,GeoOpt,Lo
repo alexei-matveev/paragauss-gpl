@@ -21,7 +21,7 @@
     SPIN_RESTRICTED     =  T # UKS
     DIRECT_ENERGY_CALC  =  TRUE # calculate all contributions to energy 
                                 # separately without extra cost.
-    RELATIVISTIC        =  true
+    RELATIVISTIC        =  "true"
     update_hessian_iteration = 0
     integrals_on_file   =  true
  /MAIN_OPTIONS

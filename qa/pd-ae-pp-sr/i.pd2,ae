@@ -35,7 +35,7 @@
 
  &MAIN_OPTIONS
     SPIN_RESTRICTED     =  TRUE # RKS
-    RELATIVISTIC        =  f
+    RELATIVISTIC        =  "f"
     SPIN_ORBIT          =  f # (the default)
     INTEGRALS_ON_FILE   =  true   
     orbitals_in_memory  = true

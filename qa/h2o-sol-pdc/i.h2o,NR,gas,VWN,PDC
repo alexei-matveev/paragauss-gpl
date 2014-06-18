@@ -40,7 +40,7 @@
     SPIN_RESTRICTED     =  T # UKS
     DIRECT_ENERGY_CALC  =  TRUE # calculate all contributions to energy
                                 # separately without extra cost.
-    RELATIVISTIC        =  f
+    RELATIVISTIC        =  "f"
  /MAIN_OPTIONS
 
  &PVMOPTIONS

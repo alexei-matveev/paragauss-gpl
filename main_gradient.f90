@@ -259,8 +259,9 @@ subroutine main_gradient(loop)
 #ifdef WITH_ERI4C
   use density_data_module, only: densmat
 #endif
-  use overlap_module, only: overlap
+#ifdef _DPRINT
   use error_module, only: MyID
+#endif
   use interfaces, only: main_integral, integral_trafo, RELGRAD, RELSDER
   use interfaces, only: potential_calculate
   use interfaces, only: grad_solv_calculate

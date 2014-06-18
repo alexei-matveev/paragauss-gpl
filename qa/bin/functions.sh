@@ -38,6 +38,8 @@ make_summary(){
 	grads $out
 	echo "FREQUENCIES:"
 	freq.pl $out/output
+	echo "POTENTIAL-DERIVED CHARGES:"
+	pdc.pl $out/output
 }
 
 diff_prec(){

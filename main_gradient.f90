@@ -912,22 +912,22 @@ subroutine main_gradient(loop)
 contains
 
 #ifdef _DPRINT
-     subroutine print_cart_grads(header)
-       implicit none
-       character(len=*), intent(in), optional :: header
-       ! *** end of interface ***
+  subroutine print_cart_grads (header)
+    implicit none
+    character (len=*), intent(in), optional :: header
+    ! *** end of interface ***
 
-       integer(i4_kind) :: u,e
+    integer (i4_kind) :: u, e
 
-       if(present(header)) &
-         print*,header
-         print '(2A4,3A20)','ua','ea','x','y','z'
-       do u=1,size(gradient_cartesian)
-       do e=1,size(gradient_cartesian(u)%m,2)
-         print '(2I4,3F20.10)',u,e,gradient_cartesian(u)%m(:,e)
+    if (present (header)) print *, header
+
+    print '(2A4,3A20)', 'ua', 'ea', 'x', 'y', 'z'
+    do u = 1, size (gradient_cartesian)
+       do e = 1, size (gradient_cartesian(u) % m, 2)
+          print '(2I4,3F20.10)', u, e, gradient_cartesian(u) % m(:, e)
        enddo
-       enddo
-     end subroutine print_cart_grads
+    enddo
+  end subroutine print_cart_grads
 
      subroutine print_totsym_grads(header)
        implicit none

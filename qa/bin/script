@@ -84,7 +84,7 @@ total_num=0
 for name in $*; do
 	name=`echo $name | sed s/^i\.//`
 	inp=i.$name
-	echo -n -e "Running $inp\t"
+	echo -n -e "Running $inp$rc_tab"
 for vers in $versions; do
 	out=o.$name,$vers
 	smr=s.$name,$vers
@@ -106,11 +106,6 @@ else
 fi
 
 	make_summary $out > $smr
-
-#    \033[31m      switch on red
-#    \033[32m      switch on green
-rc_ok="\033[32mok\033[m\017"
-rc_failed="\033[31mFAILED\033[m\017"
 
 if [ "$vers" != "$vers_cmp" ]; then
 	total_num=$(($total_num + 1))

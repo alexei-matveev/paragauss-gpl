@@ -43,7 +43,7 @@ out=$3
 vers=$4
 
 if [ -f x.$nam ]; then
-  cp x.$nam gx.$nam
+  cp x.$nam gxfile
 fi
 
 if [ -f optimizer.input.$nam ]; then

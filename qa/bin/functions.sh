@@ -43,6 +43,8 @@ make_summary(){
 	fi
 	echo "POTENTIAL-DERIVED CHARGES:"
 	pdc.pl $out/output
+        echo "TDDFT EXCITATION ENERGIES AND OSCILLATOR STRENGTHS:"
+        tddft.pl $out/output  
 }
 
 diff_prec(){

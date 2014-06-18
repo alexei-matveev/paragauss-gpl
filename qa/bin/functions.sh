@@ -18,10 +18,12 @@
 if test -t 1 -a "$TERM" != "raw" -a "$TERM" != "dumb" && stty size > /dev/null 2>&1 ; then
 	rc_tab="\033[30G"
 	rc_ok="\033[32mok\033[m\017"
+	rc_no="\033[31mNO\033[m\017"
 	rc_failed="\033[31mFAILED\033[m\017"
 else
 	rc_tab="\t"
 	rc_ok="ok"
+	rc_ok="NO"
 	rc_failed="FAILED"
 fi
 

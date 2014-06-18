@@ -30,22 +30,6 @@ if [ -z "$vers_cmp" ]; then
 	vers_cmp=${versions%% *}
 fi
 
-#
-# This is too specific to theochem setup:
-#
-# if [ -z "$PE_HOSTFILE" ]; then
-#    export PE_HOSTFILE=$dir/$hostfile
-# fi
-#
-# If you wish to use more than one processor, invoke "make" as
-#
-#       PE_HOSTFILE=./bin/hostfile make SUBDIRS=pd*
-#
-# or as
-#
-#       NP=2 make SUBDIRS=pd*
-# 
-
 #[[=== run a single job by ``runtest NAME INPUT OUTDIR VERSION'' ===
 run_test(){
 local nam

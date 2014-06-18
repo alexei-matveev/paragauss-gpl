@@ -70,6 +70,7 @@
             qm-write-gxfile!
             qm-run-path-sxp
             qm-run-path-nml
+            call-with-qm-world
             pople-radius
             slater-radius
             ionic-radius

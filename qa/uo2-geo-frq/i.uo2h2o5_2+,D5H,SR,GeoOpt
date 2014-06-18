@@ -1,0 +1,130 @@
+
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+ # UO22+_5H2O All Electron D5h                                      #
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+ # << Main Operation Parameters >>
+ &TASKS
+    TASK             = "GeoOpt"
+    ECHO_INPUT_LEVEL = "default"
+    GX_HIGHPREC      = TRUE
+    READ_GX          = TRUE
+#   SOLVATION        = TRUE
+ /TASKS
+
+ &RECOVER_OPTIONS
+    SAVE_KSMATRIX      =     T
+    READ_KSMATRIX      =     T
+    RESET_SCFCYCLE     =     T     # (the default)       
+ /RECOVER_OPTIONS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =  T # UKS
+    DIRECT_ENERGY_CALC  =  TRUE # calculate all contributions to energy
+                                # separately without extra cost.
+    RELATIVISTIC        =  ADKH
+ /MAIN_OPTIONS
+
+ &OUTPUT
+    OUTPUT_LEVEL =  1  # normal amount of output
+ /OUTPUT
+
+#&OUTPUT_SOLVATION
+#   OUTPUT_CAVITY_DATA     = TRUE
+#   OUTPUT_CAVITY_LONG     = FALSE # (the default)
+#   OUTPUT_SOLV_GRADS      = TRUE
+#/OUTPUT_SOLVATION (namelist may be dropped)
+                          
+ # << Geometry >>
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "D5H"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =   4 
+ /UNIQUE_ATOM_NUMBER
+
+&UNIQUE_ATOM NAME=" U", Z=   92.00000, N_EQUAL_ATOMS=1 /
+    0.000000000000         0.000000000000         0.000000000000
+
+&UNIQUE_ATOM NAME=" O", Z=    8.00000, N_EQUAL_ATOMS=2 /
+    0.000000000000         0.000000000000         3.700000000000
+
+&UNIQUE_ATOM NAME=" O", Z=    8.00000, N_EQUAL_ATOMS=5 /
+    4.600000000000         0.000000000000         0.000000000000
+
+&UNIQUE_ATOM NAME=" H", Z=    1.00000, N_EQUAL_ATOMS=10 /
+    5.710000000000         0.000000000000         1.430000000000
+
+ # << Basis Sets >>
+
+~U_24.19.16.11_10.7.7.4
+~O_9.5.1_5.4.1
+~H_6.1_4.1
+~O_9.5.1_5.4.1
+
+ # << SCF Parameters >>
+
+ &MIXING
+    CHMIX             = 0.5
+    START_AFTER_CYCLE = 5    
+  # start mixing coefficients for charge fit function coefficients
+      # start dynamic mixing after second SCF cycle
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =      30  # maximal number of SCF cycles allowed
+    STOP_IF_NOT_CONVERGED =   FALSE
+    ENERGY_CRITERION      = 1.0E-08  # maximal difference in total energy
+    COEFF_CRITERION       = 5.0E-06  # maximal difference in charge fit coefficients
+    DENSITY_CRITERION     = 1.0E-08  # maximal difference in density matrix
+    MAX_GEO_ITERATION     =   20
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XC = 'vwn'
+ /XC_CONTROL
+
+ &OCCUPATION
+    CHARGE             =   +2.000000 # (the default)
+ /OCCUPATION
+
+#&SOLVATION
+#   SOLVATION_MODEL     = "COSMO" # (the default)
+#   CAVITATION_ENERGY   =    TRUE # (the default)
+#   DISP_REP_ENERGY     =    TRUE # (the default)
+#   DIELECTRIC_CONSTANT =  78.390
+#   ABS_TEMPERATURE     = 298.000 # (the default)
+#   SOLVENT_VOLUME      =  18.070 # (the default)
+#   SOLVENT_RADIUS      =   1.385
+#   SCALED_FACTOR       =   1.200 # (the default)
+#   POINT_FACTOR        =       1 # (the default)
+#   MAX_TES_AREA        =   1.000
+#   GET_VDWR            =   FALSE # (the default)
+#   EXTERNAL_VDWR       =       0
+#   NO_HYDROGEN_SPHERE  =   FALSE # (the default)
+#   HYDROGEN_NO_SCALE   =    TRUE # (the default)
+#   SOL_START_CYCLE     =       1 # (the default)
+#   CENT_TYPE           =  "mass"
+#   CORRECTION_TYPE     =  "None" # Allowed values are: None Scale_Nuc_El Scale_Nuclear Charge_Inside
+#   FIX_NUMBER_ADD      = TRUE
+#/SOLVATION
+
+ &GRID
+    SYM_REDUCE = TRUE   # exploit local atom symmetry
+    WEIGHT_GRADS = TRUE  # consider derivatives of weights of the integration grid
+ /GRID
+
+ &GRIDATOM  NRAD =  30, NANG = 131 /GRIDATOM  
+ &GRIDATOM  NRAD =  30, NANG = 131 /GRIDATOM  
+ &GRIDATOM  NRAD =  30, NANG = 131 /GRIDATOM  
+ &GRIDATOM  NRAD =  30, NANG = 131 /GRIDATOM  
+
+ &GRID_PH
+    WEIGHT_GRADS = TRUE  # consider derivatives of weights of the integration grid
+ /GRID_PH
+
+
+
+

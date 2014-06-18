@@ -1,0 +1,22 @@
+#!/bin/bash
+
+dir=`dirname $0`
+
+. $dir/functions.sh
+
+for name in $*; do
+	name=`echo $name | sed s/^o\.//`
+	inp=i.$name
+	out=o.$name
+
+# extract energies and gradients:
+echo "========================= $out ============================="
+echo "ENERGY:"
+esum  $out
+echo "GRADIENTS:"
+grads $out
+#echo "TIMINGS:"
+#/home/matveev/bin.pl/timing.pl $out/output
+
+done # foreach $*
+

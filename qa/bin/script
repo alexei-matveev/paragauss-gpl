@@ -1,0 +1,73 @@
+#!/bin/bash
+
+dir=`dirname $0`
+
+. $dir/functions.sh
+
+if [ -z "$ttfs" ]; then
+	ttfs=~ttfs/bin/ttfs_V3.0
+fi
+
+if [ -z "$vers_cmp" ]; then
+	vers_cmp="V3.0.40b12-32"
+fi
+
+if [ -z "$versions" ]; then
+	versions="$vers_cmp V3.1pre-32"
+fi
+
+if [ -z "$PE_HOSTFILE" ]; then
+   export PE_HOSTFILE=$dir/hostfile
+fi
+
+for name in $*; do
+	echo -n -e "Running $name\t"
+for vers in $versions; do
+	name=`echo $name | sed s/^i\.//`
+	inp=i.$name
+	out=o.$name,$vers
+	smr=s.$name,$vers
+	smr_cmp=s.$name,$vers_cmp
+
+	echo -n " with $vers ..."
+$ttfs $name \
+ -newinput $inp \
+ -inputdir . -outputdir $out \
+ -vers $vers -mpi \
+ -verbose -restartable \
+ -keep_datadir \
+ > tty
+
+if [ -f tty ]; then
+  mv tty $out
+fi
+
+if [ -f hesse_cartesian.dat ]; then
+  mv hesse_cartesian.dat $out
+fi
+
+if [ -f saved_scfstate.dat ]; then
+  mv saved_scfstate.dat $out
+fi
+	echo -n " done."
+
+make_summary $out > $smr
+
+if [ "$vers" != "$vers_cmp" ]; then
+	echo -n " Compare to $vers_cmp"
+	ok="ok"
+	for p in 8 6 4; do
+		diff_prec $smr_cmp $smr $p #> diff$p
+		retval=$?
+		#echo -n " prec $p ret $retval"
+		if [ $retval != 0 ]; then
+			echo -en "\nFAILED at precision $p! ($smr)"
+			ok="\nFAILED! ($smr)"
+		fi
+	done
+	echo -e "$ok"
+fi
+
+done # foreach version
+done # foreach $*
+

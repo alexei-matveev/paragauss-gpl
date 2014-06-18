@@ -83,6 +83,10 @@ if [ -f gxfile ]; then
   mv gxfile $out/gxfile.final
 fi
 
+if [ -f gx.$nam ]; then
+  mv gx.$nam $out
+fi
+
 if [ -f hesse.dat ]; then
   mv hesse.dat $out
 fi

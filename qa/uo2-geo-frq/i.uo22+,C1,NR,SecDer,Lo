@@ -26,10 +26,6 @@
     integrals_on_file   =  true
  /MAIN_OPTIONS
 
- &PVMOPTIONS
-    N_PROCS  =  1 # number of processors
- /PVMOPTIONS
-
  &OUTPUT
     OUTPUT_LEVEL =  1  # normal amount of output
  /OUTPUT

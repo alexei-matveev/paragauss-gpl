@@ -19,10 +19,6 @@
     OPERATIONS_PROPERTIES        = FALSE
  /OPERATIONS
 
- &PVMOPTIONS
-        N_PROCS = 2
- /PVMOPTIONS
-
  &OUTPUT
     OUTPUT_LEVEL =  1  # legal values are 0, 1, 5, 10
  /OUTPUT

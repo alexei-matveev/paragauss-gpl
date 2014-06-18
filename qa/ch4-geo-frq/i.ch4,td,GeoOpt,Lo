@@ -130,16 +130,6 @@
     EIG_MAX          =  1.000E+01 # (the default)
  /POPULATION (namelist may be dropped)
 
- &PVMOPTIONS
-    N_PROCS                  =      1
-    MASTER_WORK              =   TRUE # (the default)
-    PVM_TIMEOUT              =    900 # (the default)
-    PVM_TIMESTEP             =     10 # (the default)
-    CATCH_SLAVEOUT           =  FALSE # (the default)
-    PVM_MASTER_INTERRUPT_NBR =      1 # (the default)
-    PVM_SLAVE_INTERRUPT_NBR  =      5 # (the default)
- /PVMOPTIONS
-
  &MAIN_OPTIONS
     NUMERIC_EXCH        =      TRUE # (the default)
     SPIN_RESTRICTED     =     true

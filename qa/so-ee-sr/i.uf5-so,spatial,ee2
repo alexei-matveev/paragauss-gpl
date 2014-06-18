@@ -37,10 +37,6 @@
     LEVEL = "SpinOrbit,BackTrafo,FitTrafo:DKH(2)"
  /SPIN_ORBIT
 
- &PVMOPTIONS
-    N_PROCS  =  2 # number of processors
- /PVMOPTIONS
-
  &OUTPUT
     OUTPUT_LEVEL =  1  # normal amount of output
  /OUTPUT

@@ -48,10 +48,6 @@
     VC = 1.0
  /SPIN_ORBIT
 
- &PVMOPTIONS
-    N_PROCS  =  8        
- /PVMOPTIONS
-
  &RECOVER_OPTIONS
     SAVE_SCFSTATE  =     T
     READ_SCFSTATE  =     f

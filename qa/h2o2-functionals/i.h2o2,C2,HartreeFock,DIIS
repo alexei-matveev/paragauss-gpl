@@ -58,7 +58,6 @@
 
  &DIIS
     DIIS_ON = TRUE
-    MFIX = 4
     CFIX = 0.6500
     MMAX = 3
     LOOP_START= 2

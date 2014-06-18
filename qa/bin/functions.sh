@@ -132,7 +132,7 @@ sders() {
 }
 
 function Esum() {
-	esum $* | fgrep '[' | tail -1
+	esum $* | fgrep ' [' | tail -1
 	esum $* | fgrep -v FINAL | fgrep '('
 }
 
@@ -141,5 +141,5 @@ function efinal() {
 }
 
 ewc() {
-	grep e_sum $1 | fgrep '[' | wc -l
+	grep e_sum $1 | fgrep ' [' | wc -l
 }

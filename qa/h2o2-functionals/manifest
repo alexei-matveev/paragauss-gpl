@@ -27,4 +27,5 @@ i.h2o2,C2,M06L,ints_in_mem,etot_mode
 i.h2o2,C2,VSXC,ints_in_mem,etot_mode     
 i.h2o2,C2,HartreeFock,DIIS               
 i.h2o2,C2,PBE0,DIIS                      
-i.h2o2,C2,DEFAULT,ints_in_mem                
+i.sf6,OH,B3LYP,DIIS                      
+i.h2o2,C2,DEFAULT,ints_in_mem            

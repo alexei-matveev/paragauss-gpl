@@ -75,42 +75,44 @@ else
 	$cmd > tty
 fi
 
-if [ -f tty -a -d $out ]; then
-  mv tty $out
-fi
+if [ -d $out ]; then
+   if [ -f tty ]; then
+     mv tty $out
+   fi
 
-if [ -f gxfile ]; then
-  mv gxfile $out/gxfile.final
-fi
+   if [ -f gxfile ]; then
+     mv gxfile $out/gxfile.final
+   fi
 
-if [ -f gx.$nam ]; then
-  mv gx.$nam $out
-fi
+   if [ -f gx.$nam ]; then
+     mv gx.$nam $out
+   fi
 
-if [ -f hesse.dat ]; then
-  mv hesse.dat $out
-fi
+   if [ -f hesse.dat ]; then
+     mv hesse.dat $out
+   fi
 
-if [ -f hesse_cartesian.dat ]; then
-  mv hesse_cartesian.dat $out
-fi
+   if [ -f hesse_cartesian.dat ]; then
+     mv hesse_cartesian.dat $out
+   fi
 
-if [ -f HESS.cart ]; then
-  mv HESS.cart $out
-fi
+   if [ -f HESS.cart ]; then
+     mv HESS.cart $out
+   fi
 
-if [ -f grads ]; then
-  mv grads $out
-fi
+   if [ -f grads ]; then
+     mv grads $out
+   fi
 
-if [ -f optimizer.input ]; then
-  mv optimizer.input $out
-fi
+   if [ -f optimizer.input ]; then
+     mv optimizer.input $out
+   fi
 
-if [ -f saved_scfstate.dat ]; then
-  mv saved_scfstate.dat $out
+   if [ -f saved_scfstate.dat ]; then
+     mv saved_scfstate.dat $out
+   fi
 fi
-}
+} # eof run_test()
 #]]=================================================================
 
 clean_and_exit(){

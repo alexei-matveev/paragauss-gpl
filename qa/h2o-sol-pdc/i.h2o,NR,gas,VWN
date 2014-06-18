@@ -1,0 +1,135 @@
+ 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+ # H2O All Electron C2V                                           #
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+ # << Main Operation Parameters >>
+
+&OPERATIONS
+    OPERATIONS_SYMM              =  TRUE # (the default)
+    OPERATIONS_SCF               =  true
+    OPERATIONS_INTEGRAL          =  true
+    OPERATIONS_WRITE_INPUT       =  TRUE # (the default)
+    OPERATIONS_WRITE_FULL_INPUT  = FALSE # (the default)
+    OPERATIONS_WRITE_SHORT_INPUT = FALSE # (the default)
+    OPERATIONS_WRITE_INPUT_SLAVE = FALSE # (the default)
+    OPERATIONS_POST_HOC          =  true
+    OPERATIONS_GRADIENTS         =  true
+    OPERATIONS_GEO_OPT           =  f
+    OPERATIONS_MAKE_GX           =  f
+    OPERATIONS_READ_GX           = FALSE # (the default)
+    OPERATIONS_DIPOLE            = f
+    OPERATIONS_OLD_INPUT         = FALSE # (the default)
+    OPERATIONS_GX_HIGHPREC       =  true
+    OPERATIONS_GX_TEST           = FALSE # (the default)
+    OPERATIONS_PROPERTIES        = FALSE # (the default)
+    OPERATIONS_RESPONSE          = FALSE # (the default)
+    OPERATIONS_CORE_DENSITY      = FALSE # (the default)
+    OPERATIONS_FITBASIS_OPT      = FALSE # (the default)
+ /OPERATIONS
+
+ &RECOVER_OPTIONS
+          SAVE_SCFSTATE = F
+          READ_SCFSTATE = F
+        /RECOVER_OPTIONS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =  T # UKS
+    DIRECT_ENERGY_CALC  =  TRUE # calculate all contributions to energy
+                                # separately without extra cost.
+    RELATIVISTIC        = f 
+ /MAIN_OPTIONS
+
+ &PVMOPTIONS
+    N_PROCS  =  1 # number of processors
+ /PVMOPTIONS
+
+ &OUTPUT
+    OUTPUT_LEVEL =  1  # normal amount of output
+ /OUTPUT
+                          
+ # << Geometry >>
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C2V"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =   2 
+ /UNIQUE_ATOM_NUMBER
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = " O"
+    Z             =  8.0
+    N_equal_atoms =   1
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+
+ &UNIQUE_ATOM # unique atom  2 
+    NAME          = " H"
+    Z             = 1.0
+    N_equal_atoms =  2
+ /UNIQUE_ATOM
+    1.4000E+00    0.000000000000000E+00    1.150000000000000E+00 
+    
+
+ # << Basis Sets >>
+
+~/home/ray/bases/OXYGEN/O_9.5.1_5.4.1           
+~/home/ray/bases/hydrogen/H_6.1_4.1
+
+
+ # << SCF Parameters >>
+
+ &MIXING
+    CHMIX             = 0.5
+    START_AFTER_CYCLE = 5    
+  # start mixing coefficients for charge fit function coefficients
+      # start dynamic mixing after second SCF cycle
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =      90  # maximal number of SCF cycles allowed
+    STOP_IF_NOT_CONVERGED =   FALSE
+    ENERGY_CRITERION      = 1.0E-08  # maximal difference in total energy
+    COEFF_CRITERION       = 1.0E-06  # maximal difference in charge fit coefficients
+    DENSITY_CRITERION     = 1.0E-08  # maximal difference in density matrix
+    MAX_GEO_ITERATION     =   50
+ /CONVERGENCE_LIST
+
+&XC_CONTROL
+    XALPHA         =  TRUE # (the default)
+    VWN            =  TRUE
+    PERDEW         =  f
+    BECKE88        =  f
+    PWLDAc         =  F 
+    PBEc           =  F 
+    PBENx          =  F 
+ /XC_CONTROL (namelist may be dropped)       
+
+ &OCCUPATION
+    CHARGE             =   0.000000 # (the default)
+ /OCCUPATION (namelist may be dropped)       
+
+ &GRID
+    SYM_REDUCE = TRUE   # exploit local atom symmetry
+ /GRID
+
+ &GRIDATOM  # define grid for unique atom 1
+     NRAD =  70       # number of shells of the integration grid
+     NANG = 191       # number of grid points per shell
+ /GRIDATOM  
+
+&GRIDATOM  # define grid for unique atom 2 
+     NRAD =  70       # number of shells of the integration grid
+     NANG = 191       # number of grid points per shell
+ /GRIDATOM 
+ 
+
+&GRID_PH
+    WEIGHT_GRADS = TRUE  # consider derivatives of weights of the integration grid
+ /GRID_PH
+
+
+
+

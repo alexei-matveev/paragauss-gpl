@@ -858,7 +858,7 @@ subroutine main_gradient(loop)
    end block
 #else
    ! To stay consistent also in this case:
-   call set_energy (rism=0.0)
+   call set_energy (rism=0.0_r8_kind)
 #endif
 
   ! ================ CONTEXT: MASTER ONLY ==================

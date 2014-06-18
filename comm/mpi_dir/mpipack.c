@@ -25,7 +25,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include "mpi.h"
-// #include "extnames.h"
 #include "externdecs.h"
 
 // static int c1_size_buf = 1;

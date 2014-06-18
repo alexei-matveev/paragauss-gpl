@@ -42,8 +42,7 @@
 #include <sys/time.h>
 #include <math.h>
 #include <assert.h>
-/* extnames.h redefines names e.g. by appending underscores */
-// #include "extnames.h"
+
 /* Global variables and prototypes with scope bigger than this file */
 #include "externdecs.h"
 

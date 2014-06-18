@@ -19,7 +19,6 @@ i.h2o2,C2,HCTH120,ints_in_mem,etot_mode
 i.h2o2,C2,HCTH147,ints_in_mem,etot_mode  
 i.h2o2,C2,HCTH407,ints_in_mem,etot_mode  
 i.h2o2,C2,TPSS,ints_in_mem,etot_mode     
-i.h2o2,C2,revTPSS,ints_in_mem,etot_mode  
 i.h2o2,C2,VMT,ints_in_mem,etot_mode      
 i.h2o2,C2,VT84,ints_in_mem,etot_mode     
 i.h2o2,C2,VMTsol,ints_in_mem,etot_mode   

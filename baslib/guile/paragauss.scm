@@ -105,6 +105,9 @@ of a nested input:
 
 ;; (equal? (fold-input cons '() *h2o*) (reverse *h2o*)) => #t
 
+;;;
+;;; FIXME: need a comparison aware of -/_ redundancy:
+;;;
 (define (nml-count nml input)
   "(nml-count nml input) => integer
 
@@ -277,6 +280,40 @@ Count namelists."
           (form form))))                ; pass through
     (fmap-input expand input)))
 
+;;;
+;;; Adds unique-atom-number nml if not present:
+;;;
+(define (fix-unique-atom-number input)
+  (let ((n1 (nml-count 'unique-atom-number input))
+        (n2 (nml-count 'unique_atom_number input))
+        (m1 (nml-count 'unique-atom input))
+        (m2 (nml-count 'unique_atom input)))
+    (if (positive? (+ n1 n2))
+        input
+        (let ((fix (match-lambda
+                    ((or ('symmetry-group x)
+                         ('symmetry_group x))
+                     `((symmetry-group ,x)
+                       (unique-atom-number (n-unique-atoms ,(+ m1 m2)))))
+                    (form form))))
+          (fmap-input fix input)))))
+
+
+;;;
+;;; Adds unique-atom-number nml if not present:
+;;;
+(define (fix-gridatom input)
+  (let ((n (nml-count 'gridatom input))
+        (m1 (nml-count 'unique-atom input))
+        (m2 (nml-count 'unique_atom input)))
+    (if (not (equal? n 1))
+        input                        ; as is
+        (let ((fix (match-lambda     ; otherwise use the same settings
+                    (('gridatom . rest)
+                     (make-list (+ m1 m2) (cons 'gridatom rest)))
+                    (form form))))
+          (fmap-input fix input)))))
+
 
 ;;;
 ;;; FIXME: ugly as hell.  Improvements are welcome.  The second branch
@@ -298,6 +335,14 @@ Count namelists."
 (set! tilde (memoize tilde))
 
 ;;;
+;;; Kitchen sink of all artificial intelligence:
+;;;
+(define (do-what-i-mean input)
+  (fix-gridatom
+   (fix-unique-atom-number
+    (expand-special-forms input))))
+
+;;;
 ;;; Print  input in PG  format. This  treats most  input entries  as a
 ;;; namelists, except (~ ...) forms and lists of numbers.
 ;;;
@@ -316,7 +361,7 @@ Count namelists."
         (write-data x))
        (else
         (error "dont know such input object" x)))))
-  (let ((input (expand-special-forms input)))
+  (let ((input (do-what-i-mean input)))
     ;; (with-output-to-file "processed.scm"
     ;;   (lambda () (pretty-print input)))
     (fold-input (lambda (x acc) (write-obj x))

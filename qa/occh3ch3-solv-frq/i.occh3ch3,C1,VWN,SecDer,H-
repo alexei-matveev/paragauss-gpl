@@ -151,7 +151,7 @@
     NO_HYDROGEN_SPHERE  =    t
     FIX_NUMBER_ADD      =    f
  /SOLVATION
-	     
+
  &XC_CONTROL
     XALPHA         =  TRUE # (the default)
     VWN            =  TRUE # (the default)

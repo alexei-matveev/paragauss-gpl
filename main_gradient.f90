@@ -236,6 +236,10 @@ subroutine main_gradient(loop)
   use energy_calc_module, only: get_energy
   use efp_solv_grad_module, only: transform_X_solv_grad_to_cart, X_solv_grad_cart_write
 #endif
+  use energy_calc_module, only: set_energy
+#ifdef WITH_BGY3D
+  use bgy3d, only: rism_term
+#endif
   use solv_cavity_module
   use solv_electrostat_module
   use solv_2nd_deriv_module, only: nuc_solv_2nd_deriv,charge_solv_2nd_deriv,matrix_2nd_deriv !!!!!!!!!AS
@@ -811,11 +815,61 @@ subroutine main_gradient(loop)
        call efield_gradient(gradient_cartesian)
      endif
 
-     call say ("gradient_data_write_cartesians")
-     call gradient_data_write_cartesians(' Final Cartesian Gradients:', &
-                                            gradient_cartesian)
      !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      end if QM2
+  endif master4
+  ! ================ CONTEXT: ALL PROCESSORS ===============
+
+#ifdef WITH_BGY3D
+  !
+  ! Compute and add MM contribution  to the energy and forces --- here
+  ! due to the RISM solvent environment.  The MM term is essentially a
+  ! funciton  of  geometry only.   The  corresponding  energy term  is
+  ! computed here and added to the total energy before writing out the
+  ! gxfile.
+  !
+  ! FIXME: this  energy term does not  appear during SCF,  so that the
+  ! usual e_sum printed during the iterations is incomplete.
+  !
+  ! The RISM code is called  from the parallel context. By the current
+  ! convention the values (additions actually) of energy and gradients
+  ! are duplicated on all workers. As it happens, at this point in the
+  ! program only the  values on master matter for  the written gxfile.
+  ! The consistency is however verified in energy_calc_reduce() out of
+  ! paranoya and documentation purposes.
+  !
+  block
+     real (r8_kind) :: e_rism
+
+     if (rank == 0) then
+        DCALL print_cart_grads ("GRAD: before RISM")
+     endif
+     ! The next  call will increment  it, just like it  will increment
+     ! gradients.  Historically the  energy  contributions are  stored
+     ! separately in private variable os the energy_calc_module.
+     e_rism = 0.0
+
+     call rism_term (unique_atoms, e_rism, gradient_cartesian)
+
+     call set_energy (rism=e_rism)
+     if (rank == 0) then
+        DCALL print_cart_grads ("GRAD: after RISM")
+     endif
+   end block
+#else
+   ! To stay consistent also in this case:
+   call set_energy (rism=0.0)
+#endif
+
+  ! ================ CONTEXT: MASTER ONLY ==================
+  if (rank == 0) then
+     ! If  QM gradients  exist ...  This was  in the  QM2  block above
+     ! before a huge master-only block has been split:
+     if (operations_integral) then
+        call say ("gradient_data_write_cartesians")
+        call gradient_data_write_cartesians (' Final Cartesian Gradients:', &
+             gradient_cartesian)
+     endif
 
      if(moving_pc) then
         call say ("PC_grad_to_cart")
@@ -853,7 +907,7 @@ subroutine main_gradient(loop)
         call efp_grad_cart_write()
      end if
 #endif
-  endif master4
+  endif     ! master only
   ! ================ CONTEXT: ALL PROCESSORS ===============
 
      !

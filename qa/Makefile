@@ -29,3 +29,14 @@ summaries:
 	done; \
 		cd ..; \
 	done
+
+clean:
+	for dir in $(SUBDIRS); do \
+		echo === Descending into $$dir ===; \
+		cd $$dir; \
+		for entry in o.* s.*; do \
+			echo deleting $$entry; \
+			rm -rf $$entry; \
+		done; \
+		cd ..; \
+	done

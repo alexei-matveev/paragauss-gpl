@@ -80,11 +80,11 @@
 
  # << Basis Sets >>
 
- ~/home/kremleva/ParaGauss/bases/C_9.5.1_4.3.1
- ~/home/kremleva/ParaGauss/bases/O_9.5.1_5.4.1
- ~/home/kremleva/ParaGauss/bases/H_6.1_4.1
- ~/home/kremleva/ParaGauss/bases/H_6.1_4.1
- ~/home/kremleva/ParaGauss/bases/H_6.1_4.1
+ ~C_9.5.1_4.3.1
+ ~O_9.5.1_5.4.1
+ ~H_6.1_4.1
+ ~H_6.1_4.1
+ ~H_6.1_4.1
 
  # << SCF Parameters >>
 

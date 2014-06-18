@@ -1,11 +1,12 @@
 
 ifndef versions
-versions = V3.1pre6-32 V3.1cvs20060905-32 V3.1am12-32
+date = $(shell date +%Y%m%d)
+versions = V3.0.40b13-32 V3.1cvs$(date)-32
 endif
 
-
-SUBDIRS = 	$(shell cat manifest)
-#SUBDIRS = 	pd-ae-pp-sr h2o-sol-pdc ch4-geo-frq
+ifndef SUBDIRS
+SUBDIRS = $(shell cat manifest)
+endif
 
 all:
 	export versions="$(versions)"; \

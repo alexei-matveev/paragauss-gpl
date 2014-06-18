@@ -79,6 +79,8 @@ Currently, inputs are available in the following subdirectories:
  qa/pd-ae-pp-sr
  qa/ch4-geo-frq
  qa/nico-dftplus-u
+ qa/h2o2-various-options
+ qa/h2o2-functionals
 
 Please populate the testsuite with more inputs to cover all corners
 of the ParaGauss functionality.

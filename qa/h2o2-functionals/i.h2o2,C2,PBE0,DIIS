@@ -1,0 +1,163 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# define calculation #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+  &tasks
+    task = "gradients"
+  /tasks
+
+  &main_options
+    integrals_on_file = False
+    relativistic = "false"
+    spin_restricted = True 
+    perturbation_theory = False
+  /main_options
+
+  &recover_options
+    read_scfstate = f
+    save_scfstate = f
+  /recover_options
+
+  &mixing
+    spmix = 1.0
+    xcmix = 1.0
+    chmix = 1.0
+    start_after_cycle = 1000000
+  /mixing
+
+  &diis
+    diis_on = True
+    mmax = 4
+    cfix = 0.70000000000000002
+    threshold = 0.14999999999999999
+    loop_start = 5
+  /diis
+
+  &convergence_list
+    energy_dev_checked = 3
+    density_criterion = 9.9999999999999995e-07
+    max_iteration = 50
+    energy_criterion = 1e-08
+  /convergence_list
+
+  &FERMI
+     FERMI_COMMON_EF       =     FALSE
+  /FERMI
+
+  &xc_control
+    xc = "PBE0"
+  /xc_control
+
+  &eri4c
+    j_exact = True
+  /eri4c
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# define system #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C2"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    2
+ /UNIQUE_ATOM_NUMBER
+
+ # << Geometry >>
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = "O           "
+    Z             =         8.000
+    N_equal_atoms =             2
+ /UNIQUE_ATOM
+  1.31445461     0.11549500    -0.05511335
+
+ &UNIQUE_ATOM # unique atom   3
+    NAME          = "H           "
+    Z             =         1.000
+    N_equal_atoms =             2
+ /UNIQUE_ATOM
+  1.82086422    -1.32320765     0.87468878
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~# define grid and basis #~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+ &GRID
+    SYM_REDUCE       =     true
+    WEIGHT_GRADS     =     TRUE
+ /GRID
+
+ &GRIDATOM # unique atom   1
+    NRAD    =        50
+    NANG    =        191
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =        50
+    NANG    =        191
+ /GRIDATOM
+
+ # << Basis Sets >>
+
+ ~O_6-31Gss
+ ~H_6-31Gss
+
+ ############################################
+ #
+ # EXPECTED RESULTS:
+ #
+ # * TOTAL ENERGY
+ #
+ # -151.379620004951
+ #
+ # * SPECTRUM
+ #
+ #   38    19   B     2    0.0000         96.006121
+ #   37    19   A     1    0.0000         94.274743
+ #   36    18   A     1    0.0000         80.541607
+ #   35    18   B     2    0.0000         79.617677
+ #   34    17   B     2    0.0000         75.645460
+ #   33    16   B     2    0.0000         74.048830
+ #   32    17   A     1    0.0000         72.125148
+ #   31    16   A     1    0.0000         66.555747
+ #   30    15   B     2    0.0000         65.625990
+ #   29    14   B     2    0.0000         60.939812
+ #   28    15   A     1    0.0000         57.405807
+ #   27    14   A     1    0.0000         56.507186
+ #   26    13   B     2    0.0000         45.243558
+ #   25    13   A     1    0.0000         43.262374
+ #   24    12   B     2    0.0000         40.806489
+ #   23    12   A     1    0.0000         39.372677
+ #   22    11   B     2    0.0000         37.769455
+ #   21    11   A     1    0.0000         35.813767
+ #   20    10   A     1    0.0000         28.503896
+ #   19    10   B     2    0.0000         28.400487
+ #   18     9   B     2    0.0000         26.738124
+ #   17     9   A     1    0.0000         25.528476
+ #   16     8   A     1    0.0000         24.140130
+ #   15     8   B     2    0.0000         23.461594
+ #   14     7   B     2    0.0000         21.478874
+ #   13     7   A     1    0.0000         21.462773
+ #   12     6   B     2    0.0000          4.249449
+ #   11     6   A     1    0.0000          2.699344
+ #   10     5   B     2    0.0000          1.997992
+ #    9     4   B     2    2.0000         -7.518794
+ #    8     5   A     1    2.0000         -8.744228
+ #    7     4   A     1    2.0000        -11.807585
+ #    6     3   B     2    2.0000        -13.785269
+ #    5     3   A     1    2.0000        -15.206502
+ #    4     2   B     2    2.0000        -24.947593
+ #    3     2   A     1    2.0000        -31.755253
+ #    2     1   B     2    2.0000       -524.263142
+ #    1     1   A     1    2.0000       -524.264450
+ #
+ # * ITERATIONS TO CONVERGENCE
+ #
+ # 12
+ #
+ # * GRADIENTS
+ #
+ # Unique Center:           1
+ #       Equal Center:     -0.016076642734     -0.022040685336      0.012167663029
+ #       Equal Center:      0.016076642734      0.022040685336      0.012167663029
+ # Unique Center:           2
+ #       Equal Center:     -0.004412529124      0.018057080657     -0.012167663029
+ #       Equal Center:      0.004412529124     -0.018057080657     -0.012167663029
+ #
+

@@ -117,7 +117,6 @@
  &OUTPUT_IOUNITADMIN
     IOUNITADMIN_USE_STDOUT =  TRUE # (the default)
     IOUNITADMIN_USE_DEBUG  = FALSE # (the default)
-    IOUNITADMIN_USE_BUGGY  = FALSE # (the default)
  /OUTPUT_IOUNITADMIN (namelist may be dropped)
 
  &POPULATION

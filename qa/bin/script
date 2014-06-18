@@ -138,10 +138,16 @@ if [ -d $out ]; then
 else
 	echo -n " ..."
 	run_test $name $inp $out $vers
-	echo -n " done."
+	test -d $out && echo -n " done."
 fi
 
+if [ -d $out ]; then
 	make_summary $out > $smr
+else
+	if [ -f $smr ]; then
+		echo -n "(summary)."
+	fi
+fi
 
 if [ "$vers" != "$vers_cmp" ]; then
 	total_num=$(($total_num + 1))

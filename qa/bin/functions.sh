@@ -23,7 +23,7 @@ if test -t 1 -a "$TERM" != "raw" -a "$TERM" != "dumb" && stty size > /dev/null 2
 else
 	rc_tab="\t"
 	rc_ok="ok"
-	rc_ok="NO"
+	rc_no="NO"
 	rc_failed="FAILED"
 fi
 

@@ -1,0 +1,165 @@
+#<pgpp.pl># Running pgpp.pl on i.pd2,ae,sr:
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+ # Pd19       D4  sym                 #
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+ # << Main Operation Parameters >>
+ &OPERATIONS
+    OPERATIONS_SYMM              =  TRUE # (the default)
+    OPERATIONS_SCF               =  true
+    OPERATIONS_INTEGRAL          =  true
+    OPERATIONS_WRITE_INPUT       =  TRUE # (the default)
+    OPERATIONS_WRITE_FULL_INPUT  = FALSE # (the default)
+    OPERATIONS_WRITE_SHORT_INPUT = FALSE # (the default)
+    OPERATIONS_WRITE_INPUT_SLAVE = FALSE # (the default)
+    OPERATIONS_POST_HOC          =  true
+    OPERATIONS_GRADIENTS         =  true
+    OPERATIONS_GEO_OPT           =  f
+    OPERATIONS_MAKE_GX           =  f
+    OPERATIONS_READ_GX           = FALSE # (the default)
+    OPERATIONS_DIPOLE            = f
+    OPERATIONS_OLD_INPUT         = FALSE # (the default)
+    OPERATIONS_GX_HIGHPREC       =  true
+    OPERATIONS_GX_TEST           = FALSE # (the default)
+    OPERATIONS_PROPERTIES        = FALSE # (the default)
+    OPERATIONS_RESPONSE          = FALSE # (the default)
+    OPERATIONS_CORE_DENSITY      = FALSE # (the default)
+    OPERATIONS_FITBASIS_OPT      = FALSE # (the default)
+ /OPERATIONS
+
+# &TASKS
+#    TASK             = "SinglePoint" # "GXTest"     "GeoOpt"    "MakeGX"  
+#    ECHO_INPUT_LEVEL = "default"
+#    GX_HIGHPREC      = t     # use highprecision for gxfile
+# /TASKS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =  TRUE # RKS
+    RELATIVISTIC        =  true
+    SPIN_ORBIT          =  f # (the default)
+    INTEGRALS_ON_FILE   =  true   
+    orbitals_in_memory  = true
+    INTEGRAL_EXPMAX     = 5.000E+30
+  /MAIN_OPTIONS
+
+ &SPIN_ORBIT
+    LEVEL="none"
+   #LEVEL="none,NoPVxP"
+ /SPIN_ORBIT
+
+ &PVMOPTIONS
+    N_PROCS  =  8        
+ /PVMOPTIONS
+
+ &RECOVER_OPTIONS
+    SAVE_SCFSTATE  =     T
+    READ_SCFSTATE  =     f
+ /RECOVER_OPTIONS
+
+ &OUTPUT
+    OUTPUT_LEVEL =  1           # normal amount of output
+ /OUTPUT
+
+ &OUTPUT_TIMING
+    OUTPUT_TIMING_SUMMARY           =  TRUE # (the default)
+    OUTPUT_TIMING_DETAILEDSUMMARY   =  true
+    OUTPUT_TIMING_INTEGRALS         =  TRUE # (the default)
+    OUTPUT_TIMING_DETAILEDINTEGRALS = FALSE # (the default)
+    OUTPUT_TIMING_SCFLOOPS          = FALSE # (the default)
+    OUTPUT_TIMING_SCF               =  TRUE # (the default)
+    OUTPUT_TIMING_DETAILEDSCF       = FALSE # (the default)
+    OUTPUT_TIMING_POSTHOC           =  TRUE # (the default)
+    OUTPUT_TIMING_DETAILEDPOSTHOC   = FALSE # (the default)
+    OUTPUT_TIMING_SLAVES            = FALSE # (the default)
+    OUTPUT_TIMING_INTERRUPTS        = FALSE # (the default)
+ /OUTPUT_TIMING (namelist may be dropped)
+
+ &OUTPUT_INTEGRAL
+    OUTPUT_INT_FITCONTRACT      = FALSE # (the default)
+    OUTPUT_INT_2C_FIT           = FALSE # (the default)
+    OUTPUT_INT_SOLHRULES        = FALSE # (the default)
+    OUTPUT_INT_PARAMETERS       =  TRUE # (the default)
+    OUTPUT_INT_PROGRESS         = FALSE # (the default)
+    OUTPUT_INT_DETAILEDPROGRESS = FALSE # (the default)
+    OUTPUT_INT_TASKDISTRIBUTION = FALSE # (the default)
+    OUTPUT_INT_QUADRUPELSTORE   = FALSE # (the default)
+    OUTPUT_INT_LOOPS            = f
+    OUTPUT_INT_DEEPLOOPS        = FALSE # (the default)
+    OUTPUT_INT_DATA             = FALSE # (the default)
+ /OUTPUT_INTEGRAL (namelist may be dropped)
+
+ # << Geometry >>
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "D4H"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =   1
+ /UNIQUE_ATOM_NUMBER
+
+ &UNIQUE_ATOM NAME = " Pd", Z = 46.0, N_equal_atoms =  2, nuclear_radius = 1.07734915E-04 /
+     0.00000000000000E+00    0.000000000000000E+00  2.500000000000000E+00
+
+ # << Basis Sets >>
+
+~Pd_18s13p9d_7s6p4d_rel
+
+ # << Electron State >>
+ &OCCUPATION
+  CHARGE =0
+  FIXED = f
+#  FIXED_SPIN_DIFF = F
+   MAGN_MOMENT        = 0.000
+# N_NONEMPTY_IRREPS = 3
+ /OCCUPATION
+
+ # << SCF Parameters >>
+
+ &MIXING
+    CHMIX             = 0.5000
+    SPMIX             = 0.5000
+    XCMIX             = 0.3000
+      # start mixing coefficients for charge fit function coefficients
+    START_AFTER_CYCLE =      5
+      # start dynamic mixing after second SCF cycle
+ /MIXING
+
+ &FERMI
+    FERMI_GAUSS           =     True  # (the default)
+    FERMI_FERMI           =     FALSE # (the default)
+    FERMI_SINUS           =     FALSE # (the default)
+    FERMI_ENERGY_RANGE    =   0.00000 # (the default)
+    FERMI_SIGMA           =   0.10000
+    FERMI_CUTOFF          =   5.00000 # (the default)
+    FERMI_FIX_UP_AND_DOWN =     FALSE # (the default)
+    FERMI_COMMON_EF       =     FALSE
+    FERMI_UNPAIRED        =         0 # (the default)
+    FERMI_NEWTON_MAX      =       100 # (the default)
+    FERMI_ACCURACY        = 1.000E-10 # (the default)
+ /FERMI
+ # use somewhat tighter convergence criteria
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =      50  # maximal number of SCF cycles allowed
+    STOP_IF_NOT_CONVERGED =   f
+    ENERGY_CRITERION      = 1.0E-08  # maximal difference in total energy
+    COEFF_CRITERION       = 1.0E-07  # maximal difference in charge fit coefficients
+    DENSITY_CRITERION     = 1.0E-07  # maximal difference in density matrix
+    MAX_GEO_ITERATION     = 1       # maximum number of geometry steps
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XC = "vwn"
+ /XC_CONTROL
+
+ &GRID
+    SYM_REDUCE = TRUE                # exploit local atom symmetry
+    WEIGHT_GRADS = T
+ /GRID
+ &GRIDATOM NRAD = 30, NANG = 171 /
+
+ &GRID_PH
+    SYM_REDUCE = TRUE                # exploit local atom symmetry
+    WEIGHT_GRADS = TRUE
+ /GRID_PH
+

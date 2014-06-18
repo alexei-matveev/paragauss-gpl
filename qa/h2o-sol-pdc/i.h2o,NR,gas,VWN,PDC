@@ -78,8 +78,8 @@
 
  # << Basis Sets >>
 
-~/home/ray/bases/OXYGEN/O_9.5.1_5.4.1           
-~/home/ray/bases/hydrogen/H_6.1_4.1
+~O_9.5.1_5.4.1           
+~H_6.1_4.1
 
 
  # << SCF Parameters >>

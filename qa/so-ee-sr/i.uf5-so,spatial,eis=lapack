@@ -1,0 +1,353 @@
+#<pgpp.pl># Running pgpp.pl on i.uf5-sr:
+
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+ # UF5                                                              #
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+ # << Main Operation Parameters >>
+ 
+ &OPERATIONS
+    OPERATIONS_SYMM              =  TRUE
+    OPERATIONS_SCF               =  true
+    OPERATIONS_INTEGRAL          =  true
+    OPERATIONS_WRITE_INPUT       =  true
+    OPERATIONS_POST_HOC          =  true
+    OPERATIONS_GRADIENTS         =  f
+    OPERATIONS_GEO_OPT           =  f
+    OPERATIONS_MAKE_GX           =  f
+    OPERATIONS_READ_GX           = FALSE
+    OPERATIONS_DIPOLE            = FALSE
+    OPERATIONS_GX_HIGHPREC       = true
+    OPERATIONS_PROPERTIES        = FALSE
+ /OPERATIONS
+
+ &RECOVER_OPTIONS
+          SAVE_SCFSTATE = f
+          READ_SCFSTATE = f
+ /RECOVER_OPTIONS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =  true
+    RELATIVISTIC        =  true 
+    SPIN_ORBIT		=  true
+ /MAIN_OPTIONS
+
+ &SPIN_ORBIT
+    LEVEL = "SpinOrbit,EIS=LAPACK"
+ /SPIN_ORBIT
+
+ &PVMOPTIONS
+    N_PROCS  =  2 # number of processors
+ /PVMOPTIONS
+
+ &OUTPUT
+    OUTPUT_LEVEL =  1  # normal amount of output
+ /OUTPUT
+
+ &OUTPUT_TIMING
+    OUTPUT_TIMING_SUMMARY           =  TRUE
+    OUTPUT_TIMING_DETAILEDSUMMARY   =  true
+    OUTPUT_TIMING_INTEGRALS         =  TRUE
+    OUTPUT_TIMING_DETAILEDINTEGRALS = FALSE
+    OUTPUT_TIMING_SCFLOOPS          = FALSE
+    OUTPUT_TIMING_SCF               =  TRUE
+    OUTPUT_TIMING_DETAILEDSCF       = FALSE
+    OUTPUT_TIMING_POSTHOC           =  TRUE
+    OUTPUT_TIMING_DETAILEDPOSTHOC   = FALSE
+    OUTPUT_TIMING_SLAVES            = FALSE
+    OUTPUT_TIMING_INTERRUPTS        = FALSE
+ /OUTPUT_TIMING (namelist may be dropped)
+
+ # << Geometry >>
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C4V"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =   3 
+ /UNIQUE_ATOM_NUMBER
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = " U"
+    Z             = 92.0
+    N_equal_atoms =   1
+ /UNIQUE_ATOM
+    0.000 0.000 0.000
+
+ &UNIQUE_ATOM # unique atom  2 
+    NAME          = " F"
+    Z             = 9.0
+    N_equal_atoms =  1 
+ /UNIQUE_ATOM
+    0.000 0.000 3.786 # coord(1): 0 0 Z1
+
+ &UNIQUE_ATOM # unique atom  3 
+    NAME          = " F"
+    Z             = 9.0
+    N_equal_atoms =  4 
+ /UNIQUE_ATOM
+    3.785 0.000 -0.281 # coord(2): X2 0 Z2
+
+ # << Basis Sets >>
+
+#~/home/lauter/PARAGAUSS/bases/U_24.19.16.11
+#~/home/lauter/PARAGAUSS/bases/F_9.5.1
+#<pgpp.pl># Running pgpp.pl on U_24.19.16.11:
+# unique atom U: U_24.19.16.11
+&UNIQUE_ATOM_BASISSET LMAX_OB =  3, LMAX_CH =  3, LMAX_XC =  1, N_GLOB_CONS_CH =0, N_GLOB_CONS_XC = 0/
+
+# unique atom U      orbital basis, l = 0
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 24, N_UNCONTRACTED_FCTS = 24, N_CONTRACTED_FCTS = 0/
+48171220.0     12113820.0    3147013.0 %
+912190.1       285123.9      95179.62 %
+33651.45       12511.46      4869.811 %
+1981.838       849.5540      370.1375 %
+172.9851       69.22380      37.71001 %
+15.37485       8.819909      3.336037 %
+1.857722       0.6523634     0.3124319 %
+0.08254175     0.04313320    0.02058815
+# unique atom U      orbital basis, l = 1
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 19, N_UNCONTRACTED_FCTS = 19, N_CONTRACTED_FCTS = 0/ 
+30062560.0     5589055.0     948314.4 %
+200185.0       50135.61      14437.84 %
+4676.745       1673.810      649.7508 %
+270.7284       113.7117       52.73747 %
+22.85757       11.13758       4.649110 %
+2.291376       0.9059122    0.4089979 %
+0.1579066
+# unique atom U      orbital basis, l = 2 
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 16, N_UNCONTRACTED_FCTS = 16, N_CONTRACTED_FCTS = 0/ 
+16079.47       3707.242      1215.799 %
+474.0402       205.1856      94.63173 %
+45.78370       22.23856      10.89752 %
+5.229659       2.556736      1.205077 %
+0.5121164      0.2154203     0.08774074 %
+0.03447413
+# unique atom U      orbital basis, l = 3 
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 11, N_UNCONTRACTED_FCTS = 11, N_CONTRACTED_FCTS = 0/
+703.2615       219.0811      86.84438 %
+38.22365       17.51736      8.173417 %
+3.752665       1.692354      0.7374815 %
+0.3025422      0.1103255
+
+# unique atom U      charge basis, r**2
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS = 9, N_CONTRACTED_FCTS =  0/
+0.8179958     4.582752       22.27516 %
+105.47494     541.4568       3347.62 %
+28875.68      400370.0       11178110.0
+# unique atom U      charge basis, l = 0 
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 24, N_UNCONTRACTED_FCTS = 24, N_CONTRACTED_FCTS =  0/    
+96342440.0    24227640.0     6294026.0 %
+1824380.2     570247.8       190359.24 %
+67302.90      25022.92       9739.622 %
+3763.676      1699.1080      740.2750 %
+345.9702      138.44760      75.42002 %
+30.74870      17.639818      6.672074 %
+3.715444      1.3047268      0.6248638 %
+0.16508350    0.08626640     0.04117630
+# unique atom U      charge basis, l = 1
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS =  0/
+     0.100000000000E+000      0.250000000000E+000      0.625000000000E+000  %
+      0.156250000000E+001      0.390625000000E+001
+# unique atom U  charge basis,  l = 2
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS = 0/
+      0.200000000000E+000      0.500000000000E+000      0.125000000000E+001  %
+      0.312500000000E+001      0.781250000000E+001
+# unique atom U  charge basis,  l = 3
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS = 0/
+      0.300000000              0.75000000000             1.87500000000 %
+      4.687500000             11.71875000000
+ 
+# unique atom U  exchange basis,  r**2
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 1, N_UNCONTRACTED_FCTS = 1, N_CONTRACTED_FCTS = 0/
+      0.666666666667E+000
+# unique atom U  exchange basis,  l = 0
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 6, N_UNCONTRACTED_FCTS = 6, N_CONTRACTED_FCTS = 0/
+      0.599273333333E-001      0.172035333333E+000      0.531780000000E+000  %
+      0.188256933333E+001      0.827303866667E+001      0.550909160000E+002
+# unique atom U  exchange basis,  l = 1
+&UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS = 0/
+      0.100000000000E+000      0.250000000000E+000      0.625000000000E+000  %
+      0.156250000000E+001      0.390625000000E+001
+#<pgpp.pl># Running pgpp.pl on F_9.5.1:
+#
+# AM, Mon Aug 27 12:04:19 MDT 2001
+# basis taken from /home/lauter/PARAGAUSS-1-Christa/bases/F_9.5.1.gz
+# directory of Christa Lauterbach
+#
+ # unique atom  F (Physical science data 24, Handbook of gaussian basis set, S. 313, Table 9.63.1)        
+ &UNIQUE_ATOM_BASISSET LMAX_OB =  2, LMAX_CH =  2, LMAX_XC =  2, N_GLOB_CONS_CH =0, N_GLOB_CONS_XC = 0/
+    
+ # unique atom  F         orbital basis, l =  0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS = 9, N_CONTRACTED_FCTS =  0/
+      0.388869000000E+000      0.130721500000E+001      0.603223200000E+001  %
+      1.557144000000E+001      4.297453100000E+001      1.313736600000E+002  %
+      4.623739200000E+002      2.028691600000E+003      1.352152300000E+004  
+ # unique atom  F         orbital basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS =  0/
+      2.664000000000E-001      9.185970000000E-001      2.953246000000E+000  %
+      9.993426000000E+000      4.414730300000E+001  
+ # unique atom  F         orbital basis, l =  2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 1, N_UNCONTRACTED_FCTS =  1, N_CONTRACTED_FCTS =  0/
+      0.149600000000E+001
+    
+ # unique atom  F         charge basis, r**2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS =  5, N_CONTRACTED_FCTS =  0/
+      5.328000000000E-001      18.37194000000E-001      5.906492000000E+000  %
+      19.98685200000E+000      8.829460600000E+001   
+# unique atom  F         charge basis, l = 0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS = 9, N_CONTRACTED_FCTS =  0/
+      0.777738000000E+000      0.261443000000E+001      1.206446400000E+001  %
+      3.114288000000E+001      8.594906200000E+001      2.627473200000E+002  %
+      9.247478400000E+002      4.057383200000E+003      2.704304600000E+004 
+ # charge basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS 
+= 0/
+      0.100000000000E+000      0.250000000000E+000      0.625000000000E+000  %
+      0.156250000000E+001      0.390625000000E+001
+ # charge basis, l =  2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS 
+= 0/
+      0.200000000000E+000      0.500000000000E+000      0.125000000000E+001  %
+      0.312500000000E+001      0.781250000000E+001
+
+
+ # unique atom  F         exchange basis, r**2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS =  9, N_CONTRACTED_FCTS =  0/
+      0.448000000000E-001      0.126600000000E+000      0.357720000000E+000  %
+      0.101110000000E+001      0.271902000000E+001      0.720043000000E+001  %
+      0.200366000000E+002      0.641468000000E+002      0.273042000000E+003
+ # unique atom  F         exchange basis, l = 0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS =15, N_UNCONTRACTED_FCTS = 15, N_CONTRACTED_FCTS =  0/
+      0.719200000000E-001      0.186160000000E+000      0.481720000000E+000  %
+      0.124658000000E+001      0.313632000000E+001      0.783880000000E+001  %
+      0.170654800000E+002      0.378858000000E+002      0.892894000000E+002  %
+      0.226884000000E+003      0.628070000000E+003      0.193419000000E+004  %
+      0.688308000000E+004      0.305620000000E+005      0.206218000000E+006
+ # charge basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS 
+= 0/
+      0.100000000000E+000      0.250000000000E+000      0.625000000000E+000  %
+      0.156250000000E+001      0.390625000000E+001
+ # charge basis, l =  2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS 
+= 0/
+      0.200000000000E+000      0.500000000000E+000      0.125000000000E+001  %
+      0.312500000000E+001      0.781250000000E+001
+
+#<pgpp.pl># Running pgpp.pl on F_9.5.1:
+#
+# AM, Mon Aug 27 12:04:19 MDT 2001
+# basis taken from /home/lauter/PARAGAUSS-1-Christa/bases/F_9.5.1.gz
+# directory of Christa Lauterbach
+#
+ # unique atom  F (Physical science data 24, Handbook of gaussian basis set, S. 313, Table 9.63.1)        
+ &UNIQUE_ATOM_BASISSET LMAX_OB =  2, LMAX_CH =  2, LMAX_XC =  2, N_GLOB_CONS_CH =0, N_GLOB_CONS_XC = 0/
+    
+ # unique atom  F         orbital basis, l =  0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS = 9, N_CONTRACTED_FCTS =  0/
+      0.388869000000E+000      0.130721500000E+001      0.603223200000E+001  %
+      1.557144000000E+001      4.297453100000E+001      1.313736600000E+002  %
+      4.623739200000E+002      2.028691600000E+003      1.352152300000E+004  
+ # unique atom  F         orbital basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS =  0/
+      2.664000000000E-001      9.185970000000E-001      2.953246000000E+000  %
+      9.993426000000E+000      4.414730300000E+001  
+ # unique atom  F         orbital basis, l =  2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 1, N_UNCONTRACTED_FCTS =  1, N_CONTRACTED_FCTS =  0/
+      0.149600000000E+001
+    
+ # unique atom  F         charge basis, r**2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS =  5, N_CONTRACTED_FCTS =  0/
+      5.328000000000E-001      18.37194000000E-001      5.906492000000E+000  %
+      19.98685200000E+000      8.829460600000E+001   
+# unique atom  F         charge basis, l = 0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS = 9, N_CONTRACTED_FCTS =  0/
+      0.777738000000E+000      0.261443000000E+001      1.206446400000E+001  %
+      3.114288000000E+001      8.594906200000E+001      2.627473200000E+002  %
+      9.247478400000E+002      4.057383200000E+003      2.704304600000E+004 
+ # charge basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS 
+= 0/
+      0.100000000000E+000      0.250000000000E+000      0.625000000000E+000  %
+      0.156250000000E+001      0.390625000000E+001
+ # charge basis, l =  2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS 
+= 0/
+      0.200000000000E+000      0.500000000000E+000      0.125000000000E+001  %
+      0.312500000000E+001      0.781250000000E+001
+
+
+ # unique atom  F         exchange basis, r**2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS =  9, N_CONTRACTED_FCTS =  0/
+      0.448000000000E-001      0.126600000000E+000      0.357720000000E+000  %
+      0.101110000000E+001      0.271902000000E+001      0.720043000000E+001  %
+      0.200366000000E+002      0.641468000000E+002      0.273042000000E+003
+ # unique atom  F         exchange basis, l = 0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS =15, N_UNCONTRACTED_FCTS = 15, N_CONTRACTED_FCTS =  0/
+      0.719200000000E-001      0.186160000000E+000      0.481720000000E+000  %
+      0.124658000000E+001      0.313632000000E+001      0.783880000000E+001  %
+      0.170654800000E+002      0.378858000000E+002      0.892894000000E+002  %
+      0.226884000000E+003      0.628070000000E+003      0.193419000000E+004  %
+      0.688308000000E+004      0.305620000000E+005      0.206218000000E+006
+ # charge basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS 
+= 0/
+      0.100000000000E+000      0.250000000000E+000      0.625000000000E+000  %
+      0.156250000000E+001      0.390625000000E+001
+ # charge basis, l =  2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS 
+= 0/
+      0.200000000000E+000      0.500000000000E+000      0.125000000000E+001  %
+      0.312500000000E+001      0.781250000000E+001
+
+
+ # << SCF Parameters >>
+
+ &MIXING
+    CHMIX             = 0.5
+    START_AFTER_CYCLE = 5    
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =     150  # maximal number of SCF cycles allowed
+    ENERGY_CRITERION      = 1.0E-08  # maximal difference in total energy
+    COEFF_CRITERION       = 5.0E-05
+    DENSITY_CRITERION     = 1.0E-08  # maximal difference in density matrix
+    MAX_GEO_ITERATION     = 1
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XC = "vwn,spatial"
+ /XC_CONTROL
+
+ &PHXC_CONTROL
+    XC = "vwn,gga:all"
+ /PHXC_CONTROL
+
+ &GRID
+    SYM_REDUCE   = TRUE
+    WEIGHT_GRADS = true
+ /GRID
+
+ &GRIDATOM  # define grid for unique atom 1
+     NRAD =  70       # number of shells of the integration grid
+     NANG = 191       # number of grid points per shell
+ /GRIDATOM  
+
+ &GRIDATOM  # define grid for unique atom 2 
+     NRAD =  70       # number of shells of the integration grid
+     NANG = 191       # number of grid points per shell
+ /GRIDATOM                                   
+
+ &GRIDATOM  # define grid for unique atom 2 
+     NRAD =  70       # number of shells of the integration grid
+     NANG = 191       # number of grid points per shell
+ /GRIDATOM                                   
+
+ &GRID_PH
+    SYM_REDUCE   = TRUE
+    WEIGHT_GRADS = true
+ /GRID_PH
+

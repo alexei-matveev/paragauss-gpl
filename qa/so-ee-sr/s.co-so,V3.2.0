@@ -1,0 +1,49 @@
+GEOMETRY:
+ -- Geometry in au -----------------------------------------------------
+au           6.0     C     0.000000          0.000000          0.000000
+au           8.0     O     0.000000          0.000000          2.150000
+  
+ -- Geometry in Angstroms ----------------------------------------------
+angstrom     6.0     C     0.000000          0.000000          0.000000
+angstrom     8.0     O     0.000000          0.000000          1.137731
+  
+ -----------------------------------------------------------------------
+ENERGY:
+  e_sum  =          -112.518738563673  [      0.000000000000]
+  e_sum  =          -111.569712343040  (XALPHA)
+  e_sum  =          -111.541786169612  (RXALPHA)
+  e_sum  =          -112.518738563673  (VWN)
+  e_sum  =          -112.514607020841  (PWLDA)
+  e_sum  =          -112.490853162319  (RVWN)
+  e_sum  =          -113.411280873423  (VWN+BP)
+  e_sum  =          -113.399326321041  (VWN+BPW91/VWN)
+  e_sum  =          -113.395194778209  (PWLDA+BPW91/VWN)
+  e_sum  =          -113.366672337527  (PWLDA+PW91/VWN)
+  e_sum  =          -113.366672337527  (PWLDA+PW91IIA/VWN)
+  e_sum  =          -113.370803880359  (VWN+PW91/VWN)
+  e_sum  =          -113.280199556754  (PWLDA+PBE/VWN)
+  e_sum  =          -113.374591896227  (PWLDA+revPBE/VWN)
+  e_sum  =          -113.406174669197  (PWLDA+PBEN/VWN)
+  e_sum  =          -112.872001697807  (PWLDA+PBEsol/VWN)
+  e_sum  =          -113.284331099587  (VWN+PBE/VWN)
+  e_sum  =          -113.378723439059  (VWN+revPBE/VWN)
+  e_sum  =          -113.410306212029  (VWN+PBEN/VWN)
+  e_sum  =          -112.876133240639  (VWN+PBEsol/VWN)
+  e_sum  =          -113.368478812359  (HCTH)
+  e_sum  =          -112.921869463226  (ECMV92)
+  e_sum  =          -112.933535606887  (nrECMV92)
+  e_sum  =          -113.371440919686  (RVWN+BPW91/VWN)
+  e_sum  =          -113.387552851643  (VWN+BPW91[rx,c]/VWN)
+  e_sum  =          -113.385962221319  (VWN+BPW91[rx,rc]/VWN)
+  e_sum  =          -113.358877096762  (VWN+PW91[rx,c]/VWN)
+  e_sum  =          -113.358917868836  (RVWN+PW91[rx,c]/VWN)
+  e_sum  =          -100.378133815553  (VMT)
+  e_sum  =          -100.381417525210  (VT84)
+  e_sum  =          -100.455055491274  (VMTsol)
+  e_sum  =          -100.458339200930  (VT84sol)
+  e_sum  =          -101.392328766120  (BLYP)
+  e_sum  =          -112.518738563673  (scf)
+GRADIENTS:
+FREQUENCIES:
+POTENTIAL-DERIVED CHARGES:
+TDDFT EXCITATION ENERGIES AND OSCILLATOR STRENGTHS:

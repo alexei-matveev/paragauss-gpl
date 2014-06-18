@@ -26,3 +26,4 @@ i.h2o2,C2,VMTsol,ints_in_mem,etot_mode
 i.h2o2,C2,VT84sol,ints_in_mem,etot_mode  
 i.h2o2,C2,M06L,ints_in_mem,etot_mode     
 i.h2o2,C2,VSXC,ints_in_mem,etot_mode     
+i.h2o2,C2,DEFAULT,ints_in_mem                

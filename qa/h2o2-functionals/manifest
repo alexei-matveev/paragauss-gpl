@@ -9,7 +9,7 @@ i.h2o2,C2,B88,ints_in_mem,etot_mode
 i.h2o2,C2,PW91,ints_in_mem,etot_mode     
 i.h2o2,C2,BPW91,ints_in_mem,etot_mode    
 i.h2o2,C2,ECMV92,ints_in_mem,etot_mode   
-i.h2o2,C2,NRECMV92,ints_in_mem,etot_mode 
+i.h2o2,C2,NRECMV92,ints_in_mem           
 i.h2o2,C2,PBE,ints_in_mem,etot_mode      
 i.h2o2,C2,PBEN,ints_in_mem,etot_mode     
 i.h2o2,C2,revPBE,ints_in_mem,etot_mode   

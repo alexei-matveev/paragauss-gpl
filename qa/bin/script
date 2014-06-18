@@ -53,22 +53,10 @@ fi
 # for running a test remove (eventually) existing output directory:
 rm -rf o.$nam
 
-if [ -n "$ttfs" ]; then
-  cmd="
-  $ttfs $nam \
-   -newinput $inp \
-   -inputdir . -outputdir $out \
-   -vers $vers -mpi \
-   -verbose -restartable \
-   -keep_datadir"
-else
-  cmd="$runpg $exe $inp"
-fi
-
 if [ "$tty" = "tty" ]; then
-	$cmd | tee tty
+	runqm "$inp" | tee tty
 else
-	$cmd > tty
+	runqm "$inp" > tty
 fi
 
 if [ -d o.$nam ]; then
@@ -138,7 +126,8 @@ for name in $*; do
 	inp=i.$name
 	echo -n -e "Running $inp$rc_tab"
 for vers in $versions; do
-        exe=$exedir/mainscf_$vers
+        export TTFS_VERSION="$vers"
+        TTFS_EXECUTABLE=$exedir/mainscf_$vers
 	out=o.$name,$vers
 	smr=s.$name,$vers
 	smr_cmp=s.$name,$vers_cmp

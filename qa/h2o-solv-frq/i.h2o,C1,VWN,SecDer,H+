@@ -20,7 +20,6 @@
  &MAIN_OPTIONS
     NUMERIC_EXCH        =      TRUE # (the default)
     SPIN_RESTRICTED     =      TRUE # (the default)
-    INTEGRALS_ON_FILE   =      TRUE # (the default)
     UPDATE_HESSIAN_ITERATION  =         1
     PERTURBATION_THEORY =      TRUE # (the default)
  /MAIN_OPTIONS

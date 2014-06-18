@@ -23,7 +23,6 @@
                                 # separately without extra cost.
     RELATIVISTIC        =  "f"
     update_hessian_iteration = 1
-    integrals_on_file   =  true
  /MAIN_OPTIONS
 
  &OUTPUT

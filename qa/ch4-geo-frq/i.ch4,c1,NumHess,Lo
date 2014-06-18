@@ -131,7 +131,6 @@
     ENERGIES_ALWAYS     =     FALSE # (the default)
     RELATIVISTIC        =     "f"
     SPIN_ORBIT          =     f
-    INTEGRALS_ON_FILE   =     true
     USE_MODEL_DENSITY   =     FALSE # (the default)
     USE_EXTENDED_MDA    =     FALSE # (the default)
     DIRECT_ENERGY_CALC  =     FALSE # (the default)

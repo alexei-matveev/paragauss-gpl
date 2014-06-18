@@ -13,6 +13,24 @@ all:
 	for dir in $(SUBDIRS); do \
 		echo === Descending into $$dir ===; \
 		cd $$dir; \
-		../bin/script `cat manifest`; \
+		../bin/script $(runopts) `cat manifest`; \
+		cd ..; \
+	done
+
+summaries:
+	for dir in $(SUBDIRS); do \
+		echo === Descending into $$dir ===; \
+		cd $$dir; \
+	for ver in  $(versions); do \
+		for inp in `cat manifest`; do \
+			echo Summary of $$inp with $$ver ...; \
+			nam=`echo $$inp | sed s/^i.//`; \
+			out=o.$$nam,$$ver; \
+			smr=s.$$nam,$$ver; \
+			if [ -d $$out ]; then \
+			../bin/mk_summary $$out > $$smr; \
+			fi; \
+		done; \
+	done; \
 		cd ..; \
 	done

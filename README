@@ -9,7 +9,7 @@ derived  from  ./guile/runqm.scm  by  inserting specific  search  path
 during  build  process. This  script  does  its  best to  emulate  the
 behaviour of the traditional "runpg" bash script. Use it as in
 
-    mpirun -np 8 $(PWD)/runqm [INPUTS...]
+    mpirun -np 8 $PWD/runqm [INPUTS...]
 
 Note that if neither "runqm"  script nor "guile-qm" interpreter are in
 your $PATH you will need to  specify the path in full occasionally. In

@@ -154,7 +154,7 @@ else
         # move incomplete output out of the way on SIGINT (Cntrl-C):
         trap "clean_and_exit $out" INT
 	run_test $name $inp $out $vers
-        trap -
+        trap INT
 	test -d $out && echo -n " done."
 fi
 

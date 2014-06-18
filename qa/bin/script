@@ -4,6 +4,16 @@ dir=`dirname $0`
 
 . $dir/functions.sh
 
+# dont pipe ParaGauss output onto tty by default:
+tty="file"
+while [[ "$1" == --* ]]; do
+	if [ "$1" == "--tty" ]; then
+		# ParaGauss output will go to tty:
+		tty="tty"
+	fi
+	shift
+done
+
 if [ -z "$ttfs" ]; then
 	ttfs=~ttfs/bin/ttfs_V3.0
 fi
@@ -37,13 +47,19 @@ for vers in $versions; do
 	smr_cmp=s.$name,$vers_cmp
 
 	echo -n " with $vers ..."
+cmd="
 $ttfs $name \
  -newinput $inp \
  -inputdir . -outputdir $out \
  -vers $vers -mpi \
  -verbose -restartable \
- -keep_datadir \
- > tty
+ -keep_datadir"
+
+if [ "$tty" = "tty" ]; then
+	$cmd
+else
+	$cmd > tty
+fi
 
 if [ -f tty ]; then
   mv tty $out

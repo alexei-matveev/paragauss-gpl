@@ -21,15 +21,15 @@ The default (WITH_GUILE=1) buile  produces an executable "guile-qm" in
 the top directory (where this README file resides) that can be used as
 a standalone Scheme interpreter.  You may try to execute it in serial:
 
-    $ export GUILE_LOAD_PATH=.
-    $ ./guile-qm
+    $ ./guile-qm -L ./
     guile> (+ 1 2)
     3
 
 and run PG from within it:
 
-    guile> (copy-file "some-input" "input")
+    guile> (use-modules (guile paragauss))
     guile> (define world (qm-init))
+    guile> (copy-file "some-input" "input")
     guile> (qm-run world)
     guile> (qm-finalize world)
 

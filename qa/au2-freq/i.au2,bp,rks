@@ -1,0 +1,72 @@
+# << Main Operation Parameters >>
+
+ &TASKS
+    TASK             = "Gradients"
+    ECHO_INPUT_LEVEL = "default"
+ /TASKS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =  t
+    RELATIVISTIC        = "TRUE"
+    UPDATE_HESSIAN_ITERATION = 1
+ /MAIN_OPTIONS
+
+ &OUTPUT
+    OUTPUT_LEVEL =  1  # normal amount of output
+ /OUTPUT
+
+ # << Geometry >>
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "D4H"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    1
+ /UNIQUE_ATOM_NUMBER
+
+ &UNIQUE_ATOM # unique atom  1
+    NAME          = " Au"
+    Z             = 79.0
+    N_equal_atoms =  2
+ /UNIQUE_ATOM
+     0.000000000000E+00   0.0000000000E+00   2.384460662347
+
+# << Basis Sets >>
+
+~Au_19.15.10.6_9.8.5.2n
+
+# << SCF Parameters >>
+
+ &MIXING
+    CHMIX             = 0.5
+    START_AFTER_CYCLE = 5
+  # start mixing coefficients for charge fit function coefficients
+      # start dynamic mixing after second SCF cycle
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =    100  # maximal number of SCF cycles allowed
+    STOP_IF_NOT_CONVERGED =   FALSE
+    ENERGY_CRITERION      = 1.0E-09  # maximal difference in total energy
+    COEFF_CRITERION       = 1.0E-06  # maximal difference in charge fit coefficients
+    DENSITY_CRITERION     = 1.0E-09  # maximal difference in density matrix
+    MAX_GEO_ITERATION     =   100
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XC      = "bp"
+ /XC_CONTROL
+
+ &GRID
+    SYM_REDUCE = TRUE   # exploit local atom symmetry
+ /GRID
+
+ &GRIDATOM  # define grid for unique atom 1
+    NRAD =  70       # number of shells of the integration grid
+    NANG = 171       # number of grid points per shell
+ /GRIDATOM
+
+ &GRID_PH
+    WEIGHT_GRADS = TRUE  # consider derivatives of weights of the integration grid
+ /GRID_PH

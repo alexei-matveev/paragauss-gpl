@@ -1,0 +1,88 @@
+#
+# H2O with geometry of Sekino/Bartlett
+# Ref. JCP 98, 3022 (1993)
+#
+#
+
+ &TASKS
+    TASK              = "Response"
+    DIPOLE            =       TRUE
+ /TASKS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =      TRUE 
+    RELATIVISTIC        =     FALSE # (the default)
+ /MAIN_OPTIONS (namelist may be dropped)
+
+ &RECOVER_OPTIONS
+    SAVE_SCFSTATE      =      F 
+    RESET_SCFCYCLE     =      F
+ /RECOVER_OPTIONS
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "C2V" # (the default)
+ /SYMMETRY_GROUP (namelist may be dropped)
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    2
+ /UNIQUE_ATOM_NUMBER
+
+ # << Geometry >>
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = "O"
+    Z             =         8.000
+    N_equal_atoms =             1
+ /UNIQUE_ATOM
+   0.0   0.0    0.0
+
+ &UNIQUE_ATOM # unique atom   2
+    NAME          = "H"
+    Z             =         1.000
+    N_equal_atoms =             2
+ /UNIQUE_ATOM
+    1.429960          0.000000         -1.107190
+
+# <<Basis Set>>
+~bas/O.bas
+~bas/H.bas
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =       100 # (the default)
+    STOP_IF_NOT_CONVERGED =     FALSE # (the default)
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    xc             = "bp"
+ /XC_CONTROL
+
+ &RESPONSE_CONTROL
+    TARGET                      = "SSST"
+    XALPHA_RESP                 = FALSE
+    VWN_RESP                    = FALSE
+    BECKEX_RESP                 =  TRUE
+    PERDEWC_RESP                =  TRUE
+    PW_LDAC_RESP                = FALSE
+    PBEX_RESP                   = FALSE
+    PBEC_RESP                   = FALSE 
+    CALC_ALL                    =  TRUE
+    CALC_OSC_STRENGTH           =  TRUE
+    noRI                        =  TRUE
+    MAX_ITER                    =    30
+    EIGENSOLVE_CRITERION        = 1.000E-05
+ /RESPONSE_CONTROL (namelist may be dropped)
+
+ &GRID
+    SYM_REDUCE   = TRUE
+    WEIGHT_GRADS = TRUE
+ /GRID
+
+ &GRIDATOM # unique atom   1
+    NRAD    =         80
+    NANG    =        291
+ /GRIDATOM
+
+ &GRIDATOM # unique atom   2
+    NRAD    =         80
+    NANG    =        291
+ /GRIDATOM

@@ -1,0 +1,115 @@
+ # unique atom  O
+ &UNIQUE_ATOM_BASISSET LMAX_OB = 1, LMAX_CH = 2, LMAX_XC = 2, N_GLOB_CONS_CH = 0, N_GLOB_CONS_XC = 0/
+
+ # unique atom  O orbital basis, l =  0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 10, N_UNCONTRACTED_FCTS = 0, N_CONTRACTED_FCTS = 3/
+      0.2700058226D+00  %
+      0.1013761750D+01  %	
+      0.5799635340D+01  %
+      0.3599933586D+01  %
+      0.1553961625D+02  %
+      0.1689757040D+02  %
+      0.5296450000D+02  %
+      0.1880469580D+03  %
+      0.8252349460D+03  %
+      0.5484671660D+04
+### CONTR 1 ###
+      1.0 %      
+      0.0 %      
+      0.0 %      
+      0.0 %      
+      0.0 %      
+      0.0 %      
+      0.0 %      
+      0.0 %      
+      0.0 %      
+      0.0      
+### CONTR 2 ###
+      0.0 %
+      0.1130767015D+01 % 
+      0.0 %
+     -0.1480262627D+00 %
+     -0.1107775495D+00 %
+      0.0 %
+      0.0 %
+      0.0 %
+      0.0 %
+      0.0
+### CONTR 3 ###
+      0.0 %
+      0.0 %
+      0.3585208530D+00 %
+      0.0 %
+      0.0 %
+      0.4701928980D+00 %
+      0.2327143360D+00 %
+      0.6844507810D-01 %
+      0.1395017220D-01 %
+      0.1831074430D-02
+
+ # unique atom  O orbital basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 4, N_UNCONTRACTED_FCTS = 0, N_CONTRACTED_FCTS = 2/
+      0.2700058226D+00  %
+      0.1013761750D+01  %
+      0.3599933586D+01  %
+      0.1553961625D+02 
+### CONTR 1 ###
+      1.0 %
+      0.0 %
+      0.0 %
+      0.0 
+### CONTR 2 ###
+      0.0 %
+      0.7271585773D+00 %
+      0.3397528391D+00 %
+      0.7087426823D-01      
+
+
+ # unique atom  O charge basis, r**2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 1, N_UNCONTRACTED_FCTS = 1, N_CONTRACTED_FCTS = 0/
+      1.0E+30  
+ # unique atom  O charge basis, l =  0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS = 9, N_CONTRACTED_FCTS = 0/
+      0.5400116452D+00 %
+      0.2027523500D+01 %
+      0.7199867173D+01 %
+      0.1159927068D+02 %
+      0.3240874940D+02 %
+      0.1059290000D+03 %
+      0.3760939160D+03 %
+      0.1650469892D+04 %
+      0.5484671660D+04
+
+ # unique atom  O charge basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS = 0/
+      0.5400116452D+00 %
+      0.2027523500D+01 %
+      0.7199867173D+01 %
+      0.1159927068D+02 %
+      0.3240874940D+02 
+
+ # unique atom  O charge basis, l =  2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS = 0/
+      0.5400116452D+00 %
+      0.2027523500D+01 %
+      0.7199867173D+01 %
+      0.1159927068D+02 %
+      0.3240874940D+02
+
+ # unique atom  O exchange basis, r**2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS = 0/
+      0.143254666667E+000      0.482109333333E+000      0.153912666667E+001  %
+      0.522875400000E+001      0.232376420000E+002
+ # unique atom  O exchange basis, l =  0
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 9, N_UNCONTRACTED_FCTS = 9, N_CONTRACTED_FCTS = 0/
+      0.200457333333E+000      0.669514000000E+000      0.317120200000E+001  %
+      0.819164600000E+001      0.226038726667E+002      0.691011953333E+002  %
+      0.243150171333E+003      0.106647312600E+004      0.710818996000E+004
+ # unique atom  O exchange basis, l =  1
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS = 0/
+      0.100000000000E+000      0.250000000000E+000      0.625000000000E+000  %
+      0.156250000000E+001      0.390625000000E+001
+ # unique atom  O exchange basis, l =  2
+ &UNIQUE_ATOM_BASIS N_EXPONENTS = 5, N_UNCONTRACTED_FCTS = 5, N_CONTRACTED_FCTS = 0/
+      0.200000000000E+000      0.500000000000E+000      0.125000000000E+001  %
+      0.312500000000E+001      0.781250000000E+001

@@ -1,0 +1,64 @@
+ &TASKS
+    TASK              = "Response"
+    DIPOLE            =       TRUE
+ /TASKS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =      TRUE # (the default)
+    RELATIVISTIC        =      TRUE 
+ /MAIN_OPTIONS
+
+ &RECOVER_OPTIONS
+    SAVE_SCFSTATE      =     FALSE 
+    READ_SCFSTATE      =     FALSE
+ /RECOVER_OPTIONS (namelist may be dropped)
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "D8H "
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =    1
+ /UNIQUE_ATOM_NUMBER
+
+ # << Geometry >>
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = "Au          "
+    Z             =        79.000
+    N_equal_atoms =             2
+    FIXED         =         FALSE # (the default)
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00   2.3820134 
+
+# << Basis Set >>
+~bas/Au.bas
+
+ &XC_CONTROL
+    XC             = "bp"
+ /XC_CONTROL
+
+ &RESPONSE_CONTROL
+    TARGET                      = "SSST"
+    XALPHA_RESP                 = FALSE 
+    VWN_RESP                    = FALSE
+    BECKEX_RESP                 =  TRUE
+    PERDEWC_RESP                =  TRUE
+    PW_LDAC_RESP                = FALSE
+    noRI                        =  TRUE
+    CALC_ALL                    = FALSE
+    EIGENSOLVE_CRITERION        = 1.000E-05
+    CALC_N_LOW                  =    30 
+    MAX_ITER                    =    30
+    CALC_OSC_STRENGTH           =  TRUE
+ /RESPONSE_CONTROL
+
+ &GRID
+    SYM_REDUCE       =     TRUE 
+ /GRID (namelist may be dropped)
+
+ &GRIDATOM # unique atom   1
+    NRAD    =         50
+    NANG    =        231
+ /GRIDATOM
+

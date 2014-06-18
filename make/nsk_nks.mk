@@ -134,7 +134,7 @@ SETMTIME = touch -r
 
 ## C compiler:
 CC = mpiicc
-CCFLAGS = -DF77_EXT_NAMES=lowercase_
+CCFLAGS = 
 
 
 #### LDFLAGS, LIBRARY-PATH ####

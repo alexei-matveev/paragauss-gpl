@@ -137,7 +137,7 @@ ifeq ($(serial),1)
 else
   CC = /gpfs/CLUSTERUSERS/chemicct/local/bin/mpicc
 endif
-CCFLAGS = -DF77_EXT_NAMES=lowercase_ -Wall
+CCFLAGS = -Wall
 
 
 #### LDFLAGS, LIBRARY-PATH ####

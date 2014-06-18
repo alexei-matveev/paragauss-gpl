@@ -168,7 +168,7 @@ ifeq ($(serial),1)
 else
   CC = mpicc
 endif
-CCFLAGS = -DF77_EXT_NAMES=lowercase_ -Wall
+CCFLAGS = -Wall
 
 
 #### LDFLAGS, LIBRARY-PATH ####

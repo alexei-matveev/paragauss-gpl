@@ -132,7 +132,7 @@ ifeq ($(serial),1)
 else
   CC = /usr/local/openmpi-1.4.2/bin/mpicc
 endif
-CCFLAGS = -DF77_EXT_NAMES=lowercase_ -Wall
+CCFLAGS = -Wall
 
 
 #### LDFLAGS, LIBRARY-PATH ####

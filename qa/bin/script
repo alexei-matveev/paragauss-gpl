@@ -74,6 +74,10 @@ if [ -f tty ]; then
   mv tty $out
 fi
 
+if [ -f gxfile ]; then
+  mv gxfile $out/gxfile.final
+fi
+
 if [ -f hesse.dat ]; then
   mv hesse.dat $out
 fi

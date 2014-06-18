@@ -146,6 +146,7 @@ module energy_calc_module
   real(r8_kind) :: e_efield = 0.0
   real(r8_kind) :: e_coul_2z = 0.0  ! 2-center part of E_COUL
   real(r8_kind) :: e_nuc_core = 0.0 ! core-core interaction energy
+  real(r8_kind) :: e_rism = 0.0 ! RISM solvation energy, not PCM!
   real(r8_kind) :: e_tot = 0.0
 
   !
@@ -294,6 +295,13 @@ contains
     end select
 
     !
+    ! The term should be zero in a regular case or #ifndef WITH_BGY3D.
+    ! See main_gradient() where this addition is computed and saved in
+    ! the module private variable:
+    !
+    a_tot = a_tot + e_rism
+
+    !
     ! FIXME: a singularity here! In SCF the e_xc energy is returned by
     ! xc_get_exc(), see above.  However after SCF it is  assumed to be
     ! the   last   entry  in   the   array   of   many  different   XC
@@ -319,10 +327,9 @@ contains
   !*************************************************************
 
   subroutine get_energy(tot)
-    !  Purpose: make the private Variables
-    !           E_KIN,E_NUC,E_COUL,E_XC
-    !           accessible to the dear user
-    !------------ Declaration of formal parameters ---------------
+    !
+    ! Returns the total energy making sure all terms have been added.
+    !
     implicit none
     real(r8_kind), intent(out) :: tot
     !** End of interface *****************************************
@@ -795,12 +802,17 @@ contains
     e_tot               = zero
     a_energy_solv_el    = zero
     a_energy_solv_nonel = zero
+    e_rism = 0.0
   end subroutine init_energy
 
-  subroutine set_energy(kin, nuc, coul, c_2z, exex, xc, efield, dft_plus_u)
-    !  Purpose: set energy contributions stored as the private variables
-    !           in this module (for the 'direct_energy_calc' option)
-    !------------ Declaration of formal parameters ---------------
+  subroutine set_energy (kin, nuc, coul, c_2z, exex, xc, &
+       efield, dft_plus_u, rism)
+    !
+    ! Set energy contributions stored as the private variables in this
+    ! module (for the  'direct_energy_calc' option). The variables set
+    ! here  are   added  up  in  update_energies()   and  returned  by
+    ! get_energy().
+    !
     real(r8_kind), optional, intent(in) :: kin
     real(r8_kind), optional, intent(in) :: nuc
     real(r8_kind), optional, intent(in) :: xc
@@ -809,8 +821,9 @@ contains
     real(r8_kind), optional, intent(in) :: exex
     real(r8_kind), optional, intent(in) :: efield
     real(r8_kind), optional, intent(in) :: dft_plus_u
+    real(r8_kind), optional, intent(in) :: rism
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+
 
     if (present(kin) )   e_kin            = kin
     if (present(nuc) )   e_nuc            = nuc
@@ -820,23 +833,25 @@ contains
     if (present(xc)  )   e_xc             = xc
     if (present(efield)) e_efield         = efield
     if (present(dft_plus_u)) e_dft_plus_u = dft_plus_u
-
+    if (present(rism)) e_rism = rism
   end subroutine set_energy
 
   subroutine energy_calc_reduce()
     !
-    ! Sup up partial contributions to energies over
-    ! workers. Note that some energies are only computed
-    ! by master, still we rely on the fact that in such
-    ! case the slave contributions are proper zeros.
+    ! Sup up partial contributions to energies over workers. Note that
+    ! some energies are only computed  by master, still we rely on the
+    ! fact that in such case the slave contributions are proper zeros.
     !
-    use comm, only: comm_reduce, comm_rank
+    ! FIXME: used once in ham_calc_module.f90, usefulness
+    ! questioned. Should it die?
+    !
+    use comm, only: comm_reduce, comm_rank, comm_same
     implicit none
     ! *** end of interface ***
 
-    ! Some of the energy contributions are computed
-    ! by master, so no need to reduce. To make sure
-    ! we get it right, verify this evry time:
+    ! Some of the  energy contributions are computed by  master, so no
+    ! need to reduce. To make sure  we get it right, verify this every
+    ! time:
     if( comm_rank() /= 0 ) then
         ASSERT(e_kin==0.0)
         ASSERT(e_nuc==0.0)
@@ -846,10 +861,14 @@ contains
         ASSERT(e_efield==0.0)
     endif
 
-    !
-    ! All others will be summed up over processors and collected
-    ! on master (this is not idempotent, of course):
-    !
+    ! Other energy contributions, such as e_rism, returned by external
+    ! (serial or parallel) library with its own conventions are set on
+    ! all  workers  to the  same  final value  and  thus  do not  need
+    ! reduction either:
+    ASSERT(comm_same(e_rism))
+
+    ! There are still  some that need to be  summed up over processors
+    ! and collected on master (this is not idempotent, of course):
     call comm_reduce(e_coul)
     call comm_reduce(e_xc)
     call comm_reduce(e_tot)

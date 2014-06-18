@@ -58,10 +58,10 @@
                 #:select (find-basis))
   #:use-module ((baslib guile paragauss)
                 #:select (qm-write-input))
-  #:export (qm-main
-            ;; qm-init
-            ;; qm-run
-            ;; qm-finalize
+  #:export (qm-main               ; (qm-main (command-line)), use this
+            qm-init               ; (qm-init) -> world, low level
+            qm-run                ; (qm-run world), low level
+            qm-finalize           ; (qm-finalize world), low level
             qm-trace-hook
             qm-flush-trace
             qm-find-basis

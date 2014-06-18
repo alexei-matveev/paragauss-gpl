@@ -1,0 +1,156 @@
+
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+ # CH3CH2OH All Electron C1                                           #
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+ # << Main Operation Parameters >>
+
+ &TASKS
+    TASK             = "Gradients"
+    ECHO_INPUT_LEVEL = "default"
+    GX_HIGHPREC      = TRUE
+    READ_GX          = T
+ /TASKS
+
+ &RECOVER_OPTIONS
+          SAVE_SCFSTATE = F
+          READ_SCFSTATE = F
+        /RECOVER_OPTIONS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =  T # UKS
+    DIRECT_ENERGY_CALC  =  TRUE # calculate all contributions to energy
+                                # separately without extra cost.
+    RELATIVISTIC        =  F
+ /MAIN_OPTIONS
+
+ &PVMOPTIONS
+    N_PROCS  =  1 # number of processors
+ /PVMOPTIONS
+
+ &OUTPUT
+    OUTPUT_LEVEL =  1  # normal amount of output
+ /OUTPUT
+                          
+ # << Geometry >>
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "CS"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =   5
+ /UNIQUE_ATOM_NUMBER
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = " O"
+    Z             = 8.0
+    N_equal_atoms =   1
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+
+ &UNIQUE_ATOM # unique atom  2 
+    NAME          = " C"
+    Z             = 6.0
+    N_equal_atoms =  1 
+ /UNIQUE_ATOM
+        0.000000000000000E+00   -2.457E+00  0.000000000E+00 
+    
+ &UNIQUE_ATOM # 3
+    NAME  =  "H"
+    Z     =  1.0
+    N_equal_atoms = 1
+ /UNIQUE_ATOM
+    1.77000000E+0  0.61000E+00   0.000000E+00  
+
+ &UNIQUE_ATOM # 4
+    NAME  =  "H"
+    Z     =  1.0
+    N_equal_atoms = 1
+ /UNIQUE_ATOM
+    -1.965000000E+0   -3.13400000E+00   0.00000000000000E+00  
+
+ &UNIQUE_ATOM # 5
+    NAME  =  "H"
+    Z     =  1.0
+    N_equal_atoms = 2
+ /UNIQUE_ATOM
+    0.92300000E+0  -2.795000E+00   -1.80000E+00  
+
+
+ # << Basis Sets >>
+
+ ~/home/kremleva/ParaGauss/bases/C_9.5.1_4.3.1
+ ~/home/kremleva/ParaGauss/bases/O_9.5.1_5.4.1
+ ~/home/kremleva/ParaGauss/bases/H_6.1_4.1
+ ~/home/kremleva/ParaGauss/bases/H_6.1_4.1
+ ~/home/kremleva/ParaGauss/bases/H_6.1_4.1
+
+ # << SCF Parameters >>
+
+ &MIXING
+    CHMIX             = 0.5
+    START_AFTER_CYCLE = 5    
+  # start mixing coefficients for charge fit function coefficients
+      # start dynamic mixing after second SCF cycle
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =      90  # maximal number of SCF cycles allowed
+    STOP_IF_NOT_CONVERGED =   FALSE
+    ENERGY_CRITERION      = 1.0E-08  # maximal difference in total energy
+    COEFF_CRITERION       = 1.0E-06  # maximal difference in charge fit coefficients
+    DENSITY_CRITERION     = 1.0E-08  # maximal difference in density matrix
+    MAX_GEO_ITERATION     =   1
+ /CONVERGENCE_LIST
+
+&XC_CONTROL
+    XALPHA         =  TRUE # (the default)
+    VWN            =  TRUE
+    PERDEW         =  TRUE
+    BECKE88        =  TRUE
+    PWLDAc         =  F 
+    PBEc           =  F 
+    PBENx          =  F 
+ /XC_CONTROL (namelist may be dropped)       
+
+ &OCCUPATION
+    CHARGE             =   0.000000 # (the default)
+ /OCCUPATION (namelist may be dropped)       
+
+ &GRID
+    SYM_REDUCE = TRUE   # exploit local atom symmetry
+ /GRID
+
+ &GRIDATOM  # define grid for unique atom 1
+     NRAD =  70       # number of shells of the integration grid
+     NANG = 191       # number of grid points per shell
+ /GRIDATOM  
+
+&GRIDATOM  # define grid for unique atom 2 
+     NRAD =  70       # number of shells of the integration grid
+     NANG = 191       # number of grid points per shell
+ /GRIDATOM 
+ 
+&GRIDATOM
+     NRAD = 70
+     NANG = 191                                  
+ /GRIDATOM
+
+&GRIDATOM
+     NRAD = 70
+     NANG = 191                                  
+ /GRIDATOM
+
+&GRIDATOM
+     NRAD = 70
+     NANG = 191                                  
+ /GRIDATOM
+
+&GRID_PH
+    WEIGHT_GRADS = TRUE  # consider derivatives of weights of the integration grid
+ /GRID_PH
+
+
+
+

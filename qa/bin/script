@@ -12,6 +12,10 @@ while [[ "$1" == --* ]]; do
 		# ParaGauss output will go to tty:
 		tty="tty"
 	fi
+	if [ "$1" == "--delete" ]; then
+		# ParaGauss will overwrite existing directories: 
+		delete="delete"
+	fi
 	shift
 done
 
@@ -87,6 +91,12 @@ for vers in $versions; do
 	smr_cmp=s.$name,$vers_cmp
 
 	echo -n " with $vers"
+
+if [ -n "$delete" ]; then
+	# delete existing direcories:
+	rm -rf $out
+fi
+
 if [ -d $out ]; then
 	echo -n " (exists)."
 else

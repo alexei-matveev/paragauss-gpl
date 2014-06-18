@@ -1,0 +1,99 @@
+
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+ # UF6 (Stoll-Preuss ECP basis for everything)                            #
+ #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+ # << Main Operation Parameters >>
+
+ &TASKS
+    TASK             = "Gradients"
+    ECHO_INPUT_LEVEL = "default"
+    GX_HIGHPREC      = TRUE    
+    READ_GX          = f
+ /TASKS
+
+ &RECOVER_OPTIONS
+    SAVE_SCFSTATE = f
+    READ_SCFSTATE = f
+ /RECOVER_OPTIONS
+
+ &MAIN_OPTIONS
+    SPIN_RESTRICTED     =  T # UKS
+    DIRECT_ENERGY_CALC  =  TRUE # calculate all contributions to energy 
+                                # separately without extra cost.
+    RELATIVISTIC        =  f
+    update_hessian_iteration = 1
+    integrals_on_file   = f
+    orbitals_in_memory  = true
+ /MAIN_OPTIONS
+
+ &PVMOPTIONS
+    N_PROCS  =  1 # number of processors
+ /PVMOPTIONS
+
+ &OUTPUT
+    OUTPUT_LEVEL =  1  # normal amount of output
+ /OUTPUT
+
+ # << Geometry >>
+
+ &SYMMETRY_GROUP
+    POINT_GROUP = "OH"
+ /SYMMETRY_GROUP
+
+ &UNIQUE_ATOM_NUMBER
+    N_UNIQUE_ATOMS =   2 
+ /UNIQUE_ATOM_NUMBER
+
+ &UNIQUE_ATOM # unique atom   1
+    NAME          = " U"
+    Z             = 92.0
+    N_equal_atoms =   1
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+
+ &UNIQUE_ATOM # unique atom  2 
+    NAME          = " F"
+    Z             = 9.0
+    N_equal_atoms =  6 
+ /UNIQUE_ATOM
+    0.000000000000000E+00    0.000000000000000E+00    3.817550466870
+
+ # << Basis Sets >>
+
+~U-ECP78MWB.bas
+~F-ECP2MWB.bas
+
+#/home/matveev/LCGTO/paragau/convert/Lauterbach/U_24.19.16.11
+#/home/moskal/CALC/bases/F_9.5.1_5.4.1
+
+ # << SCF Parameters >>
+
+ &MIXING
+    CHMIX             = 0.5
+    START_AFTER_CYCLE = 5    
+  # start mixing coefficients for charge fit function coefficients
+      # start dynamic mixing after second SCF cycle
+ /MIXING
+
+ &CONVERGENCE_LIST
+    MAX_ITERATION         =     90  # maximal number of SCF cycles allowed
+    STOP_IF_NOT_CONVERGED =    FALSE 
+    ENERGY_CRITERION      = 1.0E-08  # maximal difference in total energy
+    COEFF_CRITERION       = 2.0E-05
+    DENSITY_CRITERION     = 1.0E-08  # maximal difference in density matrix
+    MAX_GEO_ITERATION     =  50 
+ /CONVERGENCE_LIST
+
+ &XC_CONTROL
+    XC = vwn
+ /XC_CONTROL
+
+ &GRID
+    SYM_REDUCE = TRUE   # exploit local atom symmetry
+    WEIGHT_GRADS = TRUE  # consider derivatives of weights of the integration grid
+ /GRID
+
+ &GRIDATOM NRAD =  70, NANG = 291 /GRIDATOM  
+ &GRIDATOM NRAD =  70, NANG = 291 /GRIDATOM  
+

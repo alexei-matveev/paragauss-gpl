@@ -1,0 +1,185 @@
+  &UNIQUE_ATOM_BASISSET
+    LMAX_OB     = 3,
+    LMAX_CH     = 2,
+    LMAX_XC     = 0,
+    ZC          = 78,
+    LMAX_PSEUDO = 4
+  /UNIQUE_ATOM_BASISSET
+  # ORBITAL BASIS:
+# U  s ECP78MWB :  8 1 1.4
+#  (8s8p6d5f2g)/[5s5p4d3f2g] GTO-basis for U  ECP78MWB, Ref 34.
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 8,
+    N_UNCONTRACTED_FCTS = 4,
+    N_CONTRACTED_FCTS = 1
+  /UNIQUE_ATOM_BASIS
+  # exponents:
+  0.025611 0.063372 0.279115 0.586852 %
+  2.011693 4.774836 7.161545 12.125253
+  # contractions:
+  0.0 0.0 0.0 0.0  %
+  -1.071209 0.560299 -0.225160 0.021921
+
+# U  p ECP78MWB :  8 1 1.4
+#  (8s8p6d5f2g)/[5s5p4d3f2g] GTO-basis for U  ECP78MWB, Ref 34.
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 8,
+    N_UNCONTRACTED_FCTS = 4,
+    N_CONTRACTED_FCTS = 1
+  /UNIQUE_ATOM_BASIS
+  # exponents:
+  0.032130 0.083442 0.267908 0.581858 %
+  2.241670 5.155878 7.735356 17.254770
+  # contractions:
+  0.0 0.0 0.0 0.0  %
+  -0.317268 0.110578 -0.033346 0.001398
+
+# U  d ECP78MWB :  6 1 1.3
+#  (8s8p6d5f2g)/[5s5p4d3f2g] GTO-basis for U  ECP78MWB, Ref 34.
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 6,
+    N_UNCONTRACTED_FCTS = 3,
+    N_CONTRACTED_FCTS = 1
+  /UNIQUE_ATOM_BASIS
+  # exponents:
+  0.051548 0.124879 0.278136 %
+  0.575630 2.160162 4.841070
+  # contractions:
+  0.0 0.0 0.0  %
+  0.238828 -0.057236 0.005731
+
+# U  f ECP78MWB :  5 1 1.3
+#  (8s8p6d5f2g)/[5s5p4d3f2g] GTO-basis for U  ECP78MWB, Ref 34.
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 5,
+    N_UNCONTRACTED_FCTS = 2,
+    N_CONTRACTED_FCTS = 1
+  /UNIQUE_ATOM_BASIS
+  # exponents:
+  0.101867 0.240596 %
+  0.529693 1.144682 2.436441
+  # contractions:
+  0.0 0.0  %
+  0.304679 0.400846 0.355011
+
+# U  g ECP78MWB :  2 0
+#  (8s8p6d5f2g)/[5s5p4d3f2g] GTO-basis for U  ECP78MWB, Ref 34.
+# &UNIQUE_ATOM_BASIS
+#   N_EXPONENTS = 2,
+#   N_UNCONTRACTED_FCTS = 2,
+#   N_CONTRACTED_FCTS = 0
+# /UNIQUE_ATOM_BASIS
+# # exponents:
+# 0.42 1.18
+  # PSEUDOPOTENTIAL:
+# U  ECP ECP78MWB : 78 5 0 51
+#   Q=14., MEFIT, WB, Ref 34.
+  # TYPE: local
+  &UNIQUE_ATOM_PSEUDOPOT N_EXPONENTS = 1 /
+  # powers of the prefactors
+  2
+  # exponents
+  1.000000
+  # coefficients
+  0.000000
+
+  # TYPE: L = 0
+  &UNIQUE_ATOM_PSEUDOPOT N_EXPONENTS = 3 /
+  # powers of the prefactors
+  2 2 2
+  # exponents
+  4.063653 1.883995 0.886567
+  # coefficients
+  112.920103 15.647500 -3.689971
+
+  # TYPE: L = 1
+  &UNIQUE_ATOM_PSEUDOPOT N_EXPONENTS = 3 /
+  # powers of the prefactors
+  2 2 2
+  # exponents
+  3.986181 2.000160 0.960841
+  # coefficients
+  118.758016 15.077228 0.556720
+
+  # TYPE: L = 2
+  &UNIQUE_ATOM_PSEUDOPOT N_EXPONENTS = 3 /
+  # powers of the prefactors
+  2 2 2
+  # exponents
+  4.147972 2.234563 0.913695
+  # coefficients
+  60.855892 29.280047 4.998029
+
+  # TYPE: L = 3
+  &UNIQUE_ATOM_PSEUDOPOT N_EXPONENTS = 3 /
+  # powers of the prefactors
+  2 2 2
+  # exponents
+  3.998938 1.998840 0.995641
+  # coefficients
+  49.924035 -24.674042 1.389480
+
+# # TYPE: L = 4
+# &UNIQUE_ATOM_PSEUDOPOT N_EXPONENTS = 2 /
+# # powers of the prefactors
+# 2 2
+# # exponents
+# 3.817422 0.262501
+# # coefficients
+# -36.040977 -0.090511
+
+  # CORE DENSITY: r2- and s-fakeed:
+  &UNIQUE_ATOM_CORE_DENSITY N_EXPONENTS = 1 /
+  -1.0
+   0.0
+  &UNIQUE_ATOM_CORE_DENSITY N_EXPONENTS = 1 /
+  -1.0
+   0.0
+
+  # CHARHE FIT: r2-type, generated from orbitals p-basis:
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 8,
+    N_UNCONTRACTED_FCTS = 8,
+    N_CONTRACTED_FCTS = 0
+  /UNIQUE_ATOM_BASIS
+  0.06426 0.166884 0.535816 1.163716 4.48334 10.311756 15.470712 34.50954
+
+  # CHARHE FIT:  s-type, generated from orbitals s-basis:
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 8,
+    N_UNCONTRACTED_FCTS = 8,
+    N_CONTRACTED_FCTS = 0
+  /UNIQUE_ATOM_BASIS
+  0.051222 0.126744 0.55823 1.173704 4.023386 9.549672 14.32309 24.250506
+
+  # CHARHE FIT:  p-type:
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 5,
+    N_UNCONTRACTED_FCTS = 5,
+    N_CONTRACTED_FCTS = 0
+  /UNIQUE_ATOM_BASIS
+  0.1 0.25 0.625 1.5625 3.90625
+
+  # CHARHE FIT:  d-type:
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 5,
+    N_UNCONTRACTED_FCTS = 5,
+    N_CONTRACTED_FCTS = 0
+  /UNIQUE_ATOM_BASIS
+  0.2 0.5 1.25 3.125 7.8125
+
+  # XC FIT: r2- and s-fakeed:
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 1,
+    N_UNCONTRACTED_FCTS = 1,
+    N_CONTRACTED_FCTS = 0
+  /UNIQUE_ATOM_BASIS
+  -1.0    
+
+  &UNIQUE_ATOM_BASIS
+    N_EXPONENTS = 1,
+    N_UNCONTRACTED_FCTS = 1,
+    N_CONTRACTED_FCTS = 0
+  /UNIQUE_ATOM_BASIS
+  -1.0    
+

@@ -57,6 +57,7 @@ EXE = $(EXEDIR)/$(exe)
 # variables is $(PETSC_DIR)/bmake/common/variables
 #
 ifeq ($(WITH_BGY3D),1)
+	PETSC_DIR ?= /usr/lib/petsc
 	include $(PETSC_DIR)/conf/variables
 endif
 
@@ -237,7 +238,7 @@ LIBS       = \
 #
 ifeq ($(WITH_BGY3D),1)
 	BGY3D ?= $(BASEDIR)/bgy3d
-	LIBS += -L$(BGY3D) -lbgy3d -lfftw3_mpi -lfftw3 -lm $(PETSC_LIB)
+	LIBS += -L$(BGY3D) -lbgy3d -lfftw3_mpi -lfftw3 -lm $(PETSC_LIB) -lminpack
 	CCFLAGS += -DWITH_BGY3D -I$(BGY3D)
 endif
 

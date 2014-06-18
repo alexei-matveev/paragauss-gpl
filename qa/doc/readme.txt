@@ -64,9 +64,22 @@ You can set the required precisions for comparisons by
  export precisions="5 3" # bash syntax
 default is <tt>precisions="8 6 4"</tt>.
  
-Currently, the only inputs availble are those in
+Currently, inputs are available in the following subdirectories:
+ qa/au-tddft
+ qa/uf6-geo-frq
+ qa/so-ee-sr
+ qa/uo2-geo-frq
+ qa/h2o-sol-pdc
+ qa/uf6-solv-frq
+ qa/h2o-solv-frq
+ qa/h3o-solv-frq
+ qa/occh3ch3-solv-frq
+ qa/ochh-solv-frq
+ qa/ch3oh
  qa/pd-ae-pp-sr
-subdirectory.
-Please populate the testsuite with more inputs to cover all the corenrs
+ qa/ch4-geo-frq
+ qa/nico-dftplus-u
+
+Please populate the testsuite with more inputs to cover all corners
 of the ParaGauss functionality.
 

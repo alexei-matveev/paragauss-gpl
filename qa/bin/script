@@ -75,7 +75,7 @@ else
 	$cmd > tty
 fi
 
-if [ -f tty ]; then
+if [ -f tty -a -d $out ]; then
   mv tty $out
 fi
 

@@ -1,3 +1,29 @@
+#
+#    \033          ascii ESCape
+#    \033[<NUM>G   move to column <NUM> (linux console, xterm, not vt100)
+#    \033[<NUM>C   move <NUM> columns forward but only upto last column
+#    \033[<NUM>D   move <NUM> columns backward but only upto first column
+#    \033[<NUM>A   move <NUM> rows up
+#    \033[<NUM>B   move <NUM> rows down
+#    \033[1m       switch on bold
+#    \033[31m      switch on red
+#    \033[32m      switch on green
+#    \033[33m      switch on yellow
+#    \033[m        switch off color/bold
+#    \017          exit alternate mode (xterm, vt100, linux console)
+#    \033[10m      exit alternate mode (linux console)
+#    \015          carriage return (without newline)
+#
+
+if test -t 1 -a "$TERM" != "raw" -a "$TERM" != "dumb" && stty size > /dev/null 2>&1 ; then
+	rc_tab="\033[30G"
+	rc_ok="\033[32mok\033[m\017"
+	rc_failed="\033[31mFAILED\033[m\017"
+else
+	rc_tab="\t"
+	rc_ok="ok"
+	rc_failed="FAILED"
+fi
 
 make_summary(){
 	local out

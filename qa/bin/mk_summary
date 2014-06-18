@@ -9,12 +9,8 @@ for name in $*; do
 	inp=i.$name
 	out=o.$name
 
-# extract energies and gradients:
-echo "========================= $out ============================="
-echo "ENERGY:"
-esum  $out
-echo "GRADIENTS:"
-grads $out
+	echo "====================== $out ======================"
+	make_summary $out
 #echo "TIMINGS:"
 #/home/matveev/bin.pl/timing.pl $out/output
 

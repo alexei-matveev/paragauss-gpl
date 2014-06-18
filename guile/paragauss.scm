@@ -67,6 +67,7 @@
             qm-find-basis
             qm-vdw-dft-phi
             qm-vdw-dft-phi/asy
+            qm-write-gxfile!
             pople-radius
             slater-radius
             ionic-radius
@@ -279,6 +280,28 @@
     ;; Call the program with an MPI comm and return result:
     ;;
     (call-with-qm-world program)))
+
+;;;
+;;; Writes  a minimal  gxfile  used to  communicate  geometry to  core
+;;; PG. Here x is a list of list holding geometry (in Bohr). Here Z is
+;;; fake, ieq is non-zero as required for atoms that are not dummy.
+;;;
+;;; FIXME:  gxfile is  read  multiple times.  When  about writing  the
+;;; gradients it is read once  again and then this minimal gxfile wont
+;;; do.
+;;;
+(define (write-gxfile x)
+  (for-each
+   (lambda (row)
+     (format #t "0.0 ~A ~A ~A 1\n" (first row) (second row) (third row)))
+   x)
+  (format #t "-1.0 0.0 0.0 0.0 0\n"))
+
+(define (qm-write-gxfile! world x)
+  (when (zero? (comm-rank world))
+    (with-output-to-file "gxfile"
+      (lambda ()
+        (write-gxfile x)))))
 
 ;;;
 ;;; This code  is for  testing XC functionals.   Note that  qm-xc only

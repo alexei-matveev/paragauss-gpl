@@ -114,11 +114,6 @@
     OUTPUT_RESPONSE_DEBUG    = FALSE # (the default)
  /OUTPUT_RESPONSE (namelist may be dropped)
 
- &OUTPUT_IOUNITADMIN
-    IOUNITADMIN_USE_STDOUT =  TRUE # (the default)
-    IOUNITADMIN_USE_DEBUG  = FALSE # (the default)
- /OUTPUT_IOUNITADMIN (namelist may be dropped)
-
  &POPULATION
     POPULATION_LEVEL =          1
     N_COLUMNS        =          0 # (the default)

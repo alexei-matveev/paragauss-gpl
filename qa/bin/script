@@ -1,6 +1,7 @@
 #!/bin/bash
 
 dir=`dirname $0`
+export PATH="$dir:$PATH"
 
 . $dir/functions.sh
 
@@ -23,7 +24,7 @@ if [ -z "$vers_cmp" ]; then
 fi
 
 if [ -z "$versions" ]; then
-	versions="$vers_cmp V3.1pre-32"
+	versions="$vers_cmp V3.1pre5-32"
 fi
 
 if [ -z "$precisions" ]; then
@@ -72,6 +73,7 @@ fi
 
 failed_cmp=""
 failed_num=0
+total_num=0
 
 for name in $*; do
 	name=`echo $name | sed s/^i\.//`
@@ -82,9 +84,14 @@ for vers in $versions; do
 	smr=s.$name,$vers
 	smr_cmp=s.$name,$vers_cmp
 
-	echo -n " with $vers ..."
+	echo -n " with $vers"
+if [ -d $out ]; then
+	echo -n " (exists)."
+else
+	echo -n " ..."
 	run_test $inp $out $vers
 	echo -n " done."
+fi
 
 	make_summary $out > $smr
 
@@ -94,6 +101,7 @@ rc_ok="\033[32mok\033[m\017"
 rc_failed="\033[31mFAILED\033[m\017"
 
 if [ "$vers" != "$vers_cmp" ]; then
+	total_num=$(($total_num + 1))
 	echo -n " Compare to $vers_cmp"
 	ok=""
 	ps=""
@@ -120,7 +128,18 @@ done # foreach version
 done # foreach $*
 
 if [ -n "$failed_cmp" ]; then
-	echo -e "$rc_failed $failed_cmp!"
-	echo -e "$rc_failed $failed_num tests!"
+	#echo -e "$rc_failed$failed_cmp!"
+	for p in $precisions; do
+		num=0
+		lst=""
+		for f in $failed_cmp; do
+			if [[ "$f" == *@$p ]]; then
+				num=$(($num + 1))
+				lst="$lst $f"
+			fi
+		done
+	echo -e "$rc_failed $num tests at precision $p:$lst"
+	done
+	echo -e "$rc_failed $failed_num of $total_num tests!"
 fi
 

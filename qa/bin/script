@@ -24,7 +24,7 @@ if [ -z "$ttfs" ]; then
 fi
 
 if [ -z "$versions" ]; then
-	versions="V3.0.40b12-32 V3.1pre5-32"
+	versions="V3.0.40b12-32 V3.1pre6-32"
 fi
 
 if [ -z "$vers_cmp" ]; then

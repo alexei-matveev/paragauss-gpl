@@ -127,15 +127,17 @@ if [ "$vers" != "$vers_cmp" ]; then
 	ok=""
 	ps=""
 	for p in $precisions; do
-		diff_prec $smr_cmp $smr $p #> diff$p
+		diff_prec $smr_cmp $smr $p > tmpdiff
 		retval=$?
 		#echo -n " prec $p ret $retval"
 		if [ $retval != 0 ]; then
-			echo -e "\n$rc_failed test $name at precision $p!"
+			echo -e "\n$rc_failed test $name at precision $p! diff output:"
+			cat tmpdiff
 			ps="$ps@$p"
 			ok="FAILED"
 			failed_cmp="$failed_cmp $name@$p"
 		fi
+		rm -f tmpdiff
 	done
 	if [ -z "$ok" ]; then
 		echo -e " -- $rc_ok"

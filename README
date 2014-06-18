@@ -11,13 +11,14 @@ behaviour of the traditional "runpg" bash script. Use it as in
 
     mpirun -np 8 $PWD/runqm [INPUTS...]
 
-Note that if neither "runqm"  script nor "guile-qm" interpreter are in
-your $PATH you will need to  specify the path in full occasionally. In
-case of troubles,  check the "shebang" line (first  line starting with
-#!)  at the top of "runqm" and the "%load-path" a few lines below.
+Note  that neither "runqm"  script nor  "guile-qm" interpreter  are in
+your  $PATH.  So that  you  will  need to  specify  the  path in  full
+occasionally.  In  case of troubles,  check the "shebang"  line (first
+line starting with  #!)  at the top of "runqm"  and the "%load-path" a
+few lines below.
 
 There is  a possibility  to run ParaGauss  from a  Scheme interpreter.
-The default (WITH_GUILE=1) buile  produces an executable "guile-qm" in
+The default (WITH_GUILE=1) build  produces an executable "guile-qm" in
 the top directory (where this README file resides) that can be used as
 a standalone Scheme interpreter.  You may try to execute it in serial:
 

@@ -36,6 +36,8 @@ make_summary(){
 	Esum  $out
 	echo "GRADIENTS:"
 	grads $out
+	echo "FREQUENCIES:"
+	freq.pl $out/output
 }
 
 diff_prec(){

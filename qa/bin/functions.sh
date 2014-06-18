@@ -88,7 +88,7 @@ esum() {
 	else
 		cat=cat
 	fi
-	$cat $out | grep e_sum | tail -30
+	$cat $out | grep e_sum | tail -40
 }
 e_xc() {
 	local out

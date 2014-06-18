@@ -1,6 +1,6 @@
-i.h2o2,C2,VWN,ints_on_file,etot_mode
-i.h2o2,C2,VWN,ints_on_file,ham_split_mode
-i.h2o2,C2,VWN,ints_on_file,direct_mode
-i.h2o2,C2,VWN,ints_in_mem,etot_mode
-i.h2o2,C2,VWN,ints_in_mem,ham_split_mode
-i.h2o2,C2,VWN,ints_in_mem,direct_mode
+i.file,etot
+i.file,split
+i.file,direct
+i.mem,etot
+i.mem,split
+i.mem,direct

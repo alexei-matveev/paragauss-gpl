@@ -16,6 +16,10 @@ if [ -z "$versions" ]; then
 	versions="$vers_cmp V3.1pre-32"
 fi
 
+if [ -z "$precisions" ]; then
+	precisions="8 6 4"
+fi
+
 if [ -z "$PE_HOSTFILE" ]; then
    export PE_HOSTFILE=$dir/hostfile
 fi
@@ -65,7 +69,7 @@ if [ "$vers" != "$vers_cmp" ]; then
 	echo -n " Compare to $vers_cmp"
 	ok=""
 	ps=""
-	for p in 8 6 4; do
+	for p in $precisions; do
 		diff_prec $smr_cmp $smr $p #> diff$p
 		retval=$?
 		#echo -n " prec $p ret $retval"

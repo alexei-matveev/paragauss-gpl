@@ -294,7 +294,7 @@ subroutine main_scf()
      loop = loop - 1
   endif
 
-  ! this is compared against base-1 loop:
+  ! This is compared against base-1 loop:
   first_loop = loop + 1
 
   if (fixed_hole) then
@@ -315,7 +315,7 @@ subroutine main_scf()
         call write_to_output_units ("####### Loop: ", loop)
         call write_to_output_units (" ")
      endif
-     ! check recover options and fork accordingly
+     ! Check recover options and fork accordingly
      if (loop == first_loop .and. recover) then
         select case (recover_mode)
         case (recover_fitcoeff); goto 1000
@@ -358,7 +358,6 @@ subroutine main_scf()
      endif
 
      if (calc_Pol_centers() .and. loop >= first_loop+1) then
-!NO: #ifdef WITH_EFP, see if the conflict remains
         if (loop == first_loop+1) then
            do_update = .true.
         else
@@ -378,7 +377,7 @@ subroutine main_scf()
 #endif
      end if
 
-     !calculating solvation hamiltonian
+     ! Calculating solvation hamiltonian
      if (operations_solvation_effect .and. &
           loop >= first_loop+sol_start_cycle) then  !!!!!!!!!!!!!
         if (mod (loop - (first_loop + sol_start_cycle), n_Q_update) == 0) then
@@ -436,7 +435,7 @@ subroutine main_scf()
 
      call stop_timer (timer_scf_ham)
 
-     ! write calculated energies
+     ! Write calculated energies
      call say ("write_energies")
      if (output_scfloops .or. output_main_scf) call write_energies (output_unit)
      if (output_scfloops .or. output_main_scf) call write_energies (stdout_unit)
@@ -447,7 +446,7 @@ subroutine main_scf()
      else
         call get_energy (tot=tot_en)
      endif
-     ! and pass energy to the convergence check module
+     ! And pass energy to the convergence check module
      call convergence_put_energy (tot_en)
      if (store_now) call store_total_energy ! reads tot_en
 

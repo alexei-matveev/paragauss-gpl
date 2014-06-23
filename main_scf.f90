@@ -1024,7 +1024,7 @@ contains
   end subroutine do_recover
 
 
-  subroutine do_fitcoeff_store (store_now)
+  subroutine do_fitcoeff_store (store_now, mode, tot_en)
     !
     ! Purpose: saves the information for the "saved_fitcoeff" file.
     !
@@ -1033,6 +1033,8 @@ contains
     ! character (len=*) :: data_dir, fit_file
     implicit none
     logical, intent (in) :: store_now
+    integer (i4_kind), intent (in), optional :: mode
+    real (r8_kind), intent (in), optional :: tot_en
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
@@ -1040,8 +1042,13 @@ contains
     if (store_now) then
        call readwriteblocked_startwrite (recfile (fit_file), th, variable_length=.true.)
        call fit_coeff_store (th)
-       call convergence_state_store (th)
+       ! Present when called from do_final_store():
+       call convergence_state_store (th, mode=mode)
        call mixing_state_store (loop, th)
+       ! Present when called from do_final_store():
+       if (present (tot_en)) then
+          call readwriteblocked_write ([tot_en], th)
+       endif
        call readwriteblocked_stopwrite (th)
     else
        ! Temporily saves  all data which might be  modified before the
@@ -1051,7 +1058,7 @@ contains
   end subroutine do_fitcoeff_store
 
 
-  subroutine do_scfstate_store (store_now)
+  subroutine do_scfstate_store (store_now, mode, tot_en)
     !
     ! Purpose: saves the information for the "saved_scfstate" file.
     !
@@ -1060,6 +1067,8 @@ contains
     ! character (len=*) :: data_dir, fit_file
     implicit none
     logical, intent (in) :: store_now
+    integer (i4_kind), intent (in), optional :: mode
+    real (r8_kind), intent (in), optional :: tot_en
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
@@ -1067,10 +1076,15 @@ contains
     if (store_now) then
        call readwriteblocked_startwrite (recfile (scf_file), th, variable_length=.true.)
        call fit_coeff_store (th)
-       call convergence_state_store (th)
+       ! Present when called from do_final_store():
+       call convergence_state_store (th, mode=mode)
        call mixing_state_store (loop, th)
        call xcmda_coeff_store (th)
        call xc_hamiltonian_store (th)
+       ! Present when called from do_final_store():
+       if (present (tot_en)) then
+          call readwriteblocked_write ([tot_en], th)
+       endif
        call readwriteblocked_stopwrite (th)
     else
        ! Temporily saves  all data which might be  modified before the
@@ -1080,7 +1094,7 @@ contains
   end subroutine do_scfstate_store
 
 
-  subroutine do_ksmatrix_store (store_now)
+  subroutine do_ksmatrix_store (store_now, mode)
     !
     ! Purpose: saves the information for the "saved_ksmatrix" file.
     !
@@ -1089,6 +1103,7 @@ contains
     ! character (len=*) :: data_dir, fit_file
     implicit none
     logical, intent (in) :: store_now
+    integer (i4_kind), intent (in), optional :: mode
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
@@ -1096,14 +1111,15 @@ contains
     if (store_now) then
        call readwriteblocked_startwrite (recfile (ham_file), th, variable_length=.true.)
        call fit_coeff_store (th)
-       call convergence_state_store (th)
+       ! Present when called from do_final_store():
+       call convergence_state_store (th, mode=mode)
        call mixing_state_store (loop, th)
        call hamiltonian_store (th)
        call readwriteblocked_stopwrite (th)
     endif
   end subroutine do_ksmatrix_store
 
-  subroutine do_eigenvec_store (store_now, n_vir)
+  subroutine do_eigenvec_store (store_now, n_vir, mode)
     !
     ! Purpose: saves the information for the "saved_eigenvec" file.
     !
@@ -1113,19 +1129,21 @@ contains
     implicit none
     logical, intent (in) :: store_now
     integer (i4_kind), intent (in) :: n_vir
+    integer (i4_kind), intent (in), optional :: mode
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
 
+    ! Mode present when called from do_final_store().
     if (store_now) then
        call readwriteblocked_startwrite (recfile (eig_file), th, variable_length=.true.)
-       call fit_coeff_store (th)
-       call convergence_state_store (th)
-       call mixing_state_store (loop, th)
+       call fit_coeff_store (th, mode=mode)
+       call convergence_state_store (th, mode=mode)
+       call mixing_state_store (loop, th, mode=mode)
        if (options_save_eigenvec_all()) then
-          call eigenstates_store (th=th)
+          call eigenstates_store (th=th, mode=mode)
        else
-          call eigenstates_store (n_vir, th=th)
+          call eigenstates_store (n_vir, th=th, mode=mode)
        end if
        call readwriteblocked_stopwrite (th)
     else
@@ -1198,7 +1216,6 @@ contains
     integer (i4_kind), intent (in) :: n_vir
     !** End of interface ***************************************
 
-    type (readwriteblocked_tapehandle) :: th
     integer :: save_interval
     logical :: stored_curr, stored_prev
 
@@ -1219,12 +1236,8 @@ contains
     ! during SCF you must know what you are doing.
 
     if ((options_save_fitcoeff() .and. .not. stored_curr)) then
-       call readwriteblocked_startwrite (recfile (fit_file), th, variable_length=.true.)
-       call fit_coeff_store (th)
-       call convergence_state_store (th, recover_fitcoeff) ! reset mode
-       call mixing_state_store (loop, th)
-       call readwriteblocked_write ([tot_en], th)
-       call readwriteblocked_stopwrite (th)
+       call do_fitcoeff_store (store_now=.true., &
+            mode=recover_fitcoeff, tot_en=tot_en)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
@@ -1233,14 +1246,8 @@ contains
     endif
 
     if ((options_save_scfstate() .and. .not. stored_curr)) then
-       call readwriteblocked_startwrite (recfile (scf_file), th, variable_length=.true.)
-       call fit_coeff_store (th)
-       call convergence_state_store (th, recover_scfstate) ! reset mode
-       call mixing_state_store (loop, th)
-       call xcmda_coeff_store (th)
-       call xc_hamiltonian_store (th)
-       call readwriteblocked_write ([tot_en], th)
-       call readwriteblocked_stopwrite (th)
+       call do_scfstate_store (store_now=.true., &
+            mode=recover_scfstate, tot_en=tot_en)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
@@ -1249,32 +1256,23 @@ contains
     endif
 
     if ((options_save_ksmatrix() .and. .not. stored_curr)) then
-       call readwriteblocked_startwrite (recfile (ham_file), th, variable_length=.true.)
-       call fit_coeff_store (th)
-       call convergence_state_store (th, recover_nothing)
-       call mixing_state_store (loop, th)
-       call hamiltonian_store (th)
-       call readwriteblocked_stopwrite (th)
+       call do_ksmatrix_store (store_now=.true., mode=recover_nothing)
     endif
 
     if ((options_save_eigenvec() .and. .not. stored_prev)) then
-       call readwriteblocked_startwrite (recfile (eig_file), th, variable_length=.true.)
-       call fit_coeff_store (th, recover_eigenvec)           ! reset mode
-       call convergence_state_store (th, recover_eigenvec)   ! reset mode
-       call mixing_state_store (loop-1, th, recover_eigenvec) ! reset mode
-       if (options_save_eigenvec_all()) then
-          call eigenstates_store (th=th, mode=recover_eigenvec)
-       else
-          call eigenstates_store (n_vir, th, recover_eigenvec)   ! reset mode
-       end if
-       call readwriteblocked_stopwrite (th)
+       call do_eigenvec_store (store_now=.true., n_vir=n_vir, &
+            mode=recover_eigenvec)
     endif
 
     if (options_save_as_fragment()) then
-       call say ("do_save_as_fragment")
-       call readwriteblocked_startwrite (recfile (frg_file), th, variable_length=.true.)
-       call eigenstates_store (th=th)
-       call readwriteblocked_stopwrite (th)
+       block
+          type (readwriteblocked_tapehandle) :: th
+
+          call say ("do_save_as_fragment")
+          call readwriteblocked_startwrite (recfile (frg_file), th, variable_length=.true.)
+          call eigenstates_store (th=th)
+          call readwriteblocked_stopwrite (th)
+       end block
     endif
     ! Deallocate  the temporarily kept  convergence buffers  and reset
     ! the mixing state buffers (if required)

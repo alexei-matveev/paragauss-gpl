@@ -263,9 +263,8 @@ subroutine main_scf()
   endif
 #endif /* ifdef WITH_SCFCONTROL */
 
-  ! Not quite  sure what it  does, but it  needs to be done  every scf
-  ! iteration.       It       was       previousely      done       in
-  ! convergence_read_scfcontrol() called from read/write_scfcontrol:
+  ! It was previousely done every SCF iteration in
+  ! convergence_read_scfcontrol() called from read/write_scfcontrol
   call convergence_resize_buffers()
 
   call stop_timer (timer_scf_preparations)

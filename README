@@ -67,7 +67,7 @@ For MPI-enabled builds use mpirun/mpiexec as appropriate:
 You can specify output directory and the alternative name of the input
 file as in
 
-    TTFSTMP=/tmp TTFSOUPUTDIR=$PWD/output-dir TTFSINPUT=i.test ./mainscf_VX.Y.Z
+    TTFSTMP=/tmp TTFSOUPUTDIR=$PWD/o.test TTFSINPUT=i.test ./mainscf_VX.Y.Z
 
 Note that  the directory, if specified, must  already exist.  Moreover
 it  must  exist  on  all  nodes potentially  involved  in  a  parallel

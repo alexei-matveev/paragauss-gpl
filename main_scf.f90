@@ -510,11 +510,11 @@ subroutine main_scf()
 
      !
      ! In diis_fock_matrix() the total hamiltonian could be updated in
-     ! a  diis-  routine  to  get a  convergence  acceleration.   Only
-     ! ham_tot will be  changed by the routine.  It  could be switched
-     ! on by diis_on  = true in the diis  input list.  Parameters need
-     ! to  be  adapted;  their  best  choice depend  on  other  mixing
-     ! strategies like Perturbation Theory and Fermi broadening.
+     ! a DIIS routine to get a convergence acceleration.  Only ham_tot
+     ! will be  changed by  the routine.  It  could be switched  on by
+     ! diis_on = true in the  DIIS input namelist.  Parameters need to
+     ! be adapted; their best choice depend on other mixing strategies
+     ! like Perturbation Theory and Fermi broadening.
      !
      if (diis_on) then
        ASSERT (.not.options_spin_orbit)
@@ -670,21 +670,21 @@ subroutine main_scf()
   end if
 #endif
 
-  !
-  ! The diis_fock_matrix()  routine will not  be used anymore  in this
-  ! SCF,    so   we    deallocate   the    storage    matrices.    The
-  ! diis_charge_coeff() routine is treated the same way.  FIXME: maybe
-  ! move it into prescf_finalize() after making sure slaves do no harm
-  ! when executing it?
-  !
-  call diis_fock_module_close()
-
   enddo                         ! while (toggle_legacy_mode())
-
   !
   ! The  rest is  executed  on all  workers.  Except where  explicitly
   ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
   !
+
+  !
+  ! The diis_fock_matrix()  routine will not  be used anymore  in this
+  ! SCF,    so   we    deallocate   the    storage    matrices.    The
+  ! diis_charge_coeff() routine  is treated  the same way.   Make sure
+  ! slaves do  no harm when executing  it!  FIXME: maybe  move it into
+  ! prescf_finalize()?
+  !
+  call diis_fock_module_close()
+
 
   ! Clean up the XC part:
   if (xc_is_on (xc_ANY)) then

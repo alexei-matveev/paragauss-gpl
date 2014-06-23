@@ -848,18 +848,11 @@ contains
     ! not really an output file, but happens to reside in output directory:
     call input_open (trim (outfile ("scfcontrol")))
 
-    if (present (warning)) then
-       call convergence_read_scfcontrol (warning, new_trace_header)
-       call options_read_scfcontrol (warning)
-       call mixing_read_scfcontrol (warning)
-       call fermi_read_scfcontrol (warning, new_trace_header, update_scfcontrol)
-    else
-       call convergence_read_scfcontrol (new_trace_format=new_trace_header)
-       call options_read_scfcontrol()
-       call mixing_read_scfcontrol()
-       call fermi_read_scfcontrol (new_trace_format=new_trace_header, &
-            new_scfcontrol_data=update_scfcontrol)
-    endif
+    call convergence_read_scfcontrol (warning, new_trace_header)
+    call options_read_scfcontrol (warning)
+    call mixing_read_scfcontrol (warning)
+    call fermi_read_scfcontrol (warning, new_trace_header, update_scfcontrol)
+
     call input_close()
   end subroutine read_scfcontrol
 

@@ -990,32 +990,32 @@ contains
 
   subroutine diis_fock_module_close ()
     !
-    ! Purpose: deallocates diis matrices, cleans up module state.
+    ! Deallocates diis  matrices, cleans up module state.  Runs on all
+    ! workers.
     !
     implicit none
     !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: allocate_state, n_irrep, i_gamma, j
+    integer (i4_kind) :: status, i_gamma, j
 
-    if(allocated(B)) then
-      n_irrep=size(Xortho)
-      do i_gamma = 1, n_irrep
-        do j = 1, mmax
-          deallocate(ermat(j,i_gamma)%m, hamold(j,i_gamma)%m, stat = allocate_state)
-          ASSERT(allocate_state .eq. 0)
-        enddo
-        deallocate(Xortho(i_gamma)%m, stat = allocate_state)
-        ASSERT(allocate_state .eq. 0)
-      enddo
-      deallocate(B, ermat, hamold, Xortho, stat = allocate_state)
-      ASSERT(allocate_state .eq. 0)
-      ! in the case that endthreshold was set, diis_on was put false during the
-      ! scf part, here it is reset for the next one
-      diis_on = .true.
+    if (allocated (B)) then
+       do i_gamma = 1, size (Xortho) ! = n_irrep
+          do j = 1, size (ermat, 1)  ! = mmax
+             deallocate (ermat(j, i_gamma) % m, hamold(j, i_gamma) % m, stat = status)
+             ASSERT(status==0)
+          enddo
+          deallocate (Xortho(i_gamma) % m, stat = status)
+          ASSERT(status==0)
+       enddo
+       deallocate (B, ermat, hamold, Xortho, stat = status)
+       ASSERT(status==0)
+       ! In the case that endthreshold  was set, diis_on was put false
+       ! during the scf part, here it is reset for the next one
+       diis_on = .true.
     endif
-    if(allocated(b_diis)) then
-      deallocate(b_diis,coeff_charge_diis, coeff_charge_diisdp, stat = allocate_state)
-      ASSERT(allocate_state .eq. 0)
+    if (allocated (b_diis)) then
+       deallocate (b_diis, coeff_charge_diis, coeff_charge_diisdp, stat = status)
+       ASSERT(status==0)
     endif
   end subroutine diis_fock_module_close
 

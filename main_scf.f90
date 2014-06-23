@@ -1161,12 +1161,12 @@ contains
     if (options_save_fitcoeff()) then
        call readwriteblocked_startwrite (recfile (fit_file), th, &
             variable_length=.true., append=.true.)
-       call readwriteblocked_write ((/tot_en/), th)
+       call readwriteblocked_write ([tot_en], th)
        call readwriteblocked_stopwrite (th)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
-          write (output_unit, '(4es20.13)') (/tot_en/)
+          write (output_unit, '(4es20.13)') tot_en
        endif
     endif
 
@@ -1174,12 +1174,12 @@ contains
     if (options_save_scfstate()) then
        call readwriteblocked_startwrite (recfile (scf_file), th, &
             variable_length=.true., append=.true.)
-       call readwriteblocked_write ((/tot_en/), th)
+       call readwriteblocked_write ([tot_en], th)
        call readwriteblocked_stopwrite (th)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
-          write (output_unit, '(4es20.13)') (/tot_en/)
+          write (output_unit, '(4es20.13)') tot_en
        endif
     endif
   end subroutine store_total_energy
@@ -1224,12 +1224,12 @@ contains
        call fit_coeff_store (th)
        call convergence_state_store (th, recover_fitcoeff) ! reset mode
        call mixing_state_store (loop, th)
-       call readwriteblocked_write ((/tot_en/), th)
+       call readwriteblocked_write ([tot_en], th)
        call readwriteblocked_stopwrite (th)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
-          write (output_unit, '(4es20.13)') (/tot_en/)
+          write (output_unit, '(4es20.13)') tot_en
        endif
     endif
 
@@ -1240,12 +1240,12 @@ contains
        call mixing_state_store (loop, th)
        call xcmda_coeff_store (th)
        call xc_hamiltonian_store (th)
-       call readwriteblocked_write ((/tot_en/), th)
+       call readwriteblocked_write ([tot_en], th)
        call readwriteblocked_stopwrite (th)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
-          write (output_unit, '(4es20.13)') (/tot_en/)
+          write (output_unit, '(4es20.13)') tot_en
        endif
     endif
 

@@ -241,7 +241,9 @@ contains
     !
     use symmetry_data_module, only: ssym  ! symmetry information
     use comm, only: comm_bcast, comm_rank
+#if defined(WITH_MATRIX_PARALLEL) || defined(WITH_SCHEDEIG)
     use overlap_module, only: overlap
+#endif
     use time_module, only: start_timer, stop_timer
     use timer_module, only: timer_scf_eigen
 #ifdef WITH_SCHEDEIG

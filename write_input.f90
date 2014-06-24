@@ -28,9 +28,9 @@
 subroutine write_input
 !----------------------------------------------------------------
 !
-!  Purpose: Writing an input file that can be interpreted by 
+!  Purpose: Writing an input file that can be interpreted by
 !           read_input() to file "$TTFSOUT/input.out".
-!           The write routines of various modules are called in 
+!           The write routines of various modules are called in
 !           the same order as the read routines in read_input.
 !
 !  Subroutine called by: main_master
@@ -143,7 +143,7 @@ subroutine write_input
   if ( operations_old_input ) then
      call error_handler("write_input: operations_old_input outdated")
   endif
-     
+
      if (output_write_input) call write_to_output_units("write input: symmetry_group")
      call symmetry_data_group_write(unit)
 
@@ -158,13 +158,13 @@ subroutine write_input
 !!$  endif
 
 #ifdef WITH_MOLMECH
-  if(.not. operations_qm_mm_new) then   
-#endif  
+  if(.not. operations_qm_mm_new) then
+#endif
      if (output_write_input) call write_to_output_units("write input: pointcharge")
      call pointcharge_write(unit)
 #ifdef WITH_MOLMECH
   end if
-#endif  
+#endif
 
 #ifdef WITH_EFP
   if (output_write_input) call write_to_output_units("write input: efp_data")
@@ -191,7 +191,7 @@ subroutine write_input
   else
      write(unit,'(a/)')" # Namelist FERMI : not passed to the slaves"
   endif
-  
+
   if (comm_i_am_master()) then
      if (output_write_input) call write_to_output_units("write input: convergence")
      call convergence_write(unit)

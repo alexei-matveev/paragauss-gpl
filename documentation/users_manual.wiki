@@ -186,55 +186,6 @@ To start an SO calculation one needs:
 
 ----
 
-= Submitting Jobs =
-
-
-
-== Power Challenge ==
-
-You must use the queue system to start ParaGauss.
-
-Here is an example script file:
-
- <nowiki>
- #!/bin/tcsh
- #$ -cwd
- #$ -q para        
- #$ -cwd
- source /etc/cshrc
- source ~/.login
- /home/ttfs/bin.sgi/ttfs_</nowiki>''version name''
-
-Submit this file with the following command: <br /><code>> '''qsub ''time_estimate'' -pe pvm ''proc_nbr script_file'''''</code><br />where
-
-{|
-| <code>'''''time_estimate'''''</code>
-| is an estimate of the run time in the format "hh:mm"
-|-
-| <code>'''''proc_nbr'''''</code>
-| is the number of processors
-|-
-| <code>'''''script_file'''''</code>
-| is the script file described above. It must be executable.
-|}
-
-It might be necessary for huge calculations to make the PVM buffer used by the PVM daemon bigger than the default: In case you obtain error masseges like the following
-
- 
- libpvm [t40002]: da_new() Warning: shared buffer full, using malloc
- libpvm [t40002]: peer_send() Message(s) too long for shared buffer, deadlocked.
-
-... add the following lines to yout "<code>~/.cshrc"</code>" file:
-
- <nowiki>
- # set larger PVM buffer size for huge jobs
- setenv PVMBUFSIZE 104857600
- </nowiki>
-
-Remove these lines again as soon as your large calculations are
-complete since you request a vast amount of spoiled memory for each
-PVM job otherwise.
-
 = Geometry Optimization =
 
 == gx file ==

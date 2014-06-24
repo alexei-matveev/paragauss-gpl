@@ -1,18 +1,8 @@
-<div style="text-align:center; font-weight: bold; font-size:50px">ParaGauss Manuals</div>
 
-<br>
+= ParaGauss User Manual =
 
-<div style="text-align:center; font-weight: italic; font-size:25px">Th Belling, U Birkenheuer, S Kr&uuml;ger, M Mayer, F N&ouml;rtemann,M Staufer, N R&ouml;sch</div>
-
-
-<div style="text-align:center; font-size:15px">
-ParaGauss Version V19
-<br>
-Version 1, 05/02/1998
-</div>
-
-
-<div class="so">
+Th. Belling, U. Birkenheuer, S. Krüger, M. Mayer, F. Nörtemann,
+M. Staufer, N Rösch
 
 = Read Me First =
 

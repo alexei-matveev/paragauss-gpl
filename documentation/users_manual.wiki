@@ -11,160 +11,19 @@ Description of solvent effect specific options can be found in
 
 ----
 
-= How to start ParaGaus: the ttfs Script =
-
-The ttfs script is the driver script of the ParaGauss
-Program. Calculations can only be started using this script.
+= How to start ParaGauss =
 
 == Usage ==
 
- 
-  ttfs_[#ttfsopt_version ''version''] \
-    [#ttfsopt_name ''name''] \
-    [ [#ttfsopt_name_is_extension -name_is_extension] ] \
-    [ [#ttfsopt_extend_outputnames -extend_outputnames] ] \
-    [ [#ttfsopt_inputdir -inputdir] ''inputdir'' ]  \
-    [ [#ttfsopt_outputdir -outputdir] ''outputdir'' ]  \
-    [ [#ttfsopt_dir -dir] ''dir'' ] \
-    [ [#ttfsopt_newinput -newinput] ''filename'' ]  \
-    [ [#ttfsopt_gxfile -gxfile] ''filename'' ] \
-    [ [#ttfsopt_restartable -restartable] ] \
-    [ [#ttfsopt_save_old_output -save_old_output] ] \
-    [ [#ttfsopt_zip -zip] ] \
-    [ [#ttfsopt_vpp_mbx_size -vpp_mbx_size]  ''number'' ] \
-    [ [#ttfsopt_us -us] |
-      [#ttfsopt_pd -pd] ] \
-    [ [#ttfsopt_shared_fs -shared_fs]  ''dir'' ] \
-    [ [#ttfsopt_recover_in_datadir -recover_in_datadir] ] \
-    [ [#ttfsopt_keep_slaveoutput -keep_slaveoutput] ] \
-    [ [#ttfsopt_keep_core -keep_core] ]  \
-    [ [#ttfsopt_profile -profile] |
-      [#ttfsopt_count -count]  ''sourcedir'' |
-      [#ttfsopt_vpp_stats -vpp_stats]  ''optionnumber'' ]  \
-    [ [#ttfsopt_vers -vers] ''version'' ] \
-    [ [#ttfsopt_scriptvers -scriptvers] ''version'' ] \
-    [ [#ttfsopt_interfacevers -interfacevers] ''version'' ] \
-    [ [#ttfsopt_simolvers -simolvers] ''version'' ]  \
-    [ [#ttfsopt_opt -opt] ''geometry optimization program'' ] \
-    [ [#ttfsopt_integral -integral] |
-      [#ttfsopt_integral_split -integral_split] |
-      [#ttfsopt_split -split] | 
-      [#ttfsopt_split_scf -split_scf] |
-      [#ttfsopt_scf -scf] |
-      [#ttfsopt_interfacefile -interfacefile] |
-      [#ttfsopt_paragau -paragau] |
-      [#ttfsopt_help -help] ]  \
-    [ [#ttfsopt_datadir -datadir] ''datadir'' ] \
-    [ [#ttfsopt_rm_datadir -rm_datadir] |
-      [#ttfsopt_keep_datadir -keep_datadir] ] \
-    [ [#ttfsopt_oldinput -oldinput] ''filename'' ]  \
-    [ [#ttfsopt_interfaces -interfaces] ''filename'' ]  \
-    [ [#ttfsopt_lcgtooptions -lcgtooptions] ''option'' [''option'' ...] ]
-
-For obtaining on-line help:
-
- 
-  ttfs_''version'' -help
-
-The options listed above may appear in arbitrary order except for
-<code>-lcgtooptions</code> that must appear last. All options are
-optional. The first argument <code>''name''</code> as described below
-is obligatory.
-
-The following options are SP2-specific:
-
-* [ -us | -pd ]
-* [ -shared_fs ''dir'' ]
-
-The following options are VPP-specific:
-
-* [ -profile | -count ''sourcedir'' | -vpp_stats ''optionnumber'' ]
-* [ -vpp_mbx_size ''number'' ]
-
 == Location and naming of input and output files ==
-
-The ttfs script offers flexibility in naming and locating input and
-output files. Principally, two philosophies are supported for
-separating files of different calculations:
-
-; one specific directory for each calculation
-: use <code>''name''</code> to specify directory (absolute path recommended). No file name extensions are necessary.
-; several calculations in one directory kept apart by file name extensions.
-: use <code>''name''</code> to specify file name extensions and set <code>-name_is_extension</code>. Files are located either in present working directory or the one specified with <code>-dir ''dir''</code>.
-
-Separating input and output directory and naming files individually is also supported via the switches described below.
-
-; <code>''name''</code>
-: The meaning differs depending if you set [#ttfsopt_name_is_extension <code>-name_is_extension</code>].
-:* In case you do not set this flag, <code>''name''</code> is the default input and output directory of your calculation. Both relative and absolute paths are valid, but the absolute one is recommended. The last part of <code>''name''</code> is also a valid postfix for input files that allows to keep input files for different calculations in one input directory apart. In case you set <code>-extend_outputnames</code> it will also be the postfix to all output files.
-:* In case you set this flag, <code>''name''</code> is a postfix to all input and output files. The directory where your input and output files are located is the present working directory unless you specify other with <code>-dir</code> or <code>-inputdir</code> and <code>-outputdir</code>.  Intermediate directories used during the calculation are also termed according to <code>''name''</code>.
-; <code>[ -name_is_extension ]</code>
-: <code>''name''</code> is not used to set inputdir and outputdir but only as extension to input and output filenames. This implies automatically [#ttfsopt_extend_outputnames <code>-extend_outputnames</code>]. Note that input files without extensions are also accepted if none with extension exist.
-; <code>[ -extend_outputnames ]</code>
-: use last part of <code>''name''</code> as extension to output files.
-; <code>[ -inputdir ''inputdir'' ]</code>
-: directory that holds input files. Default is <code>''name''</code>, of if [#ttfsopt_name_is_extension <code>-name_is_extension</code>] is given present working directory.
-; <code>[ -outputdir ''outputdir'' ]</code>
-: directory where to store output files of new program run. If directory already exists old output files will be overwritten. Default is <code>''name''</code>, of if [#ttfsopt_name_is_extension <code>-name_is_extension</code>] is given present working directory.
-; <code>[ -dir ''dir'' ]</code>
-: equivalent to <code>[#ttfsopt_inputdir -inputdir] ''dir'' [#ttfsopt_outputdir -outputdir] ''dir''</code>.
-; <code>[ -newinput ''filename'' ]</code>
-: input file in <code>''inputdir''</code> to new program. Default is file input.
-; <code>[ -gxfile ''filename'' ]</code>
-: [#gx_file gx file] in <code>''inputdir''</code> containing geometry and Z-matrix for geometry optimization. Default is gx.
 
 == Various useful options ==
 
-; <code>[ -restartable ]</code>
-: leave [#gx_file gx file] and scf restart files in place instead of renaming them. This allows to restart calculation without modifying input/output directory. Default is moving these files to protect them from accidental modifications. The switch also implies -save_old_output (see below).
-; <code>[ -save_old_output ]</code>
-: move old output files (output, input.out, gx.start, trace file) to files with _<code>''number''</code> appended where <code>''number''</code> is the lowest one without existing files. All files of one run will obtain the same <code>''number''</code>.
-; <code>[ -zip ]</code>
-: compress output files
-; <code>[ -vpp_mbx_size ''number'' ]</code>
-: set size of mailbox for incoming PVM messages on VPP. ''number'' can take the following values resulting in the given mbx sizes on each host: {|
-| 1
-| 4 MB
-|-
-| 4
-| 16 MB
-|-
-| 16
-| 64 MB (this is the default)
-|-
-| 64
-| 256 MB
-|}
-; <code>[ -shared_fs ''dir'' ]</code>
-: use <code>''dir''</code> as shared scratch file system on SP2"
-; <code>[ -recover_in_datadir ]</code>
-: fetch and/or write scf recover files to <code>''datadir''</code> during calculation. Default is to store them in <code>''inputdir''</code> during calculation.
-
 == Debug options ==
-
-; <code>[ -keep_slaveoutput ]</code>
-: copy the slave output directories to the directoies termed after the hostnames or 1, 2, ... created in <code>''outputdir''</code>.
-; <code>[ -keep_core ]</code>
-: keep the core file for debugging in case new program crashes.
-; <code>[ -profile ]</code>
-: produce profiling information. Perform profiling by statistically recording position of program.
 
 == Selecting versions of called programs ==
 
-The versions of various programs called by the ttfs script can be selected individually. For normal purpose, the defaults should be fine. In most cases, the programs use the same <code>''version''</code> as the <code>ttfs_''version''</code> script.
-
-; <code>[ -vers ''version'' ]</code>
-: version of ParaGauss program to use Default is <code>''version''</code> of <code>ttfs_''version''</code> script.
-; <code>[ -mpi ]</code>
-: take an MPI executable instead of PVM
-
 == Exit status ==
-
-The ttfs script returns zero in case of successful execution and other values in case of errors. In the case of geometry optimization, zero is returned as long as the optimization did not yet converge within the number [[#CONVERGENCE_LIST|MAX_GEO_ITERATION]] of points allowed and 100 if the optimization converged.
-
-This is useful in the case of geometry optimization. If not all the geometry optimization cycles can be performed at once due to time limits of the queue system, the exit status of the ttfs script can be used for automatic resubmission of the job.
-
-The exit status of a program can be obtained via the shell variable "$status" directly after the execution of the program.
 
 == Examples ==
 

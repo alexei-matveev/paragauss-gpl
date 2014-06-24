@@ -60,9 +60,6 @@ F77 = $(FC)
 # To use XDR library for disk IO in modules/io.f90 uncomment:
 WITH_FXDR=1
 
-# Absoft can compile the sources in naninfchk.f
-WITH_NANINFCHK=1
-
 #### Extensions compiler understands:
 src_ext = F90
 

@@ -24,7 +24,6 @@
 # Please see the accompanying LICENSE file for further information.
 #
 WITH_OLD_INPUT = 1
-WITH_NANINFCHK = 0
 ### Machine Keyword for FPP
 MACH =	LINUX
 

@@ -723,14 +723,6 @@ ifeq ($(WITH_ISNAN),1)
 	FPPOPTIONS += -DWITH_ISINF
 endif
 
-ifeq ($(WITH_NANINFCHK),1)
-	libttfs_dontcallcomm.a += naninfchk.o
-	FPPOPTIONS += -DFPP_HAVE_NANINFCHK
-
-# for absoft only:
-naninfchk.o: FFLAGS += -YBOZTYPE=INT
-endif
-
 #
 # COMMOBJS/COMMCOBJS for communication (message passing):
 #

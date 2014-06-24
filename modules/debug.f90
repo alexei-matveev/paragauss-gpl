@@ -361,12 +361,6 @@ contains
     logical                 :: yes
     ! *** end of interface ***
 
-#ifdef FPP_HAVE_NANINFCHK
-    logical :: DNANCHK ! external func, works with Absoft
-
-    yes = DNANCHK(v)
-#endif
-#ifdef FPP_HAVE_ISNAN
 #ifndef INTRINSIC_ISNAN
     logical, external :: isNaN ! external func, provided by Intel
 #else
@@ -374,7 +368,6 @@ contains
 #endif
 
     yes = isNaN(v)
-#endif
   end function isNaN_s
 
   function isNaN_1D(v) result(mask)
@@ -472,13 +465,7 @@ contains
     logical                 :: yes
     ! *** end of interface ***
 
-#ifdef FPP_HAVE_NANINFCHK
-    logical :: DINFCHK ! external func, works with Absoft
-
-    yes = DINFCHK(v)
-#else
     yes = abs(v) > huge(v)
-#endif
   end function isInf
 #endif
 
@@ -670,8 +657,8 @@ contains
           c = '-'
         endif
       endif
-#ifdef WITH_NANINFCHK
-      if( isNaN(x) )then
+#ifdef WITH_ISNAN
+      if (isNaN (x)) then
         c = 'N'
       endif
 #endif

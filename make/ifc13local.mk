@@ -115,7 +115,6 @@ FPPOPTIONS += $(CPPOPTIONS) -D_$(MACH)
 FPPOPTIONS += $(if $(DEBUG), -DFPP_DEBUG=$(DEBUG), )
 #FPPOPTIONS += -DFPP_FAST_COMPILE
 FPPOPTIONS += -DFPP_PARAGAUSS_VERS="\"$(paragauss_vers)\""
-FPPOPTIONS += -DFPP_HAVE_ISNAN
 #
 # Dont use automatic arrays, better yet use "-heap-arrays" or just
 # "unlimit -s unlimited":

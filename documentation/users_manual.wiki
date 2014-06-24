@@ -153,8 +153,6 @@ These files will be located in the output directory in case input and output dir
 
 ----
 
-<div class="so">
-
 = Calculation Modes =
 
 == Standard Mode ==
@@ -185,7 +183,6 @@ To start an SO calculation one needs:
 * you may want to set <tt>XC = "vwn,gga:all"</tt> in [[#PHXC_CONTROL|<tt>PHXC_CONTROL</tt>]] namelist
 
 == Usage of functionals ==
-</div>
 
 ----
 
@@ -837,7 +834,7 @@ Various important options.
      NUMERIC_EXCH        =      TRUE # (the default)
      SPIN_RESTRICTED     =      TRUE # (the default)
      RELATIVISTIC        =     FALSE # (the default)
-     <span class="so">SPIN_ORBIT          =     FALSE # (the default) /* Version > 2.1g */</span>
+     SPIN_ORBIT          =     FALSE # (the default)
      INTEGRALS_ON_FILE   =      TRUE # (the default)
      USE_MODEL_DENSITY   =     FALSE # (the default)
      ENERGIES_ALWAYS     =     FALSE # (the default)
@@ -1487,7 +1484,6 @@ READ_SCFSTATE and RESET_SCFCYCLE is switched to true.
 ; RESET_SCFCYCLE
 : Reset SCF cycle counting when recovering.
 
-<div class="so">
 
 ===SPIN_ORBIT===
 
@@ -1509,8 +1505,6 @@ This namelist defines what type of SO calculations you really need. <br />Possib
 : for second order DK transformation of the coulomb term. <tt>hDKH(2)</tt> and <tt>oDKH(2)</tt> are two flavors of the <tt>DKH(2)</tt> transformation. <tt>"o"</tt> stays for ''operator'', <tt>"h"</tt> stays for ''hamiltonian''. Short hand notation <tt>FitTrafo:DKH(2)</tt> is defaulted to <tt>oDKH(2)</tt>.
 
 Refer to [#Spin_Orbit Spin Orbit] section for more information on spin-orbit.
-
-</div>
 
 === SYMMETRY_DATA ===
 
@@ -2044,7 +2038,7 @@ ported to user defined combinations: PBEX, PBEC, PBEN, PBENx, PBENC,
 TPSSx, TPSSc, EXX
 
 ==== Explicit Flags (Deprecated) ====
-<span style="color:#FF0000;"> Namelist entries flagged for deletion. Dont use them any more! </span>
+Namelist entries flagged for deletion. Dont use them any more!
 
 Selects the exchange correlation functional used in the SCF part. If
 not specified otherwise (see
@@ -2061,7 +2055,7 @@ want to use a GGA correction, also the LDA functionals have to be
 selected.
  
   &XC_CONTROL
-     XC             = "undef" # (the default)</span>
+     XC             = "undef" # (the default)
      XALPHA         =  TRUE # (the default)
      VWN            =  TRUE # (the default)
      PWLDAc         = FALSE # (the default) /* version >= V20_delta */

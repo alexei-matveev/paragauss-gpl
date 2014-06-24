@@ -66,7 +66,6 @@ subroutine write_input
   use output_module
   use machineparameters_module, only: machineparameters_write
   use grid_module, only: grid_write_ph, grid_write
-  use ph_cntrl, only: post_scf_write_input
   use xc_cntrl,    only: xc_write_input
   use xcmda_hamiltonian, only: mda_options_write
   use occupation_module, only: occupation_write
@@ -207,9 +206,6 @@ subroutine write_input
   if (output_write_input) call write_to_output_units("write input: ERI4C")
   call eri4c_write_input(unit)
 #endif
-
-  if (output_write_input) call write_to_output_units("write input: PostSCF")
-  call post_scf_write_input(unit)
 
 #ifdef WITH_RESPONSE
   if (output_write_input) call write_to_output_units("write input: Response")

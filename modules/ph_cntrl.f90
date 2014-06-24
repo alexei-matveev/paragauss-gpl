@@ -80,7 +80,6 @@ module ph_cntrl
 
   !------------ public functions and subroutines ------------------
   public :: post_scf_read_input
-  public :: post_scf_write_input
   public :: post_scf_set_defaults
   public :: post_scf_input_bcast
   public :: ph_cntrl_setup
@@ -216,15 +215,6 @@ contains
         nl_calc_ph = SCF_ON(xc_gga)
     endif
   end subroutine post_scf_set_defaults
-
-  subroutine post_scf_write_input(iounit)
-    ! purpose : Writing the input concerning phxc_control to the output
-    implicit none
-    integer(i4_kind), intent(in) :: iounit
-    !** End of interface *****************************************
-
-    WARN('skip writing PHXC_CONTROL!')
-  end subroutine post_scf_write_input
 
   subroutine post_scf_input_bcast()
     use comm, only: comm_bcast

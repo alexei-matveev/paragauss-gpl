@@ -154,7 +154,7 @@ contains
 
     n_proc=comm_get_n_processors()
     myindex=comm_myindex()
-    nn=anint(real(n_species)/real(n_proc))
+    nn = nint (real (n_species) / real (n_proc))
     first_index=nn*(myindex-1)+1
     last_index=first_index+nn-1
     if(myindex==n_proc) last_index=n_species

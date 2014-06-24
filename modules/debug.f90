@@ -35,7 +35,7 @@ module debug
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: ...
   !  Date: ...
@@ -187,12 +187,12 @@ module debug
 
 
   !------------ Declaration of types ------------------------------
-!!$  type 
-!!$  end type 
+!!$  type
+!!$  end type
 
   !------------ Declaration of constants and variables ----
 
-  real(RK), parameter :: zero = 0.0_RK 
+  real(RK), parameter :: zero = 0.0_RK
 
   !----------------------------------------------------------------
   !------------ Subroutines ---------------------------------------
@@ -594,7 +594,7 @@ contains
 
   end subroutine show_real_matrix
   !*************************************************************
-  
+
   !*************************************************************
   subroutine zhow_real_matrix(mat,cut)
     !  Purpose: ..
@@ -1000,7 +1000,7 @@ contains
     integer(IK),parameter       :: many=7
     real(RK),dimension(4) :: norms
     integer(IK)           :: i,j,n,m,d_n,d_m
-    
+
     call error(any(shape(M_real)/=shape(M_imag)),"isam/show_cmplx: shapes ???")
 
     n = size(M_real,1)
@@ -1020,7 +1020,7 @@ contains
        write(*,'(I3," ",8(E15.8," "))')&
             & i, (M_real(i,j), j=1,m,d_m)
     enddo
-    
+
     write(*,'(A)') '\imag>>>'
     write(*,'(8I16)') (i,i=1,m,d_m)
     do i=1,n,d_n
@@ -1151,7 +1151,7 @@ select case(M_mod_nc)
   end subroutine display_oct_sqr_mat
 
   !***************************************************************************************
-  
+
   function examine_cmplx(M_real,M_imag) result(res)
     use error_module
     implicit none
@@ -1174,7 +1174,7 @@ select case(M_mod_nc)
     diag_norm_imag =   sum(pack(M_imag,diag_mask(n))**2)
     offdiag_norm_real= sum(pack(M_real,offdiag_mask(n))**2)
     offdiag_norm_imag= sum(pack(M_imag,offdiag_mask(n))**2)
-    
+
     res=(/ diag_norm_real,offdiag_norm_real,&
          & diag_norm_imag,offdiag_norm_imag /)
     return
@@ -1184,7 +1184,7 @@ select case(M_mod_nc)
     integer(IK),intent(in) :: n
     logical,dimension(n,n) :: m  !<<<result
     ! *** end of interface ***
-    
+
     integer(IK) :: i
 
     m = .false.
@@ -1192,7 +1192,7 @@ select case(M_mod_nc)
        m(i,i) = .true.
     enddo
   end function diag_mask
-  
+
   function offdiag_mask(n) result(m)
     integer(IK),intent(in) :: n
     logical,dimension(n,n) :: m  !<<<result

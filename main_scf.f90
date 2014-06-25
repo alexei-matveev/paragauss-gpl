@@ -651,6 +651,14 @@ subroutine main_scf()
      call write_to_trace_unit ("MAIN_SCF: aborting at maximal number of cycles: ", inte=loop)
   endif
 
+
+  enddo                         ! while (toggle_legacy_mode())
+  !
+  ! The  rest is  executed  on all  workers.  Except where  explicitly
+  ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
+  !
+
+  ASSERT(allocated(n_occo))
   ! Expectation values of S2
   if (size (n_occo, 1) == 2) then ! unrestricted
      call s2_calc() ! from s2_expect.f90
@@ -658,15 +666,10 @@ subroutine main_scf()
 
 #ifdef WITH_CORE_DENS
   if (operations_core_density) then
+     ABORT("verify SPMD")
      call write_coeff_core (loop)
   end if
 #endif
-
-  enddo                         ! while (toggle_legacy_mode())
-  !
-  ! The  rest is  executed  on all  workers.  Except where  explicitly
-  ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
-  !
 
   !
   ! The diis_fock_matrix()  routine will not  be used anymore  in this

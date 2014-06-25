@@ -40,8 +40,8 @@ subroutine epe_driver
 
 use type_module
 use comm_module
-use epecom_module, only :periodic_optimization,output_epe,epedata_dir, &
-                         n_iterations, ex_pgdata, epe_input_dir
+use epecom_module, only: epedata_dir, n_iterations, ex_pgdata, &
+     epe_input_dir
 use iounitadmin_module
 use filename_module,only: data_dir, inpfile
 use main_epe_module, only: main_epe,start_epe, &

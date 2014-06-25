@@ -175,6 +175,7 @@ subroutine main_scf()
   ! One of the above, including .dat extension:
   character (len=NCHAR) :: rec_file
 
+  logical :: scf_conv ! signifies SCF convergence, broadcasted to slaves
   logical :: store_now, recover, etot_recovered
   logical :: new_trace_header
   logical :: update_scfcontrol = .FALSE.
@@ -636,7 +637,19 @@ subroutine main_scf()
 
   enddo scf_cycle
 
-  if (convergence()) then
+  enddo                         ! while (toggle_legacy_mode())
+  !
+  ! The  rest is  executed  on all  workers.  Except where  explicitly
+  ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
+  !
+
+  ! This  checks convergence  of  energy AND  charge coefficients  AND
+  ! density  matrix AND Coulomb  (?).  FIXME:  This function  seems to
+  ! complete without crash but returns junk on slave workers:
+  scf_conv = convergence()
+  call comm_bcast (scf_conv)
+
+  if (scf_conv) then
      call write_to_output_units ("")
      call write_to_output_units ("")
      call write_to_output_units ("####### convergence was reached in cycle ", inte=loop)
@@ -651,15 +664,9 @@ subroutine main_scf()
      call write_to_trace_unit ("MAIN_SCF: aborting at maximal number of cycles: ", inte=loop)
   endif
 
-
-  enddo                         ! while (toggle_legacy_mode())
-  !
-  ! The  rest is  executed  on all  workers.  Except where  explicitly
-  ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
-  !
-
+  ! Compute expectation  values of S2. Does some  output. FIXME: looks
+  ! like we have a serial O(N^3) step here:
   ASSERT(allocated(n_occo))
-  ! Expectation values of S2
   if (size (n_occo, 1) == 2) then ! unrestricted
      call s2_calc() ! from s2_expect.f90
   endif

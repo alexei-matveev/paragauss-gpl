@@ -1400,19 +1400,23 @@ contains
   subroutine eigen_hole_setup (force_hole, n_holes, hole_list, &
        hole_irrep, force_update, hole_spin)
     !
-    ! Purpose: fill the variables 'n_holes_per_irrep',
-    ! 'holes_per_irrep' and eigvec_hole using the variables
-    ! fixed_hole, hole_list and hole_irrep from the occupation
-    ! module.
+    ! Fill  the variables  'n_holes_per_irrep',  'holes_per_irrep' and
+    ! eigvec_hole  using  the   variables  fixed_hole,  hole_list  and
+    ! hole_irrep from the occupation module.
     !
-    ! Subroutine called by: 'occupation_get_holes', which in turn
-    ! is called by 'do_recover' in 'main_scf' to ensure that
+    ! Subroutine  called by occupation_get_holes(),  which in  turn is
+    ! called by main_scf() to ensure that
+    !
     ! a) fixed_hole modus works only with recovered eigenvectors
+    !
     ! b) eigenvectors are allocated and initialized
-    !-------------------------------------------------------
+    !
+    ! Does not seem  to do any communication. By  way of eigvec_read()
+    ! does  IO (reading)  in  case of  spin-orbit.  Currently runs  on
+    ! master only.
+    !
     use symmetry_data_module
     implicit none
-    ! --- Declaration of formal parameters -----------------
     logical,intent(in)               :: force_hole
     integer(kind=i4_kind),intent(in) :: n_holes
     integer(kind=i4_kind),intent(in) :: hole_list(:)
@@ -1420,12 +1424,11 @@ contains
     integer(i4_kind), intent(in), optional :: hole_spin(:)
     logical,intent(in)               :: force_update
     !** End of interface ***************************************
-    ! --- Declaration of local variables -------------------
+
     integer(kind=i4_kind) :: counter,alloc_stat,i,j,num_hole&
          ,num_spin,i_hole
     logical :: spin_restricted
     integer(i4_kind) :: irr,n_irr,n_func,n_hole,hole
-    !---- Executable code ----------------------------------
 
     if (present(hole_spin)) then
        spin_restricted=.false.
@@ -1440,14 +1443,14 @@ contains
     endif
 
     fixed_hole=.true.
-    ! This variable determines if the projector, i.e. the
-    ! hole eigenvector originating from the reference
-    ! calculation is to be updated during the SCF-Cycles
-    ! even if the hole does not *jump* from one orbital
-    ! to another. This can be set in order to take care of
-    ! cases where the holes moves slowly and then suddenly
+
+    ! This  variable  determines  if  the  projector,  i.e.  the  hole
+    ! eigenvector originating from the  reference calculation is to be
+    ! updated during the  SCF-Cycles even if the hole  does not *jump*
+    ! from one  orbital to another. This  can be set in  order to take
+    ! care of  cases where  the holes moves  slowly and  then suddenly
     ! cannot be idetnified anymore.
-    update_projector=force_update
+    update_projector = force_update
 
     if(options_spin_orbit)then
        n_irr = symmetry_data_n_proj_irreps()
@@ -1455,13 +1458,13 @@ contains
        n_irr = symmetry_data_n_irreps()
     endif
 
-    if(options_spin_orbit.and..not.EIGDATA_VALID)then
+    if (options_spin_orbit .and. .not. EIGDATA_VALID) then
        DPRINT 'eid::eigen_hole_setup: call eigvec_read()'
        call eigvec_read()
        DPRINT 'eid::eigen_hole_setup: .'
     endif
 
-    ! allocate the array 'n_holes_per_irrep' for later use
+    ! Allocate the array 'n_holes_per_irrep' for later use
     allocate(n_holes_per_irrep(n_irr),STAT=alloc_stat)
     if (alloc_stat/=0) call error_handler&
          ("eigen_hole_setup: allocation of n_holes_per_irrep failed")
@@ -1479,9 +1482,7 @@ contains
             n_holes_per_irrep(hole_irrep(i)) + 1
     enddo
 
-    irreps: do i=1,n_irr !symmetry_data_n_irreps()
-!!$       ! zero-length arrays are allowed:
-!!$       if (n_holes_per_irrep(i) == 0) cycle irreps
+    irreps: do i = 1, n_irr     ! symmetry_data_n_irreps()
 
        allocate(holes_per_irrep(i)%m(n_holes_per_irrep(i)),STAT=alloc_stat)
        if (alloc_stat/=0) call error_handler &
@@ -1510,14 +1511,11 @@ contains
           allocate(eigvec_hole(n_irr),STAT=alloc_stat)
           if (alloc_stat/=0) call error_handler&
                ("eigen_hole_setup: allocation (1) failed")!
-          irreps_2:  do i=1,n_irr !symmetry_data_n_irreps()
+          irreps_2:  do i = 1, n_irr ! symmetry_data_n_irreps()
              allocate(eigvec_hole(i)%m(symmetry_data_dimension(i),&
                   n_holes_per_irrep(i),symmetry_data_n_spin()),STAT=alloc_stat)
              if(alloc_stat/=0) call error_handler &
                   ("eigen_hole_setup: allocation (2) failed")
-
-!!$             ! zero-length loops are allowed:
-!!$             if (n_holes_per_irrep(i) == 0) cycle irreps_2
 
              do i_hole=1,n_holes_per_irrep(i)
                 num_hole=holes_per_irrep(i)%m(i_hole)
@@ -1529,24 +1527,21 @@ contains
                         eigvec(i)%m(:,num_hole,num_spin)
                 endif
              enddo
-             ! now eigvec_hole(irrep)%m(basis,orbital_with_hole,spin)
-             ! contains the eigenvector for the orbitals specified
-             ! to have a hole.
+             ! Now  eigvec_hole(irrep)  % m(basis,  orbital_with_hole,
+             ! spin)  contains   the  eigenvector  for   the  orbitals
+             ! specified to have a hole.
           enddo irreps_2
        else
           DPRINT 'eid::eigen_hole_setup: spin-orbit branch...'
           ASSERT(EIGDATA_VALID)
-!!$          DPRINT 'eid::eigen_hole_setup: n_irr=',n_irr,&
-!!$               & 'size(n_holes_per_irrep)=',size(n_holes_per_irrep)
-!!$          DPRINT 'eid::eigen_hole_setup: n_holes_per_irrep=',n_holes_per_irrep
+
           allocate(eigvec_hole_real(n_irr),eigvec_hole_imag(n_irr),&
                & STAT=alloc_stat)
           ASSERT(alloc_stat==0)
           do irr=1,n_irr
              n_func = symmetry_data_dimension_proj(irr)
              n_hole = n_holes_per_irrep(irr)
-!!$             DPRINT 'eid::eigen_hole_setup: n_func=',n_func,'n_hole=',n_hole,&
-!!$                  & 'size(holes_per_irrep(irr)%m=',size(holes_per_irrep(irr)%m)
+
              allocate(&
                   & eigvec_hole_real(irr)%m(n_func,n_hole),&
                   & eigvec_hole_imag(irr)%m(n_func,n_hole),&

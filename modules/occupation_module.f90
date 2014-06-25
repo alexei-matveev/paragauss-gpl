@@ -2773,35 +2773,44 @@ contains
 
   !*************************************************************
   subroutine occupation_get_holes()
-    !Purpose: this routine is actually a 'wrapper' for the
-    ! routine 'eigen_hole_setup' which needs variables from
-    ! the occupation_module but which cannot import them via
-    ! a use-statement since the occupation_module is already
-    ! using the eigen_data_module. Of course, since 'main_scf'
-    ! is using the whole occupation module with all its public
-    ! variables the subsequent call to the routine
-    ! 'eigen_hole_setup' could also have been done in 'main_scf',
-    ! but would have appeared a bit awkward.
     !
-    ! subroutine called by: 'do_recover' in 'main_scf'.
-    !** End of interface *****************************************
+    ! This   routine   is  actually   a   wrapper   for  the   routine
+    ! eigen_hole_setup()    which    needs    variables    from    the
+    ! occupation_module   but   which  cannot   import   them  via   a
+    ! use-statement since  the occupation_module is  already using the
+    ! eigen_data_module.   Of course,  since main_scf()  is  using the
+    ! whole  occupation  module  with  all its  public  variables  the
+    ! subsequent  call to  the routine  eigen_hole_setup()  could also
+    ! have  been done  in main_scf(),  but would  have appeared  a bit
+    ! awkward.
+    !
+    ! Subroutine called by: 'main_scf()'.
+    !
     use options_module, only: options_spin_restricted
     use eigen_data_module, only: eigen_hole_setup
+    use comm, only: comm_rank
+    !** End of interface *****************************************
+
     logical :: force_hole
 
-    if(hole_localization) then
-       force_hole=.false.
+    ! The  staff below seems  to run  on master  only and  requires no
+    ! communication but some IO:
+    if (comm_rank() /= 0) return
+
+    ! In other words, force_hole == .not. hole_localization
+    if (hole_localization) then
+       force_hole = .false.
     else
-       force_hole=.true.
-    end if
-    if (options_spin_restricted()) then
-       call eigen_hole_setup(force_hole,n_holes,hole_list,hole_irrep,&
-            hole_update)
-    else
-       call eigen_hole_setup(force_hole,n_holes,hole_list,hole_irrep,&
-            hole_update,hole_spin)
+       force_hole = .true.
     endif
 
+    if (options_spin_restricted()) then
+       call eigen_hole_setup (force_hole, n_holes, hole_list, hole_irrep, &
+            hole_update)
+    else
+       call eigen_hole_setup (force_hole, n_holes, hole_list, hole_irrep, &
+            hole_update, hole_spin)
+    endif
   end subroutine occupation_get_holes
   !*************************************************************
 

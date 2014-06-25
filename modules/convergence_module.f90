@@ -743,10 +743,14 @@ contains
   !*************************************************************
 
   logical function convergence()
-    ! purpose: returns if convergence is reached.
-    ! subroutine called by: main_scf
-    !** End of interface ***************************************
     !
+    ! Returns true  if convergence is reached.   Subroutine called by:
+    ! main_scf(). FIXME: currently seems to return different values on
+    ! master  and slaves.  Is  executed in  parallel context  at least
+    ! once.
+    !
+    !** End of interface ***************************************
+
     convergence = convergence_energy()  .and. &
                   convergence_coeff()   .and. &
                   convergence_coulomb() .and. &

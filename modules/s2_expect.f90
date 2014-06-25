@@ -81,16 +81,16 @@ module s2_expect
 
 
   !------------ Declaration of types ------------------------------
-!!$  type 
-!!$  end type 
+!!$  type
+!!$  end type
 
   !------------ Declaration of constants and variables ----
-!!$  integer(kind=IK), parameter :: 
-!!$  real(kind=RK),    parameter :: 
-!!$  logical,               parameter :: 
-!!$  character,             parameter :: 
+!!$  integer(kind=IK), parameter ::
+!!$  real(kind=RK),    parameter ::
+!!$  logical,               parameter ::
+!!$  character,             parameter ::
 !!$  integer(kind=IK),           ::
-!!$  real(kind=RK),              ::     
+!!$  real(kind=RK),              ::
 !!$  logical,                         ::
 !!$  character,                       ::
 
@@ -181,7 +181,7 @@ contains
     WRITE(output_unit,'(A)') " = S(S+1) + N_{minor} - \Sum_{ij} |S^{ab}_{ij}|^2 ="
     WRITE(output_unit,'(A)') " =================================================="
     WRITE(output_unit,'(A)')
-    WRITE(output_unit,'(" level is considered occupied if nel >= ",F6.1)') thresh 
+    WRITE(output_unit,'(" level is considered occupied if nel >= ",F6.1)') thresh
 
     ! determine minor major spins:
     nna  = 0.0_rk
@@ -329,7 +329,7 @@ contains
 
     integer(IK),parameter       :: many=7
     integer(IK)           :: i,j,n,m,d_n,d_m
-    
+
     n = size(MM,1)
     m = size(MM,2)
 

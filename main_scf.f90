@@ -135,7 +135,7 @@ subroutine main_scf()
   use mixing_module, only: mixing_read_scfcontrol
 #endif
   use population_module, only: population_mulliken, population_spor_mulliken
-  use comm_module, only: comm_parallel
+  use comm, only: comm_parallel, comm_same, comm_bcast
   use pairs_module, only: n_pairs
   use readwriteblocked_module, only: readwriteblocked_tapehandle, &
        readwriteblocked_stopread, readwriteblocked_startread, &
@@ -271,8 +271,6 @@ subroutine main_scf()
   call say ("preparations done")
   call write_to_trace_unit ("SCF preparations done")
 
-  do while (toggle_legacy_mode ())
-
   ! Here the SCF-Cycle starts
   call write_trace_header()
 
@@ -281,13 +279,21 @@ subroutine main_scf()
   ! FIXME: what about tot_en?
   loop = 0
   etot_recovered = .false.
+  ASSERT(comm_same(recover))
   if (recover) then
      !
-     ! Loads   loop,  etot_recovered   and  tot_en.   When  calling
-     ! hamiltonian_recover()   the  Fock   matrix  in   ham_tot  is
-     ! allocated and filled with data:
+     ! Loads   loop,   etot_recovered   and  tot_en.    When   calling
+     ! hamiltonian_recover() the  Fock matrix in  ham_tot is allocated
+     ! and filled with data. Master  seems to send the orders and data
+     ! to slaves  from there, the correspondig  receives are initiated
+     ! from main_slave():
      !
-     call do_recover (recover_mode, n_pairs, loop, tot_en, eof=etot_recovered)
+     do while (toggle_legacy_mode ())
+        call do_recover (recover_mode, n_pairs, loop, tot_en, eof=etot_recovered)
+     enddo
+     call comm_bcast (loop)
+     call comm_bcast (tot_en)
+     call comm_bcast (etot_recovered)
 
      ! loop is incremented at the top of the scf_cycle:
      loop = loop - 1
@@ -295,6 +301,8 @@ subroutine main_scf()
 
   ! This is compared against base-1 loop:
   first_loop = loop + 1
+
+  do while (toggle_legacy_mode ())
 
   if (fixed_hole) then
      call say ("set up hole information in eigen_data_module")

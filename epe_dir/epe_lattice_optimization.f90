@@ -62,7 +62,6 @@ subroutine epe_lattice_optimization()
                              epedata_dir, pg_cfield_calculated, &
                              epe_input_dir, do_print, qm_interfaced_mode, &
                              n_iterations,read_configuration, epeit_count, n_centres_of_generation
-  use filename_module, only: data_dir
   use main_epe_module, only: main_epe,start_epe,finish_epe, &
                              epe_send_init_to_slave, &
                              epe_send_finish_to_slave

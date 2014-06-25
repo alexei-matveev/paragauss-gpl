@@ -532,10 +532,7 @@ contains
   !*************************************************************
   subroutine addional_core_ewpc_interaction(m_charge)
 
-    use unique_atom_module, only : unique_atoms, N_unique_atoms, &
-                                   pseudopot_present
-    use pointcharge_module, only : pointcharge_array, pointcharge_N, &
-         n_timps, unique_timps
+    use unique_atom_module, only: unique_atoms, N_unique_atoms
     use ewaldpc_module
     implicit none
     !------------ Declaration of local variables -----------------

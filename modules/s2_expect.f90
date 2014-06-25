@@ -53,24 +53,10 @@ module s2_expect
 
 
   !------------ Declaration of types ------------------------------
-!!$  type, public ::  s2_
-!!$  end type s2_
 
   !------------ Declaration of constants and variables ------------
-!!$  integer(kind=IK), parameter, public  :: s2_
-!!$  real(kind=RK),    parameter, public  :: s2_
-!!$  logical,               parameter, public  :: s2_
-!!$  character,             parameter, public  :: s2_
-!!$  integer(kind=IK),            public  :: s2_
-!!$  real(kind=RK),               public  :: s2_
-!!$  logical,                          public  :: s2_
-!!$  character,                        public  :: s2_
-
 
   !------------ Interface statements ------------------------------
-!!$  interface s2_
-!!$  end interfaces2_
-!!$  public s2_
 
   !------------ public functions and subroutines ------------------
   public s2_calc
@@ -81,20 +67,8 @@ module s2_expect
 
 
   !------------ Declaration of types ------------------------------
-!!$  type
-!!$  end type
 
   !------------ Declaration of constants and variables ----
-!!$  integer(kind=IK), parameter ::
-!!$  real(kind=RK),    parameter ::
-!!$  logical,               parameter ::
-!!$  character,             parameter ::
-!!$  integer(kind=IK),           ::
-!!$  real(kind=RK),              ::
-!!$  logical,                         ::
-!!$  character,                       ::
-
-
 
   !----------------------------------------------------------------
   !------------ Subroutines ---------------------------------------

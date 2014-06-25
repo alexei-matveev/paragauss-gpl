@@ -156,6 +156,7 @@ module comm
      ! workers:
      !
      module procedure comm_same_int!(int) -> logical
+     module procedure comm_same_logical!(logical) -> logical
      module procedure comm_same_double!(real) -> logical
      module procedure comm_same_double2D!(array) -> logical
   end interface
@@ -919,6 +920,22 @@ contains
 
     call comm_allreduce (yes, "and")
   end function comm_same_int
+
+  function comm_same_logical (v) result (yes)
+    !
+    ! Returns a true if v is the same on all procs. For debug only.
+    !
+    implicit none
+    logical, intent (in) :: v
+    logical :: yes
+    ! *** end of interface ***
+
+    if (v) then
+       yes = comm_same (1)
+    else
+       yes = comm_same (0)
+    endif
+  end function comm_same_logical
 
   function comm_same_double (v) result (yes)
     !

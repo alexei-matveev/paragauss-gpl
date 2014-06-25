@@ -303,12 +303,16 @@ subroutine main_scf()
   ! This is compared against base-1 loop:
   first_loop = loop + 1
 
-  do while (toggle_legacy_mode ())
-
+  ASSERT(comm_same(fixed_hole))
   if (fixed_hole) then
      call say ("set up hole information in eigen_data_module")
      call occupation_get_holes()
   endif
+
+  ! The  code inside this  DO block  is executed  on master  only. The
+  ! slaves are spinning in  main_slave() and waiting for orders during
+  ! that time:
+  do while (toggle_legacy_mode ())
 
   scf_cycle: do
      loop = loop + 1

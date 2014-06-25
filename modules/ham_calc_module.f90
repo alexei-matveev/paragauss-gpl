@@ -150,13 +150,13 @@ contains
          comm_all_other_hosts                     ! MUSTDIE
     use msgtag_module, only: msgtag_ham_calc_main ! MUSTDIE
     use symmetry_data_module, only: ssym
-    use unique_atom_module, only: unique_atoms
     use hamiltonian_module, only: reset_ham
     use energy_calc_module, only: init_energy
     use bounds_module, only: bounds_ch, bounds_xc
     use hamiltonian_module, only: ham_tot, ham_tot_real, ham_tot_imag
     use density_data_module, only: densmat, densmat_real, densmat_imag
 #ifdef WITH_BGY3D_NON_GPL
+    use unique_atom_module, only: unique_atoms
     use bgy3d, only: bgy3d_term
 #endif
     implicit none
@@ -165,7 +165,7 @@ contains
 
     integer(i4_kind) :: rank
 
-#ifdef WITH_BGY3D
+#ifdef WITH_BGY3D_NON_GPL
     real(r8_kind) :: e_bgy      ! electrostatic energy
 #endif
 
@@ -325,8 +325,8 @@ contains
     use solv_electrostat_module,  only: ham_solv_el
     use solv_cavity_module,       only: sol_start_cycle
     use operations_module,        only: operations_solvation_effect
-    use overlap_module,           only: overlap
 #ifdef WITH_DFTPU
+    use overlap_module,           only: overlap
     use dft_plus_u_module,        only: dft_plus_u_in_use                      &
                                       , dft_plus_u_term
 #endif
@@ -782,11 +782,11 @@ contains
                                   , direct_2c_energy_calc_and_add
 #if WITH_ERI4C == 1
     use eri4c_options, only: J_exact, K_exact
+    use unique_atom_module, only: unique_atoms
 #endif
     use options_module,       only: options_spin_orbit
-    use unique_atom_module,   only: unique_atoms
-    use overlap_module,       only: overlap
 #ifdef WITH_DFTPU
+    use overlap_module, only: overlap
     use dft_plus_u_module,    only: dft_plus_u_mo_in_use                       &
                                   , dft_plus_u_proj
 #endif

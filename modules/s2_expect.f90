@@ -110,7 +110,7 @@ contains
   !*************************************************************
   subroutine s2_expectation (occ, ovl, ev)
     !
-    ! Compuites  the expectation  value  of the  S2  according to  the
+    ! Computes  the  expectation value  of  the  S2  according to  the
     ! formula:
     !
     !     S2 = S(S+1) + ( Nb - SUM(ja,jb) |Sab(ja,jb)|^2 )

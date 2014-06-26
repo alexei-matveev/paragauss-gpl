@@ -55,100 +55,114 @@ module xc_cntrl
   !------------ Declaration of types ------------------------------
 
   !------------ Declaration of constants and variables ------------
-  integer(IK)                    :: k
-  ! FIXME: this was a bad idea ...
-  integer(IK), parameter, public ::&
-       xc_XAlpha              =  1, &
-       xc_VWN                 =  2, &
-       xc_PWLDAc              =  3, &
-       xc_RXalpha             =  4, &
-       xc_RVWN                =  5, &
-       ! this is a PARAMETER, not an option:
-       xc_NLDAXC              =  5, & ! Number of LDA XC functionals
-       ! options continue:
-       xc_Becke88             =  6, &
-       xc_RBecke88            =  7, & ! IS A TOTAL, NOT A CORRECTION
-       xc_PerdewWang91x       =  8, &
-       xc_RPerdewwang91x      =  9, &
-       xc_PBEx                = 10, &
-       xc_revPBEx             = 11, &
-       xc_pbesolx             = 12, &
-       xc_PBENx               = 13, &
-       xc_Perdew              = 14, &
-       xc_PerdewWang91c       = 15, & ! may be the pucking bug i=29 on theo1
-       xc_revPW91c            = 16, &
-       xc_RPerdewwang91c      = 17, &
-       xc_PBEc                = 18, &
-       xc_pbesolc             = 19, &
-       xc_Baerends94          = 20, &
-       xc_ECMV92              = 21, & ! IS A TOTAL, NOT A CORRECTION
-       xc_NRECMV92            = 22, & ! IS A TOTAL, NOT A CORRECTION
-       xc_HCTH_X              = 23, &
-       xc_HCTH_C              = 24, &
-       xc_M06L_X              = 25, & ! is a total, not a correction
-       xc_M06L_C              = 26, & ! is a total, not a correction
-       xc_M06_X               = 27, & ! is a total, not a correction
-       xc_M06_C               = 28, & ! is a total, not a correction
-       xc_TPSS_X              = 29, & ! IS A TOTAL, NOT A CORRECTION
-       xc_TPSS_C              = 30, & ! IS A TOTAL, NOT A CORRECTION
-!      xc_revTPSS_X           = 31, & ! IS A TOTAL, NOT A CORRECTION
-!      xc_revTPSS_C           = 32, & ! IS A TOTAL, NOT A CORRECTION
-       xc_VMT                 = 31, & !
-       xc_VT84                = 32, & !
-       xc_VMTsol              = 33, & !
-       xc_VT84sol             = 34, & !
-       xc_VS_X                = 35, & ! is a total, not a correction
-       xc_VS_C                = 36, & ! is a total, not a correction
-       xc_LYP_C               = 37, & ! is a total, not a correction
-       xc_EXX                 = 38, &
-       xc_HF                  = 39, & ! mainly to set exact coulomb for HF
-       xc_new                 = 40, & ! THE LAST OF XC, copy to default(xc_NXC)
-       ! this is a PARAMETER, not an option:
-       xc_NXC                 = 40, & ! Number of XC functionals
-       ! options continue:
-       xc_GGA                 = 41, &
-       xc_GGA_version         = 42, &
-       xc_MGGA                = 43, &
-       xc_HYBRID              = 44, & ! may be obsolete or can substitute xc_EXX
-       xc_SO_Spatial          = 45, &
-       xc_SO_orb_to_sporb     = 46, &
-       xc_orbcalc_version     = 47, &
-       xc_denscalc_version    = 48, & ! bug? xc_denscalc_version /= xc_NRECMV92
-       xc_sop_version         = 49, &
-       xc_HCTH_version        = 50, &
-       xc_nuc_sec_der_version = 51, &
-       xc_rel                 = 52, &
-       xc_ANY                 = 53, &
-       xc_NOp                 = 54  ! Number of Options, incuding this one
 
-  integer(IK), parameter, private :: df_Options(xc_NOp) = (/&
-       1,                    & !   1) XALPHA (set!)
-       1,                    & !   2) VWN    (set!)
-       ( 0, k = 3, xc_NXC ), & ! All others disabled !!!!
-       0,                    & !  41) GGA (set if one of the GGA is set)
-       2,                    & !  42) GGA_version
-       0,                    & !  43) MGGA (set if one of the MGGA is set)
-       0,                    & !  44) HYBRID (set if one of the HYBRIDS is set)
-       0,                    & !  45) Spatial
-       0,                    & !  46) orb_to_sporb
-       3,                    & !  47) orbcalc_version (changed to 3 in r1.4)
-       2,                    & !  48) denscalc_version
-       2,                    & !  49) sop_version
-       4,                    & !  50) hcth_version
-       2,                    & !  51) nuc_sec_der_version
-       0,                    & !  52) rel
-       1,                    & !  53) is XC on at all?
-       xc_NOp               /) !  54) number of options, including this one
+  ! There are no other enums, only  bind (c). Also there seem to be no
+  ! way to make them all public. FIXME: this was a bad idea, still ...
+  enum, bind (c)
+     enumerator :: unused = 0
+     enumerator xc_XAlpha       ! == 1
+     enumerator xc_VWN
+     enumerator xc_PWLDAc
+     enumerator xc_RXalpha
+     enumerator xc_RVWN
+     enumerator xc_Becke88
+     enumerator xc_RBecke88     ! is a total, not a correction
+     enumerator xc_PerdewWang91x
+     enumerator xc_RPerdewwang91x
+     enumerator xc_PBEx
+     enumerator xc_revPBEx
+     enumerator xc_pbesolx
+     enumerator xc_PBENx
+     enumerator xc_Perdew
+     enumerator xc_PerdewWang91c
+     enumerator xc_revPW91c
+     enumerator xc_RPerdewwang91c
+     enumerator xc_PBEc
+     enumerator xc_pbesolc
+     enumerator xc_Baerends94
+     enumerator xc_ECMV92       ! is a total, not a correction
+     enumerator xc_NRECMV92     ! is a total, not a correction
+     enumerator xc_HCTH_X
+     enumerator xc_HCTH_C
+     enumerator xc_M06L_X       ! is a total, not a correction
+     enumerator xc_M06L_C       ! is a total, not a correction
+     enumerator xc_M06_X        ! is a total, not a correction
+     enumerator xc_M06_C        ! is a total, not a correction
+     enumerator xc_TPSS_X       ! is a total, not a correction
+     enumerator xc_TPSS_C       ! is a total, not a correction
+!!$  enumerator xc_revTPSS_X    ! is a total, not a correction
+!!$  enumerator xc_revTPSS_C    ! is a total, not a correction
+     enumerator xc_VMT
+     enumerator xc_VT84
+     enumerator xc_VMTsol
+     enumerator xc_VT84sol
+     enumerator xc_VS_X         ! is a total, not a correction
+     enumerator xc_VS_C         ! is a total, not a correction
+     enumerator xc_LYP_C        ! is a total, not a correction
+     enumerator xc_EXX
+     enumerator xc_HF        ! mainly to set exact coulomb for HF
+     enumerator xc_new       ! The last of XC, copy to default(xc_NXC)
+     enumerator xc_GGA
+     enumerator xc_GGA_version
+     enumerator xc_MGGA
+     enumerator xc_HYBRID   ! may be obsolete or can substitute xc_EXX
+     enumerator xc_SO_Spatial
+     enumerator xc_SO_orb_to_sporb
+     enumerator xc_orbcalc_version
+     enumerator xc_denscalc_version ! bug? xc_denscalc_version /= xc_NRECMV92
+     enumerator xc_sop_version
+     enumerator xc_HCTH_version
+     enumerator xc_nuc_sec_der_version
+     enumerator xc_rel
+     enumerator xc_ANY
+     enumerator xc_NOp  ! == 54, number of options, including this one
+  end enum
 
-  integer(IK), private :: Options(xc_NOp) = df_Options
+  ! Number of LDA XC functionals:
+  integer, parameter, public :: xc_NLDAXC = xc_RVWN
 
-  real(RK),    private :: frac(xc_NOp)    = (/ 1.0_RK               & ! XAlpha
-                                             , 1.0_RK               & ! VWN
-                                             , (0.0_RK, k=3,xc_NOp) /)! others
+  ! Number of all XC functionals:
+  integer, parameter, public :: xc_NXC = xc_new
 
-  real(RK),    private :: full         = 1.0_RK ! For "pure" functionals
-  real(RK),    private :: off          = 0.0_RK ! Check if really needed
-  real(RK),    private :: frac_tmp
+  public :: xc_XAlpha, xc_VWN, xc_PWLDAc, xc_RXalpha, xc_RVWN, &
+      xc_Becke88, xc_RBecke88, xc_PerdewWang91x, xc_RPerdewwang91x, &
+      xc_PBEx, xc_revPBEx, xc_pbesolx, xc_PBENx, xc_Perdew, &
+      xc_PerdewWang91c, xc_revPW91c, xc_RPerdewwang91c, xc_PBEc, &
+      xc_pbesolc, xc_Baerends94, xc_ECMV92, xc_NRECMV92, xc_HCTH_X, &
+      xc_HCTH_C, xc_M06L_X, xc_M06L_C, xc_M06_X, xc_M06_C, xc_TPSS_X, &
+      xc_TPSS_C, xc_VMT, xc_VT84, xc_VMTsol, xc_VT84sol, xc_VS_X, &
+      xc_VS_C, xc_LYP_C, xc_EXX, xc_HF, xc_new, xc_GGA, &
+      xc_GGA_version, xc_MGGA, xc_HYBRID, xc_SO_Spatial, &
+      xc_SO_orb_to_sporb, xc_orbcalc_version, xc_denscalc_version, &
+      xc_sop_version, xc_HCTH_version, xc_nuc_sec_der_version, xc_rel, &
+      xc_ANY, xc_NOp
+
+  integer (IK) :: k_
+  integer(IK), parameter, private :: df_Options(xc_NOp) = &
+       [1, 1, (0, k_ = 3, xc_NXC), & ! XALPHA and VWN set, all others disabled
+       0, &           !  41) GGA (set if one of the GGA is set)
+       2, &           !  42) GGA_version
+       0, &           !  43) MGGA (set if one of the MGGA is set)
+       0, &           !  44) HYBRID (set if one of the HYBRIDS is set)
+       0, &           !  45) Spatial
+       0, &           !  46) orb_to_sporb
+       3, &           !  47) orbcalc_version (changed to 3 in r1.4)
+       2, &           !  48) denscalc_version
+       2, &           !  49) sop_version
+       4, &           !  50) hcth_version
+       2, &           !  51) nuc_sec_der_version
+       0, &           !  52) rel
+       1, &           !  53) is XC on at all?
+       xc_NOp]        !  54) number of options, including this one
+
+  integer (IK), private :: Options(xc_NOp) = df_Options
+
+  real (RK), parameter, private :: full = 1.0 ! For "pure" functionals
+  real (RK), parameter, private :: off = 0.0  ! Check if really needed
+
+  ! Default functional is VWN = 1.0 * XALPHA(x) + 1.0 * VWN(c)
+  real (RK), private :: frac(xc_NOp) = [full, full, (off, k_ = 3, xc_NOp)]
+  real (RK), private :: frac_tmp
 
   integer(IK), private :: iyes = 1
 

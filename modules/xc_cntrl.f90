@@ -162,9 +162,8 @@ module xc_cntrl
 
   ! Default functional is VWN = 1.0 * XALPHA(x) + 1.0 * VWN(c)
   real (RK), private :: frac(xc_NOp) = [full, full, (off, k_ = 3, xc_NOp)]
-  real (RK), private :: frac_tmp
 
-  integer(IK), private :: iyes = 1
+  integer (IK), parameter, private :: iyes = 1
 
   ! xc_nl_calc == is_on (xc_GGA), DEPRECATED
   logical, public, protected :: xc_nl_calc
@@ -173,8 +172,8 @@ module xc_cntrl
   ! GGAs. In gradient runs it is the same as xc_nl_calc.
   logical, public, protected :: xc_nl_calc_ph
 
-  real(RK), public  :: xc_sdens_cutoff = 1.0E-20_rk
-  real(RK), private :: df_sdens_cutoff = 1.0E-20_rk
+  real (RK), public, protected :: xc_sdens_cutoff = 1.0E-20_rk
+  real (RK), parameter, private :: df_sdens_cutoff = 1.0E-20_rk
 
   character(len=16), public ::&
        xc_cntrl_names(2, xc_NXC) = reshape ([ &
@@ -427,6 +426,7 @@ contains
     integer(IK)           :: xc_found, xc_fracs_found
     integer(IK)           :: longtrans
     integer(IK)           :: ixc
+    real (RK) :: frac_tmp
 
     namelist /xc_control/ XC, sdens_cutoff
 

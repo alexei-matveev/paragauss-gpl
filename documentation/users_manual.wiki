@@ -925,7 +925,7 @@ Default is to perform Single Point Calculation and Calculate Gradients.
      OPERATIONS_WRITE_FULL_INPUT  = FALSE # (the default)
      OPERATIONS_WRITE_SHORT_INPUT = FALSE # (the default)
      OPERATIONS_WRITE_INPUT_SLAVE = FALSE # (the default)
-     OPERATIONS_POST_HOC          =  TRUE # (the default)
+     OPERATIONS_POST_SCF          =  TRUE # (the default)
      OPERATIONS_GRADIENTS         =  TRUE # (the default)
      OPERATIONS_GEO_OPT           = FALSE # (the default)
      OPERATIONS_MAKE_GX           = FALSE # (the default)

@@ -290,8 +290,9 @@ contains
       !
     elseif ( IOp > 0 .and.       present( ROp ) ) then
       ASSERT(ROp/=0.0_RK)
-      ! ROp present
-      frac( Op ) = frac( Op ) + ROp
+      ! ROp present.  FIXME: do we  really need to increment?  We have
+      ! enough state to track here:
+      frac(Op) = frac(Op) + ROp
       !
     else
       ASSERT(IOp==0)

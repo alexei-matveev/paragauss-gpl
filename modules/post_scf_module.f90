@@ -326,9 +326,7 @@ contains
     use unique_atom_methods, only: unique_atom_grad_information
     use iounitadmin_module
     use xc_cntrl, only: is_on, xc_mgga
-    use ph_cntrl, only: &
-         nl_calc_ph, &
-         ph_cntrl_setup
+    use ph_cntrl, only: nl_calc_ph
     use pointcharge_module
     use xc_func, only: xc_func_reset
     use integralpar_module, only: integralpar_2dervs,integralpar_cpksdervs
@@ -351,7 +349,6 @@ contains
     ! Write to trace unit to show progress of calculation:
     call dtrace ("Entering PostSCF part")
 
-    call ph_cntrl_setup()
     dummy=1
     do_grads=operations_gradients
     split_gradients=options_split_gradients()
@@ -1425,7 +1422,7 @@ contains
     use time_module
     use unique_atom_methods, only: unique_atom_grad_information
     use iounitadmin_module
-    use ph_cntrl, only:  nl_calc_ph,ph_cntrl_setup
+    use ph_cntrl, only:  nl_calc_ph
     use pointcharge_module
     use integralpar_module, only: integralpar_2dervs,integralpar_cpksdervs
     use cpksdervs_matrices,only:cpksalloc,cpks,cpks_Qxc_calculated
@@ -1446,8 +1443,6 @@ contains
      DPRINT MyID,'cpks_xc_main(',job,') cpks_Qxc_calculated  =',cpks_Qxc_calculated
 !    MEMSET(0)
 
-
-    call ph_cntrl_setup()
 
     do_grads=operations_gradients
     split_gradients=options_split_gradients()

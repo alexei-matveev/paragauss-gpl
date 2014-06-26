@@ -82,7 +82,6 @@ module ph_cntrl
   public :: post_scf_read_input
   public :: post_scf_set_defaults
   public :: post_scf_input_bcast
-  public :: ph_cntrl_setup
 
   !================================================================
   ! End of public interface of module
@@ -96,17 +95,6 @@ module ph_cntrl
   !----------------------------------------------------------------
   !------------ Subroutines ---------------------------------------
 contains
-
-  subroutine ph_cntrl_setup()
-    ! called at the beginning of PH
-!!$    use operations_module, only: operations_gradients
-    implicit none
-    ! *** end of interface ***
-
-    ! does nothing currently, should import
-    ! XC settings from PHXC into XC_CONTROL
-    ! FIXME here, if you want different XC in PH and SCF
-  end subroutine ph_cntrl_setup
 
   subroutine post_scf_read_input()
     !

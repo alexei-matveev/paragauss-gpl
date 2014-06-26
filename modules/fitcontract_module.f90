@@ -1057,7 +1057,6 @@ contains
     !  reshaped from fit_contract by VN
     !------------ Modules used -----------------------------------
     use orbitalprojection_module
-    use int_data_2cob3c_module, only: prim_int_3c_co, prim_int_3c_xc
     implicit none
     !------------ Declaration of formal parameters ---------------
     character(*),intent(in)           :: flag ! 'ch' or 'xc' or 'grad'

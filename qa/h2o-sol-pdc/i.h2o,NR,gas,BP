@@ -13,7 +13,7 @@
     OPERATIONS_WRITE_FULL_INPUT  = FALSE # (the default)
     OPERATIONS_WRITE_SHORT_INPUT = FALSE # (the default)
     OPERATIONS_WRITE_INPUT_SLAVE = FALSE # (the default)
-    OPERATIONS_POST_HOC          =  true
+    OPERATIONS_POST_SCF          =  true
     OPERATIONS_GRADIENTS         =  true
     OPERATIONS_GEO_OPT           =  f
     OPERATIONS_MAKE_GX           =  f

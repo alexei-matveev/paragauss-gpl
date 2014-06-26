@@ -3,7 +3,7 @@
     OPERATIONS_SCF               =  TRUE # (the default)
     OPERATIONS_INTEGRAL          =  TRUE # (the default)
     OPERATIONS_WRITE_INPUT       =  TRUE # (the default)
-    OPERATIONS_POST_HOC          =  TRUE # (the default)
+    OPERATIONS_POST_SCF          =  TRUE # (the default)
     OPERATIONS_GRADIENTS         =  TRUE # (the default)
     OPERATIONS_GEO_OPT           =  f
     OPERATIONS_READ_GX           =  F

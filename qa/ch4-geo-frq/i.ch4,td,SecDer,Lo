@@ -4,7 +4,7 @@
     OPERATIONS_SYMM              = true
     OPERATIONS_INTEGRAL          = true
     OPERATIONS_SCF               = true
-    OPERATIONS_POST_HOC          = true
+    OPERATIONS_POST_SCF          = true
     OPERATIONS_GRADIENTS         = true
     OPERATIONS_GEO_OPT           = f
     OPERATIONS_READ_GX           = f

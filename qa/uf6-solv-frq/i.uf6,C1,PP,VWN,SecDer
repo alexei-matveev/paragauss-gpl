@@ -114,8 +114,7 @@
  /CONVERGENCE_LIST
 
  &XC_CONTROL
-    XALPHA         =  TRUE # (the default)
-    VWN            =  TRUE # (the default)
+    xc = "vwn"
  /XC_CONTROL
 
  &OCCUPATION

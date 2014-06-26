@@ -97,9 +97,8 @@
  /SOLVATION
              
  &XC_CONTROL
-    XALPHA         =  TRUE # (the default)
-    VWN            =  TRUE # (the default)
- /XC_CONTROL (namelist may be dropped)
+    xc = "vwn"
+ /XC_CONTROL
 
  &OCCUPATION
     CHARGE             =   1.000000 # (the default)

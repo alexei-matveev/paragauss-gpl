@@ -107,10 +107,7 @@
  /CONVERGENCE_LIST
 
  &XC_CONTROL
-    xalpha  = true
-    vwn     = true
-    PERDEW  = f
-    BECKE88 = f
+    xc = "vwn"
  /XC_CONTROL
 
  &GRID

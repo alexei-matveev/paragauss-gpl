@@ -166,7 +166,6 @@ contains
     use spin_orbit_module,        only: spin_orbit_input_bcast
     use xcmda_hamiltonian,        only: mda_options_bcast
     use grid_module,              only: grid_bcast
-    use ph_cntrl,                 only: post_scf_input_bcast
 #ifdef WITH_RESPONSE
     use response_module,          only: response_input_bcast
 #endif
@@ -323,10 +322,7 @@ contains
     !
     ! bcast grid input
     call grid_bcast( (operations_post_scf .or. operations_response) )
-    !
-    ! bcast post scf input
-    call post_scf_input_bcast()
-    !
+
 #ifdef WITH_RESPONSE
     ! bcast response module input
     call response_input_bcast()

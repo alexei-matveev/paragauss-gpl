@@ -1970,9 +1970,13 @@ END function erf
 !--------------------------------------------------------------------
 
 real(kind=r8_kind) FUNCTION ERFC(X)
-! **COMPLEMETARY ERRORFUNCTION USING CHEBYSHEV APPROXIMATION (YL LUKE
-! **1975 PP123-4) D,DD,SV AS IN PRESS, NUM. REC. 1988 "CHEBEV"
-
+  !
+  ! **COMPLEMETARY ERRORFUNCTION USING CHEBYSHEV APPROXIMATION (YL LUKE
+  ! **1975 PP123-4) D,DD,SV AS IN PRESS, NUM. REC. 1988 "CHEBEV"
+  !
+  ! See also modules/fermi_module.f90, utilities/ewald.f90,
+  ! utilities/ewald_new.f90
+  !
   integer(kind=i4_kind),parameter :: NA=25, &
                                      NC=22
   real(kind=r8_kind),parameter ::  ZERO=0.0, &

@@ -1389,6 +1389,9 @@ contains
     ! References: YL Luke 1975, pp 123-4
     !             Num. Rec. 1988 "CHEBEV"
     !
+    ! See also: epe_dir/culon_module.f90, utilities/ewald.f90,
+    ! utilities/ewald_new.f90
+    !
     !------------ Declaration of formal parameters ---------------
     real(kind=r8_kind), intent(in) :: x
     real(kind=r8_kind)             :: erfc

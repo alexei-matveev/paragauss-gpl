@@ -1496,8 +1496,13 @@ write(output_unit,*) 'F(X0)=',f(x),x
       end function expf
 
       function erfc(x)
-!     COMPLEMETARY ERROR FUNCTION USING CHEBYSHEV APPROXIMATION (YL LUKE
-!     1975 PP123-4) D,DD,SV AS IN PRESS, NUM. REC. 1988 "CHEBEV"
+        !
+        ! COMPLEMETARY ERROR FUNCTION USING CHEBYSHEV APPROXIMATION (YL LUKE
+        ! 1975 PP123-4) D,DD,SV AS IN PRESS, NUM. REC. 1988 "CHEBEV"
+        !
+        ! See also modules/fermi_module.f90, epe_dir/culon_module.f90,
+        ! utilities/ewald_new.f90
+        !
         implicit none
         integer(kind=4), parameter :: na=25, nc=22
         real(kind=8), dimension(0:na) :: a

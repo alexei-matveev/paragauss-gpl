@@ -224,7 +224,7 @@ do while ( input_which_namelist(namelist_name) )
 
    case ("output", "output_trace", "output_config", "output_unique_atoms",  &
         "output_scf", "output_sym", "output_integral", "output_timing", &
-        "output_post_hoc", "output_post_scf", "output_iounitadmin", "output_dipole", "output_solvation" )
+        "output_post_scf", "output_iounitadmin", "output_dipole", "output_solvation" )
       if (out_read) call input_error( &
            "READ_INPUT: output options must all be given together" )
       ! read output options

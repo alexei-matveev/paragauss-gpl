@@ -154,8 +154,7 @@ logical, public :: output_timing_summary           = .true. , &
 ! following parameter renamed to ..scf, old values kept for consistency
 ! with old input files, will give an warning message
 logical, private :: output_timing_posthoc           = .true. , &
-                   output_timing_detailedposthoc   = .false., &
-                   output_post_hoc_main = .false.
+     output_timing_detailedposthoc = .false.
 
 ! namelist /output_post_scf/
 logical, public :: output_post_scf_main = .false., &
@@ -361,14 +360,7 @@ namelist /output_timing/         output_timing_summary          , &
                                  output_timing_slaves           , &
                                  output_timing_interrupts
 
-namelist /output_post_scf/       output_post_hoc_main, &
-                                 output_post_scf_main, &
-                                 output_main_gradient
-
-! doubles list namelist output_post_scf, is here for
-! consistency with old input
-namelist /output_post_hoc/       output_post_hoc_main, &
-                                 output_post_scf_main, &
+namelist /output_post_scf/       output_post_scf_main, &
                                  output_main_gradient
 
 namelist /output_dipole/         output_dipole_detailed      , &
@@ -858,7 +850,6 @@ contains
     output_timing_detailedposthoc   = df_output_timing_detailedps
 
     ! namelist /output_post_scf/
-    output_post_hoc_main = df_output_post_scf_main ! input consistency
     output_post_scf_main = df_output_post_scf_main
     output_main_gradient = df_output_main_gradient
 
@@ -923,18 +914,6 @@ contains
           read(unit, nml=output_timing, iostat=status)
           if (status .gt. 0) call input_error( &
                "output_read: namelist output_timing")
-       case ("output_post_hoc")
-          ! this case should be removed lateron, stays here
-          ! only for consistency
-          WARN('output_post_hoc has been renamed')
-          print *, " name of this list should be output_post_scf"
-          print *, " list will be redirected"
-          print *, " Please conside updating your input file"
-          WARN('Make sure not to use old and new one')
-          call input_read_to_intermediate
-          read(unit, nml=output_post_hoc, iostat=status)
-          if (status .gt. 0) call input_error( &
-               "output_read: namelist output_post_hoc")
        case ("output_post_scf")
           call input_read_to_intermediate
           read(unit, nml=output_post_scf, iostat=status)
@@ -961,15 +940,6 @@ contains
 
        if( output_cavity_long) output_cavity_data = .true.
     enddo
-
-
-    if (output_post_hoc_main .neqv. df_output_post_scf_main) then
-      WARN('output_post_hoc_main has been renamed')
-      print *, " output_post_hoc_main is now output_post_scf_main"
-      print *, " Now setting output_post_scf_main to output_post_hoc_main value"
-      print *, " Please conside updating your input file"
-      output_post_scf_main = output_post_hoc_main
-    endif
 
     if (output_timing_posthoc .neqv. df_output_timing_post_scf) then
       WARN('output_timing_posthoc has been renamed')

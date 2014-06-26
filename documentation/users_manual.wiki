@@ -329,7 +329,7 @@ Most of the namelists can appear in arbitrary order, but some have to appear tog
 ; Post Hoc Grid
 : The namelists [[#GRID_PH|GRID_PH]] and [[#GRIDATOM_PH|GRIDATOM_PH]] have to be grouped together as described with namelist [[#GRID_PH|GRID_PH]]. In case this optional block does not appear the settings from the SCF grid are used.
 ; Output Options
-: The namelists [[#OUTPUT|OUTPUT]], [[#OUTPUT_CONFIG|OUTPUT_CONFIG]], [[#OUTPUT_DIPOLE|OUTPUT_DIPOLE]], [[#OUTPUT_INTEGRAL|OUTPUT_INTEGRAL]], [[#OUTPUT_IOUNITADMIN|OUTPUT_IOUNITADMIN]], [[#OUTPUT_POST_HOC|OUTPUT_POST_HOC]], [[#OUTPUT_SCF|OUTPUT_SCF]], [[#OUTPUT_SYM|OUTPUT_SYM]], [[#OUTPUT_TIMING|OUTPUT_TIMING]], [[#OUTPUT_TRACE|OUTPUT_TRACE]], and [[#OUTPUT_UNIQUE_ATOMS|OUTPUT_UNIQUE_ATOMS]] have to be grouped together as described with namelist [[#OUTPUT|OUTPUT]]. In case it appears, the optional namelists [[#OUTPUT|OUTPUT]] must start the block. The remaining optional namelists may appear in arbitrary order.
+: The namelists [[#OUTPUT|OUTPUT]], [[#OUTPUT_CONFIG|OUTPUT_CONFIG]], [[#OUTPUT_DIPOLE|OUTPUT_DIPOLE]], [[#OUTPUT_INTEGRAL|OUTPUT_INTEGRAL]], [[#OUTPUT_IOUNITADMIN|OUTPUT_IOUNITADMIN]], [[#OUTPUT_POST_SCF|OUTPUT_POST_SCF]], [[#OUTPUT_SCF|OUTPUT_SCF]], [[#OUTPUT_SYM|OUTPUT_SYM]], [[#OUTPUT_TIMING|OUTPUT_TIMING]], [[#OUTPUT_TRACE|OUTPUT_TRACE]], and [[#OUTPUT_UNIQUE_ATOMS|OUTPUT_UNIQUE_ATOMS]] have to be grouped together as described with namelist [[#OUTPUT|OUTPUT]]. In case it appears, the optional namelists [[#OUTPUT|OUTPUT]] must start the block. The remaining optional namelists may appear in arbitrary order.
 ; Information on Irreps
 : This block is only required in the outdated case the new symmetry part is not used. The namelists [[#SYMMETRY_DATA|SYMMETRY_DATA]] and [[#IRREP|IRREP]] have to be grouped together as described with namelist [[#SYMMETRY_DATA|SYMMETRY_DATA]].
 ; Symmetry Adaption Coefficients
@@ -1136,13 +1136,13 @@ This namelists determines which files should be used for output. File
 ; IOUNITADMIN_USE_BUGGY
 : output to file "buggy_log". This file is well suited for finding the exact location of a program crash since it is always opened and closed.
 
-=== OUTPUT_POST_HOC ===
+=== OUTPUT_POST_SCF ===
 
  
-  &OUTPUT_POST_HOC
-     OUTPUT_POST_HOC_MAIN = FALSE # (the default)
+  &OUTPUT_POST_SCF
+     OUTPUT_POST_SCF_MAIN = FALSE # (the default)
      OUTPUT_MAIN_GRADIENT = FALSE # (the default)
-  /OUTPUT_POST_HOC (namelist may be dropped)
+  /OUTPUT_POST_SCF (namelist may be dropped)
 
 === OUTPUT_SCF ===
 

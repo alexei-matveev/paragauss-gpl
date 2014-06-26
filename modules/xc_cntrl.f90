@@ -177,7 +177,7 @@ module xc_cntrl
   real(RK), private :: df_sdens_cutoff = 1.0E-20_rk
 
   character(len=16), public ::&
-       xc_cntrl_names(2, xc_NXC) = reshape( (/ &
+       xc_cntrl_names(2, xc_NXC) = reshape ([ &
        'xalpha          ' , '[X L N ]        ', &
        'vwn             ' , '[ CL N ]        ', &
        'pwldac          ' , '[ CL N ]        ', &
@@ -217,8 +217,8 @@ module xc_cntrl
        'lyp_c           ' , '[ CLGN ]        ', &
        'exx             ' , '[X LGN ]        ', &
        'hf              ' , '[X LGN ]        ', &
-       'new             ' , '[      ]        '  &
-       /), (/ 2, xc_NXC /) )
+       'new             ' , '[      ]        '], &
+       [2, xc_NXC])
 
   !------------ Interface statements ------------------------------
 

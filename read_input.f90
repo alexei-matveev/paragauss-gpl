@@ -27,18 +27,16 @@
 !===============================================================
 subroutine read_input(loop)
 !
-!  Purpose: Reading in input file and performing consistency checks.
-!           The input_module is initialised and the input file
-!           is opened, then the read routines of various modules
-!           are called to read the data beloging to their modules.
-!           After that routines for consistency checks are called.
-!           Then the input file is closed.
-!           All routines reading the input file should use input_module:
-!            input_read(line) to obtain string to read from.
-!            inut_error(message) to handle reading errors
-!           An output can be automatically produced by output_write
-!           that contains call to write routines corresponding to
-!           the read routines called here
+!  Reading  in  input file  and  performing  consistency checks.   The
+!  input_module is initialised and the  input file is opened, then the
+!  read  routines of  various  modules  are called  to  read the  data
+!  beloging  to their  modules.  After  that routines  for consistency
+!  checks are  called.  Then the  input file is closed.   All routines
+!  reading the input file should use input_module: input_read(line) to
+!  obtain string to read  from.  inut_error(message) to handle reading
+!  errors An output can be automatically produced by output_write that
+!  contains call to write  routines corresponding to the read routines
+!  called here.
 !
 !  Subroutine called by: main_master
 !

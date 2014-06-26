@@ -393,7 +393,6 @@ contains
     implicit none
     ! *** end of interface ***
 
-    DPRINT 'xccntl::set_global: entered'
     xalpha        = is_on(xc_xalpha)
     vwn           = is_on(xc_vwn)
     rvwn          = is_on(xc_rvwn)
@@ -433,10 +432,6 @@ contains
     if (operations_gradients) then
         xc_nl_calc_ph = is_on (xc_gga)
     endif
-
-    DPRINT 'xccntl::set_global: Options=',Options
-    DPRINT 'xccntl::set_global: xc_nl_calc=',xc_nl_calc
-    DPRINT 'xccntl::set_global: exit'
   end subroutine set_global
 
   subroutine set_options()
@@ -488,11 +483,12 @@ contains
   end subroutine set_options
 
   subroutine xc_read_input()
-    ! Purpose : Reading the input concerning the xc_control
-    !           The input consits of logicals which determine if
-    !           a special functional has to be calculated or not.
-    !           if a nonlocal functional is selected the logical
-    !           nl_clac is set to true.
+    !
+    ! Reading the input concerning the xc_control The input consits of
+    ! logicals  which determine  if  a special  functional  has to  be
+    ! calculated  or not.  if  a nonlocal  functional is  selected the
+    ! logical nl_clac is set to true.
+    !
     use iounitadmin_module, only: write_to_output_units
     use input_module
     use strings,            only: wpresent, spresent

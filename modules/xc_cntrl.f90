@@ -412,7 +412,7 @@ contains
     nrecmv92      = is_on(xc_nrecmv92)
     rperdewwang91x= is_on(xc_rperdewwang91x)
     hcth_x        = is_on(xc_hcth_x)
-    hcth_c        = is_on(xc_hcth_c) 
+    hcth_c        = is_on(xc_hcth_c)
 
     call set_functional_type()
 
@@ -1254,7 +1254,7 @@ contains
        ! more cases wanted ...
        !
        if(wpresent(XC,"spatial"))then
-          ! evaluate xc for spin-orbit 
+          ! evaluate xc for spin-orbit
           ! in orbital (as opposit to spinor) space
           Options(xc_so_spatial) = iyes ! <<< global
        endif
@@ -1366,7 +1366,7 @@ contains
 
     DPRINT "xccntl::xc_read: options   : ",Options
     DPRINT "xccntl::xc_read: xc_nl_calc: ",xc_nl_calc
-    
+
   contains
 
     subroutine say (phrase)
@@ -1413,7 +1413,7 @@ contains
 #else
       DPRINT 'xcntl::check: Options=',Options
       if ( is_on(xc_vwn).and.is_on(xc_pwldac))&
-           & call input_error("Two different LDA-c specified") 
+           & call input_error("Two different LDA-c specified")
 
       if (.not.(vwn.or.pwldac).and.(perdewwang91c.or.pbec)) &
            & call input_error&
@@ -1452,8 +1452,8 @@ contains
          df_baerends94    = df_Options(xc_baerends94)    .ne.0 , &
          df_xalpha        = df_Options(xc_xalpha)        .ne.0 , &
          df_vwn           = df_Options(xc_vwn)           .ne.0 , &
-         df_rvwn          = df_Options(xc_rvwn)          .ne.0 , & 
-         df_pbex          = df_Options(xc_pbex)          .ne.0 , & 
+         df_rvwn          = df_Options(xc_rvwn)          .ne.0 , &
+         df_pbex          = df_Options(xc_pbex)          .ne.0 , &
          df_pbec          = df_Options(xc_pbec)          .ne.0 , &
          df_revPBEx       = df_Options(xc_revpbex)       .ne.0 , &
          df_PBENx         = df_Options(xc_pbenx)         .ne.0 , &
@@ -1469,7 +1469,7 @@ contains
          iounit,operations_echo_input_level)
     call strng('XC            ',trim(xc_setting)//'"  # original: "'//trim(XC)&
               ,'undef"  # original: "undef')
-    call real("SDENS_CUTOFF  ",xc_sdens_cutoff,df_sdens_cutoff) 
+    call real("SDENS_CUTOFF  ",xc_sdens_cutoff,df_sdens_cutoff)
     call flag("XALPHA        ",xalpha ,df_xalpha )
     call flag("VWN           ",vwn    ,df_vwn    )
     call flag("RVWN          ",rvwn   ,df_rvwn    )
@@ -1478,9 +1478,9 @@ contains
     call flag("BECKE88       ",becke88,df_becke88)
     call flag("RBECKE88       ",rbecke88,df_rbecke88)
     call flag("PERDEWWANG91C ",perdewwang91c,df_perdewwang91c)
-    call flag("RPERDEWWANG91c",rperdewwang91c,df_rperdewwang91c) 
+    call flag("RPERDEWWANG91c",rperdewwang91c,df_rperdewwang91c)
     call flag("PERDEWWANG91X ",perdewwang91x,df_perdewwang91x)
-    call flag("RPERDEWWANG91x ",rperdewwang91x,df_rperdewwang91x)  
+    call flag("RPERDEWWANG91x ",rperdewwang91x,df_rperdewwang91x)
     call flag("BAERENDS94    ",baerends94,df_baerends94)
     call flag("PBEx          ",pbex,df_pbex)
     call flag("PBEc          ",pbec,df_pbec)
@@ -1557,15 +1557,15 @@ contains
     lperdew        = is_on(xc_perdew)
     lxalpha        = is_on(xc_xalpha)
     lvwn           = is_on(xc_vwn)
-    lrvwn          = is_on(xc_rvwn) 
+    lrvwn          = is_on(xc_rvwn)
     lperdewwang91x = is_on(xc_perdewwang91x)
     lrperdewwang91x= is_on(xc_rperdewwang91x)
     lperdewwang91c = is_on(xc_perdewwang91c)
     lrperdewwang91c= is_on(xc_rperdewwang91c)
     lbaerends94    = is_on(xc_baerends94)
-    lrxalpha       = is_on(xc_rxalpha)  
+    lrxalpha       = is_on(xc_rxalpha)
     lhcth_x        = is_on(xc_hcth_x)
-    lhcth_c        = is_on(xc_hcth_c)  
+    lhcth_c        = is_on(xc_hcth_c)
     lecmv92        = is_on(xc_ecmv92)
     lnrecmv92      = is_on(xc_nrecmv92)
   end subroutine xc_cntrl_give

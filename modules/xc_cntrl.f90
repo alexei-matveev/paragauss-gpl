@@ -152,7 +152,12 @@ module xc_cntrl
 
   integer(IK), private :: iyes = 1
 
-  logical, public   :: xc_nl_calc ! == is_on(xc_GGA), DEPRECATED
+  ! xc_nl_calc == is_on (xc_GGA), DEPRECATED
+  logical, public, protected :: xc_nl_calc
+
+  ! This one is true in  "energy" runs to allow computing all possible
+  ! GGAs. In gradient runs it is the same as xc_nl_calc.
+  logical, public, protected :: xc_nl_calc_ph
 
   real(RK), public  :: xc_sdens_cutoff = 1.0E-20_rk
   real(RK), private :: df_sdens_cutoff = 1.0E-20_rk
@@ -384,6 +389,7 @@ contains
 
   subroutine set_global()
     ! compatibility
+    use operations_module, only: operations_gradients
     implicit none
     ! *** end of interface ***
 
@@ -416,7 +422,18 @@ contains
 
     call set_functional_type()
 
-    xc_nl_calc = is_on(xc_GGA)
+    xc_nl_calc = is_on (xc_GGA)
+
+    ! By default we do all  GGAs in single-point post-scf run, but see
+    ! next:
+    xc_nl_calc_ph = .true.
+
+    ! Energy should be consistent with forces, in this case. Gradients
+    ! of XC term can only be computed for one functional.
+    if (operations_gradients) then
+        xc_nl_calc_ph = is_on (xc_gga)
+    endif
+
     DPRINT 'xccntl::set_global: Options=',Options
     DPRINT 'xccntl::set_global: xc_nl_calc=',xc_nl_calc
     DPRINT 'xccntl::set_global: exit'
@@ -1496,7 +1513,6 @@ contains
 
   end subroutine xc_write_input
 
-  !*****************************************************************************
 
   subroutine xc_input_bcast()
     ! Purpose : broadcasting the xc_input
@@ -1509,6 +1525,7 @@ contains
     call comm_bcast( frac            )
     call comm_bcast( xc_sdens_cutoff )
 
+    ! This will also set the public flags xc_nl_calc, xc_nl_calc_ph:
     if ( comm_rank() /= 0 ) call set_global()
 
   end subroutine xc_input_bcast

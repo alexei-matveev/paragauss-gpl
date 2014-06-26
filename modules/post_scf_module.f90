@@ -325,8 +325,7 @@ contains
     use time_module
     use unique_atom_methods, only: unique_atom_grad_information
     use iounitadmin_module
-    use xc_cntrl, only: is_on, xc_mgga
-    use ph_cntrl, only: nl_calc_ph
+    use xc_cntrl, only: is_on, xc_mgga, nl_calc_ph => xc_nl_calc_ph
     use pointcharge_module
     use xc_func, only: xc_func_reset
     use integralpar_module, only: integralpar_2dervs,integralpar_cpksdervs
@@ -1422,7 +1421,7 @@ contains
     use time_module
     use unique_atom_methods, only: unique_atom_grad_information
     use iounitadmin_module
-    use ph_cntrl, only:  nl_calc_ph
+    use xc_cntrl, only:  nl_calc_ph => xc_nl_calc_ph
     use pointcharge_module
     use integralpar_module, only: integralpar_2dervs,integralpar_cpksdervs
     use cpksdervs_matrices,only:cpksalloc,cpks,cpks_Qxc_calculated
@@ -2085,7 +2084,6 @@ contains
 
   subroutine post_scf_write_results
     use iounitadmin_module
-    use ph_cntrl
     use xc_func, only: xc_func_write
     implicit none
     ! purpose : write the results of the post_scf part
@@ -2213,9 +2211,9 @@ contains
     !** End of interface *****************************************
     use time_module
     use timer_module
-    use ph_cntrl
     use iounitadmin_module
     use xc_func
+    use xc_cntrl, only: nl_calc_ph => xc_nl_calc_ph
     implicit none
 
     integer(i4_kind) :: vla, xyz
@@ -2585,7 +2583,6 @@ contains
     !** End of interface *****************************************
     use time_module
     use timer_module
-    use ph_cntrl
     use xc_func ! exc_*, xc_functionals
     use cpks_grid_utils, only: symWtsNGra, cartNGra, cartNDer
     use cpks_xc_resp   , only: xc_resp_lda
@@ -3335,7 +3332,6 @@ contains
     !** End of interface *****************************************
     use time_module
     use timer_module
-    use ph_cntrl
     use xc_func ! exc_*, xc_functionals
     implicit none
     integer(i4_kind) :: i,ii,i_ea,i_ua,i_spin,k,i_vec,i_ma,i_m
@@ -3513,8 +3509,8 @@ contains
     !           - calcularions of derivatives not implemented yet
     use time_module
     use timer_module
-    use ph_cntrl
-    use xc_cntrl, only: xc_hcth_version, is_on, xc_mgga
+    use xc_cntrl, only: xc_hcth_version, is_on, xc_mgga, &
+         nl_calc_ph => xc_nl_calc_ph
     use xc_func ! exc_*, xc_functionals
 
     use cpksdervs_matrices, only: cpks, n_cpks, i_cpks, cpks_Qxc_calculated, &
@@ -5209,7 +5205,6 @@ contains
     !** End of interface *****************************************
     use time_module
     use timer_module
-    use ph_cntrl
     use xc_cntrl, only: xc_hcth_version
     use xc_func ! exc_*, xc_functionals
     use integralpar_module, only: integralpar_2dervs
@@ -5520,9 +5515,9 @@ contains
     use timer_module
 !temp comment    use rspace_plot
     use gamma_module
-    use ph_cntrl
     use iounitadmin_module
     use xc_func ! exc_*, xc_functionals
+    use xc_cntrl, only: nl_calc_ph => xc_nl_calc_ph
     implicit none
     real(kind=r8_kind), allocatable :: grad_rho(:,:,:), sec_der_rho(:,:,:), &
                                        gamm(:,:), dfdgrarho(:,:), &

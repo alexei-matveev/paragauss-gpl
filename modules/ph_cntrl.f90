@@ -66,16 +66,6 @@ module ph_cntrl
 
   !------------ Declaration of constants and variables ------------
 
-  !
-  ! This flag is used in post_scf_module to indicate a GGA run:
-  !
-  logical, public, protected :: nl_calc_ph
-  !
-  ! FIXME: This flag and compatibility reasons (accepting older inputs)
-  !        are the only reason for existence of this module.
-  !        Get rid of it, whoever has the courage.
-  !
-
   !------------ Interface statements ------------------------------
 
   !------------ public functions and subroutines ------------------
@@ -186,31 +176,15 @@ contains
   end subroutine post_scf_read_input
 
   subroutine post_scf_set_defaults()
-    use xc_cntrl, SCF_ON => IS_ON
-    use operations_module, only: operations_gradients
     implicit none
     !** End of interface **************************************
 
-    !
-    ! By default we do all GGAs in single-point post-scf run:
-    !
-    nl_calc_ph = .true.
-
-    !
-    ! Energy should be consistent with forces, in this case:
-    !
-    if ( operations_gradients ) then
-        nl_calc_ph = SCF_ON(xc_gga)
-    endif
   end subroutine post_scf_set_defaults
 
   subroutine post_scf_input_bcast()
-    use comm, only: comm_bcast
     implicit none
     ! Purpose : broadcasting the phxc_input
     !** End of interface *****************************************
-
-    call comm_bcast(nl_calc_ph)
 
   end subroutine post_scf_input_bcast
 

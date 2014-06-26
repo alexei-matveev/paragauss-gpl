@@ -441,6 +441,7 @@ contains
 
   subroutine set_options()
     ! compatibility
+    use operations_module, only: operations_gradients
     implicit none
     ! *** end of interface ***
 
@@ -474,6 +475,16 @@ contains
     call set_functional_type()
 
     xc_nl_calc = is_on(xc_GGA)
+
+    ! By default we do all  GGAs in single-point post-scf run, but see
+    ! next:
+    xc_nl_calc_ph = .true.
+
+    ! Energy should be consistent with forces, in this case. Gradients
+    ! of XC term can only be computed for one functional.
+    if (operations_gradients) then
+        xc_nl_calc_ph = is_on (xc_gga)
+    endif
   end subroutine set_options
 
   subroutine xc_read_input()
@@ -1335,10 +1346,14 @@ contains
          call input_error("xc_read: ambiguous settings in keyword XC")
        endif
 
+       ! Sets xc_nl_calc, xc_nl_calc_ph too:
        call set_global()
     else
+       ! Sets xc_nl_calc, xc_nl_calc_ph too:
        call set_options()
     endif
+    ! FIXME: get rid of legacy per-contribution globals! Otherwise one
+    ! would always need to maintain two branches as above.
 
     ! Now determine the type of functional i.e. the step in jakobs ladder
     call set_functional_type()

@@ -114,14 +114,6 @@
     BECKE88 = f
  /XC_CONTROL
 
- &PHXC_CONTROL
-   # XC = "vwn,gga:all"
-   XALPHA_PH = true
-   VWN_PH    = true
-   BECKE88_PH = true
-   PERDEW_PH  = true
- /PHXC_CONTROL
-
  &GRID
     SYM_REDUCE       =     true
     WEIGHT_GRADS     =     TRUE

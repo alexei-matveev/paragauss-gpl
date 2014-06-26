@@ -87,11 +87,6 @@
     VWN            =  TRUE
  /XC_CONTROL (namelist may be dropped)       
 
- &PHXC_CONTROL
-    XALPHA_PH         =  TRUE # (the default)
-    VWN_PH            =  TRUE # (the default)
- /PHXC_CONTROL
-
  &OCCUPATION
     CHARGE             =   +2.000000 # (the default)
  /OCCUPATION (namelist may be dropped)       

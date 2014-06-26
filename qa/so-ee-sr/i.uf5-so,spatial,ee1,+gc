@@ -333,10 +333,6 @@
     XC = "vwn,spatial"
  /XC_CONTROL
 
- &PHXC_CONTROL
-    XC = "vwn,gga:all"
- /PHXC_CONTROL
-
  &GRID
     SYM_REDUCE   = TRUE
     WEIGHT_GRADS = true

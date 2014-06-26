@@ -323,7 +323,6 @@ libttfs_callcomm.a += \
 		modules/orbitalprojection_module.o \
 		modules/output_module.o \
 		modules/pert_coeff_module.o \
-		modules/ph_cntrl.o \
 		external_centers/pointcharge_module.o \
 		external_centers/point_dqo_module.o \
 		external_centers/induced_dipoles_module.o \

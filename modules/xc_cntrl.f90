@@ -227,7 +227,7 @@ module xc_cntrl
   public :: xc_input_bcast
   public :: is_on
   public :: whatis
-  public :: xc_cntrl_give
+  public :: xc_cntrl_give       ! MUSTDIE!
   public :: xc_cntrl_frac
 
   !================================================================
@@ -1367,6 +1367,10 @@ contains
 
   !*****************************************************************************
 
+  !
+  ! FIXME: This one must die, after xcmda_hamiltonian.f90 is converted
+  ! to use xc_func.
+  !
   subroutine xc_cntrl_give( &
        lbecke88, &
        lrbecke88, &

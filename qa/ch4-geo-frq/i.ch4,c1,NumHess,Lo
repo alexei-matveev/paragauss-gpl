@@ -95,10 +95,10 @@
     OUTPUT_INT_DATA             = FALSE # (the default)
  /OUTPUT_INTEGRAL (namelist may be dropped)
 
- &OUTPUT_POST_HOC
-    OUTPUT_POST_HOC_MAIN = FALSE # (the default)
+ &OUTPUT_POST_SCF
+    OUTPUT_POST_SCF_MAIN = FALSE # (the default)
     OUTPUT_MAIN_GRADIENT = FALSE # (the default)
- /OUTPUT_POST_HOC (namelist may be dropped)
+ /OUTPUT_POST_SCF (namelist may be dropped)
 
  &OUTPUT_DIPOLE
     OUTPUT_DIPOLE_DETAILED       =  TRUE # (the default)

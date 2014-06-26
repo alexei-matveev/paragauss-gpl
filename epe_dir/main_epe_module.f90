@@ -5094,7 +5094,7 @@ endif
 
 !-------------------------------------------------
      subroutine imp_3_body_1(e3bi,reg,ref)
-     use calc3c_switches, only:print_epe
+       ! use calc3c_switches, only: print_epe
 
 !    called in qm_interfaced_mode from  defect contib
 !    calculates energy and gradients 

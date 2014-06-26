@@ -66,8 +66,7 @@ subroutine main_epe_block()
   use unique_atom_module 
   use orbitalprojection_module
   use options_module,   only: options_xcmode, xcmode_model_density
-  use fit_coeff_module, only: coeff_charge, coeff_charge_eperef,&
-                              fit_coeff_send, ICHFIT, IXCFIT
+  use fit_coeff_module, only: fit_coeff_send, ICHFIT, IXCFIT
   use symmetry_data_module, only: get_totalsymmetric_irrep 
   use comm_module
   use epe_module 
@@ -77,15 +76,10 @@ subroutine main_epe_block()
                               epe_send_init_to_slave,  &
                               epe_send_finish_to_slave 
          
-  use epecom_module, only:  reg_I_pg,reg_I_n_ions,output_epe,i_ir_eperef, &
-                            e_epe_atstart,e_epe_final,etot_epe,           &
-                            epe_rel_converged,use_epe_reference,          &
-                            n_pgepe_iterations, ex_pgdata,                &
-                            ecoul_epecluster,eshort_epecluster,           &
-                            ecoul_vaccluster,                             &
-                            epe, q_shell,q_nuclear,epg_cluster_reg_I,     &
-                            get_epe_energies,                             &
-                            qau_qepe,rel_converged_unit,diffpg_ec_ecref,  &
+  use epecom_module, only: reg_I_pg, reg_I_n_ions, etot_epe, &
+       epe_rel_converged, n_pgepe_iterations, epg_cluster_reg_I, &
+       get_epe_energies, &
+                            qau_qepe,rel_converged_unit, &
                             make_epe_reference,                           &
                             dealloc_epe_ref,                              &
                             eperef_unit,                                  &

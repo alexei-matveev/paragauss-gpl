@@ -243,7 +243,7 @@ subroutine  integral_calc_quad_2cob3c()
                             xcmode_model_density, xcmode_extended_mda, &
                             options_xcmode, options_spin_orbit
 #ifdef WITH_EPE
-  use ewaldpc_module,only: epe_rel_done,ewpc_n,epe_relaxation,ewa_allocstat
+  use ewaldpc_module,only: ewpc_n
 #endif
   use pointcharge_module, only: totsym_grad_pc_length
   use point_dqo_module, only: totsym_grad_dip_length, &

@@ -494,9 +494,13 @@ contains
 
 
   !*************************************************************
-  subroutine write_to_trace_unit(msg, inte, real)
-    !  Purpose: writes message to end of trace file, opening and
-    !  and closing the file
+  subroutine write_to_trace_unit (msg, inte, real)
+    !
+    ! Writes message to end of trace file, opening and and closing the
+    ! file.  Will silently  do nothing  on workers  that did  not call
+    ! open_special_units()   or  otherwise   ensured  that   the  that
+    ! trace_unit > 0.
+    !
     use comm, only: comm_rank
     use time_module, only: clktime
     implicit none
@@ -506,7 +510,10 @@ contains
     real(kind=r8_kind), intent(in), optional :: real
     !** End of interface *****************************************
 
-    logical, save :: warned = .false.
+    ! Set this to  false and you will get the  warning once. I've seen
+    ! that enough times already:
+    logical, save :: warned = .true.
+
     integer(i4_kind)           :: stat
     real(r8_kind)              :: time
     character(len=11)          :: prefix
@@ -522,8 +529,8 @@ contains
     ! Some platforms have problems  with many workers writing to files
     ! simultaneousely, so trace output may be only enabled for master:
     !
-    if ( trace_unit <= 0 ) then
-       if ( .not. warned ) then
+    if (trace_unit <= 0) then
+       if (.not. warned) then
           print *, "write_to_trace_unit(", msg, "... ) on rank", comm_rank()
           print *, "WARNING: writing to trace file is disabled for workers"
           print *, "         that did not call open_special_units()."

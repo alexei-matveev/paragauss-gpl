@@ -56,7 +56,7 @@ subroutine lin_search_epe
 #include <def.h>
   !------------ Modules used --------------------------------------
   use type_module ! type specification parameters
-  use epecom_module, only: n_ls,output_epe,dg_convergence_reached,reg_I_n_ions
+  use epecom_module, only: n_ls, output_epe, reg_I_n_ions
   use epecom_module, only: n_vacancies,regI_previous,relax_shells_only
   use epecom_module, only: r_sh_ion,r_nuc_ion,pk,epe,point_0_core_grad,reset
 

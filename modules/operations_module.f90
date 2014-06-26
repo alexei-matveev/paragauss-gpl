@@ -69,7 +69,6 @@ private         ! by default, all names are private
 save
 !== Interrupt end of public interface of module =================
 
-logical         :: operations_post_hoc   ! Old keep for consistency, only to be changed here
 !------------- Declaration of public input parameters -----------
 logical, public :: operations_symm             , &
                    operations_scf              , &
@@ -205,7 +204,6 @@ namelist /operations/ operations_symm             , &
                       operations_write_input_slave, &
                       operations_get_input_out    , & !!!!!!!!!!!!AS
                       operations_post_scf         , &
-                      operations_post_hoc         , &
                       operations_gradients        , &
                       operations_geo_opt          , &
                       operations_qm_mm            , &
@@ -295,8 +293,6 @@ contains
     operations_write_short_input = df_operations_write_short_input
     operations_write_input_slave = df_operations_write_input_slave
     operations_post_scf          = df_operations_post_scf
-    operations_post_hoc          = df_operations_post_scf
-         ! same as operations_post_scf, just kept for old input files
     operations_gradients         = df_operations_gradients
     operations_geo_opt           = df_operations_geo_opt
 #ifdef WITH_MOLMECH
@@ -444,15 +440,6 @@ contains
           print *,'operations_read: iostat=',status,'while reading nml=operations'
           call input_error("operations_read: namelist operations")
        endif
-
-       if (operations_post_hoc .neqv. df_operations_post_scf) then
-          WARN('operations_post_hoc has been renamed')
-          print *, " operations_post_hoc is now operations_post_scf"
-          print *, " Now setting operations_post_scf with new value"
-          print *, " Please, consider changing your input file."
-          operations_post_scf = operations_post_hoc
-       endif
-
 
 #ifndef NEW_EPE
        if( operations_epe_lattice) then

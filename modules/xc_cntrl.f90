@@ -227,28 +227,9 @@ module xc_cntrl
   !------------ Declaration of constants and variables ----
 
   ! ----------- XC control parameters ---------------------------
-  ! USE OF THESE VARIABLES DEPRECATED:
-  logical :: becke88, &
-             rbecke88, &
-             perdewwang91x , &
-             perdewwang91c ,&
-             rperdewwang91c ,&
-             baerends94, &
-             perdew , &
-             xalpha , &
-             vwn,rvwn , &
-             pbex, pbec, revPBEx, PBENx, &
-             revPW91c, pwldac, &
-             rxalpha, &
-             ecmv92, &
-             nrecmv92, &
-             rperdewwang91x, &
-             hcth_x, &
-             hcth_c
 
-  ! is going to replace the above:
-  character(len=strlen) :: XC = "undef"
-  character(len=strlen) :: xc_setting = "undef"
+  character (len=strlen) :: XC = "VWN"
+  character (len=strlen) :: xc_setting = "VWN"
 
   real(RK), parameter, private :: zero = 0.0_rk
 
@@ -393,32 +374,6 @@ contains
     implicit none
     ! *** end of interface ***
 
-    xalpha        = is_on(xc_xalpha)
-    vwn           = is_on(xc_vwn)
-    rvwn          = is_on(xc_rvwn)
-    pwldac        = is_on(xc_pwldac)
-    rxalpha       = is_on(xc_rxalpha)
-
-    perdew        = is_on(xc_perdew)
-    becke88       = is_on(xc_becke88)
-    rbecke88      = is_on(xc_rbecke88)
-    perdewwang91x = is_on(xc_perdewwang91x)
-    perdewwang91c = is_on(xc_perdewwang91c)
-    rperdewwang91c = is_on(xc_rperdewwang91c)
-    baerends94    = is_on(xc_baerends94)
-    pbex          = is_on(xc_pbex)
-    pbec          = is_on(xc_pbec)
-    ! no legacy flag for PBESOLC, use XC="PBESOL" in input
-    revPBEx       = is_on(xc_revPBEx)
-    ! no legacy flag for PBESOLX, use XC="PBESOL" in input
-    PBENx         = is_on(xc_PBENx)
-    revPW91c      = is_on(xc_revPW91c)
-    ecmv92        = is_on(xc_ecmv92)
-    nrecmv92      = is_on(xc_nrecmv92)
-    rperdewwang91x= is_on(xc_rperdewwang91x)
-    hcth_x        = is_on(xc_hcth_x)
-    hcth_c        = is_on(xc_hcth_c)
-
     call set_functional_type()
 
     xc_nl_calc = is_on (xc_GGA)
@@ -433,54 +388,6 @@ contains
         xc_nl_calc_ph = is_on (xc_gga)
     endif
   end subroutine set_global
-
-  subroutine set_options()
-    ! compatibility
-    use operations_module, only: operations_gradients
-    implicit none
-    ! *** end of interface ***
-
-    !MF bugfix:
-    Options(:xc_GGA) = 0
-    if (xalpha)         call set_contrib( xc_xalpha        , iyes )
-    if (vwn)            call set_contrib( xc_vwn           , iyes )
-    if (rvwn)           call set_contrib( xc_rvwn          , iyes )
-    if (perdew)         call set_contrib( xc_perdew        , iyes )
-    if (becke88)        call set_contrib( xc_becke88       , iyes )
-    if (rbecke88)       call set_contrib( xc_rbecke88      , iyes )
-    if (perdewwang91x)  call set_contrib( xc_perdewwang91x , iyes )
-    if (perdewwang91c)  call set_contrib( xc_perdewwang91c , iyes )
-    if (baerends94)     call set_contrib( xc_baerends94    , iyes )
-    if (pbex)           call set_contrib( xc_pbex          , iyes )
-    if (pbec)           call set_contrib( xc_pbec          , iyes )
-    ! no legacy flag for PBESOLC, use XC=" PBESOL" in input
-    if (revPBEx)        call set_contrib( xc_revPBEx       , iyes )
-    ! no legacy flag for PBESOLX, use XC=" PBESOL" in input
-    if (PBENx)          call set_contrib( xc_PBENx         , iyes )
-    if (revPW91c)       call set_contrib( xc_revPW91c      , iyes )
-    if (pwldac)         call set_contrib( xc_pwldac        , iyes )
-    if (rxalpha)        call set_contrib( xc_rxalpha       , iyes )
-    if (ecmv92)         call set_contrib( xc_ecmv92        , iyes )
-    if (nrecmv92)       call set_contrib( xc_nrecmv92      , iyes )
-    if (rperdewwang91x) call set_contrib( xc_rperdewwang91x, iyes )
-    if (rperdewwang91c) call set_contrib( xc_rperdewwang91c, iyes )
-    if (hcth_x)         call set_contrib( xc_hcth_x        , iyes )
-    if (hcth_c)         call set_contrib( xc_hcth_c        , iyes )
-
-    call set_functional_type()
-
-    xc_nl_calc = is_on(xc_GGA)
-
-    ! By default we do all  GGAs in single-point post-scf run, but see
-    ! next:
-    xc_nl_calc_ph = .true.
-
-    ! Energy should be consistent with forces, in this case. Gradients
-    ! of XC term can only be computed for one functional.
-    if (operations_gradients) then
-        xc_nl_calc_ph = is_on (xc_gga)
-    endif
-  end subroutine set_options
 
   subroutine xc_read_input()
     !
@@ -507,31 +414,7 @@ contains
     integer(IK)           :: longtrans
     integer(IK)           :: ixc
 
-    namelist /xc_control/ &
-         & XC,&
-         & xalpha,&
-         & rxalpha, &
-         & vwn,&
-         & rvwn,&
-         & pwldac,&
-         & becke88,&
-         & rbecke88,&
-         & perdew,&
-         & perdewwang91x,&
-         & rperdewwang91x,&
-         & perdewwang91c,&
-         & rperdewwang91c,&
-         & revPW91c,&
-         & baerends94,&
-         & pbex,&
-         & pbec,&
-         & revPBEx,&
-         & PBENx,&
-         & ecmv92, &
-         & nrecmv92, &
-         & hcth_x, &
-         & hcth_c,&
-         & sdens_cutoff
+    namelist /xc_control/ XC, sdens_cutoff
 
     DPRINT 'xccntl::xc_read: entered'
 
@@ -549,34 +432,8 @@ contains
             "xc_read: namelist xc_control")
     endif
 
-    if (  xalpha.neqv.(df_Options(xc_xalpha) > 0) .or.                         &
-          rxalpha.neqv.(df_Options(xc_rxalpha) > 0) .or.                       &
-          vwn.neqv.(df_Options(xc_vwn) > 0) .or.                               &
-          rvwn.neqv.(df_Options(xc_rvwn) > 0) .or.                             &
-          pwldac.neqv.(df_Options(xc_pwldac) > 0) .or.                         &
-          becke88.neqv.(df_Options(xc_becke88) > 0) .or.                       &
-          rbecke88.neqv.(df_Options(xc_rbecke88) > 0) .or.                     &
-          perdew.neqv.(df_Options(xc_perdew) > 0) .or.                         &
-          perdewwang91x.neqv.(df_Options(xc_perdewwang91x) > 0) .or.           &
-          rperdewwang91x.neqv.(df_Options(xc_rperdewwang91x) > 0) .or.         &
-          perdewwang91c.neqv.(df_Options(xc_perdewwang91c) > 0) .or.           &
-          rperdewwang91c.neqv.(df_Options(xc_rperdewwang91c) > 0) .or.         &
-          revPW91c.neqv.(df_Options(xc_revPW91c) > 0) .or.                     &
-          baerends94.neqv.(df_Options(xc_baerends94) > 0) .or.                 &
-          pbex.neqv.(df_Options(xc_pbex) > 0) .or.                             &
-          pbec.neqv.(df_Options(xc_pbec) > 0) .or.                             &
-          revPBEx.neqv.(df_Options(xc_revPBEx) > 0) .or.                       &
-          PBENx.neqv.(df_Options(xc_PBENx) > 0) .or.                           &
-          ecmv92.neqv.(df_Options(xc_ecmv92) > 0) .or.                         &
-          nrecmv92.neqv.(df_Options(xc_nrecmv92) > 0) .or.                     &
-          hcth_x.neqv.(df_Options(xc_hcth_x) > 0) .or.                         &
-          hcth_c.neqv.(df_Options(xc_hcth_c) > 0) ) then
-      write(*,*) 'WARNING: Explicit functional keyword obsolete!'
-      write(*,*) '         Please use XC = combination.'
-    endif
-
     xc_setting = " "
-    if( XC .ne. "undef" )then
+    if (.true.) then
        ! ignore old fashioned input:
        call set_defaults( no )
 
@@ -1344,12 +1201,7 @@ contains
 
        ! Sets xc_nl_calc, xc_nl_calc_ph too:
        call set_global()
-    else
-       ! Sets xc_nl_calc, xc_nl_calc_ph too:
-       call set_options()
     endif
-    ! FIXME: get rid of legacy per-contribution globals! Otherwise one
-    ! would always need to maintain two branches as above.
 
     ! Now determine the type of functional i.e. the step in jakobs ladder
     call set_functional_type()
@@ -1365,8 +1217,7 @@ contains
     call check()
 
     call say ("--> XC settings -->")
-    if (XC /= "undef") &
-         call say ('XC = "' // trim (xc_setting) // '"  (original: "' // trim (XC) // '")')
+    call say ('XC = "' // trim (xc_setting) // '"  (original: "' // trim (XC) // '")')
     if (is_on (xc_so_spatial)) call say ("using orbital space for XC evaluating")
     if (is_on (xc_so_orb_to_sporb)) call say ("using orbitals for evaluation of spinors")
 
@@ -1461,9 +1312,9 @@ contains
 
   !*************************************************************
 
-  subroutine xc_write_input(iounit)
+  subroutine xc_write_input (iounit)
     !
-    ! Purpose: Writing the input concerning xc_control to the output
+    ! Writing the input concerning xc_control to the output.
     !
     use echo_input_module, only: start, real, flag, intg, strng, stop, &
          echo_level_full
@@ -1472,60 +1323,17 @@ contains
     integer(kind=IK), intent(in) :: iounit
     !** End of interface *****************************************
 
-    ! ----------- Default values for input parameters -------------
-    logical ::&
-         df_becke88       = df_Options(xc_becke88)       .ne.0 , &
-         df_rbecke88      = df_Options(xc_rbecke88)      .ne.0 , &
-         df_perdew        = df_Options(xc_perdew)        .ne.0 , &
-         df_perdewwang91x = df_Options(xc_perdewwang91x) .ne.0 , &
-         df_rperdewwang91x= df_Options(xc_rperdewwang91x).ne.0 , &
-         df_perdewwang91c = df_Options(xc_perdewwang91c) .ne.0 , &
-         df_rperdewwang91c= df_Options(xc_rperdewwang91c).ne.0 , &
-         df_baerends94    = df_Options(xc_baerends94)    .ne.0 , &
-         df_xalpha        = df_Options(xc_xalpha)        .ne.0 , &
-         df_vwn           = df_Options(xc_vwn)           .ne.0 , &
-         df_rvwn          = df_Options(xc_rvwn)          .ne.0 , &
-         df_pbex          = df_Options(xc_pbex)          .ne.0 , &
-         df_pbec          = df_Options(xc_pbec)          .ne.0 , &
-         df_revPBEx       = df_Options(xc_revpbex)       .ne.0 , &
-         df_PBENx         = df_Options(xc_pbenx)         .ne.0 , &
-         df_revPW91c      = df_Options(xc_revpw91c)      .ne.0 , &
-         df_pwldac        = df_Options(xc_pwldac)        .ne.0 , &
-         df_rxalpha       = df_Options(xc_rxalpha)       .ne.0 , &
-         df_hcth_x        = df_Options(xc_hcth_x)        .ne.0 , &
-         df_hcth_c        = df_Options(xc_hcth_c)        .ne.0 , &
-         df_ecmv92        = df_Options(xc_ecmv92)        .ne.0 , &
-         df_nrecmv92      = df_options(xc_nrecmv92)      .ne.0
-
-    call start("XC_CONTROL","XC_WRITE_INPUT", &
-         iounit,operations_echo_input_level)
-    call strng('XC            ',trim(xc_setting)//'"  # original: "'//trim(XC)&
-              ,'undef"  # original: "undef')
-    call real("SDENS_CUTOFF  ",xc_sdens_cutoff,df_sdens_cutoff)
-    call flag("XALPHA        ",xalpha ,df_xalpha )
-    call flag("VWN           ",vwn    ,df_vwn    )
-    call flag("RVWN          ",rvwn   ,df_rvwn    )
-    call flag("PWLDAc        ",pwldac ,df_pwldac    )
-    call flag("PERDEW        ",perdew ,df_perdew )
-    call flag("BECKE88       ",becke88,df_becke88)
-    call flag("RBECKE88       ",rbecke88,df_rbecke88)
-    call flag("PERDEWWANG91C ",perdewwang91c,df_perdewwang91c)
-    call flag("RPERDEWWANG91c",rperdewwang91c,df_rperdewwang91c)
-    call flag("PERDEWWANG91X ",perdewwang91x,df_perdewwang91x)
-    call flag("RPERDEWWANG91x ",rperdewwang91x,df_rperdewwang91x)
-    call flag("BAERENDS94    ",baerends94,df_baerends94)
-    call flag("PBEx          ",pbex,df_pbex)
-    call flag("PBEc          ",pbec,df_pbec)
-    call flag("revPBEx       ",revPBEx,df_revPBEx)
-    call flag("PBENx         ",PBENx,df_PBENx)
-    call flag("revPW91c      ",revPW91c,df_revPW91c)
-    call flag("RXALPHA       ",rxalpha ,df_rxalpha)
-    call flag("HCTH_X        ",hcth_x ,df_hcth_x)
-    call flag("HCTH_C        ",hcth_c ,df_hcth_c)
-    call flag("ECMV92        ",ecmv92,df_ecmv92)
-    call flag("NRECMV92      ",nrecmv92,df_nrecmv92)
+    ! FIXME: this injection hack is abusing output of string values to
+    ! propagate   additional  info   to  the   input.out.    Here  the
+    ! user-specified value is XC and should be distinguished from what
+    ! the program  derived from that  input (XC_SETTING).  It  is ugly
+    ! AND  wrong!  For  example,  with input  xc  = "vwn,spatial"  the
+    ! input.out will only contain xc = "VWN":
+    call start ("XC_CONTROL", "XC_WRITE_INPUT", iounit, operations_echo_input_level)
+    call strng ('XC', trim (xc_setting) // '"  # original: "' // trim (XC), &
+         'VWN"  # original: "VWN')
+    call real ("SDENS_CUTOFF", xc_sdens_cutoff, df_sdens_cutoff)
     call stop()
-
   end subroutine xc_write_input
 
 

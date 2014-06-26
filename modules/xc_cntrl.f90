@@ -1440,18 +1440,22 @@ contains
           ! dont check
 #else
       DPRINT 'xcntl::check: Options=',Options
-      if ( is_on(xc_vwn).and.is_on(xc_pwldac))&
-           & call input_error("Two different LDA-c specified")
+      if (is_on (xc_vwn) .and. is_on (xc_pwldac)) then
+         call input_error ("Two different LDA-c specified")
+      endif
 
-      if (.not.(vwn.or.pwldac).and.(perdewwang91c.or.pbec)) &
-           & call input_error&
-           & ("PW91c, PBEC require PWLDAc or VWN for the LDA part of Ec")
+      if (.not. (is_on (xc_vwn) .or. is_on (xc_pwldac)) &
+           .and. (is_on (xc_perdewwang91c) .or. is_on (xc_pbec))) then
+         call input_error &
+              ("PW91c, PBEC require PWLDAc or VWN for the LDA part of Ec")
+      endif
       ! do not other functio
 #endif
 
-      if(xc_sdens_cutoff.lt.zero)&
-           & call input_error&
-           & ("Spin density cutoff is negative (&xc_control). Aborting...")
+      if (xc_sdens_cutoff < 0.0) then
+         call input_error &
+              ("Spin density cutoff is negative (&xc_control). Aborting...")
+      endif
     end subroutine check
   end subroutine xc_read_input
 

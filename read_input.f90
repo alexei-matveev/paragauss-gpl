@@ -79,7 +79,6 @@ use diis_fock_module, only: diis_read_input
 use fermi_module, only: fermi_read, check_occ_fermi
 use convergence_module, only: convergence_read
 use grid_module, only: grid_read, grid_read_ph, grid_copy_to_ph
-use ph_cntrl, only: post_scf_read_input, post_scf_set_defaults
 use machineparameters_module, only: machineparameters_read
 use xc_cntrl, only: xc_read_input
 #ifdef WITH_DFTPU
@@ -128,7 +127,7 @@ integer(i4_kind) :: i
 character(len=32) :: namelist_name
 logical :: out_read, ua_read, basis_read, gr_read, ph_gr_read, pc_read, &
      symadapt_read, sym_read, mix_read, ferm_read, conv_read, mp_read, opt_read, &
-     rec_read, xc_read, ph_xc_read, occ_read, mda_read, pop_read, dip_read, ef_read, &
+     rec_read, xc_read, occ_read, mda_read, pop_read, dip_read, ef_read, &
      prop_read, orb_plot_read, frag_orb_read, resp_read, spin_orbit_read, solvat_read, &
      grid_ph_only, dis_re_read,epe_rd, pot_calc_read, gten_read, empiricalmethods_read
 logical :: solv_mix_read, diis_read
@@ -162,7 +161,6 @@ mp_read = .false.
 opt_read = .false.
 rec_read = .false.
 xc_read = .false.
-ph_xc_read = .false.
 dft_plus_u_read = .false.
 occ_read = .false.
 prop_read = .false.
@@ -323,12 +321,6 @@ do while ( input_which_namelist(namelist_name) )
       if (output_read_input) call write_to_output_units("read input: xc_control")
       call xc_read_input()
       xc_read = .true.
-
-   case("phxc_control")
-      if (ph_xc_read) call input_error( "READ_INPUT: namelist phxc_control appears twice" )
-      if (output_read_input) call write_to_output_units("read input: phxc_control")
-      call post_scf_read_input()
-      ph_xc_read = .true.
 
 #ifdef WITH_DFTPU
    case("dft_plus_u")
@@ -542,7 +534,6 @@ if ( .not. conv_read ) call convergence_read()
 if ( .not. gr_read ) call grid_read()
 if ( .not. ph_gr_read ) call grid_copy_to_ph()      ! not grid_read_ph()
 if ( .not. xc_read ) call xc_read_input()
-if ( .not. ph_xc_read ) call post_scf_set_defaults()  ! not post_scf_read_input()
 if ( .not. spin_orbit_read ) call spin_orbit_read_input()
 if ( .not. occ_read ) call occupation_read()
 if ( .not. prop_read ) call properties_read()

@@ -398,10 +398,10 @@ contains
     !
     use iounitadmin_module, only: write_to_output_units
     use input_module
-    use strings,            only: wpresent, spresent
-    use exchange, only: &
-       X_PW91, X_BECKE86, X_PBE, X_REVPBE, X_PBESOL, X_PBEN, X_BECKE88, X_ECMV92, X_XALPHA, &
-       X_LONG, X_TRANS, X_LONGTRANS
+    use strings, only: wpresent, spresent
+    use exchange, only: X_PW91, X_BECKE86, X_PBE, X_REVPBE, X_PBESOL, &
+         X_PBEN, X_BECKE88, X_ECMV92, X_XALPHA, X_LONG, X_TRANS, &
+         X_LONGTRANS
     implicit none
     !** End of interface **************************************
 
@@ -421,787 +421,785 @@ contains
     found = 0
 
     ! default values
-    call set_defaults( yes )
+    call set_defaults (yes)
     DPRINT 'xccntl::xc_read: defaults=',Options
 
-    if ( input_line_is_namelist("xc_control") ) then
+    if (input_line_is_namelist ("xc_control")) then
        call input_read_to_intermediate
-       unit= input_intermediate_unit()
-       read(unit, nml=xc_control, iostat=status)
+       unit = input_intermediate_unit()
+       read (unit, nml=xc_control, iostat=status)
        if (status .gt. 0) call input_error( &
             "xc_read: namelist xc_control")
     endif
 
     xc_setting = " "
-    if (.true.) then
-       ! ignore old fashioned input:
-       call set_defaults( no )
-
-       xc_found = 0
-       xc_fracs_found = 0
-
-       if(wpresent(XC,"XALPHA"))then
-          call set_contrib( xc_xalpha       , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "XALPHA"
-       endif
-
-       if(wpresent(XC,"VWN"))then
-          call set_contrib( xc_xalpha       , iyes )
-          call set_contrib( xc_vwn          , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "VWN"
-       endif
-
-       if(    wpresent(XC,"PWLDA" ) .or.&
-            & wpresent(XC,"PW-LDA") .or.&
-            & wpresent(XC,"PWLSD" ) .or.&
-            & wpresent(XC,"PW-LSD") )then
-          call set_contrib( xc_xalpha        , iyes )
-          call set_contrib( xc_pwldac        , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "PWLDA"
-       endif
-
-       if(wpresent(XC,"RVWN"))then
-          call set_contrib( xc_xalpha        , 0    )
-          call set_contrib( xc_rxalpha       , iyes )
-          call set_contrib( xc_vwn           , iyes )
-          if(wpresent(XC,"RVWN:Engel"))then
-            call set_contrib( xc_rvwn        , 2    )
-            xc_setting = "RVWN_ENGEL"
-          else
-            call set_contrib( xc_rvwn        , 1    )
-            xc_setting = "RVWN"
-          endif
-          xc_found = xc_found + 1
-       endif
-
-       if(wpresent(XC,"RVWN_ENGEL"))then
-          call set_contrib( xc_xalpha        , 0    )
-          call set_contrib( xc_rxalpha       , iyes )
-          call set_contrib( xc_vwn           , iyes )
-          call set_contrib( xc_rvwn          , 2    )
-          xc_found = xc_found + 1
-          xc_setting = "RVWN_ENGEL"
-       endif
-
-       if(wpresent(XC,"LB94"))then
-          call set_contrib( xc_xalpha        , iyes )
-          call set_contrib( xc_vwn           , iyes )
-          call set_contrib( xc_baerends94    , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "LB94"
-       endif
-
-       if(wpresent(XC,"BP"))then
-#ifdef WITH_LIBDFTAUTO
-          call set_contrib( xc_xalpha        , 0    )
-          call set_contrib( xc_vwn           , 0    )
-#else
-          call set_contrib( xc_xalpha        , iyes )
-          call set_contrib( xc_vwn           , iyes )
-#endif
-          call set_contrib( xc_becke88       , iyes )
-          call set_contrib( xc_perdew        , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "BP"
-       endif
-
-       if(wpresent(XC,"BLYP").or.spresent(XC,"B-LYP"))then
-#ifdef WITH_LIBDFTAUTO
-          call set_contrib( xc_xalpha        , 0    )
-#else
-          call set_contrib( xc_xalpha        , iyes )
-#endif
-          call set_contrib( xc_becke88       , iyes )
-          call set_contrib( xc_lyp_c         , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "BLYP"
-       endif
-
-       if(wpresent(XC,"B88"))then
-#ifdef WITH_LIBDFTAUTO
-          call set_contrib( xc_xalpha        , 0    )
-#else
-          call set_contrib( xc_xalpha        , iyes )
-#endif
-          call set_contrib( xc_becke88       , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "B88"
-       endif
-
-       if(wpresent(XC,"RBP"))then
-          ! "RBP" means relativistic Becke for the exchange part
-          ! and non-relativistic Perdew for the correlation part.
-#ifdef WITH_LIBDFTAUTO
-          ABORT('recompile w/o -DWITH_LIBDFTAUTO')
-#else
-          call set_contrib( xc_xalpha        , iyes )
-          call set_contrib( xc_vwn           , iyes )
-          call set_contrib( xc_becke88       , 0    )
-          call set_contrib( xc_rbecke88      , iyes )
-          call set_contrib( xc_perdew        , iyes )
-#endif
-          xc_found = xc_found + 1
-          xc_setting = "RBP"
-       endif
-
-       if(wpresent(XC,"BPW91"))then
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_becke88       , iyes )
-          call set_contrib( xc_perdewwang91c , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "BPW91"
-       endif
-
-       if(wpresent(XC,"PW91"))then
-#ifdef WITH_LIBDFTAUTO
-          call set_contrib( xc_xalpha        , 0    )
-          call set_contrib( xc_pwldac        , 0    )
-#else
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-#endif
-          call set_contrib( xc_perdewwang91c , iyes )
-          call set_contrib( xc_perdewwang91x , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "PW91"
-       endif
-
-       if(wpresent(XC,"PW91c"))then
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_perdewwang91c , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "PW91c"
-       endif
-
-       if(wpresent(XC,"PW91x"))then
-          call set_contrib( xc_xalpha        , iyes )
-          call set_contrib( xc_perdewwang91x , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "PW91x"
-       endif
-
-       if(wpresent(XC,"RPW91x"))then
-          ! "RPW91x" is relativistic PW91x.
-          call set_contrib( xc_rperdewwang91x, iyes ) ! IS A TOTAL
-          xc_found = xc_found + 1
-          xc_setting = "RPW91x"
-       endif
-
-       if(wpresent(XC,"RPW91c"))then
-          ! "RPW91" is relativistic PW91c
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_perdewwang91c , iyes )
-          call set_contrib( xc_rperdewwang91c, iyes )
-          xc_found = xc_found + 1
-          xc_setting = "RPW91c"
-       endif
-
-       if(wpresent(XC,"RPW91"))then
-          ! "RPW91" is relativistic PW91c and relativistic PW91x.
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_rperdewwang91x, iyes ) ! IS A TOTAL
-          call set_contrib( xc_perdewwang91c , iyes )
-          call set_contrib( xc_rperdewwang91c, iyes ) ! IS A CORRECTION
-          xc_found = xc_found + 1
-          xc_setting = "RPW91"
-       endif
-
-       if(wpresent(XC,"NRECMV92"))then
-          call set_contrib( xc_xalpha        , iyes )
-          call set_contrib( xc_nrecmv92      , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "NRECMV92"
-       endif
-
-       if(wpresent(XC,"ECMV92"))then
-          call set_contrib( xc_xalpha        , iyes )
-          call set_contrib( xc_ecmv92        , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "ECMV92"
-       endif
-
-       if(wpresent(XC,"PBE"))then
-#ifdef WITH_LIBDFTAUTO
-          call set_contrib( xc_xalpha        , 0    )
-          call set_contrib( xc_pwldac        , 0    )
-          call set_contrib( xc_pbex          , iyes )
-          call set_contrib( xc_pbec          , iyes )
-#else
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_pbex          , X_PBE)
-          call set_contrib( xc_pbec          , iyes )
-#endif
-          xc_found = xc_found + 1
-          xc_setting = "PBE"
-       endif
-
-       if(wpresent(XC,"PBEX"))then
-         if(spresent(XC,"PBEX:"))then
-           frac_tmp = get_contrib( XC, 'PBEX:' )
-           xc_setting = ':'//trim(rtoa(frac_tmp,8))//' '//trim(xc_setting)
-           xc_fracs_found = xc_fracs_found + 1
-         else
-           frac_tmp = 1.0_RK
-         endif
-#ifdef WITH_LIBDFTAUTO
-          call set_contrib( xc_xalpha        , 0    )
-          call set_contrib( xc_pbex          , iyes , frac_tmp )
-#else
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes , frac_tmp )
-          endif
-          call set_contrib( xc_pbex          , X_PBE, frac_tmp )
-#endif
-          xc_found = xc_found + 1
-          xc_setting = "PBEx"//trim(xc_setting)
-       endif
-
-       if(wpresent(XC,"PBEC"))then
-         if(spresent(XC,"PBEC:"))then
-           frac_tmp = get_contrib( XC, 'PBEC:' )
-           xc_setting = ':'//trim(rtoa(frac_tmp,8))//' '//trim(xc_setting)
-           xc_fracs_found = xc_fracs_found + 1
-         else
-           frac_tmp = 1.0_RK
-         endif
-#ifdef WITH_LIBDFTAUTO
-          call set_contrib( xc_pwldac        , 0    )
-          call set_contrib( xc_pbec          , iyes , frac_tmp )
-#else
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes , frac_tmp )
-          endif
-          call set_contrib( xc_pbec          , iyes , frac_tmp )
-#endif
-          xc_found = xc_found + 1
-          xc_setting = "PBEC"//trim(xc_setting)
-       endif
-
-       if(wpresent(XC,"PBEN"))then
-         if(spresent(XC,"PBEN:"))then
-           frac_tmp = get_contrib( XC, 'PBEN:' )
-           xc_setting = ':'//trim(rtoa(frac_tmp,8))//' '//trim(xc_setting)
-           xc_fracs_found = xc_fracs_found + 1
-         else
-           frac_tmp = 1.0_RK
-         endif
-         if(.not.is_on(xc_rxalpha))then
-           call set_contrib( xc_xalpha       , iyes  , frac_tmp )
-         endif
-         if(.not.is_on(xc_vwn))then
-           call set_contrib( xc_pwldac       , iyes  , frac_tmp )
-         endif
-         call set_contrib( xc_pbenx          , X_PBEN, frac_tmp )
-         call set_contrib( xc_pbec           , iyes  , frac_tmp )
-         xc_found = xc_found + 1
-         xc_setting = "PBEN"//trim(xc_setting)
-       endif
-
-       if(wpresent(XC,"PBENX"))then
-         if(spresent(XC,"PBENx:"))then
-           frac_tmp = get_contrib( XC, 'PBENx:' )
-           xc_setting = ':'//trim(rtoa(frac_tmp,8))//' '//trim(xc_setting)
-           xc_fracs_found = xc_fracs_found + 1
-         else
-           frac_tmp = 1.0_RK
-         endif
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes  , frac_tmp )
-          endif
-          call set_contrib( xc_pbenx         , X_PBEN, frac_tmp )
-          xc_found = xc_found + 1
-          xc_setting = "PBENx"//trim(xc_setting)
-       endif
-
-       if(wpresent(XC,"PBENC"))then
-         if(spresent(XC,"PBENC:"))then
-           frac_tmp = get_contrib( XC, 'PBENC:' )
-           xc_setting = ':'//trim(rtoa(frac_tmp,8))//' '//trim(xc_setting)
-           xc_fracs_found = xc_fracs_found + 1
-         else
-           frac_tmp = 1.0_RK
-         endif
-         if(.not.is_on(xc_vwn))then
-           call set_contrib( xc_pwldac       , iyes  , frac_tmp )
-         endif
-         call set_contrib( xc_pbec           , iyes  , frac_tmp )
-         xc_found = xc_found + 1
-         xc_setting = "PBENc"//trim(xc_setting)
-       endif
-
-       if(wpresent(XC,"revPBE"))then
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_revpbex       , X_REVPBE)
-          call set_contrib( xc_pbec          , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "revPBE"
-       endif
-
-       if(wpresent(XC,"revPBEx"))then
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          call set_contrib( xc_revpbex       , X_REVPBE)
-          xc_found = xc_found + 1
-          xc_setting = "revPBEx"
-       endif
-
-       if(wpresent(XC, "PBESOL"))then
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_pbesolx       , X_PBESOL)
-          call set_contrib( xc_pbesolc       , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "PBEsol"
-       endif
-
-       if(wpresent(XC,"HCTHv4").or.wpresent(XC,"HCTH407"))then
-          call set_contrib( xc_hcth_x        , iyes )
-          call set_contrib( xc_hcth_c        , iyes )
-          Options(xc_HCTH_version)  = 4
-          xc_found = xc_found + 1
-          xc_setting = "HCTHv4"
-       endif
-
-       if(wpresent(XC,"HCTHv3").or.wpresent(XC,"HCTH147"))then
-          call set_contrib( xc_hcth_x        , iyes )
-          call set_contrib( xc_hcth_c        , iyes )
-          Options(xc_HCTH_version)  = 3
-          xc_found = xc_found + 1
-          xc_setting = "HCTHv3"
-       endif
-
-       if(wpresent(XC,"HCTHv2").or.wpresent(XC,"HCTH120"))then
-          call set_contrib( xc_hcth_x        , iyes )
-          call set_contrib( xc_hcth_c        , iyes )
-          Options(xc_HCTH_version)  = 2
-          xc_found = xc_found + 1
-          xc_setting = "HCTHv2"
-       endif
-
-       if(wpresent(XC,"HCTHv1").or.wpresent(XC,"HCTH"))then
-          call set_contrib( xc_hcth_x        , iyes )
-          call set_contrib( xc_hcth_c        , iyes )
-          Options(xc_HCTH_version)  = 1
-          xc_found = xc_found + 1
-          xc_setting = "HCTHv1"
-       endif
-
-       if(wpresent(XC,"HCTHx"))then
-          call set_contrib( xc_hcth_x        , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "HCTHx"
-       endif
-
-       if(wpresent(XC,"HCTHc"))then
-          call set_contrib( xc_hcth_c        , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "HCTHc"
-       endif
-
-       if(wpresent(XC,"TPSS"))then
-          call set_contrib( xc_tpss_x        , iyes )
-          call set_contrib( xc_tpss_c        , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "TPSS"
-       endif
-
-       if(wpresent(XC,"TPSSX"))then
-         if(spresent(XC,"TPSSx:"))then
-           frac_tmp = get_contrib( XC, 'TPSSx:' )
-           xc_setting = ':'//trim(rtoa(frac_tmp,8))//' '//trim(xc_setting)
-           xc_fracs_found = xc_fracs_found + 1
-         else
-           frac_tmp = 1.0_RK
-         endif
-         xc_found = xc_found + 1
-         xc_setting = "TPSSx"//trim(xc_setting)
-         call set_contrib( xc_tpss_x         , iyes, frac_tmp )
-       endif
-
-       if(wpresent(XC,"TPSSC"))then
-         if(spresent(XC,"TPSSc:"))then
-           frac_tmp = get_contrib( XC, 'TPSSc:' )
-           xc_setting = ':'//trim(rtoa(frac_tmp,8))//' '//trim(xc_setting)
-           xc_fracs_found = xc_fracs_found + 1
-         else
-           frac_tmp = 1.0_RK
-         endif
-         xc_found = xc_found + 1
-         xc_setting = "TPSSc"//trim(xc_setting)
-         call set_contrib( xc_tpss_c         , iyes, frac_tmp )
-       endif
-
-!      if(wpresent(XC,"revTPSS"))then
-!         call set_contrib( xc_revtpss_x     , iyes )
-!         call set_contrib( xc_revtpss_c     , iyes )
-!         xc_found = xc_found + 1
-!         xc_setting = "revTPSS"
-!      endif
-
-       if(wpresent(XC,"M06L"))then
-          call set_contrib( xc_m06l_x        , iyes )
-          call set_contrib( xc_m06l_c        , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "M06L"
-       endif
-
-       if(wpresent(XC,"M06"))then
-         call set_contrib( xc_m06_x          , iyes )
-         call set_contrib( xc_m06_c          , iyes )
-         call set_contrib( xc_EXX            , iyes, 0.27_RK  )
-         xc_found = xc_found + 1
-         xc_setting = "M06"
-       endif
-
-       if(wpresent(XC,"VMT").or.wpresent(XC,"VMT1"))then
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_vmt           , iyes )
-          call set_contrib( xc_pbec          , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "VMT"
-       endif
-
-       if(wpresent(XC,"VT84").or.spresent(XC,"VT{84}"))then
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_vt84          , iyes )
-          call set_contrib( xc_pbec          , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "VT84"
-       endif
-
-       if(wpresent(XC,"VMTsol").or.wpresent(XC,"VMT1sol"))then
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_vmtsol        , iyes )
-          call set_contrib( xc_pbec          , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "VMTsol"
-       endif
-
-       if(wpresent(XC,"VT84sol").or.spresent(XC,"VT{84}sol"))then
-          if(.not.is_on(xc_rxalpha))then
-            call set_contrib( xc_xalpha      , iyes )
-          endif
-          if(.not.is_on(xc_vwn))then
-            call set_contrib( xc_pwldac      , iyes )
-          endif
-          call set_contrib( xc_vt84sol       , iyes )
-          call set_contrib( xc_pbec          , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "VT84sol"
-       endif
-
-       if(wpresent(XC,"VSXC").or.wpresent(XC,"VS98"))then
-          call set_contrib( xc_vs_x          , iyes )
-          call set_contrib( xc_vs_c          , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "VS98"
-       endif
-
-       if(wpresent(XC,"HF").or.wpresent(XC,"HartreeFock"))then
-          call set_contrib( xc_HF            , iyes )
-          xc_found = xc_found + 1
-          xc_setting = "HartreeFock"
-       endif
-
-       if(wpresent(XC,"B3LYP").or.wpresent(XC,"B3-LYP"))then
-         ! Exc[B3LYP] = Exc[LDA] + a * ( Ex[EXX] - Ex[LDA] )
-         !                       + b *   Ex[B88]              <- Correction
-         !                       + c * ( Ec[LYP] - Ec[VWN] )
-         !            = (1-a-b)*Ex[LDA] + a*Ex[EXX] + b*Ex[B88]
-         !              + (1-c)*Ex[VWN] + c*Ec[LYP]
-         !
-         ! with :     a = 0.20 ,  b = 0.72 ,  c = 0.81
-         !
-#ifdef WITH_LIBDFTAUTO
-         ! There is 0.72*Ex[LDA] already present in B88
-         call set_contrib( xc_XAlpha  , iyes,  0.08_RK ) ! = 1 - a - b
-#else
-         call set_contrib( xc_XAlpha  , iyes,  0.80_RK ) ! = 1 - a
-#endif
-         call set_contrib( xc_Becke88 , iyes,  0.72_RK ) ! = b
-         call set_contrib( xc_VWN     , iyes,  0.19_RK ) ! = 1 - c
-         call set_contrib( xc_LYP_c   , iyes,  0.81_RK ) ! = c
-         call set_contrib( xc_EXX     , iyes,  0.20_RK ) ! = a
-         xc_found = xc_found + 1
-         xc_setting = "B3LYP"
-       endif
-
-       if(wpresent(XC,"TPSSh").or.wpresent(XC,"TPSS1TPSS"))then
-         call set_contrib( xc_tpss_x        , iyes, 0.9_RK )
-         call set_contrib( xc_EXX           , iyes, 0.1_RK )
-         call set_contrib( xc_tpss_c        , iyes )
-         xc_found = xc_found + 1
-         xc_setting = "TPSSh"
-       endif
-
-       if(wpresent(XC,"PBE0").or.wpresent(XC,"PBE1PBE"))then
-         ! This is PBE0 method of Adamo and Barone (J. Chem. Phys. 110)
-         ! with 25% exact exchange contribution.
-#ifdef WITH_LIBDFTAUTO
-         call set_contrib( xc_XAlpha  , 0              )
-         call set_contrib( xc_pwldac  , 0              )
-         call set_contrib( xc_pbex    , iyes, 0.75_RK  )
-         call set_contrib( xc_pbec    , iyes           )
-#else
-         if(.not.is_on(xc_rxalpha))then
-           call set_contrib( xc_XAlpha, iyes, 0.75_RK  )
-         endif
-         if(.not.is_on(xc_vwn))then
-           call set_contrib( xc_pwldac, iyes           )
-         endif
-         call set_contrib( xc_pbex,    X_PBE, 0.75_RK  )
-         call set_contrib( xc_pbec,     iyes           )
-#endif
-         call set_contrib( xc_EXX     , iyes, 0.25_RK  )
-         xc_found = xc_found + 1
-         xc_setting = "PBE0"
-       endif
-
-       if(wpresent(XC,"EXX"))then
-         ! This is pure exact exchange intended for custom settings of methods
-         if(spresent(XC,"EXX:"))then
-           frac_tmp = get_contrib( XC, 'EXX:' )
-           xc_fracs_found = xc_fracs_found + 1
-           xc_setting = ':'//trim(rtoa(frac_tmp,8))//' '//trim(xc_setting)
-         else
-           frac_tmp = 1.0_RK
-         endif
-         call set_contrib( xc_EXX     , iyes, frac_tmp )
-         xc_setting = "EXX"//trim(xc_setting)
-         xc_found = xc_found + 1
-       endif
-
-       longtrans = X_LONGTRANS
-       if(wpresent(XC,"LONG"))then
-          longtrans = X_LONG
-       endif
-
-       if(wpresent(XC,"REL").or.wpresent(XC,"RLDA"))then
-          ! promote to relativistic, if possible
-
-          Options(xc_rel) = longtrans
-
-          found = 0
-          if(is_on(xc_xalpha))then
-            call set_contrib( xc_rxalpha     , iyes )
-            call set_contrib( xc_xalpha      , 0    )
-            found = found + 1
-            print *,'xc_cntrl: Xalpha promoted to RXalpha'
-            print *,'xc_cntrl: Xalpha turned off'
-          endif
-
-          if(is_on(xc_vwn))then
-             if(wpresent(XC,"Engel"))then
-               call set_contrib( xc_rvwn     , 2    )
-                print *,'xc_cntrl: VWNc promoted to RVWNc(Engel)'
-             else
-               call set_contrib( xc_rvwn     , 1    )
-               print *,'xc_cntrl: VWNc promoted to RVWNc'
-             endif
-             found = found + 1
-          endif
-
-          if(is_on(xc_pwldac))then
-             print *,'xc_cntrl: no RPWLDAC available, maybe RVWN?'
-          endif
-       endif
-
-       if(wpresent(XC,"REL").or.wpresent(XC,"RGGA").or.wpresent(XC,"RGGAX"))then
-          ! promote to relativistic, if possible
-
-          if(is_on(xc_becke88))then
-            call set_contrib( xc_xalpha      , iyes )
-            call set_contrib( xc_rxalpha     , 0    ) ! RBECKE88 includes RXALPHA (but not XALPHA itself)
-            call set_contrib( xc_rbecke88    , iyes )
-            call set_contrib( xc_becke88     , 0    )
-            found = found + 1
-            print *,'xc_cntrl: BECKE88 promoted to RBECKE88'
-            print *,'xc_cntrl: XALPHA switched on'
-            print *,'xc_cntrl: RXALPHA switched off'
-          endif
-
-          if(is_on(xc_perdewwang91x))then
-            call set_contrib( xc_xalpha      , iyes )
-            call set_contrib( xc_rxalpha     , 0    )
-            call set_contrib( xc_rperdewwang91x, iyes )
-            call set_contrib( xc_perdewwang91x , 0    ) ! rperdewwang91x is a TOTAL
-            found = found + 1
-            print *,'xc_cntrl: PW91x promoted to RPW91x'
-            print *,'xc_cntrl: XALPHA switched on'
-            print *,'xc_cntrl: RXALPHA switched off'
-          endif
-
-          if(is_on(xc_pbex))then
-            call set_contrib( xc_xalpha      , iyes )
-            call set_contrib( xc_rxalpha     , 0    )
-            call set_contrib( xc_pbex        , X_PBE + longtrans )
-            found = found + 1
-            print *,'xc_cntrl: PBEx promoted to REL:PBEx'
-            print *,'xc_cntrl: XALPHA switched on'
-            print *,'xc_cntrl: RXALPHA switched off'
-          endif
-
-          if(is_on(xc_pbenx))then
-            call set_contrib( xc_xalpha      , iyes )
-            call set_contrib( xc_rxalpha     , 0    )
-            call set_contrib( xc_pbenx       , X_PBEN + longtrans )
-            found = found + 1
-            print *,'xc_cntrl: PBENx promoted to REL:PBENx'
-            print *,'xc_cntrl: XALPHA switched on'
-            print *,'xc_cntrl: RXALPHA switched off'
-          endif
-
-          if(is_on(xc_revpbex))then
-            call set_contrib( xc_xalpha      , iyes )
-            call set_contrib( xc_rxalpha     , 0    )
-            call set_contrib( xc_revpbex     , X_REVPBE + longtrans )
-            found = found + 1
-            print *,'xc_cntrl: revPBEx promoted to REL:revPBEx'
-            print *,'xc_cntrl: XALPHA switched on'
-            print *,'xc_cntrl: RXALPHA switched off'
-          endif
-       endif
-
-       if(wpresent(XC,"REL").or.wpresent(XC,"RGGA").or.wpresent(XC,"RGGAC"))then
-          ! promote to relativistic, if possible
-
-          if(is_on(xc_perdewwang91c))then
-            call set_contrib( xc_rvwn          , 0    ) ! FIXME: do I need it?
-            call set_contrib( xc_rperdewwang91c, iyes )
-            call set_contrib( xc_perdewwang91c , 0    ) ! rperdewwang91x is NOW a TOTAL
-            found = found + 1
-            print *,'xc_cntrl: PW91c promoted to RPW91c'
-            print *,'xc_cntrl: RVWNc switched off'
-          endif
-       endif
-
-       if(wpresent(XC,"off").or.wpresent(XC,"null").or.wpresent(XC,"none"))then
-          ! turn everything off:
-          Options(:xc_NXC) = 0
-          frac             = off
-          WARN('xc was turned OFF!')
-          xc_found = xc_found + 1
-          xc_setting = 'none" #   "WARNING: XC disabled manually'
-       endif
-       !
-       ! more cases wanted ...
-       !
-       if(wpresent(XC,"spatial"))then
-          ! evaluate xc for spin-orbit
-          ! in orbital (as opposit to spinor) space
-          Options(xc_so_spatial) = iyes ! <<< global
-       endif
-       if(wpresent(XC,"orb->sporb"))then
-          ! use (spatial0 orbital to compute spinors,
-          ! as opposed to independent evaluation of both
-          Options(xc_so_orb_to_sporb) = iyes ! <<< global
-       endif
-       if(wpresent(XC,"GGAv1"))then
-          ! older version of GGA subroutine
-          Options(xc_GGA_version) = 1
-       endif
-       if(wpresent(XC,"ORBv1"))then
-          ! deprecated
-          ! older version of orbitals_calculate:
-          Options(xc_orbcalc_version) = 1
-       endif
-       if(wpresent(XC,"ORBv2"))then
-          ! deprecated:
-          Options(xc_orbcalc_version) = 2
-       endif
-       if(wpresent(XC,"ORBv3"))then
-          ! latest:
-          Options(xc_orbcalc_version) = 3
-       endif
-       if(wpresent(XC,"DENSv1"))then
-          ! older version of density_calc_nl:
-          Options(xc_denscalc_version) = 1
-       endif
-       if(wpresent(XC,"SOPv1"))then
-          ! older version of calc_xcks_polarized
-          Options(xc_sop_version) = 1
-       endif
-       if(wpresent(XC,"SOPv2"))then
-          ! newer version of calc_xcks_polarized
-          Options(xc_sop_version) = 2
-       endif
-       if(wpresent(XC,"NSDv2"))then
-          ! newer version of calculate_nuc_sec_der
-          Options(xc_nuc_sec_der_version) = 2
-       endif
-       if(wpresent(XC,"NSDv1"))then
-          ! older version of calculate_nuc_sec_der
-          Options(xc_nuc_sec_der_version) = 1
-       endif
-
-       if(wpresent(XC,"new").or.wpresent(XC,"test"))then
-         call set_contrib( xc_new, iyes )
-         xc_found = xc_found + 1
-       endif
-
-       if(sdens_cutoff.ne.df_sdens_cutoff)then
-          ! spin-density cutoff changed
-          xc_sdens_cutoff = sdens_cutoff
-       endif
-       DPRINT 'xccntl::xc_read: options=',Options
-
-       if ( xc_found == 0 ) then
-         call input_error("xc_read: unknown method set in keyword XC")
-       elseif ( xc_found > 1 .and. xc_found .ne. xc_fracs_found ) then
-         call input_error("xc_read: ambiguous settings in keyword XC")
-       endif
-
-       ! Sets xc_nl_calc, xc_nl_calc_ph too:
-       call set_global()
+    ! ignore old fashioned input:
+    call set_defaults (no)
+
+    xc_found = 0
+    xc_fracs_found = 0
+
+    if (wpresent (XC, "XALPHA")) then
+       call set_contrib (xc_xalpha, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "XALPHA"
     endif
+
+    if (wpresent (XC, "VWN")) then
+       call set_contrib (xc_xalpha, iyes)
+       call set_contrib (xc_vwn, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "VWN"
+    endif
+
+    if (   wpresent (XC, "PWLDA") .or. &
+         & wpresent (XC, "PW-LDA") .or. &
+         & wpresent (XC, "PWLSD") .or. &
+         & wpresent (XC, "PW-LSD")) then
+       call set_contrib (xc_xalpha, iyes)
+       call set_contrib (xc_pwldac, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "PWLDA"
+    endif
+
+    if (wpresent (XC, "RVWN")) then
+       call set_contrib (xc_xalpha, 0)
+       call set_contrib (xc_rxalpha, iyes)
+       call set_contrib (xc_vwn, iyes)
+       if (wpresent (XC, "RVWN:Engel")) then
+          call set_contrib (xc_rvwn, 2)
+          xc_setting = "RVWN_ENGEL"
+       else
+          call set_contrib (xc_rvwn, 1)
+          xc_setting = "RVWN"
+       endif
+       xc_found = xc_found + 1
+    endif
+
+    if (wpresent (XC, "RVWN_ENGEL")) then
+       call set_contrib (xc_xalpha, 0)
+       call set_contrib (xc_rxalpha, iyes)
+       call set_contrib (xc_vwn, iyes)
+       call set_contrib (xc_rvwn, 2)
+       xc_found = xc_found + 1
+       xc_setting = "RVWN_ENGEL"
+    endif
+
+    if (wpresent (XC, "LB94")) then
+       call set_contrib (xc_xalpha, iyes)
+       call set_contrib (xc_vwn, iyes)
+       call set_contrib (xc_baerends94, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "LB94"
+    endif
+
+    if (wpresent (XC, "BP")) then
+#ifdef WITH_LIBDFTAUTO
+       call set_contrib (xc_xalpha, 0)
+       call set_contrib (xc_vwn, 0)
+#else
+       call set_contrib (xc_xalpha, iyes)
+       call set_contrib (xc_vwn, iyes)
+#endif
+       call set_contrib (xc_becke88, iyes)
+       call set_contrib (xc_perdew, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "BP"
+    endif
+
+    if (wpresent (XC, "BLYP") .or. spresent (XC, "B-LYP")) then
+#ifdef WITH_LIBDFTAUTO
+       call set_contrib (xc_xalpha, 0)
+#else
+       call set_contrib (xc_xalpha, iyes)
+#endif
+       call set_contrib (xc_becke88, iyes)
+       call set_contrib (xc_lyp_c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "BLYP"
+    endif
+
+    if (wpresent (XC, "B88")) then
+#ifdef WITH_LIBDFTAUTO
+       call set_contrib (xc_xalpha, 0)
+#else
+       call set_contrib (xc_xalpha, iyes)
+#endif
+       call set_contrib (xc_becke88, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "B88"
+    endif
+
+    if (wpresent (XC, "RBP")) then
+       ! "RBP" means relativistic Becke for the exchange part
+       ! and non-relativistic Perdew for the correlation part.
+#ifdef WITH_LIBDFTAUTO
+       ABORT('recompile w/o -DWITH_LIBDFTAUTO')
+#else
+       call set_contrib (xc_xalpha, iyes)
+       call set_contrib (xc_vwn, iyes)
+       call set_contrib (xc_becke88, 0)
+       call set_contrib (xc_rbecke88, iyes)
+       call set_contrib (xc_perdew, iyes)
+#endif
+       xc_found = xc_found + 1
+       xc_setting = "RBP"
+    endif
+
+    if (wpresent (XC, "BPW91")) then
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_becke88, iyes)
+       call set_contrib (xc_perdewwang91c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "BPW91"
+    endif
+
+    if (wpresent (XC, "PW91")) then
+#ifdef WITH_LIBDFTAUTO
+       call set_contrib (xc_xalpha, 0)
+       call set_contrib (xc_pwldac, 0)
+#else
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+#endif
+       call set_contrib (xc_perdewwang91c, iyes)
+       call set_contrib (xc_perdewwang91x, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "PW91"
+    endif
+
+    if (wpresent (XC, "PW91c")) then
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_perdewwang91c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "PW91c"
+    endif
+
+    if (wpresent (XC, "PW91x")) then
+       call set_contrib (xc_xalpha, iyes)
+       call set_contrib (xc_perdewwang91x, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "PW91x"
+    endif
+
+    if (wpresent (XC, "RPW91x")) then
+       ! "RPW91x" is relativistic PW91x.
+       call set_contrib (xc_rperdewwang91x, iyes) ! IS A TOTAL
+       xc_found = xc_found + 1
+       xc_setting = "RPW91x"
+    endif
+
+    if (wpresent (XC, "RPW91c")) then
+       ! "RPW91" is relativistic PW91c
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_perdewwang91c, iyes)
+       call set_contrib (xc_rperdewwang91c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "RPW91c"
+    endif
+
+    if (wpresent (XC, "RPW91")) then
+       ! "RPW91" is relativistic PW91c and relativistic PW91x.
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_rperdewwang91x, iyes) ! IS A TOTAL
+       call set_contrib (xc_perdewwang91c, iyes)
+       call set_contrib (xc_rperdewwang91c, iyes) ! IS A CORRECTION
+       xc_found = xc_found + 1
+       xc_setting = "RPW91"
+    endif
+
+    if (wpresent (XC, "NRECMV92")) then
+       call set_contrib (xc_xalpha, iyes)
+       call set_contrib (xc_nrecmv92, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "NRECMV92"
+    endif
+
+    if (wpresent (XC, "ECMV92")) then
+       call set_contrib (xc_xalpha, iyes)
+       call set_contrib (xc_ecmv92, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "ECMV92"
+    endif
+
+    if (wpresent (XC, "PBE")) then
+#ifdef WITH_LIBDFTAUTO
+       call set_contrib (xc_xalpha, 0)
+       call set_contrib (xc_pwldac, 0)
+       call set_contrib (xc_pbex, iyes)
+       call set_contrib (xc_pbec, iyes)
+#else
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_pbex, X_PBE)
+       call set_contrib (xc_pbec, iyes)
+#endif
+       xc_found = xc_found + 1
+       xc_setting = "PBE"
+    endif
+
+    if (wpresent (XC, "PBEX")) then
+       if (spresent (XC, "PBEX:")) then
+          frac_tmp = get_contrib (XC, 'PBEX:')
+          xc_setting = ':' // trim (rtoa(frac_tmp, 8)) // ' ' // trim (xc_setting)
+          xc_fracs_found = xc_fracs_found + 1
+       else
+          frac_tmp = 1.0_RK
+       endif
+#ifdef WITH_LIBDFTAUTO
+       call set_contrib (xc_xalpha, 0)
+       call set_contrib (xc_pbex, iyes, frac_tmp)
+#else
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes, frac_tmp)
+       endif
+       call set_contrib (xc_pbex, X_PBE, frac_tmp)
+#endif
+       xc_found = xc_found + 1
+       xc_setting = "PBEx" // trim (xc_setting)
+    endif
+
+    if (wpresent (XC, "PBEC")) then
+       if (spresent (XC, "PBEC:")) then
+          frac_tmp = get_contrib (XC, 'PBEC:')
+          xc_setting = ':' // trim (rtoa(frac_tmp, 8)) // ' ' // trim (xc_setting)
+          xc_fracs_found = xc_fracs_found + 1
+       else
+          frac_tmp = 1.0_RK
+       endif
+#ifdef WITH_LIBDFTAUTO
+       call set_contrib (xc_pwldac, 0)
+       call set_contrib (xc_pbec, iyes, frac_tmp)
+#else
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes, frac_tmp)
+       endif
+       call set_contrib (xc_pbec, iyes, frac_tmp)
+#endif
+       xc_found = xc_found + 1
+       xc_setting = "PBEC" // trim (xc_setting)
+    endif
+
+    if (wpresent (XC, "PBEN")) then
+       if (spresent (XC, "PBEN:")) then
+          frac_tmp = get_contrib (XC, 'PBEN:')
+          xc_setting = ':' // trim (rtoa(frac_tmp, 8)) // ' ' // trim (xc_setting)
+          xc_fracs_found = xc_fracs_found + 1
+       else
+          frac_tmp = 1.0_RK
+       endif
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes, frac_tmp)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes, frac_tmp)
+       endif
+       call set_contrib (xc_pbenx, X_PBEN, frac_tmp)
+       call set_contrib (xc_pbec, iyes, frac_tmp)
+       xc_found = xc_found + 1
+       xc_setting = "PBEN" // trim (xc_setting)
+    endif
+
+    if (wpresent (XC, "PBENX")) then
+       if (spresent (XC, "PBENx:")) then
+          frac_tmp = get_contrib (XC, 'PBENx:')
+          xc_setting = ':' // trim (rtoa(frac_tmp, 8)) // ' ' // trim (xc_setting)
+          xc_fracs_found = xc_fracs_found + 1
+       else
+          frac_tmp = 1.0_RK
+       endif
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes, frac_tmp)
+       endif
+       call set_contrib (xc_pbenx, X_PBEN, frac_tmp)
+       xc_found = xc_found + 1
+       xc_setting = "PBENx" // trim (xc_setting)
+    endif
+
+    if (wpresent (XC, "PBENC")) then
+       if (spresent (XC, "PBENC:")) then
+          frac_tmp = get_contrib (XC, 'PBENC:')
+          xc_setting = ':' // trim (rtoa(frac_tmp, 8)) // ' ' // trim (xc_setting)
+          xc_fracs_found = xc_fracs_found + 1
+       else
+          frac_tmp = 1.0_RK
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes, frac_tmp)
+       endif
+       call set_contrib (xc_pbec, iyes, frac_tmp)
+       xc_found = xc_found + 1
+       xc_setting = "PBENc" // trim (xc_setting)
+    endif
+
+    if (wpresent (XC, "revPBE")) then
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_revpbex, X_REVPBE)
+       call set_contrib (xc_pbec, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "revPBE"
+    endif
+
+    if (wpresent (XC, "revPBEx")) then
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       call set_contrib (xc_revpbex, X_REVPBE)
+       xc_found = xc_found + 1
+       xc_setting = "revPBEx"
+    endif
+
+    if (wpresent (XC, "PBESOL")) then
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_pbesolx, X_PBESOL)
+       call set_contrib (xc_pbesolc, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "PBEsol"
+    endif
+
+    if (wpresent (XC, "HCTHv4") .or. wpresent (XC, "HCTH407")) then
+       call set_contrib (xc_hcth_x, iyes)
+       call set_contrib (xc_hcth_c, iyes)
+       Options(xc_HCTH_version)  = 4
+       xc_found = xc_found + 1
+       xc_setting = "HCTHv4"
+    endif
+
+    if (wpresent (XC, "HCTHv3") .or. wpresent (XC, "HCTH147")) then
+       call set_contrib (xc_hcth_x, iyes)
+       call set_contrib (xc_hcth_c, iyes)
+       Options(xc_HCTH_version)  = 3
+       xc_found = xc_found + 1
+       xc_setting = "HCTHv3"
+    endif
+
+    if (wpresent (XC, "HCTHv2") .or. wpresent (XC, "HCTH120")) then
+       call set_contrib (xc_hcth_x, iyes)
+       call set_contrib (xc_hcth_c, iyes)
+       Options(xc_HCTH_version)  = 2
+       xc_found = xc_found + 1
+       xc_setting = "HCTHv2"
+    endif
+
+    if (wpresent (XC, "HCTHv1") .or. wpresent (XC, "HCTH")) then
+       call set_contrib (xc_hcth_x, iyes)
+       call set_contrib (xc_hcth_c, iyes)
+       Options(xc_HCTH_version)  = 1
+       xc_found = xc_found + 1
+       xc_setting = "HCTHv1"
+    endif
+
+    if (wpresent (XC, "HCTHx")) then
+       call set_contrib (xc_hcth_x, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "HCTHx"
+    endif
+
+    if (wpresent (XC, "HCTHc")) then
+       call set_contrib (xc_hcth_c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "HCTHc"
+    endif
+
+    if (wpresent (XC, "TPSS")) then
+       call set_contrib (xc_tpss_x, iyes)
+       call set_contrib (xc_tpss_c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "TPSS"
+    endif
+
+    if (wpresent (XC, "TPSSX")) then
+       if (spresent (XC, "TPSSx:")) then
+          frac_tmp = get_contrib (XC, 'TPSSx:')
+          xc_setting = ':' // trim (rtoa(frac_tmp, 8)) // ' ' // trim (xc_setting)
+          xc_fracs_found = xc_fracs_found + 1
+       else
+          frac_tmp = 1.0_RK
+       endif
+       xc_found = xc_found + 1
+       xc_setting = "TPSSx" // trim (xc_setting)
+       call set_contrib (xc_tpss_x, iyes, frac_tmp)
+    endif
+
+    if (wpresent (XC, "TPSSC")) then
+       if (spresent (XC, "TPSSc:")) then
+          frac_tmp = get_contrib (XC, 'TPSSc:')
+          xc_setting = ':' // trim (rtoa(frac_tmp, 8)) // ' ' // trim (xc_setting)
+          xc_fracs_found = xc_fracs_found + 1
+       else
+          frac_tmp = 1.0_RK
+       endif
+       xc_found = xc_found + 1
+       xc_setting = "TPSSc" // trim (xc_setting)
+       call set_contrib (xc_tpss_c, iyes, frac_tmp)
+    endif
+
+    !      if (wpresent (XC, "revTPSS")) then
+    !         call set_contrib (xc_revtpss_x, iyes)
+    !         call set_contrib (xc_revtpss_c, iyes)
+    !         xc_found = xc_found + 1
+    !         xc_setting = "revTPSS"
+    !      endif
+
+    if (wpresent (XC, "M06L")) then
+       call set_contrib (xc_m06l_x, iyes)
+       call set_contrib (xc_m06l_c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "M06L"
+    endif
+
+    if (wpresent (XC, "M06")) then
+       call set_contrib (xc_m06_x, iyes)
+       call set_contrib (xc_m06_c, iyes)
+       call set_contrib (xc_EXX, iyes, 0.27_RK)
+       xc_found = xc_found + 1
+       xc_setting = "M06"
+    endif
+
+    if (wpresent (XC, "VMT") .or. wpresent (XC, "VMT1")) then
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_vmt, iyes)
+       call set_contrib (xc_pbec, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "VMT"
+    endif
+
+    if (wpresent (XC, "VT84") .or. spresent (XC, "VT{84}")) then
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_vt84, iyes)
+       call set_contrib (xc_pbec, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "VT84"
+    endif
+
+    if (wpresent (XC, "VMTsol") .or. wpresent (XC, "VMT1sol")) then
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_vmtsol, iyes)
+       call set_contrib (xc_pbec, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "VMTsol"
+    endif
+
+    if (wpresent (XC, "VT84sol") .or. spresent (XC, "VT{84}sol")) then
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_xalpha, iyes)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_vt84sol, iyes)
+       call set_contrib (xc_pbec, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "VT84sol"
+    endif
+
+    if (wpresent (XC, "VSXC") .or. wpresent (XC, "VS98")) then
+       call set_contrib (xc_vs_x, iyes)
+       call set_contrib (xc_vs_c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "VS98"
+    endif
+
+    if (wpresent (XC, "HF") .or. wpresent (XC, "HartreeFock")) then
+       call set_contrib (xc_HF, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "HartreeFock"
+    endif
+
+    if (wpresent (XC, "B3LYP") .or. wpresent (XC, "B3-LYP")) then
+       ! Exc[B3LYP] = Exc[LDA] + a *  (Ex[EXX] - Ex[LDA])
+       !                       + b *   Ex[B88]              <- Correction
+       !                       + c *  (Ec[LYP] - Ec[VWN])
+       !            = (1-a-b)*Ex[LDA] + a*Ex[EXX] + b*Ex[B88]
+       !              + (1-c)*Ex[VWN] + c*Ec[LYP]
+       !
+       ! with :     a = 0.20, b = 0.72, c = 0.81
+       !
+#ifdef WITH_LIBDFTAUTO
+       ! There is 0.72*Ex[LDA] already present in B88
+       call set_contrib (xc_XAlpha, iyes, 0.08_RK) ! = 1 - a - b
+#else
+       call set_contrib (xc_XAlpha, iyes, 0.80_RK) ! = 1 - a
+#endif
+       call set_contrib (xc_Becke88, iyes, 0.72_RK) ! = b
+       call set_contrib (xc_VWN, iyes, 0.19_RK)     ! = 1 - c
+       call set_contrib (xc_LYP_c, iyes, 0.81_RK)   ! = c
+       call set_contrib (xc_EXX, iyes, 0.20_RK)     ! = a
+       xc_found = xc_found + 1
+       xc_setting = "B3LYP"
+    endif
+
+    if (wpresent (XC, "TPSSh") .or. wpresent (XC, "TPSS1TPSS")) then
+       call set_contrib (xc_tpss_x, iyes, 0.9_RK)
+       call set_contrib (xc_EXX, iyes, 0.1_RK)
+       call set_contrib (xc_tpss_c, iyes)
+       xc_found = xc_found + 1
+       xc_setting = "TPSSh"
+    endif
+
+    if (wpresent (XC, "PBE0") .or. wpresent (XC, "PBE1PBE")) then
+       ! This is PBE0 method of Adamo and Barone (J. Chem. Phys. 110)
+       ! with 25% exact exchange contribution.
+#ifdef WITH_LIBDFTAUTO
+       call set_contrib (xc_XAlpha, 0)
+       call set_contrib (xc_pwldac, 0)
+       call set_contrib (xc_pbex, iyes, 0.75_RK)
+       call set_contrib (xc_pbec, iyes)
+#else
+       if (.not. is_on (xc_rxalpha)) then
+          call set_contrib (xc_XAlpha, iyes, 0.75_RK)
+       endif
+       if (.not. is_on (xc_vwn)) then
+          call set_contrib (xc_pwldac, iyes)
+       endif
+       call set_contrib (xc_pbex, X_PBE, 0.75_RK)
+       call set_contrib (xc_pbec, iyes)
+#endif
+       call set_contrib (xc_EXX, iyes, 0.25_RK)
+       xc_found = xc_found + 1
+       xc_setting = "PBE0"
+    endif
+
+    if (wpresent (XC, "EXX")) then
+       ! This is pure exact exchange intended for custom settings of methods
+       if (spresent (XC, "EXX:")) then
+          frac_tmp = get_contrib (XC, 'EXX:')
+          xc_fracs_found = xc_fracs_found + 1
+          xc_setting = ':' // trim (rtoa(frac_tmp, 8)) // ' ' // trim (xc_setting)
+       else
+          frac_tmp = 1.0_RK
+       endif
+       call set_contrib (xc_EXX, iyes, frac_tmp)
+       xc_setting = "EXX" // trim (xc_setting)
+       xc_found = xc_found + 1
+    endif
+
+    longtrans = X_LONGTRANS
+    if (wpresent (XC, "LONG")) then
+       longtrans = X_LONG
+    endif
+
+    if (wpresent (XC, "REL") .or. wpresent (XC, "RLDA")) then
+       ! promote to relativistic, if possible
+
+       Options(xc_rel) = longtrans
+
+       found = 0
+       if (is_on (xc_xalpha)) then
+          call set_contrib (xc_rxalpha, iyes)
+          call set_contrib (xc_xalpha, 0)
+          found = found + 1
+          print *, 'xc_cntrl: Xalpha promoted to RXalpha'
+          print *, 'xc_cntrl: Xalpha turned off'
+       endif
+
+       if (is_on (xc_vwn)) then
+          if (wpresent (XC, "Engel")) then
+             call set_contrib (xc_rvwn, 2)
+             print *, 'xc_cntrl: VWNc promoted to RVWNc(Engel)'
+          else
+             call set_contrib (xc_rvwn, 1)
+             print *, 'xc_cntrl: VWNc promoted to RVWNc'
+          endif
+          found = found + 1
+       endif
+
+       if (is_on (xc_pwldac)) then
+          print *, 'xc_cntrl: no RPWLDAC available, maybe RVWN?'
+       endif
+    endif
+
+    if (wpresent (XC, "REL") .or. wpresent (XC, "RGGA") .or. wpresent (XC, "RGGAX")) then
+       ! promote to relativistic, if possible
+
+       if (is_on (xc_becke88)) then
+          call set_contrib (xc_xalpha, iyes)
+          call set_contrib (xc_rxalpha, 0) ! RBECKE88 includes RXALPHA (but not XALPHA itself)
+          call set_contrib (xc_rbecke88, iyes)
+          call set_contrib (xc_becke88, 0)
+          found = found + 1
+          print *, 'xc_cntrl: BECKE88 promoted to RBECKE88'
+          print *, 'xc_cntrl: XALPHA switched on'
+          print *, 'xc_cntrl: RXALPHA switched off'
+       endif
+
+       if (is_on (xc_perdewwang91x)) then
+          call set_contrib (xc_xalpha, iyes)
+          call set_contrib (xc_rxalpha, 0)
+          call set_contrib (xc_rperdewwang91x, iyes)
+          call set_contrib (xc_perdewwang91x, 0) ! rperdewwang91x is a TOTAL
+          found = found + 1
+          print *, 'xc_cntrl: PW91x promoted to RPW91x'
+          print *, 'xc_cntrl: XALPHA switched on'
+          print *, 'xc_cntrl: RXALPHA switched off'
+       endif
+
+       if (is_on (xc_pbex)) then
+          call set_contrib (xc_xalpha, iyes)
+          call set_contrib (xc_rxalpha, 0)
+          call set_contrib (xc_pbex, X_PBE + longtrans)
+          found = found + 1
+          print *, 'xc_cntrl: PBEx promoted to REL:PBEx'
+          print *, 'xc_cntrl: XALPHA switched on'
+          print *, 'xc_cntrl: RXALPHA switched off'
+       endif
+
+       if (is_on (xc_pbenx)) then
+          call set_contrib (xc_xalpha, iyes)
+          call set_contrib (xc_rxalpha, 0)
+          call set_contrib (xc_pbenx, X_PBEN + longtrans)
+          found = found + 1
+          print *, 'xc_cntrl: PBENx promoted to REL:PBENx'
+          print *, 'xc_cntrl: XALPHA switched on'
+          print *, 'xc_cntrl: RXALPHA switched off'
+       endif
+
+       if (is_on (xc_revpbex)) then
+          call set_contrib (xc_xalpha, iyes)
+          call set_contrib (xc_rxalpha, 0)
+          call set_contrib (xc_revpbex, X_REVPBE + longtrans)
+          found = found + 1
+          print *, 'xc_cntrl: revPBEx promoted to REL:revPBEx'
+          print *, 'xc_cntrl: XALPHA switched on'
+          print *, 'xc_cntrl: RXALPHA switched off'
+       endif
+    endif
+
+    if (wpresent (XC, "REL") .or. wpresent (XC, "RGGA") .or. wpresent (XC, "RGGAC")) then
+       ! promote to relativistic, if possible
+
+       if (is_on (xc_perdewwang91c)) then
+          call set_contrib (xc_rvwn, 0) ! FIXME: do I need it?
+          call set_contrib (xc_rperdewwang91c, iyes)
+          call set_contrib (xc_perdewwang91c, 0) ! rperdewwang91x is NOW a TOTAL
+          found = found + 1
+          print *, 'xc_cntrl: PW91c promoted to RPW91c'
+          print *, 'xc_cntrl: RVWNc switched off'
+       endif
+    endif
+
+    if (wpresent (XC, "off") .or. wpresent (XC, "null") .or. wpresent (XC, "none")) then
+       ! turn everything off:
+       Options(:xc_NXC) = 0
+       frac             = off
+       WARN('xc was turned OFF!')
+       xc_found = xc_found + 1
+       xc_setting = 'none" #   "WARNING: XC disabled manually'
+    endif
+    !
+    ! more cases wanted ...
+    !
+    if (wpresent (XC, "spatial")) then
+       ! evaluate xc for spin-orbit
+       ! in orbital (as opposit to spinor) space
+       Options(xc_so_spatial) = iyes ! <<< global
+    endif
+    if (wpresent (XC, "orb->sporb")) then
+       ! use (spatial0 orbital to compute spinors,
+       ! as opposed to independent evaluation of both
+       Options(xc_so_orb_to_sporb) = iyes ! <<< global
+    endif
+    if (wpresent (XC, "GGAv1")) then
+       ! older version of GGA subroutine
+       Options(xc_GGA_version) = 1
+    endif
+    if (wpresent (XC, "ORBv1")) then
+       ! deprecated
+       ! older version of orbitals_calculate:
+       Options(xc_orbcalc_version) = 1
+    endif
+    if (wpresent (XC, "ORBv2")) then
+       ! deprecated:
+       Options(xc_orbcalc_version) = 2
+    endif
+    if (wpresent (XC, "ORBv3")) then
+       ! latest:
+       Options(xc_orbcalc_version) = 3
+    endif
+    if (wpresent (XC, "DENSv1")) then
+       ! older version of density_calc_nl:
+       Options(xc_denscalc_version) = 1
+    endif
+    if (wpresent (XC, "SOPv1")) then
+       ! older version of calc_xcks_polarized
+       Options(xc_sop_version) = 1
+    endif
+    if (wpresent (XC, "SOPv2")) then
+       ! newer version of calc_xcks_polarized
+       Options(xc_sop_version) = 2
+    endif
+    if (wpresent (XC, "NSDv2")) then
+       ! newer version of calculate_nuc_sec_der
+       Options(xc_nuc_sec_der_version) = 2
+    endif
+    if (wpresent (XC, "NSDv1")) then
+       ! older version of calculate_nuc_sec_der
+       Options(xc_nuc_sec_der_version) = 1
+    endif
+
+    if (wpresent (XC, "new") .or. wpresent (XC, "test")) then
+       call set_contrib (xc_new, iyes)
+       xc_found = xc_found + 1
+    endif
+
+    if (sdens_cutoff /= df_sdens_cutoff) then
+       ! spin-density cutoff changed
+       xc_sdens_cutoff = sdens_cutoff
+    endif
+    DPRINT 'xccntl::xc_read: options=', Options
+
+    if (xc_found == 0) then
+       call input_error ("xc_read: unknown method set in keyword XC")
+    elseif (xc_found > 1 .and. xc_found /= xc_fracs_found) then
+       call input_error ("xc_read: ambiguous settings in keyword XC")
+    endif
+
+    ! Sets xc_nl_calc, xc_nl_calc_ph too:
+    call set_global()
 
     ! Now determine the type of functional i.e. the step in jakobs ladder
     call set_functional_type()
@@ -1338,19 +1336,19 @@ contains
 
 
   subroutine xc_input_bcast()
-    ! Purpose : broadcasting the xc_input
-    use comm, only: comm_bcast                                                 &
-                  , comm_rank
+    !
+    ! Broadcast user input.
+    !
+    use comm, only: comm_bcast, comm_rank
     implicit none
     !** End of interface *******************************************************
 
-    call comm_bcast( Options         )
-    call comm_bcast( frac            )
-    call comm_bcast( xc_sdens_cutoff )
+    call comm_bcast (Options)
+    call comm_bcast (frac)
+    call comm_bcast (xc_sdens_cutoff)
 
     ! This will also set the public flags xc_nl_calc, xc_nl_calc_ph:
-    if ( comm_rank() /= 0 ) call set_global()
-
+    if (comm_rank() /= 0) call set_global()
   end subroutine xc_input_bcast
 
   !*****************************************************************************

@@ -53,7 +53,7 @@ subroutine lin_search_epe
   ! Description: ...
   !
   !----------------------------------------------------------------
-#include <def.h>
+#include "def.h"
   !------------ Modules used --------------------------------------
   use type_module ! type specification parameters
   use epecom_module, only: n_ls, output_epe, reg_I_n_ions

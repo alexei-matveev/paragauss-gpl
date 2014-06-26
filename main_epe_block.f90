@@ -57,7 +57,7 @@ subroutine main_epe_block()
   !----------------------------------------------------------------
 
   !------------ Modules used --------------------------------------
-#include <def.h>
+#include "def.h"
   use type_module ! type specification parameters
   use filename_module, only: data_dir
   use time_module

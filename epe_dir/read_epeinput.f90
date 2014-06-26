@@ -35,8 +35,8 @@ subroutine read_epeinput
   use str_module
   use epe_pg_module,only:an_epe_type,operations_make_reg_reference
   use iounitadmin_module
-  use epepar_module, only: treat_epepar_namelist &
-        ,par, ec_name_of_type=>name_of_type, get_slsp, &
+  use epepar_module, only: treat_epepar_namelist, &
+       ec_name_of_type => name_of_type, get_slsp, &
          ec_max_type_ions=>max_type_ions
   use filename_module, only: env => filename_env, filename_namelengthmax
 

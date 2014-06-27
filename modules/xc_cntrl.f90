@@ -313,13 +313,13 @@ contains
     !
     ! FIXME: should it rather be an
     !
-    !           ASSERT(Op>=1.and.Op<=xc_NXC)
+    !   ASSERT(Op>=1.and.Op<=xc_NXC)
     !
-    !        instead?
+    ! instead?
     !
     ASSERT(Op>=1.and.Op<=xc_NOp)
 
-    Yes = (whatis(Op).ne.0)
+    Yes = (whatis(Op) /= 0)
   end function is_on
 
   function xc_cntrl_frac(Op) result(ROp)

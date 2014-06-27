@@ -73,10 +73,9 @@ subroutine main_scf()
        timer_scf_cycle, timer_scf_ham, timer_scf_preparations, &
        timer_scf_reoc, timer_scf_xc, timer_grid_small_to_large, &
        timer_print_scfcycle, timer_print_scf
-  use occupation_module, only: eigenstates_store, occupation_jz, &
-       occupation_spindiff, fixed_hole, n_occo, eigenstates_recover, &
-       print_occ_num, occupation_print_spectrum, occupation_2d_correct, &
-       occupation_get_holes, reoccup
+  use occupation_module, only: fixed_hole, n_occo, reoccup,&
+       print_occ_num, occupation_2d_correct, &
+       occupation_print_spectrum, occupation_get_holes
   use fermi_module, only: fermi_reoccup, fermi_level_broad, fermi_get_entropy, &
        fermi_write_input, fermi_read_scfcontrol
   use occupied_levels_module, only: sndrcv_eigvec_occ1
@@ -946,7 +945,8 @@ contains
     ! integer (i4_kind) :: loop
     ! real   (r8_kind) :: tot_en
     ! logical          :: eof (== etot_recovered)
-    ! ------- Declaraction of formal parameters ----------------
+    use occupation_module, only: eigenstates_recover
+    implicit none
     integer (i4_kind), intent (in) :: recover_mode
     integer (i4_kind), intent (in) :: n_vir
     integer (i4_kind), intent (out) :: loop
@@ -1145,6 +1145,7 @@ contains
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
     ! character (len=*) :: data_dir, fit_file
+    use occupation_module, only: eigenstates_store
     implicit none
     logical, intent (in) :: store_now
     integer (i4_kind), intent (in) :: n_vir
@@ -1231,6 +1232,7 @@ contains
     ! real   (r8_kind) :: tot_en
     ! character (len=*) :: data_dir
     ! character (len=*) :: fit_file, scf_file, ham_file, eig_file
+    use occupation_module, only: eigenstates_store
     implicit none
     integer (i4_kind), intent (in) :: n_vir
     !** End of interface ***************************************
@@ -1301,7 +1303,15 @@ contains
   end subroutine do_final_store
 
   subroutine write_trace_header
+    use comm, only: comm_rank
+    implicit none
+    ! *** end of interface ***
+
     integer (i4_kind) :: trace_bgn, trace_end
+
+    ! FIXME: some of the inquiry functions, notably
+    ! occupation_spindiff() fail on slaves:
+    if (comm_rank() /= 0) return
 
     trace_line = " "
     trace_end = 0
@@ -1419,8 +1429,17 @@ contains
 
   end subroutine write_trace_header
 
-  subroutine write_trace_item
-     integer (i4_kind) :: trace_bgn, trace_end
+  subroutine write_trace_item ()
+    use comm, only: comm_rank
+    use occupation_module, only: occupation_spindiff, occupation_jz
+    implicit none
+    ! *** end of interface ***
+
+    integer (i4_kind) :: trace_bgn, trace_end
+
+    ! FIXME: some of the inquiry functions, notably
+    ! occupation_spindiff() fail on slaves:
+    if (comm_rank() /= 0) return
 
      trace_end = 0
      ! loop
@@ -1458,7 +1477,7 @@ contains
      endif
      if (symmetry_data_n_spin() == 2) then
         ! spin difference
-        spin_diff = occupation_spindiff()
+        spin_diff = occupation_spindiff() ! FIXME: fails on slaves
         trace_bgn = trace_end + 1
         trace_end = trace_end + trace_width(7)
         write (trace_line(trace_bgn:trace_end), trace_format(7)) spin_diff

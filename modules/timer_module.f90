@@ -1099,57 +1099,67 @@ contains
    write(output_unit,*) ""
    write(output_unit,*) "Summary of Timing for SCF Cycle"
    write(output_unit,*) ""
+
    call print_timer(timer_scf_cycle,output_unit, &
         "Entire SCF cycle",start=.true.,sum=.true.,average=.true.,nbr=.true.)
+
    call print_timer(timer_scf_xc,output_unit, &
         "Numeric Build up of Exchange Part of Hamiltonian")
+
    call print_timer(timer_scf_ham,output_unit, &
         "Build up of Hamiltonian")
+
    call print_timer(timer_scf_eigen,output_unit, &
         "Eigensolver")
+
    call print_timer(timer_scf_reoc,output_unit, &
         "Reoccupation of Orbitals")
+
    call print_timer(timer_scf_chfit,output_unit, &
         "Chargefit")
+
    call print_timer(timer_grid_orbitals,output_unit, &
         "Calculation of orbitals", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.,nbr=.true.)
+
    call print_timer(timer_grid_density,output_unit, &
         "Calculation of density", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
-!:UB[ added
+
    if ( xcmda_called ) &
         call print_timer(timer_grid_trunc_dens,output_unit, &
         "Truncation of density", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
-!:UB]
+
    call print_timer(timer_grid_functionals,output_unit, &
         "Calculation of xc-functionals", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
-!:UB[ added
+
    if ( xcmda_called ) &
         call print_timer(timer_grid_trunc_funcs,output_unit, &
         "Truncation of xc-functionals", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
+
    if ( xcmda_called ) &
         call print_timer(timer_grid_projections,output_unit, &
         "Calculation of numerical projections", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
+
    if ( extended_mda ) &
         call print_timer(timer_grid_num_metric,output_unit, &
         "Calculation of numericl metric", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
+
    if ( xcmda_called ) &
         call print_timer(timer_grid_fit_coeffs,output_unit, &
         "Calculation of fitting coefficients", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
-!:UB]
-!:UB[ modified
+
    if ( .not.xcmda_called ) &
         call print_timer(timer_grid_xcbuild,output_unit, &
-!:UB]
         "Construction of the numerical XC-Hamiltonian", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
+
    write(output_unit,*) ""
    end subroutine timer_print_scfcycle
    !*************************************************************

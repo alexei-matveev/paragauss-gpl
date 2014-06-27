@@ -308,11 +308,6 @@ subroutine main_scf()
      call occupation_get_holes()
   endif
 
-  ! The  code inside this  DO block  is executed  on master  only. The
-  ! slaves are spinning in  main_slave() and waiting for orders during
-  ! that time:
-  do while (toggle_legacy_mode ())
-
   scf_cycle: do
      loop = loop + 1
      call start_timer (timer_scf_cycle)
@@ -326,6 +321,12 @@ subroutine main_scf()
         call write_to_output_units ("####### Loop: ", loop)
         call write_to_output_units (" ")
      endif
+
+     ! The code inside  this DO block is executed  on master only. The
+     ! slaves  are spinning  in  main_slave() and  waiting for  orders
+     ! during that time:
+     legacy: do while (toggle_legacy_mode ())
+
      ! Check recover options and fork accordingly
      if (loop == first_loop .and. recover) then
         select case (recover_mode)
@@ -479,16 +480,22 @@ subroutine main_scf()
      call read_scfcontrol()
 #endif /* ifdef WITH_SCFCONTROL */
 
-     if ((convergence() .or. convergence_max_iterations (loop)) .and. &
-          loop /= first_loop) then
+
+     ! Check SCF convergence:
+     scf_conv = (convergence() .or. convergence_max_iterations (loop)) &
+          .and. loop /= first_loop
+     if (scf_conv) then
         ! Reads loop, tot_en and old values of the save_data options:
         call do_final_store (n_vir=n_pairs)
 
-        call say ("timing cycle and exit scf_cycle")
-        call stop_timer (timer_scf_cycle)
-        call timer_grid_small_to_large()
-        if (output_timing_scfloops) call timer_print_scfcycle()
-        exit scf_cycle
+        call say ("exit scf_cycle")
+
+        ! FIXME:  for the transiton  period we  need a  different exit
+        ! strategy. Instead  of just doing  "exit scf_cycle" we  set a
+        ! flag, let the  master tell the slaves this  round is over by
+        ! letting him call  toggle_legacy_mode() again. Then broadcast
+        ! that flag and let everyone exit the SCF block.
+        cycle legacy
      endif
      ! Now  update the save_data  options, deallocate  the temporarily
      ! kept  convergence  buffers (as  far  as  necessary), reset  the
@@ -610,6 +617,25 @@ subroutine main_scf()
      call convergence_put_coeff_dev (coeff_dev)
      call convergence_put_coulomb_dev (coulomb_dev)
 
+     enddo legacy               ! while (toggle_legacy_mode())
+
+     call comm_bcast (scf_conv)
+     if (scf_conv) then
+        call stop_timer (timer_scf_cycle)
+        call timer_grid_small_to_large()
+
+        ! Does nothing when the slaves have no output:
+        if (output_timing_scfloops) then
+           call timer_print_scfcycle()
+        endif
+
+        exit scf_cycle
+     endif
+     !
+     ! The rest  is executed on all workers.   Except where explicitly
+     ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
+     !
+
      if (output_chargefit) then
         call say ("coeff_charge is written to file")
         call print_coeff_charge (loop)
@@ -636,12 +662,6 @@ subroutine main_scf()
      call say ("cycle done")
 
   enddo scf_cycle
-
-  enddo                         ! while (toggle_legacy_mode())
-  !
-  ! The  rest is  executed  on all  workers.  Except where  explicitly
-  ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
-  !
 
   ! This  checks convergence  of  energy AND  charge coefficients  AND
   ! density  matrix AND Coulomb  (?).  FIXME:  This function  seems to

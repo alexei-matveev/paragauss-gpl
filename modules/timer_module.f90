@@ -1086,14 +1086,16 @@ contains
      use iounitadmin_module, only: output_unit
      implicit none
    !** End of interface *****************************************
-!:UB[ added
+
    logical :: extended_mda, xcmda_called
-!:UB]
-   !------------ Executable code --------------------------------
-!:UB[ added
+
+   ! FIXME: what should  slaves do when they dont  have an output file
+   ! open? For now bail out:
+   if (output_unit <= 0) RETURN
+
    extended_mda = options_xcmode() == xcmode_extended_mda
    xcmda_called = options_xcmode() == xcmode_model_density .or. extended_mda
-!:UB]
+
    write(output_unit,*) ""
    write(output_unit,*) "Summary of Timing for SCF Cycle"
    write(output_unit,*) ""

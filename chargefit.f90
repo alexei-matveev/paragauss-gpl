@@ -113,6 +113,8 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
   use comm, only: comm_rank, comm_bcast
   use comm_module, only: comm_init_send, comm_send, comm_all_other_hosts
   use msgtag_module, only: msgtag_charge_fit
+  use time_module, only: start_timer, stop_timer
+  use timer_module, only: timer_scf_chfit
   use symmetry_data_module, only: symmetry_data_n_irreps, &
     symmetry_data_n_spin, symmetry_data_dimension, &
     symmetry_data_n_proj_irreps, symmetry_data_dimension_proj
@@ -206,6 +208,11 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
   !
   ! From here on all workers run in a parallel context!
   !
+
+  ! This timer  was previously in  main_scf() then executed  at master
+  ! only.   Other  steps like  broadcasting  eigenvectors and  density
+  ! matrix generation were also included back then:
+  call start_timer (timer_scf_chfit)
 
   n_ch = fit_coeff_n_ch()
   n_xc = fit_coeff_n_xc()
@@ -870,6 +877,9 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
         !
         call deallocate_pairs()
     endif
+
+  ! See the top for the corresponding start:
+  call stop_timer (timer_scf_chfit)
 
   DPRINT 'chargefit: exit'
 end subroutine chargefit

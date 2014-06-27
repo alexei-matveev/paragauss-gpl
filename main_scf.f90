@@ -69,7 +69,7 @@ subroutine main_scf()
   use paragauss, only: toggle_legacy_mode
   use prescf_module, only: prescf_init, prescf_finalize
   use time_module, only: start_timer, stop_timer ! timing routines
-  use timer_module, only: timer_grid_setup, timer_scf, timer_scf_chfit, &
+  use timer_module, only: timer_grid_setup, timer_scf, &
        timer_scf_cycle, timer_scf_ham, timer_scf_preparations, &
        timer_scf_reoc, timer_scf_xc, timer_grid_small_to_large, &
        timer_print_scfcycle, timer_print_scf
@@ -575,7 +575,6 @@ subroutine main_scf()
 
      ! Setup  of  density  matrix  (on  each  slave)  and  fit  charge
      ! fitfunction coefficients
-     call start_timer (timer_scf_chfit)
      call say ("send_eigvec_occ")
 
      call sndrcv_eigvec_occ1()
@@ -616,8 +615,6 @@ subroutine main_scf()
         call say ("coeff_charge is written to file")
         call print_coeff_charge (loop)
      endif
-
-     call stop_timer (timer_scf_chfit)
 
      ! Calculate and print timing summary for SCF cycle
      call say ("timing")

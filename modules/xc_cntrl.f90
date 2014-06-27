@@ -267,39 +267,36 @@ contains
     !
   end function get_contrib
 
-  subroutine set_contrib(Op, IOp, ROp)
+  subroutine set_contrib (Op, IOp, ROp)
     !
-    ! Associates an integer IOp and a real ROp with
-    ! an option Op preserving constrains:
+    ! Associates  an integer  IOp and  a real  ROp with  an  option Op
+    ! preserving constrains:
     !
     !   is_on(Op) <=> (whatis(Op) /= 0) <=> (xc_cntrl_frac(Op) /= 0.0)
     !
     implicit none
-    integer(IK),        intent(in) :: Op
-    integer(IK),        intent(in) :: IOp
-    real(RK), optional, intent(in) :: ROp
+    integer (IK), intent (in) :: Op
+    integer (IK), intent (in) :: IOp
+    real (RK), optional, intent (in) :: ROp
     ! *** end of interface ***
-    !
+
     ASSERT(Op>0.and.Op<=xc_NXC)
     ASSERT(IOp>=0)
-    !
-    Options( Op ) = IOp
-    if     ( IOp > 0 .and. .not. present( ROp ) ) then
-      ! default case: frac = 1.0
-      frac( Op ) = full
-      !
-    elseif ( IOp > 0 .and.       present( ROp ) ) then
-      ASSERT(ROp/=0.0_RK)
-      ! ROp present.  FIXME: do we  really need to increment?  We have
-      ! enough state to track here:
-      frac(Op) = frac(Op) + ROp
-      !
+
+    Options(Op) = IOp
+    if (IOp > 0 .and. .not. present (ROp)) then
+       ! Default case: frac = 1.0
+       frac(Op) = full
+    elseif (IOp > 0 .and. present (ROp)) then
+       ! ROp present
+       ASSERT(ROp/=0.0)
+       ASSERT(frac(Op)==0.0)
+       frac(Op) = ROp
     else
-      ASSERT(IOp==0)
-      ! no ROp
-      frac( Op ) = off
+       ! no ROp
+       ASSERT(IOp==0)
+       frac(Op) = off
     endif
-    !
   end subroutine set_contrib
 
   function is_on(Op) result(Yes)

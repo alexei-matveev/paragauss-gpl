@@ -831,52 +831,51 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
   endif
 
 999 CONTINUE
-    !
-    ! Here again, all workers run in a parallel context ...
-    !
+  !
+  ! Here again, all workers run in a parallel context ...
+  !
+  if (perturbation_theory) then
+     !
+     ! Rotated eigenvectors need to be updated on all workers:
+     !
+     if (comm_rank() == 0) then
+        eigvec_rotated = any (n_rot > 0)
+     endif
 
-    if ( perturbation_theory ) then
+     ! This flag was set to a meaniful value only on master:
+     call comm_bcast (eigvec_rotated)
+
+     if (eigvec_rotated) then
         !
-        ! Rotated eigenvectors need to be updated on all workers:
+        ! Perturbation theory modified (?) eigenvectors, update
+        ! them everywhere (another question is WHY we do this):
         !
-        if ( comm_rank() == 0 ) then
-            eigvec_rotated = any(n_rot > 0)
+        call update_eigvec_occ()
+     endif
+
+     !
+     ! FIXME: we are in master only context here, doing manipulaitons
+     !        in the global state of other modules:
+     !
+     if (comm_rank() == 0) then
+        if (.not. eigen_kept) then
+           deallocate (n_rot, STAT=alloc_stat)
+           ASSERT(alloc_stat==0)
         endif
+     endif
+  endif
 
-        ! This flag was set to a meaniful value only on master:
-        call comm_bcast(eigvec_rotated)
+  !
+  ! Dealocate module variables in pert_coeff_module:
+  !
+  call pert_coeff_free()
 
-        if ( eigvec_rotated ) then
-            !
-            ! Perturbation theory modified (?) eigenvectors, update
-            ! them everywhere (another question is WHY we do this):
-            !
-            call update_eigvec_occ()
-        endif
-
-        !
-        ! FIXME: we are in master only context here, doing manipulaitons
-        !        in the global state of other modules:
-        !
-        if ( comm_rank() == 0 ) then
-            if (.not.eigen_kept) then
-                deallocate(n_rot, STAT=alloc_stat)
-                ASSERT(alloc_stat==0)
-            endif
-        endif
-    endif
-
-    !
-    ! Dealocate module variables in pert_coeff_module:
-    !
-    call pert_coeff_free()
-
-    if ( perturbation_theory ) then
-        !
-        ! This cleans up pairs_module()
-        !
-        call deallocate_pairs()
-    endif
+  if (perturbation_theory) then
+     !
+     ! This cleans up pairs_module()
+     !
+     call deallocate_pairs()
+  endif
 
   ! See the top for the corresponding start:
   call stop_timer (timer_scf_chfit)

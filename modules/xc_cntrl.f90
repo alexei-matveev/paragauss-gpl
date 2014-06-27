@@ -172,8 +172,8 @@ module xc_cntrl
   ! GGAs. In gradient runs it is the same as xc_nl_calc.
   logical, public, protected :: xc_nl_calc_ph
 
-  real (RK), public, protected :: xc_sdens_cutoff = 1.0E-20_rk
   real (RK), parameter, private :: df_sdens_cutoff = 1.0E-20_rk
+  real (RK), public, protected :: xc_sdens_cutoff = df_sdens_cutoff
 
   character(len=16), public ::&
        xc_cntrl_names(2, xc_NXC) = reshape ([ &

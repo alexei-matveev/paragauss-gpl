@@ -1273,21 +1273,22 @@ contains
       endif
     end subroutine say
 
-    subroutine set_defaults( set_df )
+    subroutine set_defaults (set_df)
       implicit none
-      logical, intent(in) :: set_df
+      logical, intent (in) :: set_df
       ! *** end of interface ***
 
-      if( set_df )then
-        ! set default values
-        Options            = df_Options
-        frac(:xc_NXC)      = real( df_Options(:xc_NXC), RK )
-        frac(xc_NXC+1:)    = 0.0_RK ! those have no meaning at all
+      if (set_df) then
+        ! Set default values
+        Options = df_Options
+        ! Conversion of integer options to real numbers here:
+        frac(:xc_NXC) = df_Options(:xc_NXC)
+        frac(xc_NXC + 1:) = 0.0   ! those have no meaning at all
       else
-        ! set all XC settings to zero
-        Options(:xc_NXC)   = 0
-        Options(xc_NXC+1:) = df_Options(xc_NXC+1:)
-        frac               = 0.0_RK
+        ! Set all XC settings to zero
+        Options(:xc_NXC) = 0
+        Options(xc_NXC + 1:) = df_Options(xc_NXC + 1:)
+        frac = 0.0
       endif
 
       sdens_cutoff = df_sdens_cutoff

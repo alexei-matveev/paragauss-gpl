@@ -113,7 +113,8 @@ subroutine main_scf()
 #ifdef WITH_CORE_DENS
   use fit_coeff_module, only: write_coeff_core
 #endif
-  use density_data_module, only: print_densmat, gendensmat_occ1, save_densmat, densmat
+  use density_data_module, only: print_densmat, gendensmat_occ, &
+       save_densmat, densmat
   use overlap_module, only: overlap
   use filename_module, only: outfile, recfile
   use hamiltonian_module, only: ham_tot, hamiltonian_store, hamiltonian_recover
@@ -175,6 +176,7 @@ subroutine main_scf()
   character (len=NCHAR) :: rec_file
 
   logical :: scf_conv ! signifies SCF convergence, broadcasted to slaves
+  logical :: check_density_dev
   logical :: store_now, recover, etot_recovered
   logical :: new_trace_header
   logical :: update_scfcontrol = .FALSE.
@@ -585,20 +587,6 @@ subroutine main_scf()
 
      call sndrcv_eigvec_occ1()
 
-     call say ("gendensmat_occ1")
-     if (convergence_check_density_dev() .and. &
-          .not. (recover .and. loop == first_loop)) then
-        call gendensmat_occ1 (density_dev)
-     else
-        call gendensmat_occ1()
-        if (recover .and. loop == first_loop) then
-           density_dev = 0.0_r8_kind
-        else
-           density_dev = huge (0.0_r8_kind)
-        endif
-     endif
-     call convergence_put_density_dev (density_dev)
-
      enddo legacy               ! while (toggle_legacy_mode())
      !
      ! The rest  is executed on all workers.   Except where explicitly
@@ -617,8 +605,29 @@ subroutine main_scf()
         exit scf_cycle
      endif
 
+     call say ("gendensmat_occ")
+
+     ! The function here seems to  just return the input parameter and
+     ! thus should give the same value on all workers, modulo bugs, as
+     ! always:
+     check_density_dev = convergence_check_density_dev() &
+          .and. .not. (recover .and. loop == first_loop)
+
+     ASSERT(comm_same(check_density_dev))
+     if (check_density_dev) then
+        call gendensmat_occ (density_dev)
+     else
+        call gendensmat_occ()
+        if (recover .and. loop == first_loop) then
+           density_dev = 0.0_r8_kind
+        else
+           density_dev = huge (0.0_r8_kind)
+        endif
+     endif
+     call convergence_put_density_dev (density_dev)
+
      !
-     ! Moved from gendensmat_occ1() here:
+     ! Moved from gendensmat_occ() here:
      !
      if (output_densmat) then
         call print_densmat (loop)

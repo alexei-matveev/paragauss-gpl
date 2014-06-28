@@ -78,7 +78,8 @@ subroutine main_scf()
        occupation_print_spectrum, occupation_get_holes
   use fermi_module, only: fermi_reoccup, fermi_level_broad, fermi_get_entropy, &
        fermi_write_input, fermi_read_scfcontrol
-  use occupied_levels_module, only: sndrcv_eigvec_occ1
+  use occupied_levels_module, only: sndrcv_eigvec_occ, &
+       sndrcv_eigvec_occ1
   use options_module, only: xcmode_model_density, xcmode_extended_mda, &
        xcmode_numeric_exch, recover_fitcoeff, recover_scfstate, recover_ksmatrix, &
        xcmode_exchange_fit, recover_eigenvec, recover_fragment, options_save_ksmatrix, &
@@ -581,12 +582,6 @@ subroutine main_scf()
         call do_eigenvec_store (store_now, n_vir=n_pairs) ! reads loop
      endif
 
-     ! Setup  of  density  matrix  (on  each  slave)  and  fit  charge
-     ! fitfunction coefficients
-     call say ("send_eigvec_occ")
-
-     call sndrcv_eigvec_occ1()
-
      enddo legacy               ! while (toggle_legacy_mode())
      !
      ! The rest  is executed on all workers.   Except where explicitly
@@ -604,6 +599,12 @@ subroutine main_scf()
 
         exit scf_cycle
      endif
+
+     ! Setup  of  density  matrix  (on  each  slave)  and  fit  charge
+     ! fitfunction coefficients
+     call say ("send_eigvec_occ")
+
+     call sndrcv_eigvec_occ()
 
      call say ("gendensmat_occ")
 

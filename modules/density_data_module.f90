@@ -431,22 +431,29 @@ contains
 
   !*************************************************************
 
-  subroutine gendensmat_occ(density_dev)
+  subroutine gendensmat_occ (density_dev)
     !
-    !  Purpose: Assemble  density matrix from  occupied eigenstates as
-    !  stored in eigvec_occ  and occ_num_occ.  Allocates denity matrix
-    !  if it is not already allocated.
+    ! Purpose:  Assemble density matrix  from occupied  eigenstates as
+    ! stored in  eigvec_occ and occ_num_occ.   Allocates denity matrix
+    ! if it is not already allocated.
     !
-    !  Input parameter (not modified on output):
+    ! Input parameter (not modified on output):
     !
-    !  Name:              Description/Range:
-    !  ssym               ssymmetry stuff
-    !  n_occo             the index of the heighest non-empty orbital
-    !  occ_num_occ        occupation number of the occupied states
-    !  eigvec_occ         the orbital coefficient of the occupied states
+    !   Name:        Description/Range:
+    !   ssym         ssymmetry stuff
+    !   n_occo       the index of the heighest non-empty orbital
+    !   occ_num_occ  occupation number of the occupied states
+    !   eigvec_occ   the orbital coefficient of the occupied states
     !
-    !  Subroutine called by: pre_dens_master, chargefit(),
-    !  properties_main().
+    ! Subroutine called by: main_scf(), main_gradient(),
+    ! properties_main().
+    !
+    ! FIXME: the presence of the argument toggles more allocations for
+    ! space to  store the old  density matrix in  order to be  able to
+    ! compute  the difference.   This argument  was present  on master
+    ! (call   from  main_scf())   but   not  on   slaves  (call   from
+    ! main_slave()).  Now that it  is called  from a  paralle context,
+    ! this argument is present on every worker.
     !
     !  Author: Uwe Birkenheuer (based on gendensmat of TG)
     !  Date: 7/97
@@ -466,7 +473,7 @@ contains
     use options_module, only: options_spin_orbit
     use output_module, only: output_n_density_dev
     implicit none
-    real(kind=r8_kind), optional, intent(out) :: density_dev
+    real (r8_kind), optional, intent (out) :: density_dev
     ! *** end of interface ***
 
     integer(kind=i4_kind)       :: i_gamma
@@ -513,9 +520,8 @@ contains
     endif
 
     !
-    ! Now set up the new density matrix,
-    ! this sub does the real work and updates global
-    ! densmat/densmat_real/densmat_imag:
+    ! Now set up  the new density matrix, this sub  does the real work
+    ! and updates global densmat/densmat_real/densmat_imag:
     !
     call gendensmat()
 
@@ -573,11 +579,9 @@ contains
   end subroutine gendensmat_occ
 
   subroutine gendensmat()
-    !  Purpose: Assemble density matrix from occupied eigenstates
-    !           as stored in eigvec_occ and occ_num_occ.
-    !           UB 7/97
-    !** End of interface *****************************************
     !
+    ! Assemble density  matrix from occupied eigenstates  as stored in
+    ! eigvec_occ and occ_num_occ.  UB 7/97
     !
     !  Input parameter (not modified on output):
     !
@@ -608,6 +612,7 @@ contains
     use occupied_levels_module, only: eigvec_occ, occ_num_occ,eigvec_occ_real,eigvec_occ_imag, &
                                       occ_num_core_occ
     use options_module, only: options_spin_orbit
+    implicit none
     ! *** end of interface ***
 
     integer(i4_kind)       :: i_gamma, i_spin

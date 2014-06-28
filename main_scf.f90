@@ -1169,11 +1169,13 @@ contains
 
   subroutine do_eigenvec_store (store_now, n_vir, mode)
     !
-    ! Purpose: saves the information for the "saved_eigenvec" file.
+    ! Purpose:   saves  the   information  for   the  "saved_eigenvec"
+    ! file. Does nothing on slaves.
     !
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
     ! character (len=*) :: data_dir, fit_file
+    use comm, only: comm_rank
     use occupation_module, only: eigenstates_store
     implicit none
     logical, intent (in) :: store_now
@@ -1182,6 +1184,8 @@ contains
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
+
+    if (comm_rank() /= 0) return
 
     ! Mode present when called from do_final_store().
     if (store_now) then

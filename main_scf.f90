@@ -599,6 +599,24 @@ subroutine main_scf()
      endif
      call convergence_put_density_dev (density_dev)
 
+     enddo legacy               ! while (toggle_legacy_mode())
+     !
+     ! The rest  is executed on all workers.   Except where explicitly
+     ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
+     !
+     call comm_bcast (scf_conv)
+     if (scf_conv) then
+        call stop_timer (timer_scf_cycle)
+        call timer_grid_small_to_large()
+
+        ! Does nothing when the slaves have no output:
+        if (output_timing_scfloops) then
+           call timer_print_scfcycle()
+        endif
+
+        exit scf_cycle
+     endif
+
      !
      ! Moved from gendensmat_occ1() here:
      !
@@ -616,25 +634,6 @@ subroutine main_scf()
 
      call convergence_put_coeff_dev (coeff_dev)
      call convergence_put_coulomb_dev (coulomb_dev)
-
-     enddo legacy               ! while (toggle_legacy_mode())
-
-     call comm_bcast (scf_conv)
-     if (scf_conv) then
-        call stop_timer (timer_scf_cycle)
-        call timer_grid_small_to_large()
-
-        ! Does nothing when the slaves have no output:
-        if (output_timing_scfloops) then
-           call timer_print_scfcycle()
-        endif
-
-        exit scf_cycle
-     endif
-     !
-     ! The rest  is executed on all workers.   Except where explicitly
-     ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
-     !
 
      if (output_chargefit) then
         call say ("coeff_charge is written to file")

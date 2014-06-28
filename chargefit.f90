@@ -111,8 +111,6 @@ subroutine chargefit (loop, coeff_dev, coulomb_dev)
 # include "def.h"
   use type_module    ! contains standard data types
   use comm, only: comm_rank, comm_bcast
-  use comm_module, only: comm_init_send, comm_send, comm_all_other_hosts
-  use msgtag_module, only: msgtag_charge_fit
   use time_module, only: start_timer, stop_timer
   use timer_module, only: timer_scf_chfit
   use symmetry_data_module, only: symmetry_data_n_irreps, &
@@ -196,18 +194,6 @@ subroutine chargefit (loop, coeff_dev, coulomb_dev)
   ! call fit_coeff_charge_norm()
 
   DPRINT 'chargefit: entered'
-
-  if ( comm_rank() == 0 ) then
-      !
-      ! Tell slaves to enter chargefit():
-      !
-      call comm_init_send(comm_all_other_hosts, msgtag_charge_fit)
-      call comm_send()
-  endif
-
-  !
-  ! From here on all workers run in a parallel context!
-  !
 
   ! This timer  was previously in  main_scf() then executed  at master
   ! only.   Other  steps like  broadcasting  eigenvectors and  density

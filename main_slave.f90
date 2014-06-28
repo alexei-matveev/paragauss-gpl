@@ -105,7 +105,6 @@ use elec_static_field_module, only: receive_surf_point, &
      surf_points_gradinfo_dealloc,surf_points_grad_information,read_field_e,send_receive_field, &
      bounds_free_field
 use interfaces, only: ISLAV
-use interfaces, only: chargefit
 use calc3c_switches
 #ifdef WITH_MOLMECH
 use molmech_msgtag_module, only: msgtag_start_molmech
@@ -116,7 +115,6 @@ implicit none
 integer (i4_kind) :: msgtag
 
 integer(i4_kind), parameter :: UNUSED_INT = -1
-real(r8_kind) :: UNUSED_REAL_1, UNUSED_REAL_2
 
 do ! while comm_msgtag() /= msgtag_finito, then RETURN
 
@@ -155,18 +153,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       call say("gendensmat_occ1")
       call gendensmat_occ1() ! without optional arg
 
-   case (msgtag_charge_fit)
-      call say("chargefit")
-      !
-      ! Interface imported from modules/interfaces.f90
-      ! must be consistent with the actual interface.
-      ! Waiting for the time when chargefit() will be
-      ! a module procedure.
-      !
-      ! FIXME: call from a better context, so that we can pass
-      !        real arguments.
-      !
-      call chargefit(UNUSED_INT, UNUSED_REAL_1, UNUSED_REAL_2)
    case (msgtag_commdata)
       ABORT('is handled by comm_enroll()')
    case (msgtag_build_xc)

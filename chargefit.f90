@@ -25,7 +25,7 @@
 !===============================================================
 ! Public interface of module
 !===============================================================
-subroutine chargefit(loop, coeff_dev, coulomb_dev)
+subroutine chargefit (loop, coeff_dev, coulomb_dev)
   !
   !  Purpose: This subroutine performs the charge fit.
   !
@@ -168,8 +168,8 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
   use interfaces, only: IMAST
   implicit none
   !------------ Declaration of formal parameters ----------------
-  integer(i4_kind), intent(in) :: loop
-  real(r8_kind), intent(out) :: coeff_dev, coulomb_dev
+  integer (i4_kind), intent (in) :: loop
+  real (r8_kind), intent (out) :: coeff_dev, coulomb_dev
   ! *** end of interface ***
 
 

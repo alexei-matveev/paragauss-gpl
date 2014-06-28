@@ -557,14 +557,17 @@ contains
        density_dev = dev(1)
 
        !
-       ! The whole complexity for these lines in the output:
+       ! FIXME:  Most of  the complexity  is  for these  lines in  the
+       ! output which I never looked at.
        !
        if (output_n_density_dev > 0) then
-          write(output_unit,*)" "
-          write(output_unit,*)"MAX. DIFF. IN DENSITY MATRIX      "
-          write(output_unit,1000) dev
-          write(output_unit,*)" "
-          1000 format(2x,6ES13.3)
+          if (output_unit > 0) then
+             write (output_unit, *) " "
+             write (output_unit, *) "MAX. DIFF. IN DENSITY MATRIX      "
+             write (output_unit, 1000) dev
+             write (output_unit, *) " "
+1000         format (2x, 6ES13.3)
+          endif
        endif
     endif
   end subroutine gendensmat_occ

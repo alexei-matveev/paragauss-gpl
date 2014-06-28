@@ -577,11 +577,6 @@ subroutine main_scf()
 
 3000 continue ! entry point for "read_eigenvec"
 
-     ! Save eigenstates and occupation if required
-     if (options_save_eigenvec()) then
-        call do_eigenvec_store (store_now, n_vir=n_pairs) ! reads loop
-     endif
-
      enddo legacy               ! while (toggle_legacy_mode())
      !
      ! The rest  is executed on all workers.   Except where explicitly
@@ -598,6 +593,11 @@ subroutine main_scf()
         endif
 
         exit scf_cycle
+     endif
+
+     ! Save eigenstates and occupation if required
+     if (options_save_eigenvec()) then
+        call do_eigenvec_store (store_now, n_vir=n_pairs) ! reads loop
      endif
 
      ! Setup  of  density  matrix  (on  each  slave)  and  fit  charge

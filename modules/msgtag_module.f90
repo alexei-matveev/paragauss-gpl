@@ -59,7 +59,7 @@ save
 #define INTEGER_T       integer(kind=i4_kind), parameter, public
 INTEGER_T :: msgtag_pert=                   2
 INTEGER_T :: msgtag_ham_calc_main =         3
-INTEGER_T :: msgtag_dens=                   4
+!NTEGER_T :: msgtag_dens=                   4
 INTEGER_T :: msgtag_finito=                 5
 INTEGER_T :: msgtag_eigensolve=             6
 !NTEGER_T :: msgtag_charge_fit=             7
@@ -307,7 +307,7 @@ contains
     name = 'undef'
     CMP(msgtag_pert)
     CMP(msgtag_ham_calc_main)
-    CMP(msgtag_dens)
+    !MP(msgtag_dens)
     CMP(msgtag_finito)
     CMP(msgtag_eigensolve)
     !CMP(msgtag_coeff)

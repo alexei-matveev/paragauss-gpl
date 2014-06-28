@@ -67,7 +67,7 @@ use msgtag_module
 use xc_hamiltonian, only: build_xc
 use xcfit_hamiltonian, only: build_xcfit
 use xcmda_hamiltonian, only: build_xcmda
-use density_data_module, only: gendensmat_occ1, density_data_free, open_densmat
+use density_data_module, only: density_data_free, open_densmat
 use occupied_levels_module, only: sndrcv_eigvec_occ1
 use virtual_levels_module, only: eigvec_vir_dealloc
 use pointcharge_module
@@ -148,10 +148,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       ! parallel eigensolver entry:
       call say("eigen_data_solve")
       call eigen_data_solve1()
-
-   case (msgtag_dens)
-      call say("gendensmat_occ1")
-      call gendensmat_occ1() ! without optional arg
 
    case (msgtag_commdata)
       ABORT('is handled by comm_enroll()')

@@ -50,8 +50,6 @@ module density_data_module
   !                              density_data_free
   !                              print_densmat -> print densat to file
   !                                               $TTFSOUT/densmat.new
-  !                             gendensmat_occ1-> invokes densmat calculations
-  !                                               using gendensmat_occ
   !                             gendensmat_occ -> generate the density matrix
   !                                               based on the data available
   !                                               in the occupied_levels_module
@@ -138,7 +136,6 @@ module density_data_module
   ! MUSTDIE:
   public :: density_data_free1!(), does density_data_free() and tells slaves to do so
 
-  public :: gendensmat_occ1!(density_deviation), also tells slaves to join
   public :: gendensmat_occ!(density_deviation), to be executed in parallel context
   public :: gendensmat_tot!( irrep, dmat ), for one irepp only
 
@@ -363,44 +360,6 @@ contains
     return
   end subroutine print_densmat
 
-  !*************************************************************
-
-  subroutine gendensmat_occ1(density_dev)
-    !
-    !  Purpose: to envoke the computation of the density matrix
-    !           on the master and each slave
-    !
-    !  Subroutine called by: mainscf
-    !
-    !  Author: U. Birkenheuer  --  extracted from CHARGEFIT (TG)
-    !                              and adopted to gendensmat_occ
-    !  Date: 7/97
-    !
-    ! Modules used -----------------------------------------------
-    use comm_module, only: comm_parallel, comm_i_am_master &
-      , comm_init_send, comm_send, comm_all_other_hosts
-    use msgtag_module, only: msgtag_dens
-    !------------ Declaration of formal parameters ---------------
-    implicit none
-    real(kind=r8_kind), optional, intent(out) :: density_dev
-    !** End of interface *****************************************
-    !------------ Executable code --------------------------------
-    !*************************************************************
-
-    !
-    ! Tell slaves to call this sub ...
-    ! (FIXME: call gendensmat_occ() from a parallel context instead):
-    !
-    if( comm_parallel() .and. comm_i_am_master() ) then
-       call comm_init_send(comm_all_other_hosts, msgtag_dens)
-       call comm_send()
-    endif
-
-    !
-    ! This runs in a parallel context
-    !
-    call gendensmat_occ(density_dev)
-  end subroutine gendensmat_occ1
 
   subroutine gendensmat_tot(irr, P)
     !

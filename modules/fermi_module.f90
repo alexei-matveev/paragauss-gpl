@@ -924,11 +924,11 @@ contains
 
     call get_n_elec(n_elec)
 
-    if (.not.allocated(occ_num)) then
+    if (.not. allocated (occ_num)) then
        call alloc_occ_num()
     endif
 
-    if (.not.allocated(n_occo)) then
+    if (.not. allocated (n_occo)) then
        call alloc_n_occo(ssym)
     endif
 
@@ -1007,21 +1007,21 @@ contains
           enddo element
        enddo irrep
 
+       ! Calculate the energetic  distances gamma_plus and gamma_minus
+       ! between ef and the nearest eigenvalue both for higher and for
+       ! lower lying levels
+       gamma_plus = HUGE (zero)
+       gamma_minus = HUGE (zero)
+       irrp: do i = 1, n_irrep
+          elemt: do m = 1, dim(i)
+             spn: do is = 1, ssym % n_spin
+                e_diff = eigval(i) % m(m, is) - ef
+                if (e_diff == zero ) cycle ! the case when ef==E(HOMO)
 
-       ! calculate the energetic distances gamma_plus and
-       ! gamma_minus between ef and the nearest
-       ! eigenvalue both for higher and for lower lying levels
-       gamma_plus  = HUGE(zero)
-       gamma_minus = HUGE(zero)
-       irrp: do i=1,n_irrep
-          elemt: do m=1,dim(i)
-             spn: do is=1,ssym%n_spin
-                e_diff = eigval(i)%m(m,is) - ef
-                if( e_diff .eq. zero ) cycle ! the case when ef==E(HOMO)
-                if (e_diff .gt. zero) then
-                   gamma_plus  = min( e_diff,gamma_plus)
+                if (e_diff > zero) then
+                   gamma_plus = min (e_diff, gamma_plus)
                 else
-                   gamma_minus = min(-e_diff,gamma_minus)
+                   gamma_minus = min (-e_diff, gamma_minus)
                 endif
              enddo spn
           enddo elemt

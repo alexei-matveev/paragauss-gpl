@@ -62,3 +62,13 @@ SCM scm_undefined ()
 {
   return SCM_UNDEFINED;
 }
+
+/*
+  Guile  API function  scm_c_export() works  with a  variable argument
+  list which is not callable from Fortran by standard means:
+*/
+void
+scm_c_export_1 (const char *name)
+{
+  scm_c_export (name, NULL);
+}

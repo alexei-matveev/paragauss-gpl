@@ -102,7 +102,7 @@ module echo_input_module
 
   contains
 
-  subroutine start(name,prog,unit,level)
+  subroutine start (name, prog, unit, level)
     ! Start writing a namelist
     !------------ Declaration of formal parameters ---------------
     character(len=*), intent(in) :: name, prog
@@ -249,42 +249,50 @@ module echo_input_module
 
   !***************************************************************
 
-  subroutine flag(name,value,default,comment)
-     ! Write a logical input parameter
-     !------------ Declaration of formal parameters ---------------
-     character(len=*),           intent(in) :: name
-     logical         ,           intent(in) :: value, default
-     character(len=*), optional, intent(in) :: comment
+  subroutine flag (name, value, default, comment)
+     !
+     ! Echo a logical input parameter to e.g. input.out.
+     !
+     character (len=*), intent (in) :: name
+     logical, intent (in) :: value, default
+     character (len=*), optional, intent (in) :: comment
      !** End of interface *****************************************
-     !------------ Declaration of local variables -----------------
-     integer(i4_kind)                       :: status
-     character(len=32)                      :: commentstr
 
-     commentstr = ' '
-     if ( present(comment) ) commentstr = comment
+     integer (i4_kind) :: status
+     character (len=32) :: commentstr
+     character (len=5) :: val
+
+     commentstr = ''
+     if (present (comment)) commentstr = comment
+
+     if (value) then
+        val = " TRUE"
+     else
+        val = "FALSE"
+     endif
 
      status = 0
      if (echo_mode == echo_level_full .or. (value .neqv. default)) then
-        if (value) then
-           write( wrte_unit, flag_format, iostat=status )                      &
-           name," TRUE",trim(commentstr)
+        ! NOTE: The default format used colon edit descriptor. Thus it
+        ! makes a difference  it the the output list  has two or three
+        ! entries.  Watch  for  the  stray  comment sign  "#"  in  the
+        ! input.out!
+        if (present (comment)) then
+           write (wrte_unit, flag_format, iostat=status) &
+                name, val, trim (comment)
         else
-           write( wrte_unit, flag_format, iostat=status )                      &
-           name,"FALSE",trim(commentstr)
+           write (wrte_unit, flag_format, iostat=status) &
+                name, val
         endif
         written = .true.
      elseif (echo_mode == echo_level_default) then ! value .eqv. default
-        if (value) then
-           write(wrte_unit,flag_format,iostat=status)name," TRUE", &
-                trim(commentstr)//"(the default)"
-        else
-           write(wrte_unit,flag_format,iostat=status)name,"FALSE", &
-                trim(commentstr)//"(the default)"
-        endif
+        write (wrte_unit, flag_format, iostat=status) name, val, &
+             trim (commentstr) // "(the default)"
      endif
-     if (status /= 0) call error_handler( trim(prog_name)// &
-          ": write logical parameter '"//trim(name)//"' failed")
-
+     if (status /= 0) then
+        call error_handler (trim (prog_name) &
+             // ": write logical parameter '" // trim(name) // "' failed")
+     endif
   end subroutine flag
 
   !***************************************************************
@@ -363,13 +371,15 @@ module echo_input_module
 
    !******************************************************************
 
-  subroutine real(name,value,default,format,fmt,comment)
-     ! Write a real input parameter
-     !------------ Declaration of formal parameters ---------------
-     character(len=*), intent(in)           :: name
-     real(r8_kind)   , intent(in)           :: value, default
-     integer(i4_kind), intent(in), optional :: format
-     character(len=*), intent(in), optional :: fmt, comment
+  subroutine real (name, value, default, format, fmt, comment)
+     !
+     ! Echo a real input parameter.
+     !
+     implicit none
+     character (len=*), intent (in) :: name
+     real (r8_kind), intent (in) :: value, default
+     integer (i4_kind), intent (in), optional :: format
+     character (len=*), intent (in), optional :: fmt, comment
      !** End of interface *****************************************
      !------------ Declaration of local variables -----------------
      integer(i4_kind)                       :: status
@@ -378,9 +388,9 @@ module echo_input_module
      character(len=MAX_FMT) :: commentstr
 
      commentstr = ' '
-     if ( present(comment) ) commentstr = comment
+     if (present(comment)) commentstr = comment
 
-     if(present(format).and.present(fmt))then
+     if (present (format) .and. present (fmt)) then
         ABORT('two format specs')
      endif
 
@@ -404,15 +414,25 @@ module echo_input_module
 
      status = 0
      if (echo_mode == echo_level_full .or. (value /= default)) then
-        write(wrte_unit,outfmt,iostat=status) name, value, trim(commentstr)
+        ! NOTE: The default format used colon edit descriptor. Thus it
+        ! makes a difference  it the the output list  has two or three
+        ! entries.  Watch  for  the  stray  comment sign  "#"  in  the
+        ! input.out!
+        if (present (comment)) then
+           write (wrte_unit, outfmt, iostat=status) name, value, &
+                trim (comment)
+        else
+           write (wrte_unit, outfmt, iostat=status) name, value
+        endif
         written = .true.
      elseif (echo_mode == echo_level_default) then ! value == default
-        write(wrte_unit,outfmt,iostat=status) name, value                      &
-                                            , trim(commentstr)//"(the default)"
+        write (wrte_unit, outfmt, iostat=status) name, value, &
+             trim (commentstr) // "(the default)"
      endif
-     if (status /= 0) call error_handler( trim(prog_name)// &
-          ": write real parameter '"//trim(name)//"' failed")
-
+     if (status /= 0) then
+        call error_handler (trim (prog_name) &
+             // ": write real parameter '" // trim(name)//"' failed")
+     endif
   end subroutine real
 
   !***************************************************************

@@ -324,10 +324,8 @@ contains
 
     call density_data_alloc() ! no comm!
 
-    if ( rank == 0 ) then
-      ! occ_num seems to be present only on master?
-      call alloc_occ_num() ! no comm!
-    endif
+    ! NOTE: occ_num array may not be always valid on slaves
+    call alloc_occ_num() ! no comm!
 
     !
     ! (5) setup bounds on all workers:

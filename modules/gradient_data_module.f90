@@ -248,15 +248,13 @@ contains
     !  Purpose: allocation of necesarry arrays
     !
     !  Called by: main_gradient
-    !** End of interface ****************************************
     use pointcharge_module
-!   use calc3c_switches
     use integralpar_module, only: integralpar_2dervs,integralpar_cpksdervs
     use cpksdervs_matrices
     use occupied_levels_module
     use virtual_levels_module
-    use occupation_module, only: occ_num,alloc_occ_num
-    use eigen_data_module,only:eigvec,eigval
+    use occupation_module, only: occ_num
+    use eigen_data_module,only: eigvec, eigval
     use fit_coeff_module, only: get_fit,fit
 #ifdef WITH_EPE
     use epecom_module, only: epealloc_stat
@@ -264,9 +262,9 @@ contains
 #ifdef WITH_EFP
     use efp_solv_grad_module, only: init_X_solv_grads
 #endif
-!    use epe_module, only:epemalloc_stat
     implicit none
-    !------------ Declaration of local variables ----------------
+    !** End of interface ****************************************
+
     type(unique_atom_type), pointer :: ua
     integer(kind=i4_kind)           :: counter,alloc_stat,i_unique,ts
     integer(kind=i4_kind)           :: i_unique2
@@ -450,29 +448,29 @@ contains
      MEMLOG(size(cpks_grad_fit_totasym))
      cpks_grad_fit_totasym=0.0_r8_kind
 
-    !!! what are dimentions of up and down cpks equation systems
+     !
+     ! What are dimentions of up and down cpks equation systems?
+     !
+     ! - first dimension  = occ + holes
+     ! - second dimension = vir + holes
+     !
+     if (comm_parallel()) then
+        if (.not. comm_i_am_master())  then
+           call comm_save_recv (comm_master_host, msgtag_packed_message)
+           do i_ir = 1, symmetry_data_n_irreps()
+              call communpack (occ_num(i_ir) % m(1,1), size (occ_num(i_ir) % m), 1, info)
+              ASSERT(info.eq.0)
+           enddo
 
-    !!! first dimension  = occ + holes
-    !!! second dimension = vir + holes
-
-   if(comm_parallel()) then
-    if(.not.comm_i_am_master())  then
-    call alloc_occ_num()
-    call comm_save_recv(comm_master_host,msgtag_packed_message)
-    do i_ir=1,symmetry_data_n_irreps()
-       call communpack(occ_num(i_ir)%m(1,1),size(occ_num(i_ir)%m),1,info)
-     ASSERT(info.eq.0)
-    enddo
-
-    else
-    call comm_init_send(comm_all_other_hosts,msgtag_packed_message)
-    do i_ir=1,symmetry_data_n_irreps()
-      call commpack(occ_num(i_ir)%m(1,1),size(occ_num(i_ir)%m),1,info)
-     ASSERT(info.eq.0)
-    enddo
-    call comm_send
-    endif
-   endif
+        else
+           call comm_init_send (comm_all_other_hosts, msgtag_packed_message)
+           do i_ir = 1, symmetry_data_n_irreps()
+              call commpack (occ_num(i_ir) % m(1, 1), size (occ_num(i_ir) % m), 1, info)
+              ASSERT(info.eq.0)
+           enddo
+           call comm_send
+        endif
+     endif
 
 cpks_size=0
 irr_cpks: do i_ir=1,symmetry_data_n_irreps()

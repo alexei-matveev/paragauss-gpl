@@ -119,7 +119,7 @@ subroutine main_scf()
   use overlap_module, only: overlap
   use filename_module, only: outfile, recfile
   use hamiltonian_module, only: ham_tot, hamiltonian_store, hamiltonian_recover
-  use eigen_data_module, only: eigen_data_solve1, eigen_hole_shutdown, &
+  use eigen_data_module, only: eigen_data_solve, eigen_hole_shutdown, &
        build_lvsft_hamiltonian, make_level_shift
   use diis_fock_module, only: diis_fock_matrix, fixed_fock_matrix, &
        diis_fock_module_close, diis_on
@@ -136,7 +136,7 @@ subroutine main_scf()
   use mixing_module, only: mixing_read_scfcontrol
 #endif
   use population_module, only: population_mulliken, population_spor_mulliken
-  use comm, only: comm_parallel, comm_same, comm_bcast
+  use comm, only: comm_parallel, comm_same, comm_bcast, comm_rank
   use pairs_module, only: n_pairs
   use readwriteblocked_module, only: readwriteblocked_tapehandle, &
        readwriteblocked_stopread, readwriteblocked_startread, &
@@ -529,8 +529,6 @@ subroutine main_scf()
         exit scf_cycle
      endif
 
-     do while (toggle_legacy_mode ())
-
      ! Now  update the save_data  options, deallocate  the temporarily
      ! kept  convergence  buffers (as  far  as  necessary), reset  the
      ! mixing buffers  (if required)  and update the  scf_control file
@@ -556,6 +554,8 @@ subroutine main_scf()
      if (diis_on) then
        ASSERT (.not.options_spin_orbit)
        ASSERT (allocated(overlap))
+       ASSERT (allocated(ham_tot))
+       ASSERT (allocated(densmat))
        call diis_fock_matrix (ham_tot, overlap, densmat, loop)
 
        call fixed_fock_matrix (ham_tot, loop)
@@ -568,7 +568,7 @@ subroutine main_scf()
      ! Perform Hamiltonian diagonalization, see eigen_data_module.
      ! FIXME: pass arguments explicitly.
      !
-     call eigen_data_solve1()
+     call eigen_data_solve()
 
      ! Write eigendata to temporary file "eigenmist" for debugging
      if (output_each_eigendata) then
@@ -578,23 +578,37 @@ subroutine main_scf()
 
      ! Reoccupation of orbitals
      call start_timer (timer_scf_reoc)
+
      if (fermi_level_broad) then
         call say ("fermi_reoccup")
-        call fermi_reoccup()
+        ! FIXME:  The input  differes  on master  and  slaves so  that
+        ! Newton iteration fails:
+        if (comm_rank() == 0) then
+           call fermi_reoccup()
+        endif
      else
         call say ("reoccup")
         call reoccup()
      endif
+
      call say ("occupation_2d_correct")
      if (.not. options_spin_orbit) then
+        ! Does  no  communication.  Rewrites  occ_num(),  n_occo()  in
+        ! place:
         call occupation_2d_correct()
      endif
 
      call stop_timer (timer_scf_reoc)
 
-     ! Call on master after eigen_data_solve and scf_reocupp
-     if (lvshift_mixing)  call build_lvsft_hamiltonian &
-           (n_occo, level_shift, loop.gt.START_AFTER_CYCLE)
+     ! Call on  master after eigen_data_solve()  and reocupp(). FIXME:
+     ! The procedure  does no  communication, but fiddles  with global
+     ! variables that may not be available on slaves. Verify this next
+     ! time the ABORT() fires.
+     if (lvshift_mixing) then
+        ABORT("verify SPMD")
+        call build_lvsft_hamiltonian &
+             (n_occo, level_shift, loop .gt. START_AFTER_CYCLE)
+     endif
 
      if (output_spectrum) then
         call say ("print out spectrum")
@@ -606,16 +620,10 @@ subroutine main_scf()
         call print_occ_num (loop)
      endif
 
-     enddo                      ! while (toggle_legacy_mode())
-     !
-     ! The rest  is executed on all workers.   Except where explicitly
-     ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
-     !
-
      ! Entry point for "read_eigenvec":
 3000 continue
 
-     ! Save eigenstates and occupation if required
+     ! Save eigenstates and occupation if required. NOOP on slaves.
      if (options_save_eigenvec()) then
         call do_eigenvec_store (store_now, n_vir=n_pairs) ! reads loop
      endif

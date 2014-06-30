@@ -408,7 +408,7 @@ contains
     use operations_module, only: operations_scf, operations_integral, &
         operations_gradients, operations_symm, &
         operations_solvation_effect, operations_gx_test
-    use occupation_module, only: occupation_shutdown, dealloc_occ_num
+    use occupation_module, only: occupation_shutdown
     use occupied_levels_module, only: eigvec_occ_dealloc
     use fit_coeff_module, only: fit_coeff_shutdown
     use mat_charge_module, only: free_mat_charge
@@ -463,11 +463,6 @@ contains
 
             call eigvec_vir_dealloc (IPARA)
 
-            ! FIXME: find matching for master and do it there, yet
-            !        better don duplicate functionality of
-            !        occupation_module
-            if (rank /= 0) call dealloc_occ_num()
-
             ! FIXME: so far does not harm if not allocated:
             call integralstore_deallocate()
 
@@ -513,10 +508,10 @@ contains
     call population_close()
 
     !
-    ! Various shutdown and deallocation work:
-    ! FIXME: why only if operations_scf?
+    ! Various  shutdown  and deallocation  work:  FIXME:  why only  if
+    ! operations_scf?
     !
-    if ( operations_scf ) then
+    if (operations_scf) then
         call occupation_shutdown()
     endif
 

@@ -253,7 +253,7 @@ module occupation_module
        get_diagonal_offset, eigenstates_store, eigenstates_recover, &
        occupation_print_popspectrum, occupation_symmetry_check,&
        occupation_fixed,occupation_get_holes, occupation_fixed_hole,&
-       occupation_jz, count_electrons,get_charge,dealloc_occ_num
+       occupation_jz, count_electrons, get_charge
 
   !
   ! FIXME: target is here only to make things like
@@ -415,26 +415,6 @@ contains
     deallocate(dim_irrep)
 
   end subroutine alloc_occ_num
-
-  subroutine dealloc_occ_num()
-    implicit none
-    ! *** end of interface ***
-
-    integer(kind=i4_kind) ::            i,alloc_stat,n_irreps
-       n_irreps = symmetry_data_n_irreps()
-    if (allocated(occ_num)) then
-    DPRINT MyID//'occ_num allocated',allocated(occ_num)
-       do i=1,n_irreps
-          if (allocated (occ_num(i) % m)) then
-             deallocate (occ_num(i) % m, STAT=alloc_stat)
-             ASSERT(alloc_stat.eq.0)
-          endif
-       enddo
-       deallocate(occ_num,STAT=alloc_stat)
-       ASSERT(alloc_stat.eq.0)
-    DPRINT MyID//'occ_num deallocate done'
-    endif
-   end subroutine dealloc_occ_num
 
   subroutine occupation_shutdown()
     !

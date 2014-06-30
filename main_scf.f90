@@ -931,7 +931,6 @@ contains
     ! file.
     !
     ! INTENT (IN)
-    ! character (len=*) :: data_dir
     ! character (len=*) :: fit_file, scf_file, ham_file, eig_file
     !
     implicit none
@@ -988,7 +987,6 @@ contains
     ! SCF cycle and resets the SCF loop counter accordingly.
     !
     ! INTENT (IN)
-    ! character (len=*) :: data_dir
     ! character (len=*) :: rec_file
     ! INTENT (OUT)
     ! integer (i4_kind) :: loop
@@ -1098,7 +1096,7 @@ contains
     !
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
-    ! character (len=*) :: data_dir, fit_file
+    ! character (len=*) :: fit_file
     implicit none
     logical, intent (in) :: store_now
     integer (i4_kind), intent (in), optional :: mode
@@ -1132,7 +1130,7 @@ contains
     !
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
-    ! character (len=*) :: data_dir, fit_file
+    ! character (len=*) :: fit_file
     implicit none
     logical, intent (in) :: store_now
     integer (i4_kind), intent (in), optional :: mode
@@ -1194,7 +1192,7 @@ contains
     !
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
-    ! character (len=*) :: data_dir, fit_file
+    ! character (len=*) :: fit_file
     use comm, only: comm_rank
     use occupation_module, only: eigenstates_store
     implicit none
@@ -1241,7 +1239,6 @@ contains
     !
     ! INTENT (IN)
     ! real   (r8_kind) :: tot_en
-    ! character (len=*) :: data_dir
     ! character (len=*) :: fit_file, scf_file
     !** End of interface ***************************************
 
@@ -1283,7 +1280,6 @@ contains
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
     ! real   (r8_kind) :: tot_en
-    ! character (len=*) :: data_dir
     ! character (len=*) :: fit_file, scf_file, ham_file, eig_file
     use occupation_module, only: eigenstates_store
     implicit none

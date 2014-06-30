@@ -401,16 +401,13 @@ subroutine main_gradient(loop)
   ! ================ CONTEXT: ALL PROCESSORS ===============
   if(.not. operations_integral) goto 1000 ! not to calculate QM gradients
 
-     ! FIXME:  yet better, make  sure that  fit_coeff_sndrcv() handles
-     ! the serial case gracefully:
-     if (comm_size () > 1) then
-        call say ("fit_coeff_sndrcv")
-        ! MDA:  update coeff_xcmda must  be sent  to each  slave else:
-        ! coeff_charge has not yet been send to the slaves
-        IFIT = ICHFIT
-        if (model_density) IFIT = IFIT + IXCFIT
-        call fit_coeff_sndrcv (IFIT)
-     endif
+  ! Here fit_coeff_sndrcv() handles  the serial case gracefully.  MDA:
+  ! update coeff_xcmda  must be sent to each  slave else: coeff_charge
+  ! has not yet been send to the slaves.
+  call say ("fit_coeff_sndrcv")
+  IFIT = ICHFIT
+  if (model_density) IFIT = IFIT + IXCFIT
+  call fit_coeff_sndrcv (IFIT)
 
      call say ("main_integral(1)")
 

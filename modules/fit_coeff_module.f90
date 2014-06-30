@@ -1932,20 +1932,22 @@ contains
   end subroutine print_coeff_charge
   !*************************************************************
 
-  subroutine fit_coeff_sndrcv(IMOD)
-    ! to be used in parallel context
+  subroutine fit_coeff_sndrcv (IMOD)
+    !
+    ! To be used in parallel context. Handles serial case ok.
+    !
     use comm_module
     use msgtag_module, only: msgtag_fit_coeff_send
     implicit none
     integer(i4_kind), intent(in) :: IMOD
     ! *** end of interface ***
 
-    if(.not.comm_parallel()) RETURN
+    if (.not. comm_parallel ()) return
 
-    if( comm_i_am_master() )then
-       call fit_coeff_send(IMOD)
+    if (comm_i_am_master()) then
+       call fit_coeff_send (IMOD)
     else
-       call comm_save_recv(comm_master_host,msgtag_fit_coeff_send)
+       call comm_save_recv (comm_master_host, msgtag_fit_coeff_send)
        ! unpack, actualy:
        call fit_coeff_receive()
     endif

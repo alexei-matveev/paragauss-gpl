@@ -229,10 +229,10 @@ contains
 
   !**************************diis_fock********************************
 
-  subroutine diis_fock_matrix(hamact, overlap, densmatact, loop_scf)
+  subroutine diis_fock_matrix (hamact, overlap, densmatact, loop_scf)
     !
-    ! Purpose: replaces the actual fockmatrix by a linear combination
-    !          of older Fock matrices via the DIIS algorithm
+    ! Replaces the actual fockmatrix  by a linear combination of older
+    ! Fock matrices via the DIIS algorithm.
     !
     ! This sub is supposed to set
     !
@@ -240,22 +240,25 @@ contains
     !
     ! to the self-mixing proportion.
     !
-    ! FIXME: This global public variable is used elsewhere at another
-    !        times, therefore it may appear inconvenient to pass it to
-    !        outside via the intent(out) argument.
+    ! FIXME: This global public  variable is used elsewhere at another
+    ! times,  therefore  it may  appear  inconvenient  to  pass it  to
+    ! outside via the intent(out) argument.
     !
+    use comm, only: comm_rank
     implicit none
-    !------------ Declaration of formal parameters ---------------
-    integer(kind=i4_kind), intent(in) :: loop_scf
-    type(arrmat3),         intent(inout) :: hamact(:)
-    type(arrmat3),         intent(in) :: densmatact(:)
-    type(arrmat2),         intent(in) :: overlap(:)
+    integer (i4_kind), intent (in) :: loop_scf
+    type (arrmat3), intent (inout) :: hamact(:)
+    type (arrmat3), intent (in) :: densmatact(:)
+    type (arrmat2), intent (in) :: overlap(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    integer(kind=i4_kind)                :: diis_allocstat, i, diis_loop_m, n_irrep, n_dim, n_spin, actmatsize
-    real(kind=r8_kind)                   :: c(mmax)
-    type(arrmat3), allocatable           :: ermatact(:) !n_irrep
-    !------------ Executable code --------------------------------
+
+    integer (i4_kind) :: diis_allocstat, i, diis_loop_m, n_irrep, &
+         n_dim, n_spin, actmatsize
+    real (r8_kind) :: c(mmax)
+    type (arrmat3), allocatable :: ermatact(:) ! n_irrep
+
+
+    if (comm_rank() /= 0) return
 
     if(loop_scf > loop_start) then
       print*, "DIIS-Fock matrix: entered", loop_scf
@@ -326,14 +329,15 @@ contains
 
   !*************************************************************
 
-  subroutine fixed_fock_matrix(hamact, loop_scf)
+  subroutine fixed_fock_matrix (hamact, loop_scf)
     !
     ! Purpose: replaces the actual Fock matrix by a linear combination
     ! of older Fock matrices via a fixed mixing ratio.
     !
+    use comm, only: comm_rank
     implicit none
-    integer(kind=i4_kind), intent(in)    :: loop_scf
-    type(arrmat3),         intent(inout) :: hamact(:)
+    integer (i4_kind), intent (in) :: loop_scf
+    type (arrmat3), intent (inout) :: hamact(:)
     ! *** end of interface ***
 
     !
@@ -347,6 +351,8 @@ contains
                                         ! allocated; > 1 when HAMLAST
                                         ! is filled with data.
     integer(i4_kind) :: i_gamma
+
+    if (comm_rank() /= 0) return
 
     if (.not. diis_step .and. cfix /= 0.0) then
        !

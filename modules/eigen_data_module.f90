@@ -295,18 +295,19 @@ contains
   end subroutine eigen_data_solve
   !*************************************************************
 
-  subroutine build_lvsft_hamiltonian(n_occo, level_shift, set_start_lvshift)
+  subroutine build_lvsft_hamiltonian (n_occo, level_shift, set_start_lvshift)
     !
-    ! input:  ham_lsft matrixes to be modifed
-    !         level_shift - energy shifts of vacant levels
+    ! Global  variable ham_lsft(:)  holding the  matrices  is modifed,
+    ! level_shift  -   energy  shifts   of  vacant  levels.   Does  no
+    ! communication.
     !
-    ! result: modified ham_lsft for all representations
+    ! Result: modified ham_lsft for all representations.
     !
     use symmetry_data_module, only: ssym
     implicit none
-    integer(kind=i4_kind), intent(in), dimension(:,:) :: n_occo
-    real(kind=r8_kind), intent(in) :: level_shift
-    logical, intent(in) :: set_start_lvshift
+    integer (i4_kind), intent (in), dimension(:, :) :: n_occo
+    real (r8_kind), intent (in) :: level_shift
+    logical, intent (in) :: set_start_lvshift
     ! *** end of interface ***
 
     integer(kind=i4_kind) :: i_gamma,is,nm,vac
@@ -314,17 +315,14 @@ contains
 
     make_level_shift = set_start_lvshift
 
-    ! set appropriate dimensions of irreps
-    ! (use projective irreps in case of spin orbit)
-     do i_gamma = 1,ssym%n_irrep
-       if ( ssym%dim(i_gamma) == 0 ) cycle
+    ! Set appropriate  dimensions of irreps (use  projective irreps in
+    ! case of spin orbit)
+     do i_gamma = 1, ssym % n_irrep
+       if (ssym % dim(i_gamma) == 0) cycle
 
-       nm = ssym%dim(i_gamma)
+       nm = ssym % dim(i_gamma)
        do is = 1, ssym%n_spin
-          !             call rsg(nm,nn,ham_tot(i_gamma)%m(1:nn,1:nn,is), &
-          !                  overlap(i_gamma)%m,eigval(i_gamma)%m(1:nn,is),matz, &
-          !                  eigvec(i_gamma)%m(1:nn,1:nn,is),ierr)
-          allocate(shifts(nm, nm), temp(nm, nm), stat=allocate_stat(1))
+          allocate (shifts(nm, nm), temp(nm, nm), stat=allocate_stat(1))
           ASSERT(allocate_stat(1).eq.0)
           allocate_stat(1) = size(shifts) * 2
 
@@ -334,10 +332,10 @@ contains
              shifts(vac, vac) = level_shift
           enddo
 
-          temp = matmul(shifts, transpose(ham_lsft(i_gamma)%m(:, :, is)))
+          temp = matmul (shifts, transpose (ham_lsft(i_gamma) % m(:, :, is)))
 
           ham_lsft(i_gamma)%m(1:nm, 1:nm, is) = &
-               matmul(ham_lsft(i_gamma)%m(:, :, is), temp)
+               matmul (ham_lsft(i_gamma) % m(:, :, is), temp)
 
           deallocate(shifts, temp, stat=allocate_stat(1))
           ASSERT(allocate_stat(1) .eq. 0)

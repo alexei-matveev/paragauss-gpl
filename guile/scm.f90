@@ -359,6 +359,15 @@ interface
      type (scm_t) :: proc
    end function scm_c_define_gsubr
 
+   subroutine scm_c_export_1 (name) bind (c)
+     !
+     ! void scm_c_export_1 (const char *name)
+     !
+     import
+     implicit none
+     character (kind=c_char), intent (in) :: name(*) ! null-terminated, of course
+   end subroutine scm_c_export_1
+
    function scm_fluid_p (obj) result (yes) bind (c)
      !
      ! SCM scm_fluid_p (SCM)
@@ -727,6 +736,7 @@ public :: scm_variable_ref      ! SCM variable -> SCM value
 public :: scm_fluid_ref         ! SCM fluid -> SCM value or #f
 public :: scm_undefined         ! () -> SCM_UNDEFINED
 public :: scm_define_gsubr      ! (character, integer, integer, integer, c_funptr) -> SCM proc
+public :: scm_export            ! (character)
 public :: scm_resolve_module ! SCM name -> SCM module or string -> SCM module
 
 contains
@@ -860,21 +870,34 @@ contains
     buf(length+1:max_len) = " "
   end subroutine scm_to_stringbuf
 
-   function scm_define_gsubr (name, req, opt, rst, fcn) result (proc)
-     !
-     ! Fortranish wrapper (appends C_NULL_CHAR to name) for
-     !
-     ! SCM scm_c_define_gsubr (const char *name, int req, int opt, int rst, fcn)
-     !
-     implicit none
-     character (len=*) :: name
-     integer (c_int), intent (in) :: req, opt, rst
-     type (c_funptr), intent (in) :: fcn
-     type (scm_t) :: proc
-     ! *** end of interface ***
+  function scm_define_gsubr (name, req, opt, rst, fcn) result (proc)
+    !
+    ! Fortranish wrapper (appends C_NULL_CHAR to name) for
+    !
+    ! SCM scm_c_define_gsubr (const char *name, int req, int opt, int rst, fcn)
+    !
+    implicit none
+    character (len=*) :: name
+    integer (c_int), intent (in) :: req, opt, rst
+    type (c_funptr), intent (in) :: fcn
+    type (scm_t) :: proc
+    ! *** end of interface ***
 
-     proc = scm_c_define_gsubr (name // C_NULL_CHAR, req, opt, rst, fcn)
-   end function scm_define_gsubr
+    proc = scm_c_define_gsubr (name // C_NULL_CHAR, req, opt, rst, fcn)
+  end function scm_define_gsubr
+
+  subroutine scm_export (name)
+    !
+    ! Fortranish wrapper (appends C_NULL_CHAR to name) for
+    !
+    ! void scm_c_export_1 (const char *name)
+    !
+    implicit none
+    character (len=*) :: name
+    ! *** end of interface ***
+
+    call scm_c_export_1 (name // C_NULL_CHAR)
+  end subroutine scm_export
 
   function define (key, val) result (var)
     implicit none

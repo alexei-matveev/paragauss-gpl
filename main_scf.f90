@@ -325,13 +325,11 @@ subroutine main_scf()
         call write_to_output_units (" ")
      endif
 
-     ! The code inside  this DO block is executed  on master only. The
-     ! slaves  are spinning  in  main_slave() and  waiting for  orders
-     ! during that time:
-     legacy: do while (toggle_legacy_mode ())
-
      ! Check recover options and fork accordingly
+     ASSERT(comm_same(loop))
+     ASSERT(comm_same(first_loop))
      if (loop == first_loop .and. recover) then
+        ASSERT(comm_same(recover_mode))
         select case (recover_mode)
         case (recover_fitcoeff); goto 1000
         case (recover_scfstate); goto 1000
@@ -340,6 +338,11 @@ subroutine main_scf()
         case (recover_fragment); goto 3000
         end select
      endif
+
+     ! The code inside  this DO block is executed  on master only. The
+     ! slaves  are spinning  in  main_slave() and  waiting for  orders
+     ! during that time:
+     do while (toggle_legacy_mode ())
 
      ! Calculation of exchange-correlation hamiltonian:
      if (xc_is_on (xc_ANY)) then
@@ -412,7 +415,15 @@ subroutine main_scf()
         call print_densmat (loop)
      endif
 
-1000 continue ! entry point for "read_fitcoeff" and "read_scfstate"
+     enddo                      ! while (toggle_legacy_mode())
+
+     ! Legacy mode ends here temporarily because of the entry point of
+     ! a GOTO that follows ...
+
+     ! Entry point for "read_fitcoeff" and "read_scfstate":
+1000 continue
+
+     do while (toggle_legacy_mode ())
 
      ! Save fit coefficients and current SCF state if required
      if (options_save_fitcoeff()) then
@@ -465,7 +476,15 @@ subroutine main_scf()
      call convergence_put_energy (tot_en)
      if (store_now) call store_total_energy ! reads tot_en
 
-2000 continue ! entry point for "read_ksmatrix"
+     enddo                      ! while (toggle_legacy_mode())
+
+     ! Legacy mode ends here temporarily because of the entry point of
+     ! a GOTO that follows ...
+
+     ! Entry point for "read_ksmatrix":
+2000 continue
+
+     legacy: do while (toggle_legacy_mode ())
 
      ! Save Kohn-Sham matrix if required
      if (options_save_ksmatrix()) then
@@ -575,8 +594,6 @@ subroutine main_scf()
         call print_occ_num (loop)
      endif
 
-3000 continue ! entry point for "read_eigenvec"
-
      enddo legacy               ! while (toggle_legacy_mode())
      !
      ! The rest  is executed on all workers.   Except where explicitly
@@ -594,6 +611,9 @@ subroutine main_scf()
 
         exit scf_cycle
      endif
+
+     ! Entry point for "read_eigenvec":
+3000 continue
 
      ! Save eigenstates and occupation if required
      if (options_save_eigenvec()) then

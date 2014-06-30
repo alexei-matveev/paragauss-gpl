@@ -484,41 +484,53 @@ subroutine main_scf()
      ! Entry point for "read_ksmatrix":
 2000 continue
 
-     legacy: do while (toggle_legacy_mode ())
-
-     ! Save Kohn-Sham matrix if required
+     ! Save Kohn-Sham matrix if required. NOOP on slaves:
      if (options_save_ksmatrix()) then
         call do_ksmatrix_store (store_now) ! reads loop
      endif
 
-     ! Check convergence and exit loop in case of convergence
-     call say ("convergence is checked")
-
 #ifdef WITH_SCFCONTROL
+#warning "WITH_SCFCONTROL=1 is not useful for batch runs"
      ! Read file with steering  parameters first and modify the length
      ! of  convergence buffers  (if required)  keeping a  copy  of the
      ! original   data.   Caution:   reloads  options_save_interval(),
-     ! options_save_fitcoeff() ...
+     ! options_save_fitcoeff().  If  you  want  every worker  to  know
+     ! updated parameters, you either  have to let everyone read them,
+     ! or broadcast them.
      call read_scfcontrol()
 #endif /* ifdef WITH_SCFCONTROL */
 
+     ! Check convergence and exit loop in case of convergence
+     call say ("convergence is checked")
 
-     ! Check SCF convergence:
+     ! Check SCF convergence.  FIXME: maybe make sure all workers have
+     ! the data to determine convergence on their own?
      scf_conv = (convergence() .or. convergence_max_iterations (loop)) &
           .and. loop /= first_loop
+     call comm_bcast (scf_conv)
+
      if (scf_conv) then
-        ! Reads loop, tot_en and old values of the save_data options:
+        call stop_timer (timer_scf_cycle)
+        call timer_grid_small_to_large()
+
+        ! Does nothing when the slaves have no output:
+        if (output_timing_scfloops) then
+           call timer_print_scfcycle()
+        endif
+
+        ! Uses  global variables loop,  tot_en and  old values  of the
+        ! save_data options. NOOP on slaves.
         call do_final_store (n_vir=n_pairs)
 
         call say ("exit scf_cycle")
 
-        ! FIXME:  for the transiton  period we  need a  different exit
-        ! strategy. Instead  of just doing  "exit scf_cycle" we  set a
-        ! flag, let the  master tell the slaves this  round is over by
-        ! letting him call  toggle_legacy_mode() again. Then broadcast
-        ! that flag and let everyone exit the SCF block.
-        cycle legacy
+        ! Let  everyone exit  the SCF  block.  This  is the  only exit
+        ! point:
+        exit scf_cycle
      endif
+
+     do while (toggle_legacy_mode ())
+
      ! Now  update the save_data  options, deallocate  the temporarily
      ! kept  convergence  buffers (as  far  as  necessary), reset  the
      ! mixing buffers  (if required)  and update the  scf_control file
@@ -594,23 +606,11 @@ subroutine main_scf()
         call print_occ_num (loop)
      endif
 
-     enddo legacy               ! while (toggle_legacy_mode())
+     enddo                      ! while (toggle_legacy_mode())
      !
      ! The rest  is executed on all workers.   Except where explicitly
      ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
      !
-     call comm_bcast (scf_conv)
-     if (scf_conv) then
-        call stop_timer (timer_scf_cycle)
-        call timer_grid_small_to_large()
-
-        ! Does nothing when the slaves have no output:
-        if (output_timing_scfloops) then
-           call timer_print_scfcycle()
-        endif
-
-        exit scf_cycle
-     endif
 
      ! Entry point for "read_eigenvec":
 3000 continue

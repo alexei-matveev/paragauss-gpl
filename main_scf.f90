@@ -1162,17 +1162,21 @@ contains
 
   subroutine do_ksmatrix_store (store_now, mode)
     !
-    ! Purpose: saves the information for the "saved_ksmatrix" file.
+    ! Purpose:   saves  the   information  for   the  "saved_ksmatrix"
+    ! file. Does nothing on the slave workers.
     !
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
-    ! character (len=*) :: data_dir, fit_file
+    ! character (len=*) :: fit_file
+    use comm, only: comm_rank
     implicit none
     logical, intent (in) :: store_now
     integer (i4_kind), intent (in), optional :: mode
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
+
+    if (comm_rank() /= 0) return
 
     if (store_now) then
        call readwriteblocked_startwrite (recfile (ham_file), th, variable_length=.true.)
@@ -1281,6 +1285,7 @@ contains
     ! integer (i4_kind) :: loop
     ! real   (r8_kind) :: tot_en
     ! character (len=*) :: fit_file, scf_file, ham_file, eig_file
+    use comm, only: comm_rank
     use occupation_module, only: eigenstates_store
     implicit none
     integer (i4_kind), intent (in) :: n_vir
@@ -1288,6 +1293,8 @@ contains
 
     integer :: save_interval
     logical :: stored_curr, stored_prev
+
+    if (comm_rank() /= 0) return
 
     save_interval = options_save_interval()
 

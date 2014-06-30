@@ -72,19 +72,28 @@ guile_qm_finalize (const SCM world)
     return SCM_UNSPECIFIED;
 }
 
+
+#define EXPORT(name, req, opt, rst, func)               \
+  (scm_c_define_gsubr (name, req, opt, rst, func),      \
+   scm_c_export (name, NULL))
+
 void qm_init_scheme (void);
 
-static SCM
-guile_paragauss_module_init (void)
+/*
+  Calling this will define a few qm-* gsubrs.  This callback is run by
+  Guile   interpreter    at   the   latest   when    the   module   is
+  imported/compiled.  See the call to scm_c_define_module() below.
+*/
+static void
+paragauss_module_init (void *unused)
 {
-    scm_c_define_gsubr ("qm-init", 0, 0, 0, guile_qm_init);
-    scm_c_define_gsubr ("qm-run", 1, 0, 0, guile_qm_run);
-    scm_c_define_gsubr ("qm-finalize", 1, 0, 0, guile_qm_finalize);
+  (void) unused;
+  EXPORT ("qm-init", 0, 0, 0, guile_qm_init);
+  EXPORT ("qm-run", 1, 0, 0, guile_qm_run);
+  EXPORT ("qm-finalize", 1, 0, 0, guile_qm_finalize);
 
-    /* See ../modules/paragauss.f90: */
-    qm_init_scheme ();
-
-    return SCM_UNSPECIFIED;
+  /* See ../modules/paragauss.f90: */
+  qm_init_scheme ();
 }
 
 static void
@@ -100,26 +109,30 @@ guile_main (void *data, int argc, char **argv)
     Calling this  will define comm-*  gsubrs in (guile  comm internal)
     module:
    */
-    scm_c_define_module ("guile comm internal", guile_comm_module_init, NULL);
+  scm_c_define_module
+    ("guile comm internal", guile_comm_module_init, NULL);
 
   /*
-   * Calling this  will define  a few qm-*  gsubrs defined  in Fortran
-   * sources:
-   */
-    scm_c_define_gsubr ("guile-paragauss-module-init", 0, 0, 0, guile_paragauss_module_init);
+    Calling  this will  define a  few qm-*  gsubrs defined  in Fortran
+    sources:
+  */
+  scm_c_define_module
+    ("guile paragauss internal", paragauss_module_init, NULL);
 
 #ifdef WITH_BGY3D
-    /* The function bgy3d_guile_init() initialzes Petsc, defines a few
-       gsubrs with  bgy3d-prefix and returns. The tricky  part is that
-       it registers  an atexit() function  that calls PetscFinalize().
-       This function both, uses MPI and invokes MPI_Finalize(), if MPI
-       was initialized from  PetscInitialize(). If you call MPI_Init()
-       earlier than this  point, you seem to have  to register another
-       atexit() handler that does MPI_Finalize(). */
-    bgy3d_guile_init (argc, argv);
+  /*
+    The  function bgy3d_guile_init() initialzes  Petsc, defines  a few
+    gsubrs with bgy3d-prefix  and returns. The tricky part  is that it
+    registers an  atexit() function that  calls PetscFinalize().  This
+    function  both, uses MPI  and invokes  MPI_Finalize(), if  MPI was
+    initialized from PetscInitialize(). If you call MPI_Init() earlier
+    than this  point, you  seem to have  to register  another atexit()
+    handler that does MPI_Finalize().
+  */
+  bgy3d_guile_init (argc, argv);
 #endif
 
-    scm_shell (argc, argv); // never returns
+  scm_shell (argc, argv); // never returns
 }
 
 int

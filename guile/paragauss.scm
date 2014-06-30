@@ -32,77 +32,77 @@
 ;;; ./baslib/guile/paragauss.scm
 ;;;
 ;;; Some are home-grown  modules.  This needs %load-path to  be set up
-;;; properly.
+;;; properly.  Such modules are prefixed with (guile ...) here:
 ;;;
 (define-module (guile paragauss)
   #:use-module (srfi srfi-1)            ; list functions
   #:use-module (ice-9 pretty-print)
   #:use-module (ice-9 getopt-long)
-  ;;
-  ;; Custom modules, need properly set %load-path:
-  ;;
   #:use-module ((guile comm)
-                #:select (comm-size
-                          comm-rank
-                          comm-bcast
-                          comm-barrier
-                          critical))
+                #:select
+                (comm-size
+                 comm-rank
+                 comm-bcast
+                 comm-barrier
+                 critical))
   #:use-module ((guile utils)
-                #:select (begin0
-                          let-env
-                          derivatives
-                          list-derivatives))
-  ;;
-  ;; Import basis set library:
-  ;;
-  #:use-module ((baslib guile baslib)
-                #:select (find-basis))
+                #:select
+                (begin0
+                 let-env
+                 derivatives
+                 list-derivatives))
+  #:use-module ((baslib guile baslib)   ; basis set library
+                #:select
+                (find-basis))
   #:use-module ((baslib guile paragauss)
-                #:select (qm-write-input))
-  #:export (qm-main               ; (qm-main (command-line)), use this
-            qm-init               ; (qm-init) -> world, low level
-            qm-run                ; (qm-run world), low level
-            qm-finalize           ; (qm-finalize world), low level
-            qm-trace-hook
-            qm-flush-trace
-            qm-find-basis
-            qm-vdw-dft-phi
-            qm-vdw-dft-phi/asy
-            qm-write-gxfile!
-            qm-run-path-sxp
-            qm-run-path-nml
-            call-with-qm-world
-            pople-radius
-            slater-radius
-            ionic-radius
-            with-stdout-to-file
-            make-prl-plot
-            test-xc))
+                #:select
+                (qm-write-input))
+  #:use-module (guile paragauss internal) ; see guile-qm.c
+  #:re-export                        ; from (guile paragauss internal)
+  (qm-init                           ; (qm-init) -> world, low level
+   qm-run                            ; (qm-run world), low level
+   qm-finalize                       ; (qm-finalize world), low level
+   qm-vdw-dft-phi
+   pople-radius
+   slater-radius
+   ionic-radius)
+  #:export
+  (qm-main                        ; (qm-main (command-line)), use this
+   qm-trace-hook
+   qm-flush-trace
+   qm-find-basis
+   qm-vdw-dft-phi/asy
+   qm-write-gxfile!
+   qm-run-path-sxp
+   qm-run-path-nml
+   call-with-qm-world
+   with-stdout-to-file
+   make-prl-plot
+   test-xc))
 
 ;;;
-;;; This name has to be defined on guile startup, see the C sources of
-;;; guile_main () in ./guile-qm.c:
+;;; The  built-in  module  of  the PG  interpreter,  (guile  paragauss
+;;; internal),  see ./guile-qm.c,  defines some  of the  auxilary qm-*
+;;; symbols.
 ;;;
-(define guile-paragauss-module-init
-  (@@ (guile-user) guile-paragauss-module-init))
-
-
+;;; NOTE: you  better do not call  any of those  whose Fortran sources
+;;; were compiled with Intel.  Not  until Intel learns how to return a
+;;; struct properly (as with GCC -freg-struct-return).
 ;;;
-;;; The Fortran  function (see ../modules/paragauss.f90)  decorated by
-;;; this C-wrapper  (./guile-qm.c) defines  some of the  auxilary qm-*
-;;; symbols.  FIXME: you better do not call any of those whose Fortran
-;;; sources were  compiled with Intel.  Not until Intel learns  how to
-;;; return a struct properly (as with GCC -freg-struct-return).
-;;;
-;;; The list of the procedures defined by this call includes:
+;;; The  list  of  the  procedures  defined in  that  built-in  module
+;;; includes:
 ;;;
 ;;;   qm-init
 ;;;   qm-run
 ;;;   qm-finalize
+;;;   qm-xc
+;;;   qm-vdw-dft-phi
+;;;   pople-radius
+;;;   slater-radius
+;;;   ionic-radius
 ;;;
 ;;; and posissibly more, depending on the compilation options.
 ;;;
-(guile-paragauss-module-init)
 
 ;;;
 ;;; Beware that writing to the  same file from multiple workers is not

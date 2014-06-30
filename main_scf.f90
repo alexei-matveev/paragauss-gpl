@@ -877,7 +877,10 @@ contains
   subroutine write_scfcontrol()
     !
     ! Purpose: write  variables that can  be changed at each  cycle to
-    ! file.
+    ! file.   This  function  when  executed  in  parallel,  does  not
+    ! necessarily try writing to  the same file. The outfile() returns
+    ! a path  to a  scratch directory for  slaves, different  for each
+    ! worker.
     !
     ! To avoid  warning messages due to spurious  modifications of the
     ! scf control  data caused by the finite  accuracy achievable with
@@ -905,7 +908,9 @@ contains
   subroutine read_scfcontrol (warning)
     !
     ! Purpose: read variables  that can be changed at  each cycle from
-    ! file
+    ! file. FIXME:  as is it looks  like each worker  would be reading
+    ! different files as  outfile() points to scratch for  all but the
+    ! rank-0 worker.
     !
     use input_module, only: input_open, input_close
     logical, optional, intent (in) :: warning

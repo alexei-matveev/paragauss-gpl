@@ -269,7 +269,6 @@ subroutine main_gradient(loop)
   use interfaces, only: main_integral, integral_trafo, RELGRAD, RELSDER
   use interfaces, only: potential_calculate
   use interfaces, only: grad_solv_calculate
-  use occupation_module, only: dealloc_occ_num
 #ifdef WITH_EXPERIMENTAL
   use symmetry_data_module, only: irrep_dimensions
   use cpks_common, only: cpks_alloc_p1w1, cpks_free_p1w1, cpks_p1, cpks_w1

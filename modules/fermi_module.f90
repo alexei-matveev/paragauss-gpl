@@ -28,10 +28,11 @@
 module fermi_module
   !---------------------------------------------------------------
   !
-  !  Purpose: contains routines for the level broadening
+  !  Purpose: contains routines for the level broadening. None of the
+  !  procedures here use any communication.
   !
   !
-  !  Module called by: main_scf
+  !  Module called by: main_scf()
   !
   !  References: Old LCGTO and references therein
   !
@@ -70,8 +71,6 @@ module fermi_module
   use occupation_module
   use iounitadmin_module, only: write_to_output_units,output_unit,&
        stdout_unit
-  use eigen_data_module, only: eigval,holes_per_irrep,spin_of_hole,&
-       n_holes_per_irrep
   use output_module, only: output_fermi,output_fermi_newton
   use options_module, only: options_spin_orbit
 
@@ -185,17 +184,17 @@ contains
   !*************************************************************
 
   subroutine fermi_reoccup()
-    !  Purpose: main routine for the reoccupation including
-    !           gaussian level broadening around the
-    !           fermi energy.
-    !** End of interface *****************************************
+    !
+    ! Main  routine  for  the  reoccupation including  gaussian  level
+    ! broadening around the fermi energy. Does no communication.
     !
     !  Author: FN
     !  Date: 4/96
     !
-    !------------ Modules used ----------------------------------
     use iounitadmin_module, only: output_unit
-    !------------ Declaration of local variables -----------------
+    implicit none
+    !** End of interface *****************************************
+
     real(kind=r8_kind)             :: efs = zero
     real(kind=r8_kind),allocatable :: efs_spin(:),e_fermi_spin(:)
     integer(kind=i4_kind)          :: alloc_stat,is
@@ -311,15 +310,12 @@ contains
     !            from the Aufbauprinciple) in order to reach
     !            convergence in 4-5 steps ( see P.Knappe,
     !            Dissertation, 1990)
-    !** End of interface *****************************************
     !
-    !------------ Modules used ----------------------------------
-!    use occupation_module, only: occupation_level_sort, &
-!         get_n_elec,num_list
-
-    !------------ Declaration of formal parameters ---------------
+    use eigen_data_module, only: eigval
+    implicit none
     real(kind=r8_kind),    intent(out) :: efs
-    !------------ Declaration of local variables -----------------
+    !** End of interface *****************************************
+
     real(kind=r8_kind)               :: n_elec,remmel,degen,delta_hole,&
                                         occ_hole,remmel_core
     integer(kind=i4_kind)            :: n_elec_int,step_dummy
@@ -448,13 +444,11 @@ contains
     !  Subroutine called by: fermi_reoccup
     !  Author: FN
     !  Date: 4/96
-    !------------ Modules used --------------------------------------
-!    use occupation_module, only: occupation_level_sort, &
-!         get_n_elec, num_list
-    !------------ Declaration of formal parameters ------------------
-    real(kind=r8_kind),    intent(out ) :: efs(:)
+    use eigen_data_module, only: eigval
+    implicit none
+    real (r8_kind), intent (out) :: efs(:)
     !** End of interface *****************************************
-    !------------ Declaration of subroutines ------------------------
+
     external error_handler
     !------------ Declaration of local variables --------------------
     real(kind=r8_kind)               :: n_elec,remmel,degen,delta_hole,&
@@ -891,7 +885,7 @@ contains
 
   !*************************************************************
 
-  subroutine newton(e_start,e_end)
+  subroutine newton (e_start, e_end)
     ! Purpose: Newton-Rhaphson procedure to calculate the
     !          Fermi energy.
     !          This procedure seeks the zeros of the
@@ -903,18 +897,16 @@ contains
     !          N  : total number of electrons
     !          arg_i : (ef - e_i/(sqrt(2)*sigma))
     !
-    !------------ Modules used ----------------------------------
-!    use occupation_module, only: get_n_elec, occ_num, &
-!         alloc_occ_num,n_occo,alloc_n_occo
     use init_module, only: init
-    !------------ Declaration of formal parameters ---------------
-    real(kind=r8_kind), intent(in)  :: e_start
-    real(kind=r8_kind), intent(out) :: e_end
+    use eigen_data_module, only: eigval
+    implicit none
+    real (r8_kind), intent (in) :: e_start
+    real (r8_kind), intent (out) :: e_end
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     integer(kind=i4_kind)     :: step,i,m,is,counter
-    real(kind=r8_kind)        :: ef,degen,fn,dfn, &
-         df, deltan, delta_e, n_elec, delta_hole
+    real (r8_kind) :: ef, degen, fn, dfn, df, deltan, delta_e, &
+         n_elec, delta_hole
     real(kind=r8_kind)           :: summ
     real(kind=r8_kind),parameter :: small = 1.e-8_r8_kind
     real(kind=r8_kind)           :: gamma_plus,gamma_minus,&
@@ -1141,16 +1133,14 @@ contains
     !          additionally a number of unpaired electrons
     !          can be specified (fermi_unpaired > 0).
     !
-    !------------ Modules used ----------------------------------
-!    use occupation_module, only: get_n_elec, occ_num, &
-!         alloc_occ_num,n_occo,alloc_n_occo
     use init_module, only: init
     use machineparameters_module, only: machineparameters_DimCheck
-    !------------ Declaration of formal parameters ---------------
+    use eigen_data_module, only: eigval
+    implicit none
     real(kind=r8_kind), intent(in)  :: e_start_spin(:)
     real(kind=r8_kind), intent(out) :: e_end_spin(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     integer(kind=i4_kind)     :: step,i,m,is,alloc_stat
     real(kind=r8_kind)        :: degen,fn,dfn, &
          df,deltan,delta_e,n_elec,delta_hole
@@ -1522,7 +1512,8 @@ contains
     !** End of interface *****************************************
     use iounitadmin_module
     use filename_module, only: tmpfile
-    !------------ Declaration of local variables -----------------
+    use eigen_data_module, only: eigval
+    implicit none
     integer(kind=i4_kind) :: io_u,i,m,is,counter
     type(arrmat2),allocatable :: eigval_help(:)
     !------------ Declaration of subroutines used ----------------
@@ -1761,33 +1752,39 @@ contains
   end function fermi_get_entropy
 
   !*************************************************************
-  subroutine fermi_hole(irrep,orb,is,step,hole,delta)
-    ! Purpose: look up if the current orbital is assigned a hole.
-    !          This is done by looping through all holes in the
-    !          current Irrep (holes_per_irrep(i_irr)%m and see if
-    !          if the orbital with indices 'irrep','orb' and 'is'
-    !          is a hole.
-    !          'delta' returns the amount by which the degeneracy
-    !          in the calling routine has to be decreased to achieve the
-    !          user-specified occupation number for the hole.
+  subroutine fermi_hole (irrep, orb, is, step, hole, delta)
     !
-    ! Subroutine called by : newton,newton_spin
-    ! --- Declaration of formal parameters --------------------
-    integer(kind=i4_kind),intent(in)  :: irrep,orb,is,step
-    logical,intent(out)               :: hole
-    real(kind=r8_kind),intent(out)    :: delta
-    ! --- declaration of local variables ----------------------
+    ! Look up if the current orbital is assigned a hole.  This is done
+    ! by   looping   through   all   holes  in   the   current   Irrep
+    ! (holes_per_irrep(i_irr)%m and see if if the orbital with indices
+    ! 'irrep','orb' and 'is' is a hole.  'delta' returns the amount by
+    ! which the degeneracy in the  calling routine has to be decreased
+    ! to achieve the user-specified occupation number for the hole.
+    !
+    ! Subroutine called by : newton, newton_spin
+    !
+    use eigen_data_module, only: eigval, holes_per_irrep, &
+         n_holes_per_irrep, spin_of_hole
+    implicit none
+    integer (i4_kind), intent (in) :: irrep, orb, is, step
+    logical, intent (out) :: hole
+    real (r8_kind), intent (out) :: delta
+    ! *** end of interface ***
+
     integer(kind=i4_kind)  :: i_hole,degen
+
     hole=.false.
     degen = symmetry_data_n_partners(irrep) * num_spin
     holes: do i_hole=1,n_holes_per_irrep(irrep)
        if (holes_per_irrep(irrep)%m(i_hole).eq.orb .and. &
             spin_of_hole(irrep)%m(i_hole).eq.is) then
           if (output_fermi) then
-             write(output_unit,'("Newton-Step ",i3,":   Orbital ",i4," in Irrep ",i2," with eigenvalue ",ES13.3," is a hole")')&
-                  step,orb,irrep,eigval(irrep)%m(orb,is)*convert1
-             write(stdout_unit,'("Newton-Step ",i3,":   Orbital ",i4," in Irrep ",i2," with eigenvalue ",ES13.3," is a hole")')&
-                  step,orb,irrep,eigval(irrep)%m(orb,is)*convert1
+             write (output_unit, &
+                  '("Newton-Step ",i3,":   Orbital ",i4," in Irrep ",i2," with eigenvalue ",ES13.3," is a hole")')&
+                  step, orb, irrep, eigval(irrep) % m(orb, is) * convert1
+             write (stdout_unit, &
+                  '("Newton-Step ",i3,":   Orbital ",i4," in Irrep ",i2," with eigenvalue ",ES13.3," is a hole")')&
+                  step, orb, irrep, eigval(irrep) % m(orb, is) * convert1
           endif
           hole=.true.
           delta=degen-occnum_hole(irrep)%m(i_hole)

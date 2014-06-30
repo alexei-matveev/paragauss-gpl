@@ -66,17 +66,26 @@ module echo_input_module
   !------------ public variables ----------------------------------
 
   integer, parameter :: MAX_FMT = 35
-  character(len=MAX_FMT), public, protected :: flag_format  = '("    ",a," = ",a20:" # ",a)'
-  character(len=MAX_FMT), public, protected :: intg_format  = '("    ",a," = ",i20:" # ",a)'
-  character(len=MAX_FMT), public, protected :: real_format  = '("    ",a," = ",g20.14:" # ",a)'
 
-  character(len=MAX_FMT), public :: &
+  character (len=MAX_FMT), parameter, public :: flag_format = &
+       '("    ",a," = ",a20:" # ",a)'
+
+  character (len=MAX_FMT), parameter, public :: intg_format = &
+       '("    ",a," = ",i20:" # ",a)'
+
+  character (len=MAX_FMT), parameter, public :: real_format = &
+       '("    ",a," = ",g20.14:" # ",a)'
+
+  character (len=MAX_FMT), parameter, public :: &
+       real_format3 = '("    ",a7," = ",es10.3:" # ",a7)', &
+       real_format4 = '("    ",a ," = ",E20.10:" # ",a)', &
+       string_format= '("    ",a," = ",a    :" # ",a)'
+
+  ! FIXME: These are indeed modified from outside of this module:
+  character (len=MAX_FMT), public :: &
        real_format1 = '("    ",a," = ",f10.8:" # ",a)', &
-                            & real_format2 = '("    ",a2," = ",f10.8:" # ",a2)', &
-                            & real_format3 = '("    ",a7," = ",es10.3:" # ",a7)', &
-                            & real_format4 = '("    ",a ," = ",E20.10:" # ",a)', &
-                            & word_format  = '("    ",a," = ",a10  :" # ",a)', &
-                            & string_format= '("    ",a," = ",a    :" # ",a)'
+       real_format2 = '("    ",a2," = ",f10.8:" # ",a2)', &
+       word_format  = '("    ",a," = ",a10  :" # ",a)'
 
   !------------ public functions and subroutines ------------------
   public :: start, flag, intg, real, word, stop, echo

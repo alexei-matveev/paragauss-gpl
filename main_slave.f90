@@ -73,7 +73,6 @@ use virtual_levels_module, only: eigvec_vir_dealloc
 use pointcharge_module
 use induced_dipoles_module, only: send_receive_id
 use calc_id_module, only: calc_Pol_ham
-use eigen_data_module, only: eigen_data_solve1
 use fit_coeff_module, only: fit_coeff_receive
 #ifdef WITH_RESPONSE
   use response_module, only: response_setup, &
@@ -143,11 +142,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       call say("ham_calc_main")
       ! invalid loop index:
       call ham_calc_main(UNUSED_INT)
-
-   case (msgtag_eigen_data_solve)
-      ! parallel eigensolver entry:
-      call say("eigen_data_solve")
-      call eigen_data_solve1()
 
    case (msgtag_commdata)
       ABORT('is handled by comm_enroll()')

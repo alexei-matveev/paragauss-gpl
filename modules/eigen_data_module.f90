@@ -135,7 +135,6 @@ module eigen_data_module
   !------------ public functions and subroutines ------------------
 
   public :: eigen_data_solve!(), to be called from a parallel context
-  public :: eigen_data_solve1!(), trampoline for master/main_slave, must die
   public :: eigen_data_alloc!(), does no communication
   public :: eigen_data_free!(), does no communication
 
@@ -200,29 +199,6 @@ module eigen_data_module
 !------------ Subroutines ---------------------------------------
 contains
 
-
-  !*************************************************************
-  subroutine eigen_data_solve1()
-    !
-    ! Separate the legacy parallel context from eigen_data_solve()
-    !
-    use comm_module, only: comm_init_send, comm_send, comm_all_other_hosts, &
-         comm_i_am_master
-    use msgtag_module, only: msgtag_eigen_data_solve
-    implicit none
-    !** End of interface *****************************************
-
-    if( comm_i_am_master() )then
-       !
-       ! First tell the slaves to enter this subroutine:
-       !
-       call comm_init_send(comm_all_other_hosts, msgtag_eigen_data_solve)
-       call comm_send()
-    endif
-
-    call eigen_data_solve()
-  end subroutine eigen_data_solve1
-  !*************************************************************
 
   !*************************************************************
   subroutine eigen_data_solve()

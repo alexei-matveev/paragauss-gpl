@@ -279,7 +279,7 @@ INTEGER_T :: msgtag_back_Pol_ham =        212
 
 ! entry point for legacy parallel eigensolver, slaves should
 ! call eigen_data_solve()
-INTEGER_T :: msgtag_eigen_data_solve =    213
+!NTEGER_T :: msgtag_eigen_data_solve =    213
 !NTEGER_T :: msgtag_eigs_entry      =     214
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -498,7 +498,7 @@ contains
 !   CMP(msgtag_main_integral)
     CMP(msgtag_end)
     CMP(msgtag_error)
-    CMP(msgtag_eigen_data_solve)
+!   CMP(msgtag_eigen_data_solve)
 
     if(name=='undef')then
        write(name,'(i5)') tag

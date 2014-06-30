@@ -907,7 +907,7 @@ contains
     ! Purpose: read variables  that can be changed at  each cycle from
     ! file
     !
-    use input_module
+    use input_module, only: input_open, input_close
     logical, optional, intent (in) :: warning
     !** End of interface ***************************************
 

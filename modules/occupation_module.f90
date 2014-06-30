@@ -348,52 +348,54 @@ contains
   !*************************************************************
 
   subroutine alloc_occ_num()
-    !  Purpose: allocate the appropriate space for occ_num
-    !           and initialize with zero
+    !
+    ! Allocate the appropriate space for occ_num and initialize with
+    ! zero
+    !
     use options_module, only: options_spin_orbit
+    implicit none
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
-    integer(kind=i4_kind)      :: i_gamma,alloc_stat,n
+    integer (i4_kind) :: i_gamma, alloc_stat, n
 
-    ! dimensions of irreps
-    ! (in order to account for SPIN ORBIT more easily)
-    integer(kind=i4_kind)                :: n_irrep
-    integer(kind=i4_kind),allocatable    :: dim_irrep(:)
-    ! n_irrep    : number of irreps
-    ! dim_irrep : number of independent functions in irrep
-    !------------ Executable code --------------------------------
+    ! Dimensions of irreps (in order to account for SPIN ORBIT more
+    ! easily)
+    integer (i4_kind) :: n_irrep
+    integer (i4_kind), allocatable :: dim_irrep(:)
+    ! n_irrep: number of irreps
+    ! dim_irrep: number of independent functions in irrep
+
     DPRINT MyID//'alloc_occ_num'
 
-    ! set appropriate dimensions of irreps
-    ! (use projective irreps in case of spin orbit)
+    ! Set appropriate  dimensions of irreps (use  projective irreps in
+    ! case of spin orbit)
     if (options_spin_orbit) then
        !
        ! SPIN ORBIT
        !
-       n_irrep = ssym%n_proj_irrep
-       allocate(dim_irrep(n_irrep))
-       do n=1,n_irrep
-          dim_irrep(n) = ssym%dim_proj(n)
+       n_irrep = ssym % n_proj_irrep
+       allocate (dim_irrep(n_irrep))
+       do n = 1, n_irrep
+          dim_irrep(n) = ssym % dim_proj(n)
        enddo
     else ! options_spin_orbit
        !
        ! STANDARD SCF (NO SPIN ORBIT)
        !
-       n_irrep = ssym%n_irrep
-       allocate(dim_irrep(n_irrep))
-       do n=1,n_irrep
-          dim_irrep(n)  = ssym%dim(n)
+       n_irrep = ssym % n_irrep
+       allocate (dim_irrep(n_irrep))
+       do n = 1, n_irrep
+          dim_irrep(n) = ssym % dim(n)
        enddo
     endif ! options_spin_orbit
 
     allocate (occ_num(n_irrep), STAT=alloc_stat)
-     ASSERT(alloc_stat.eq.0)
+    ASSERT(alloc_stat==0)
     do i_gamma = 1, n_irrep
-       allocate(occ_num(i_gamma)%m(dim_irrep(i_gamma), ssym%n_spin), STAT=alloc_stat)
-       ASSERT(alloc_stat.eq.0)
+       allocate (occ_num(i_gamma) % m(dim_irrep(i_gamma), ssym%n_spin), STAT=alloc_stat)
+       ASSERT(alloc_stat==0)
     enddo
-    call init(occ_num)
+    call init (occ_num)
 
     if(operations_core_density)then
        allocate (occ_num_core(n_irrep),STAT=alloc_stat)
@@ -435,33 +437,34 @@ contains
    end subroutine dealloc_occ_num
 
   subroutine occupation_shutdown()
-    ! Purpose: deallocate the variables
-    !          n_occo, n_occo_core, occ_num,occupied, num_list at the end
-    !          of the SCF-Cycles
-    ! Subroutine called by : main_scf
+    !
+    ! Deallocate the  variables n_occo, n_occo_core, occ_num, occupied,
+    ! num_list at the end of the SCF-Cycles
+    !
+    ! Subroutine called by : main_scf()
     !
     implicit none
     !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: alloc_stat, i, j
+    integer (i4_kind) :: alloc_stat, i, j
 
     check_num_list = .false.
 
-    if ( allocated(n_occo) ) then
+    if (allocated (n_occo)) then
        deallocate(n_occo, STAT=alloc_stat)
        ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(occ_num) ) then
-       do i = 1, size(occ_num)
-          deallocate(occ_num(i)%m, STAT=alloc_stat)
+    if (allocated (occ_num)) then
+       do i = 1, size (occ_num)
+          deallocate (occ_num(i) % m, STAT=alloc_stat)
           ASSERT(alloc_stat==0)
        enddo
        deallocate(occ_num, STAT=alloc_stat)
        ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(num_list) ) then
+    if (allocated (num_list)) then
         do i = 1, size(num_list)
             deallocate(num_list(i)%m, STAT=alloc_stat)
             ASSERT(alloc_stat==0)
@@ -470,12 +473,12 @@ contains
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(n_occo_core) ) then
+    if (allocated (n_occo_core)) then
         deallocate(n_occo_core, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(occ_num_core) ) then
+    if (allocated (occ_num_core)) then
         do i = 1, size(occ_num_core)
             deallocate(occ_num_core(i)%m, STAT=alloc_stat)
             ASSERT(alloc_stat==0)
@@ -484,17 +487,17 @@ contains
         ASSERT(alloc_stat==0)
     endif
 
-    if ( allocated(noc_start) ) then
+    if (allocated (noc_start)) then
         deallocate(noc_start, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(noc_fixed) ) then
+    if (allocated (noc_fixed)) then
         deallocate(noc_fixed, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if (allocated(occupation_numbers)) then
+    if (allocated (occupation_numbers)) then
         do i = 1, size(occupation_numbers,1)
             do j = 1, size(occupation_numbers,2)
                 deallocate(occupation_numbers(i, j)%occ, stat=alloc_stat)
@@ -505,28 +508,28 @@ contains
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(hole_irrep) ) then
+    if (allocated (hole_irrep)) then
         deallocate(hole_irrep, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(hole_list) ) then
+    if (allocated (hole_list)) then
         deallocate(hole_list, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(hole_spin) ) then
+    if (allocated (hole_spin)) then
         deallocate(hole_spin, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(hole_occnum) ) then
+    if (allocated (hole_occnum)) then
         deallocate(hole_occnum, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
     ! this variable will only be allocated if the symmetry_part is run
-    if ( allocated(occnum_hole) ) then
+    if (allocated (occnum_hole)) then
         do i = 1, size(occnum_hole)
             deallocate(occnum_hole(i)%m, STAT=alloc_stat)
             ASSERT(alloc_stat==0)
@@ -1130,7 +1133,7 @@ contains
   !*************************************************************
 
   !*************************************************************
-  subroutine reoccup
+  subroutine reoccup ()
     !  Purpose: re-occupy the levels after the eigenvalues
     !           and eigenvectors are ready, i.e. after scf.
     !           (1) First a list with successive numbers of the
@@ -1209,8 +1212,12 @@ contains
        enddo
     endif ! options_spin_orbit
 
-    if(.not.allocated(n_occo)) call alloc_n_occo(ssym)
-    if(.not.allocated(occ_num)) call alloc_occ_num()
+    if (.not. allocated (n_occo)) then
+       call alloc_n_occo (ssym)
+    endif
+    if (.not. allocated (occ_num)) then
+       call alloc_occ_num()
+    endif
     call init(occ_num)
     call init(n_occo)
     if (operations_core_density) then
@@ -1843,31 +1850,33 @@ contains
 
   !*************************************************************
   subroutine occupation_2d_correct()
-  ! Purpose: in the case of pseudo 2D irreps occupy each pseudo partner
-  !          equally
-  !
-  ! Function called by: mainscf
-  ! Author: MS
-  ! Date  : 8/97
-  !** End of interface *****************************************
-  !------------ Declaration of local variables -----------------
-  integer(kind=i4_kind) :: i_gamma,i_m,i_s,counter
-  !------------ Executable code --------------------------------
+    !
+    ! In  the case  of pseudo  2D  irreps occupy  each pseudo  partner
+    ! equally.
+    !
+    ! Function called by: mainscf
+    ! Author: MS
+    ! Date  : 8/97
+    !
+    implicit none
+    !** End of interface *****************************************
 
-    do i_gamma=1,ssym%n_irrep
-       if(ssym%pseudo(i_gamma)) then
-          do i_m=1,ssym%dim(i_gamma),2
-             occ_num(i_gamma)%m(i_m,:)=0.5_r8_kind*(occ_num(i_gamma)%m(i_m,:)+&
-                  occ_num(i_gamma)%m(i_m+1,:))
-             occ_num(i_gamma)%m(i_m+1,:)=occ_num(i_gamma)%m(i_m,:)
+    integer (i4_kind) :: i_gamma, i_m, i_s, counter
+
+    do i_gamma = 1, ssym % n_irrep
+       if (ssym % pseudo(i_gamma)) then
+          do i_m = 1, ssym % dim(i_gamma), 2
+             occ_num(i_gamma) % m(i_m, :) = 0.5_r8_kind * &
+                  (occ_num(i_gamma) % m(i_m, :) + occ_num(i_gamma) % m(i_m + 1, :))
+             occ_num(i_gamma) % m(i_m + 1, :) = occ_num(i_gamma) % m(i_m, :)
           enddo
           ! now correct n_occo
-          do i_s=1,ssym%n_spin
-             counter=0
-             do i_m=1,ssym%dim(i_gamma)
-                if(occ_num(i_gamma)%m(i_m,i_s)>0.0_r8_kind) counter=counter+1
+          do i_s = 1, ssym % n_spin
+             counter = 0
+             do i_m = 1, ssym % dim(i_gamma)
+                if (occ_num(i_gamma) % m(i_m, i_s) > 0.0_r8_kind) counter = counter + 1
              end do
-             n_occo(i_s,i_gamma)=counter
+             n_occo(i_s, i_gamma) = counter
           end do
        end if
     enddo

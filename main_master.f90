@@ -169,7 +169,7 @@ subroutine main_master()
   use efp_efp_module, only: efp_efp_energy
   use efp_only_opt_module, only: geom_converged
 #endif
-  use density_data_module, only: open_densmat !!!!!!!!!!!!!!!!!!AS
+  use density_data_module, only: open_densmat
   use solv_cavity_module, only: stop_solv
   use potential_module, only: send_recv_space_point
   use elec_static_field_module
@@ -583,11 +583,9 @@ subroutine main_master()
            call grid2space_2d()
            if (V_electronic) then
               call say ("call potential_calculate (Vel)")
-              do while (toggle_legacy_mode())
-                 if (use_saved_densmatrix) then
-                    call open_densmat()
-                 endif
-              enddo
+              if (use_saved_densmatrix) then
+                 call open_densmat() ! no comm, reads disk
+              endif
               call potential_calculate ('Potential')
            endif
            do while (toggle_legacy_mode())
@@ -600,11 +598,9 @@ subroutine main_master()
         elseif (pdc) then
            call say ("call potential_calculate (PDC)")
            call calc_shell_grid()
-           do while (toggle_legacy_mode())
-              if (use_dens_mat) then
-                 call open_densmat()
-              endif
-           enddo
+           if (use_dens_mat) then
+              call open_densmat() ! no comm, reads disk
+           endif
            call potential_calculate ('Potential')
            do while (toggle_legacy_mode())
               call collect_poten_3d()

@@ -959,65 +959,40 @@ contains
     close(io_u)
     call return_iounit(io_u)
   end subroutine save_densmat
-  !*************************************************************
-  subroutine open_densmat
-    ! Purpose: read the density matrix earlier saved in INPUT directory
-    ! At the moment it was realized for not spin_orbit
-    ! Modules used -----------------------------------------------
+
+
+  subroutine open_densmat()
+    !
+    ! Read the density matrix earlier  saved in INPUT directory At the
+    ! moment it was realized for not spin_orbit
+    !
     use filename_module, only: inpfile
-    use iounitadmin_module, only : get_iounit,return_iounit
-    use comm_module
-    use msgtag_module
-    !------------ Declaration of local variables -----------------
-    integer(kind=i4_kind) :: i, j, k, io_u, info
-    logical               :: yes
-    real(kind=r8_kind), allocatable :: help_arr(:)
-    logical, allocatable :: mask(:,:,:)
-    !------------ Executable code --------------------------------
+    use iounitadmin_module, only : openget_iounit, returnclose_iounit
+    ! *** end of interface ***
 
-    if (comm_i_am_master()) then
-       inquire(file=trim(inpfile('densmat.save')), exist=yes)
-       if(.not.yes) call error_handler(&
-            "open_densmat: file densmat.save cannot be read. It is absent")
+    integer (i4_kind) :: i, j, k, io_u
+    logical :: yes
 
-       io_u = get_iounit()
-       open(unit= io_u, form='unformatted',status='old', &
-            file=trim(inpfile('densmat.save')))
+    inquire (file= trim (inpfile ('densmat.save')), exist= yes)
+    if (.not. yes) call error_handler &
+         ("open_densmat: file densmat.save cannot be read. It is absent")
 
-       do i=1,ssym%n_irrep
-          do j=1,ssym%dim(i)
-             do k=1,ssym%dim(i)
-                read(io_u) densmat(i)%m(j,k,1:ssym%n_spin)
-             end do
-          end do
-       end do
+    io_u = openget_iounit (file= trim (inpfile ('densmat.save')), &
+         form= 'unformatted', status= 'old')
 
-       close (io_u)
-       call return_iounit(io_u)
+    ASSERT(allocated(densmat))
+    do i = 1, ssym % n_irrep
+       ASSERT(allocated(densmat(i)%m))
+       do j = 1, ssym % dim(i)
+          do k = 1, ssym % dim(i)
+             read (io_u) densmat(i) % m(j, k, 1: ssym % n_spin)
+          enddo
+       enddo
+    enddo
 
-       call comm_init_send(comm_all_other_hosts,msgtag_open_densmat)
-       do i=1,ssym%n_irrep
-          allocate(help_arr(ssym%dim(i)*ssym%dim(i)*ssym%n_spin))
-          help_arr=pack(densmat(i)%m,.true.)
-          call commpack(help_arr,ssym%dim(i)*ssym%dim(i)*ssym%n_spin,1,info)
-          deallocate(help_arr)
-       end do
-       call comm_send()
-    else
-       allocate(densmat(ssym%n_irrep))
-       do i=1,ssym%n_irrep
-          allocate(help_arr(ssym%dim(i)*ssym%dim(i)*ssym%n_spin))
-          allocate(mask(ssym%dim(i),ssym%dim(i),ssym%n_spin))
-          mask=.true.
-          call communpack(help_arr,ssym%dim(i)*ssym%dim(i)*ssym%n_spin,1,info)
-          allocate(densmat(i)%m(ssym%dim(i),ssym%dim(i),ssym%n_spin))
-          densmat(i)%m=unpack(help_arr,mask,0.0_r8_kind)
-          deallocate(help_arr,mask)
-       end do
-    end if
-
+    call returnclose_iounit (io_u)
   end subroutine open_densmat
-  !*************************************************************
+
 
   subroutine copy2(a, b)
     implicit none

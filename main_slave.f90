@@ -63,7 +63,7 @@ use type_module
 use comm_module, only: comm_save_recv, comm_msgtag, &
      comm_master_host, comm_any_message
 use msgtag_module
-use density_data_module, only: density_data_free, open_densmat
+use density_data_module, only: density_data_free
 use virtual_levels_module, only: eigvec_vir_dealloc
 use pointcharge_module
 use induced_dipoles_module, only: send_receive_id
@@ -129,11 +129,10 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       call read_poten_e_3
       call send_receive_poten
    case (msgtag_density_data_free)
+      ! FIXME: density_data_free1() called from
+      ! elec_pot_and_field/potential_calc_module.f90 uses this tag.
       call say("density_data_free")
       call density_data_free()
-   case (msgtag_open_densmat)
-      call say("msgtag_open_densmat")
-      call open_densmat()
    case(msgtag_fit_coeff_send)
       call say("fit_coeff_receive")
       call fit_coeff_receive()

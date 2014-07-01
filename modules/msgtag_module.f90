@@ -219,7 +219,7 @@ INTEGER_T :: msgtag_stop_daemon    =      161
 INTEGER_T :: msgtag_packed_message =      163
 ! <<< any simple message, do unpacking
 !NTEGER_T :: msgtag_filenames=            164
-INTEGER_T :: msgtag_open_densmat =        165
+!NTEGER_T :: msgtag_open_densmat =        165
 !NTEGER_T :: msgtag_orb_plot_fit_sent =   166
 ! added by HH in pg_V2.1_hh (was 124-139, changed to ):
 INTEGER_T :: msgtag_response_rhs_h=       167
@@ -478,7 +478,7 @@ contains
     CMP(msgtag_stop_daemon)
     CMP(msgtag_packed_message)
 !   CMP(msgtag_filenames)
-    CMP(msgtag_open_densmat)
+!   CMP(msgtag_open_densmat)
     CMP(msgtag_response_rhs_h)
     CMP(msgtag_resp_sl_start_rhs)
     CMP(msgtag_resp_rhs_fitdim)

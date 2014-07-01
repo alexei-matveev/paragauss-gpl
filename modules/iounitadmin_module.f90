@@ -117,12 +117,6 @@ module  iounitadmin_module
   ! intended for tracing output that can be used to monitor
   ! state of calculation
 
-  !
-  ! This determines if subroutine write_to_output_units() writes to
-  ! STDOUT in addition to output_unit:
-  !
-  logical, parameter :: iounitadmin_use_stdout = .true.
-
   integer, parameter, private :: maxunits=199  ! maximal unit nbr
 !!!  integer, parameter, private :: maxunits=99  ! maximal unit nbr
   integer, parameter, private :: startunit=7   ! first free unit
@@ -457,34 +451,44 @@ contains
 
 
   !*************************************************************
-  subroutine write_to_output_units(message,inte,re)
-    !  Purpose: writes message to output, debug op and trace op
-    !------------ Declaration of formal parameters ---------------
-    character(len=*), intent(in) :: message
-    integer(kind=i4_kind),intent(in), optional :: inte
-    real(kind=r8_kind),intent(in), optional    :: re
+  subroutine write_to_output_units (message, inte, re)
+    !
+    ! Writes message to output, debug op and trace op.
+    !
+    use comm, only: comm_rank
+    implicit none
+    character (len=*), intent (in) :: message
+    integer (i4_kind), intent (in), optional :: inte
+    real (r8_kind), intent (in), optional :: re
     !** End of interface *****************************************
+
     if (no_output_unit_output) goto 100
-    if ( special_units_open ) then
-       if(present(inte).and..not.present(re)) then
-          write(output_unit,*) message,inte
-       elseif(present(re).and..not.present(inte)) then
-          write(output_unit,*) message,re
-       elseif(present(inte).and.present(re)) then
-          write(output_unit,*) message,inte,re
+
+    if (special_units_open) then
+       if (present (inte) .and. .not. present (re)) then
+          write (output_unit, *) message, inte
+       else if (present (re) .and. .not. present (inte)) then
+          write (output_unit, *) message, re
+       else if (present (inte) .and. present (re)) then
+          write (output_unit, *) message, inte, re
        else
-          write(output_unit,*) message
+          write (output_unit, *) message
        endif
     endif
 
 100 continue
-    if (iounitadmin_use_stdout) then
-       if (present(inte).and..not.present(re)) then
-          print *, message,inte
-       elseif(present(re).and..not.present(inte)) then
-          print *, message,re
-       elseif(present(re).and.present(inte)) then
-          print *, message,inte,re
+    ! When special  units are  not open the  above will do  nothing on
+    ! slave workers. Ideed  slaves not writing to disk  was one of the
+    ! reason of not opening these units, in the first place. STDOUT is
+    ! formally  not  disk,  but  still  some  IO.  It  would  be  only
+    ! consistent if we omit the output of slaves here too:
+    if (comm_rank() == 0 .or. special_units_open) then
+       if (present (inte) .and. .not. present (re)) then
+          print *, message, inte
+       else if (present (re) .and. .not. present (inte)) then
+          print *, message, re
+       else if (present (re) .and. present (inte)) then
+          print *, message, inte, re
        else
           print *, message
        endif

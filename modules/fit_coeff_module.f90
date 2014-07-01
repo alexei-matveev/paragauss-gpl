@@ -1370,63 +1370,44 @@ contains
 #endif /* ifdef FPP_FIT_COEFF_INIT */
 
   !*************************************************************
-  subroutine fit_coeff_normalize(spin_coeff)
+  subroutine fit_coeff_normalize (spin_coeff)
     !
-    !  Purpose: normalize the chargefit coefficients to the
-    !           total number of electrons
+    ! Normalize  the chargefit  coefficients  to the  total number  of
+    ! electrons.
     !
-    ! NOTE: normalization of the density fitting coefficients is
-    !       disabled. In a situation when an initial charge density
-    !       is provided for C atom in CH4 but not for H-atoms
-    !       it is equally wrong to scale the density on H atom up
-    !       by ~66% to match the total number of electron as not
-    !       to scale at all.
+    ! NOTE:  normalization  of  the  density fitting  coefficients  is
+    ! disabled.  In a  situation  when an  initial  charge density  is
+    ! provided for  C atom in  CH4 but not  for H-atoms it  is equally
+    ! wrong to  scale the density  on H atom  up by ~66% to  match the
+    ! total number of electron as not to scale at all.
     !
-    !       In a regular case, charge fit procedure is supposed to output
-    !       normalized fitting coefficients.
+    ! In a  regular case, charge  fit procedure is supposed  to output
+    ! normalized fitting coefficients.
     !
-    !  Subroutine called by: prescf
+    ! Subroutine called by: main_scf(), prescf
     !
-    !------------ Modules used -----------------------------------
     use occupation_module, only: get_n_elec, get_spin_diff, get_min_spin_diff
     use options_module
     implicit none
-    logical,optional,intent(in)      :: spin_coeff
-    !  if present and true the spin density coefficients are normalized too
+    logical, optional, intent(in) :: spin_coeff
+    !  if present and true the spin density coefficients are normalized
     ! *** end of interface ***
 
-    real(r8_kind) :: summ, n_elec, factor, spin_diff
+    real (r8_kind) :: summ, factor, spin_diff
 
-    summ = dot_product(coeff_charge, charge_norm)
+    ! FIXME: this renormalization is probably also not necessary:
+    if (present (spin_coeff)) then
+       if (spin_coeff .and. options_n_spin() > 1 .and. &
+            (options_xcmode() == xcmode_model_density .or. &
+            options_xcmode() == xcmode_extended_mda)) then
 
-    call get_n_elec(n_elec)
-
-    if ( summ == 0.0 ) then
-       WARN('fitted charge is zero')
-    else
-       ! summ might be zero if Veff is used
-       factor = n_elec / summ
-
-! DONT WARN('skip renormalization of charge_coeff')
-! DONT coeff_charge = coeff_charge * factor
-    endif
-
-    DPRINT   'fit_coeff_normalize: number of electrons', n_elec
-    DPRINT   'fit_coeff_normalize:       fitted charge', summ
-    DPRINT   "fit_coeff_normalize:                diff", summ - n_elec
-
-    if (present(spin_coeff) )then
-       if ( spin_coeff .and. options_n_spin() > 1 .and. &
-            ( options_xcmode() == xcmode_model_density .or. &
-              options_xcmode() == xcmode_extended_mda ) ) then
-
-          call get_spin_diff(spin_diff)
+          call get_spin_diff (spin_diff)
 
           ! to avoid devision by zero in case spin_diff /= 0 but summ == 0
           if (spin_diff == zero) then
              coeff_spin = zero
           else
-             summ = dot_product(coeff_spin, charge_norm)
+             summ = dot_product (coeff_spin, charge_norm)
 
              if (summ >= get_min_spin_diff()) then
                 factor = spin_diff / summ

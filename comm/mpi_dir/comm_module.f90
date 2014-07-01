@@ -108,7 +108,6 @@ module comm_module
   ! includes standard MPI fortran header file:
   USE_MPI, only: MPI_COMM_NULL, MPI_MAX_PROCESSOR_NAME
   use commpack_module ! interface for MPI packing and unpacking of data
-  use msgtag_module
   implicit none
   save ! save all variables defined in this module
   private
@@ -326,6 +325,7 @@ contains
     ! Sending private information to  slaves. Currently only for early
     ! testing.
     !
+    use msgtag_module, only: msgtag_commdata
     implicit none
     !** End of interface *****************************************
 
@@ -402,20 +402,26 @@ contains
 
   !***************************************************************
 
-  subroutine comm_init_send(target,msgtag)
-    ! purpose: Initialises send. First argument is only a dummy
-    !          which is needed to keep the PVM counterpart happy.
-    !------------ Declaration of formal parameters --------------
-    integer(kind=i4_kind),intent(in) :: target,msgtag
-    !** End of interface *****************************************
+  subroutine comm_init_send (target, msgtag)
+    !
+    ! Initialises send. First argument is only a dummy which is needed
+    ! to keep the PVM counterpart happy.
+    !
 #ifdef _DPRINT
-    if( verbose )then
+    use msgtag_module, only: msgtag_name
+#endif
+    implicit none
+    integer (i4_kind), intent (in) :: target, msgtag
+    !** End of interface *****************************************
+
+#ifdef _DPRINT
+    if (verbose) then
     print *, comm_myindex(), &
-         'comm_init_send: tag ',trim(msgtag_name(msgtag)), &
-         ' target=',target
+         'comm_init_send: tag ', trim (msgtag_name (msgtag)), &
+         ' target=', target
     endif
 #endif
-    call comm_init_send_buf(target,msgtag)
+    call comm_init_send_buf (target, msgtag)
   end subroutine comm_init_send
 
   !***************************************************************
@@ -454,10 +460,14 @@ contains
 
   !***************************************************************
 
-  subroutine comm_save_recv(source, msgtag, info)
+  subroutine comm_save_recv (source, msgtag, info)
     !
     ! Receive a message, block until a matching one arrives
     !
+    use msgtag_module, only: msgtag_error
+#ifdef _DPRINT
+    use msgtag_module, only: msgtag_name
+#endif
     implicit none
     integer(kind=i4_kind),intent(in) :: source, msgtag
     integer(kind=i4_kind), optional, intent(out) :: info
@@ -467,42 +477,46 @@ contains
     character(len=500) :: message
 
 #ifdef _DPRINT
-    if( verbose )then
+    if (verbose) then
        print *, comm_myindex(), &
-            'comm_save_recv: waiting for tag ',trim(msgtag_name(msgtag)), &
+            'comm_save_recv: waiting for tag ', trim (msgtag_name (msgtag)), &
             ' from=',source
     endif
 #endif
 
-    call comm_save_recv_c(source, msgtag, err)
-    if(present(info)) info = err
+    call comm_save_recv_c (source, msgtag, err)
+    if (present (info)) info = err
 
 #ifdef _DPRINT
-    if( verbose )then
+    if (verbose) then
        print *, comm_myindex(), &
-            'comm_save_recv: received tag ',trim(msgtag_name(comm_msgtag())), &
-            ' from=',source
+            'comm_save_recv: received tag ', trim (msgtag_name (comm_msgtag())), &
+            ' from=', source
     endif
 #endif
 
     ! FIXME: error handling code, possibly needs revision:
-    if( msgtag .eq. comm_any_message ) then
-       if ( comm_msgtag() .eq. msgtag_error) then
-          call communpack(message,err)
-          if (err.ne.0) call error_handler("comm_save_recv: &
-               & unpacking of error message failed")
-          call error_handler(message)
+    if (msgtag == comm_any_message) then
+       if (comm_msgtag() == msgtag_error) then
+          call communpack(message, err)
+          if (err /= 0) call error_handler &
+               ("comm_save_recv: unpacking of error message failed")
+          call error_handler (message)
        endif
     endif
   end subroutine comm_save_recv
 
   !***************************************************************
 
-  logical function comm_save_recv_nonblocking(source, msgtag, info)
+  logical function comm_save_recv_nonblocking (source, msgtag, info)
     !
-    ! Try to receive, but do not block if there is nothing
+    ! Try  to  receive,   but  do  not  block  if   there  is  nothing
     ! matching. Just return "false" in that case.
     !
+    use msgtag_module, only: msgtag_error
+#ifdef _DPRINT
+    use msgtag_module, only: msgtag_name
+#endif
     implicit none
     integer(kind=i4_kind), intent(in) :: source, msgtag
     integer(kind=i4_kind),optional,intent(out) :: info
@@ -511,31 +525,30 @@ contains
     integer(kind=i4_kind) :: recv, err
     character(len=500) :: message
 
-    recv = comm_save_recv_nonblocking_buf(source, msgtag)
+    recv = comm_save_recv_nonblocking_buf (source, msgtag)
     ASSERT(recv==0.or.recv==1)
-    if(present(info)) info = 0
+    if (present (info)) info = 0
 
-    if(recv.eq.0) &
-         comm_save_recv_nonblocking = .false.
+    if (recv == 0) comm_save_recv_nonblocking = .false.
 
-    if(recv.eq.1) then
+    if(recv == 1) then
        comm_save_recv_nonblocking = .true.
 
 #ifdef _DPRINT
-       if( verbose )then
+       if (verbose) then
          print *, comm_myindex(), &
-              'comm_save_recv_nonblocking: received tag ',trim(msgtag_name(msgtag)), &
-              ' from=',source
+              'comm_save_recv_nonblocking: received tag ', trim (msgtag_name (msgtag)), &
+              ' from=', source
        endif
 #endif
 
        ! FIXME: error handling code, possibly needs revision:
-       if(msgtag.eq. comm_any_message) then
-          if ( comm_msgtag().eq. msgtag_error) then
-             call communpack(message,err)
-             if (err.ne.0) call error_handler("comm_save_recv_nonblocking: &
-                  & unpacking of error message failed")
-             call error_handler(message)
+       if (msgtag == comm_any_message) then
+          if (comm_msgtag() == msgtag_error) then
+             call communpack (message, err)
+             if (err /= 0) call error_handler &
+                  ("comm_save_recv_nonblocking: unpacking of error message failed")
+             call error_handler (message)
           endif
        endif
     endif

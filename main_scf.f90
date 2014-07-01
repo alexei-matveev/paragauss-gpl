@@ -415,20 +415,16 @@ subroutine main_scf()
         call build_solv_ham()
      endif                                          !!!!!!!!!!!!!
 
+     enddo                      ! while (toggle_legacy_mode())
+     ! Parallel context from here on ...
+
      if (output_densmat) then
         call say ("densmat is written to file")
         call print_densmat (loop)
      endif
 
-     enddo                      ! while (toggle_legacy_mode())
-
-     ! Legacy mode ends here temporarily because of the entry point of
-     ! a GOTO that follows ...
-
      ! Entry point for "read_fitcoeff" and "read_scfstate":
 1000 continue
-
-     do while (toggle_legacy_mode ())
 
      ! Save fit coefficients and current SCF state if required
      if (options_save_fitcoeff()) then
@@ -448,10 +444,13 @@ subroutine main_scf()
      !
      ! Build Coulomb  and Fock  matrices.  This also  call reset_ham()
      ! which allocates  and initializes  Fock matrix in  ham_tot. Some
-     ! recover  options  jump  over  this call.   This  subroutine  is
-     ! executed by all workers:
+     ! recover options jump over this call.
      !
      call ham_calc_main (loop - first_loop + 1) ! relative cycle number
+
+     call stop_timer (timer_scf_ham)
+
+     do while (toggle_legacy_mode ())
 
      if (operations_solvation_effect .and. &
           loop >= first_loop + sol_start_cycle) then
@@ -459,32 +458,41 @@ subroutine main_scf()
         call solv_energy_el ()
      endif
 
-     if (calc_Pol_centers() .and.loop >= first_loop+1) then
+     if (calc_Pol_centers() .and. loop >= first_loop+1) then
         call dealloc_Pol_ham()
         call calc_id_energy()
      end if
 
-     call stop_timer (timer_scf_ham)
+     enddo                      ! while (toggle_legacy_mode())
+     ! Parallel context from here on ...
 
-     ! Write calculated energies
+     ! Write calculated  energies. Slaves  could always print  that to
+     ! stdout, however the values are partial there.
      call say ("write_energies")
-     if (output_scfloops .or. output_main_scf) call write_energies (output_unit)
-     if (output_scfloops .or. output_main_scf) call write_energies (stdout_unit)
+     if (output_scfloops .or. output_main_scf) then
+        call write_energies (output_unit)
+        if (comm_rank() == 0) then
+           call write_energies (stdout_unit)
+        endif
+     endif
      if (etot_recovered) then
-        500 format(2X, 'e_sum  =  ', F25.12, '  (recovered)')
-        if (output_scfloops .or. output_main_scf) write (output_unit, 500) tot_en
-        if (output_scfloops .or. output_main_scf) write (stdout_unit, 500) tot_en
+        if (output_scfloops .or. output_main_scf) then
+500        format(2X, 'e_sum  =  ', F25.12, '  (recovered)')
+           write (output_unit, 500) tot_en
+           if (comm_rank() == 0) then
+              write (stdout_unit, 500) tot_en
+           endif
+        endif
      else
         call get_energy (tot=tot_en)
      endif
      ! And pass energy to the convergence check module
      call convergence_put_energy (tot_en)
-     if (store_now) call store_total_energy ! reads tot_en
 
-     enddo                      ! while (toggle_legacy_mode())
-
-     ! Legacy mode ends here temporarily because of the entry point of
-     ! a GOTO that follows ...
+     if (store_now) then
+        ! Write tot_en to a file:
+        call store_total_energy()
+     endif
 
      ! Entry point for "read_ksmatrix":
 2000 continue
@@ -797,7 +805,9 @@ subroutine main_scf()
   end if
 
   call write_energies (output_unit)
-  if (output_main_scf) call write_energies (stdout_unit)
+  if (comm_rank() == 0) then
+     if (output_main_scf) call write_energies (stdout_unit)
+  endif
   call get_energy (tot=tot_en)
 
   ! Write to trace unit to show progress of calculation
@@ -1111,11 +1121,13 @@ contains
 
   subroutine do_fitcoeff_store (store_now, mode, tot_en)
     !
-    ! Purpose: saves the information for the "saved_fitcoeff" file.
+    ! Purpose:   saves  the   information  for   the  "saved_fitcoeff"
+    ! file. NOOP on slaves.
     !
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
     ! character (len=*) :: fit_file
+    use comm, only: comm_rank
     implicit none
     logical, intent (in) :: store_now
     integer (i4_kind), intent (in), optional :: mode
@@ -1123,6 +1135,8 @@ contains
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
+
+    if (comm_rank() /= 0) return
 
     if (store_now) then
        call readwriteblocked_startwrite (recfile (fit_file), th, variable_length=.true.)
@@ -1145,11 +1159,13 @@ contains
 
   subroutine do_scfstate_store (store_now, mode, tot_en)
     !
-    ! Purpose: saves the information for the "saved_scfstate" file.
+    ! Purpose:   saves  the   information  for   the  "saved_scfstate"
+    ! file. NOOP on slaves.
     !
     ! INTENT (IN)
     ! integer (i4_kind) :: loop
     ! character (len=*) :: fit_file
+    use comm, only: comm_rank
     implicit none
     logical, intent (in) :: store_now
     integer (i4_kind), intent (in), optional :: mode
@@ -1157,6 +1173,8 @@ contains
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
+
+    if (comm_rank() /= 0) return
 
     if (store_now) then
        call readwriteblocked_startwrite (recfile (scf_file), th, variable_length=.true.)
@@ -1263,9 +1281,13 @@ contains
     ! INTENT (IN)
     ! real   (r8_kind) :: tot_en
     ! character (len=*) :: fit_file, scf_file
+    use comm, only: comm_rank
+    implicit none
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
+
+    if (comm_rank() /= 0) return
 
     ! FIXME: this might be a dead code, is it ever used?
     if (options_save_fitcoeff()) then

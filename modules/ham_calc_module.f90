@@ -142,13 +142,9 @@ contains
   subroutine ham_calc_main (loop)
     !
     ! Entry point for building hamiltonian (Fock) matrix.  Executed in
-    ! parallel  context by  all  workers. Called  from main_scf()  and
-    ! man_slave() on master and slaves, respectively.
+    ! parallel context by all workers. Called from main_scf().
     !
     use comm, only: comm_rank, comm_bcast
-    use comm_module, only: comm_init_send, comm_send, &
-         comm_all_other_hosts                     ! MUSTDIE
-    use msgtag_module, only: msgtag_ham_calc_main ! MUSTDIE
     use symmetry_data_module, only: ssym
     use hamiltonian_module, only: reset_ham
     use energy_calc_module, only: init_energy
@@ -160,7 +156,7 @@ contains
     use bgy3d, only: bgy3d_term
 #endif
     implicit none
-    integer (i4_kind), value :: loop ! meaningfull on master only
+    integer (i4_kind) :: loop
     ! *** end of interface ***
 
     integer(i4_kind) :: rank
@@ -170,20 +166,6 @@ contains
 #endif
 
     rank = comm_rank()
-
-    !
-    ! Tell slaves to call ham_calc_main. FIXME: yet better call from a
-    ! parallel context ...
-    !
-    if (rank == 0) then
-      ! FIXME: legacy communication primitives here:
-      call comm_init_send (comm_all_other_hosts, msgtag_ham_calc_main)
-      ! ... the corresponding tag receive in main_slave
-      call comm_send()
-    endif
-
-    ! Broadcast to slaves, loop has the VALUE attribute:
-    call comm_bcast (loop)
 
     ! RESET_HAM allocates and initializes the necessary parts
     ! of the hamiltonian:

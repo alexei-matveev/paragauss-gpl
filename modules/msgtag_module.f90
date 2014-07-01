@@ -58,7 +58,7 @@ save
 !     msgtag_end    "Sabbath, my son!"
 #define INTEGER_T       integer(kind=i4_kind), parameter, public
 INTEGER_T :: msgtag_pert=                   2
-INTEGER_T :: msgtag_ham_calc_main =         3
+!NTEGER_T :: msgtag_ham_calc_main =         3
 !NTEGER_T :: msgtag_dens=                   4
 INTEGER_T :: msgtag_finito=                 5
 INTEGER_T :: msgtag_eigensolve=             6
@@ -306,7 +306,7 @@ contains
 #define CMP(x) if(tag==x) name=__STRING(x)
     name = 'undef'
     CMP(msgtag_pert)
-    CMP(msgtag_ham_calc_main)
+    !MP(msgtag_ham_calc_main)
     !MP(msgtag_dens)
     CMP(msgtag_finito)
     CMP(msgtag_eigensolve)

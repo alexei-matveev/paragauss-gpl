@@ -60,7 +60,6 @@ subroutine main_slave()
 
 #include "def.h"
 use type_module
-use ham_calc_module, only: ham_calc_main
 use comm_module, only: comm_save_recv, comm_msgtag, &
      comm_master_host, comm_any_message
 use msgtag_module
@@ -109,8 +108,6 @@ use qmmm_interface_module, only: slave_run
 implicit none
 integer (i4_kind) :: msgtag
 
-integer(i4_kind), parameter :: UNUSED_INT = -1
-
 do ! while comm_msgtag() /= msgtag_finito, then RETURN
 
    call comm_save_recv(comm_master_host, comm_any_message)
@@ -131,11 +128,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       call say("read_poten")
       call read_poten_e_3
       call send_receive_poten
-   case (msgtag_ham_calc_main)
-      call say("ham_calc_main")
-      ! invalid loop index:
-      call ham_calc_main(UNUSED_INT)
-
    case (msgtag_commdata)
       ABORT('is handled by comm_enroll()')
    case (msgtag_density_data_free)

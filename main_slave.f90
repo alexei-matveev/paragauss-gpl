@@ -128,8 +128,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       call say("read_poten")
       call read_poten_e_3
       call send_receive_poten
-   case (msgtag_commdata)
-      ABORT('is handled by comm_enroll()')
    case (msgtag_density_data_free)
       call say("density_data_free")
       call density_data_free()

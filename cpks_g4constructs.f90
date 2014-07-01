@@ -50,7 +50,6 @@ subroutine cpks_g4constructs()
   use linsys_module
   use init_module, only: init
   use mat_charge_module
-  use virtual_levels_module, only: eigvec_vir_dealloc
   use occupied_levels_module, ONLY: eigval_occ
   use calc3c_switches
   use cpksdervs_matrices

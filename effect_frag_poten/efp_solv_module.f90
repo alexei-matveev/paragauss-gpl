@@ -383,22 +383,25 @@ contains
 
   !*************************************************************
   subroutine calc_V_and_Q_id()
-    ! Purpose: Calculate electrostatic potential and point charges
-    !          at solute cavity surface points due to efp induced
-    !          dipoles
-    !------------ Modules used -----------------------------------
+    !
+    ! Calculate  electrostatic potential and  point charges  at solute
+    ! cavity  surface  points due  to  efp  induced  dipoles. NOOP  on
+    ! slaves.
+    !
     use potential_module, only: V_pot_id, V_pot_id1, N_points, point_in_space
     use solv_electrostat_module, only: A_matrix_inv
     use solv_cavity_module, only: dielectric_constant, Q_id, Q_id1
     use unique_atom_module, only: N_unique_atoms
-    !------------ Declaration of formal parameters ---------------
+    use comm, only: comm_rank
+    implicit none
     !** End of interface *****************************************
-    !----------- declaration of local variables -------------
+
     real(r8_kind) :: V,V1,r_sp(3),r_ip(3),D(3),D1(3),rr(3),dr
     integer(i4_kind) :: iu_sp,n_eq,ie_sp,iu_ip,ie_ip,n_eql,i
     real(r8_kind), allocatable :: V_buf(:)
     integer(i4_kind) :: status
-    !--- executable code-------------------------------------
+
+    if (comm_rank() /= 0) return
 
     V_pot_id=zero;  V_pot_id1=zero
 

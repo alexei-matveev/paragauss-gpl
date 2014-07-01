@@ -72,10 +72,10 @@ module potential_module
 
   public :: send_recv_space_point  ! ()
 
-  public start_read_poten_e,read_poten_e_3,get_poten_n,get_poten_pc, &
+  public :: start_read_poten_e, get_poten_n, get_poten_pc, &
        dealloc_space_points, deallocate_pot, &
        bounds_calc_poten, get_bounds_poten, &
-       bounds_free_poten,send_receive_poten, fill_points, &
+       bounds_free_poten, fill_points, &
        destroy_poten_file , &
        poten_integral_open,poten_integral_close
 
@@ -368,17 +368,19 @@ contains
   !******************************************************
 
   !*********************************************************
-  subroutine start_read_poten_e
-   !** End of interface *****************************************
+  subroutine start_read_poten_e()
+    implicit none
+    !** End of interface *****************************************
 
-    if(comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_start_poten)
-       call comm_send()
+    if (comm_parallel()) then
+       if (comm_i_am_master()) then
+          call comm_init_send (comm_all_other_hosts, msgtag_start_poten)
+          call comm_send()
+       endif
     endif
 
-    call read_poten_e_3
-    call send_receive_poten
-
+    call read_poten_e_3()
+    call send_receive_poten()
   end subroutine start_read_poten_e
   !*********************************************************
 

@@ -142,7 +142,7 @@ subroutine main_scf()
        readwriteblocked_stopread, readwriteblocked_startread, &
        readwriteblocked_startwrite, readwriteblocked_read, readwriteblocked_stopwrite, &
        readwriteblocked_write
-  use solv_electrostat_module, only: charge_mix_wrapper, build_solv_ham, &
+  use solv_electrostat_module, only: build_solv_ham, &
        dealloc_ham_solv, solv_energy_el, calc_q_e
   use solv_cavity_module, only: sol_start_cycle, n_Q_update
   use solv_charge_mixing_module, only: mix_charges, Qs_mix, Q_dealloc
@@ -394,23 +394,24 @@ subroutine main_scf()
            call build_Pol_ham (do_update)
 #endif
         end if
-
-        ! Calculating solvation hamiltonian
-        if (operations_solvation_effect .and. &
-             loop >= first_loop+sol_start_cycle) then
-           if (mod (loop - (first_loop + sol_start_cycle), n_Q_update) == 0) then
-              call calc_Q_e()
-           end if
-#ifdef WITH_EFP
-           if (do_pol_pcm .and. n_efp > 0) then
-              call calc_V_and_Q_id()
-           end if
-#endif
-           call charge_mix_wrapper (loop, first_loop + sol_start_cycle)
-           call build_solv_ham()
-        endif
      enddo                      ! while (toggle_legacy_mode())
      ! Parallel context from here on ...
+
+     ! Calculating solvation hamiltonian
+     if (operations_solvation_effect .and. &
+          loop >= first_loop+sol_start_cycle) then
+        if (mod (loop - (first_loop + sol_start_cycle), n_Q_update) == 0) then
+           do while (toggle_legacy_mode())
+              call calc_Q_e()
+           enddo
+        end if
+#ifdef WITH_EFP
+        if (do_pol_pcm .and. n_efp > 0) then
+           call calc_V_and_Q_id()
+        end if
+#endif
+        call build_solv_ham (loop, first_loop + sol_start_cycle)
+     endif
 
      if (output_densmat) then
         call say ("densmat is written to file")

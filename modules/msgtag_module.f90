@@ -184,7 +184,7 @@ INTEGER_T :: msgtag_finish_poten=         128
 !NTEGER_T :: msgtag_prescf_init =         129
 INTEGER_T :: msgtag_geom_grad=            130
 !NTEGER_T :: msgtag_Q_elec=               131
-INTEGER_T :: msgtag_solv_ham=             132
+!NTEGER_T :: msgtag_solv_ham=             132
 !NTEGER_T :: msgtag_back_ham_solv=        133
 INTEGER_T :: msgtag_surf_point=           134
 INTEGER_T :: msgtag_surf_point_sa=        135
@@ -446,7 +446,7 @@ contains
 !   CMP(msgtag_prescf_init)
     CMP(msgtag_geom_grad)
 !   CMP(msgtag_Q_elec)
-    CMP(msgtag_solv_ham)
+!   CMP(msgtag_solv_ham)
 !   CMP(msgtag_back_ham_solv)
     CMP(msgtag_surf_point)
     CMP(msgtag_surf_point_sa)

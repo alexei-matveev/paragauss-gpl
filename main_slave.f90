@@ -91,9 +91,7 @@ use main_epe_module, only : main_epe,                      &
                             defect_contributions,          &
                             defect_contributions_fin
 #endif
-use potential_module, only: bounds_free_poten, &
-     read_poten_e_3, send_receive_poten
-use solv_electrostat_module, only: build_solv_ham
+use potential_module, only: bounds_free_poten, start_read_poten_e
 use elec_static_field_module, only: receive_surf_point, &
      surf_points_gradinfo_dealloc,surf_points_grad_information,read_field_e,send_receive_field, &
      bounds_free_field
@@ -117,10 +115,9 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    case( msgtag_free_bnds_ptn )
       call say("free_bounds_poten")
       call bounds_free_poten()
-   case( msgtag_start_poten )
-      call say("read_poten")
-      call read_poten_e_3
-      call send_receive_poten
+   case (msgtag_start_poten)
+      call say("start_read_poten_e")
+      call start_read_poten_e()
    case (msgtag_density_data_free)
       ! FIXME: density_data_free1() called from
       ! elec_pot_and_field/potential_calc_module.f90 uses this tag.
@@ -195,9 +192,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
      call epe_finish_slave()
 !AG ========================= end of EPE-distribution ======================
 #endif
-  case (msgtag_solv_ham)
-     call say("build_solv_ham")
-     call build_solv_ham()
   case (msgtag_surf_point)
      call say("receive_surf_point")
      call receive_surf_point()

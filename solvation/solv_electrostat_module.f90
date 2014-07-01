@@ -76,7 +76,7 @@ module solv_electrostat_module
 
   public solv_poten_transfer_data, &
        calc_Q_e, &
-       charge_mix_wrapper, sphere2center, &
+       sphere2center, &
        alloc_ham_solv, &
        dealloc_ham_solv, solv_energy_el,&
        matrix_generation, matrix_grad,nuc_grad,matrix_grad_vtn,nuc_grad_vtn, &
@@ -962,8 +962,8 @@ contains
   !******************************************************
   subroutine charge_mix_wrapper (scf_iter, first_iter)
     !
-    ! Called on master from main_scf() just before build_solv_ham() is
-    ! invoked on all workers. Slaves do not seem to execute this sub.
+    ! Called on  master from build_solv_ham().  Slaves do  not seem to
+    ! execute this sub.
     !
     use solv_charge_mixing_module, only: solv_charge_mix, mix_charges
     use potential_module, only: N_points
@@ -978,25 +978,21 @@ contains
   !*********************************************************
 
   !******************************************************
-  subroutine build_solv_ham()
+  subroutine build_solv_ham (loop, first_loop)
     !
     ! Setup  the part  of  hamiltonian due  to the  electron-dependent
     ! electrostatic interactions between solute and solvent.
     !
-    ! Runs in  parallel context. Called from main_scf()  on master and
-    ! from main_slave() upon reveival of the message that is sent from
-    ! here.
+    ! Runs in parallel context. Called from main_scf().
     !
-    use comm_module, only: comm_i_am_master, comm_all_other_hosts, &
-         comm_init_send, comm_send
-    use msgtag_module, only: msgtag_solv_ham
+    use comm, only: comm_rank
     implicit none
+    integer (i4_kind), intent (in) :: loop, first_loop
     !** End of interface *****************************************
 
-    ! Tell slaves to also enter this subroutine:
-    if (comm_i_am_master()) then
-       call comm_init_send (comm_all_other_hosts, msgtag_solv_ham)
-       call comm_send()
+    ! Was previousely called from main_scf() on master only:
+    if (comm_rank() == 0) then
+       call charge_mix_wrapper (loop, first_loop)
     endif
 
     ! Broadcast Q_e, Q_id, etc. to all workers:

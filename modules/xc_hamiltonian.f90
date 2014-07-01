@@ -2485,45 +2485,50 @@ contains
 ! record  5: exc_int             [if numeric_exch]
 !*************************************************************
 
-   subroutine xc_hamiltonian_recover(th)
-     ! Purpose: recovers the XC hamiltonian and XC energy from a
-     !          readwriteblocked file in case the input switch
-     !          "read_scfstate" is set.
+   subroutine xc_hamiltonian_recover (th)
      !
-     ! subroutine called by: 'main_scf'
+     ! Recovers   the   XC   hamiltonian   and  XC   energy   from   a
+     ! readwriteblocked file in  case the input switch "read_scfstate"
+     ! is set.  Skips reading the  matrix elements if the  storage was
+     ! not allocated (on slaves).
+     !
+     ! Subroutine called by: main_scf()
      !
      ! UB 8/97
-     !------------ Modules ----------------------------------------
+     !
      use iounitadmin_module, only: write_to_output_units, output_unit
-     use output_module     , only: output_main_scf, output_data_read
+     use output_module , only: output_main_scf, output_data_read
      use readwriteblocked_module
-     !------------ Declaration of formal_parameters ---------------
-     type(readwriteblocked_tapehandle), intent(inout) :: th
+     implicit none
+     type (readwriteblocked_tapehandle), intent (inout) :: th
      !** End of interface *****************************************
-     !------------ Declaration of local variables   ---------------
-     allocatable           :: buffer
-     integer(kind=i4_kind) :: n_spin, spin_stored, arr_length
-     real(kind=r8_kind)    :: dummy(1), arr_dim(2), num_exch(1), buffer(:), &
-                              zero = 0.0_r8_kind, half = 0.5_r8_kind
-     logical               :: numeric_exch
-     integer               :: alloc_stat
-     !------------ Executable code --------------------------------
+
+     integer (i4_kind) :: n_spin, spin_stored, arr_length
+     real (r8_kind) :: dummy(1), arr_dim(2), num_exch(1)
+     real (r8_kind), allocatable :: buffer(:)
+     real (r8_kind), parameter :: zero = 0.0_r8_kind, half = 0.5_r8_kind
+     logical :: numeric_exch
+     integer :: alloc_stat
+
+     ! FIXME:  The arrays  to  hold  the data  are  allocated late  on
+     ! slaves!
+
      n_spin = options_n_spin()
      numeric_exch = options_xcmode() == xcmode_numeric_exch
 
-     call readwriteblocked_read(num_exch,th)
+     call readwriteblocked_read (num_exch, th)
      if (output_data_read) then
-        write(output_unit,'(/ a     )')'Recovered XC(num) matrix :'
-        write(output_unit,'(  a     )')'numeric exchange used ?'
-        write(output_unit,'(4es20.13)')num_exch(1)
+        write (output_unit, '(/ a     )') 'Recovered XC(num) matrix :'
+        write (output_unit, '(  a     )') 'numeric exchange used ?'
+        write (output_unit, '(4es20.13)') num_exch(1)
      endif
      if (num_exch(1) /= zero) then
-        call readwriteblocked_read(arr_dim,th)
-        spin_stored = int(arr_dim(1),i4_kind)
-        arr_length = int(arr_dim(2),i4_kind)
+        call readwriteblocked_read (arr_dim, th)
+        spin_stored = int (arr_dim(1), i4_kind)
+        arr_length = int (arr_dim(2), i4_kind)
         if (output_data_read) then
-           write(output_unit,'(  a     )')'n_spin, xc_length'
-           write(output_unit,'(4es20.13)')arr_dim(1:2)
+           write (output_unit, '(  a     )') 'n_spin, xc_length'
+           write (output_unit, '(4es20.13)') arr_dim(1:2)
         endif
         if (numeric_exch) then
            if (output_main_scf) call write_to_output_units &
@@ -2532,10 +2537,10 @@ contains
         else
            if (output_main_scf) call write_to_output_units &
                 ("XC_HAMILTONIAN_REC: XC hamiltonian ignored")
-           call readwriteblocked_skipread(arr_length+1,th)
+           call readwriteblocked_skipread (arr_length + 1, th)
            if (output_data_read) then
-              write(output_unit,'(  a     )')'ham_xc_arr skipped'
-              write(output_unit,'(  a     )')'exc_int    skipped'
+              write (output_unit, '(  a     )') 'ham_xc_arr skipped'
+              write (output_unit, '(  a     )') 'exc_int    skipped'
            endif
            return
         endif
@@ -2549,7 +2554,7 @@ contains
         return
      endif
 
-     ! start recovering XC hamiltonian now
+     ! Start recovering XC hamiltonian now
      if (spin_stored > n_spin .and. output_main_scf) then
         call write_to_output_units &
              ("XC_HAMILTONIAN_REC: trying to convert spin-polarized data from")
@@ -2566,47 +2571,65 @@ contains
      endif
 
      if (options_spin_orbit) then
-        call readwriteblocked_read(ham_xc_arr_real(1:xc_length:1),th)
-        call readwriteblocked_read(ham_xc_arr_imag(1:xc_length:1),th)
+        if (allocated (ham_xc_arr_real)) then
+           call readwriteblocked_read (ham_xc_arr_real(1:xc_length:1), th)
+           call readwriteblocked_read (ham_xc_arr_imag(1:xc_length:1), th)
+        else
+           call readwriteblocked_skipread (xc_length, th)
+           call readwriteblocked_skipread (xc_length, th)
+        endif
      else
-        call readwriteblocked_read(ham_xc_arr(1:xc_length:n_spin),th)
-     endif
-     if (output_data_read) then
-        write(output_unit,'( a,i1,a )')'ham_xc_arr(1:xc_length:',n_spin,')'
-        write(output_unit,'(4es20.13)')ham_xc_arr(1:xc_length:n_spin)
+        if (allocated (ham_xc_arr)) then
+           call readwriteblocked_read (ham_xc_arr(1:xc_length:n_spin), th)
+           if (output_data_read) then
+              write(output_unit, '( a,i1,a )') 'ham_xc_arr(1:xc_length:',n_spin,')'
+              write(output_unit, '(4es20.13)') ham_xc_arr(1:xc_length:n_spin)
+           endif
+        else
+           call readwriteblocked_skipread (xc_length / n_spin, th)
+        endif
      endif
      if (spin_stored > 1) then
         if (n_spin > 1) then
-           call readwriteblocked_read(ham_xc_arr(2:xc_length:2),th)
-           if (output_data_read) then
-              write(output_unit,'(  a     )')'ham_xc_arr(2:xc_length:2)'
-              write(output_unit,'(4es20.13)')ham_xc_arr(2:xc_length:2)
+           if (allocated (ham_xc_arr)) then
+              call readwriteblocked_read (ham_xc_arr(2:xc_length:2), th)
+              if (output_data_read) then
+                 write (output_unit, '(  a     )') 'ham_xc_arr(2:xc_length:2)'
+                 write (output_unit, '(4es20.13)') ham_xc_arr(2:xc_length:2)
+              endif
+           else
+              call readwriteblocked_skipread (xc_length / 2, th)
            endif
         else
-           allocate(buffer(xc_length),stat=alloc_stat)
-           if (alloc_stat.ne.0) call error_handler &
-                ("XC_HAMILTONIAN_REC: allocation of buffer failed")
-           call readwriteblocked_read(buffer,th)
-           if (output_data_read) then
-              write(output_unit,'(  a     )')'ham_xc_arr(2:xc_length:2)'
-              write(output_unit,'(4es20.13)')buffer
+           if (allocated (ham_xc_arr)) then
+              allocate (buffer(xc_length), stat=alloc_stat)
+              if (alloc_stat.ne.0) call error_handler &
+                   ("XC_HAMILTONIAN_REC: allocation of buffer failed")
+              call readwriteblocked_read (buffer, th)
+              if (output_data_read) then
+                 write (output_unit, '(  a     )') 'ham_xc_arr(2:xc_length:2)'
+                 write (output_unit, '(4es20.13)') buffer
+              endif
+              ham_xc_arr = (ham_xc_arr + buffer) * half
+              deallocate (buffer, stat=alloc_stat)
+              if (alloc_stat.ne.0) call error_handler &
+                   ("XC_HAMILTONIAN_REC: deallocation of buffer failed")
+           else
+              call readwriteblocked_skipread (xc_length, th)
            endif
-           ham_xc_arr = ( ham_xc_arr + buffer ) * half
-           deallocate(buffer,stat=alloc_stat)
-           if (alloc_stat.ne.0) call error_handler &
-                ("XC_HAMILTONIAN_REC: deallocation of buffer failed")
         endif
      elseif (n_spin > 1) then
-        ham_xc_arr(2:xc_length:2) = ham_xc_arr(1:xc_length:2)
+        if (allocated (ham_xc_arr)) then
+           ham_xc_arr(2:xc_length:2) = ham_xc_arr(1:xc_length:2)
+        endif
         mat_initialized = .true. ! because the spin polarization is missing
      endif
-     call readwriteblocked_read(dummy(1:1),th)
+     call readwriteblocked_read (dummy(1:1), th)
      exc_int = dummy(1)
      if (output_data_read) then
-        write(output_unit,'(  a     )')'exc_int'
-        write(output_unit,'(4es20.13)')dummy(1)
+        write (output_unit, '(  a     )') 'exc_int'
+        write (output_unit, '(4es20.13)') dummy(1)
      endif
-
    end subroutine xc_hamiltonian_recover
    !*************************************************************
 

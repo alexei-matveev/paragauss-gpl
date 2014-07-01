@@ -48,7 +48,7 @@ module xc_hamiltonian
 !           the routine xc_clean is called internally between scf_cycles
 !           in order to reset variables to zero.
 !
-!           The main routine is called build_xc ( the wrapper build_xc_main)
+!           The main routine is called xc_build
 !           In this routine the hamiltonian is stored in one linear array
 !           The following tasks are performed:
 !            ! calculation of the orbitals and orbitalgradients
@@ -153,7 +153,7 @@ module xc_hamiltonian
   real(kind=r8_kind),public  :: s_average
 
 !------------ public functions and subroutines ------------------
-  public :: xc_setup, build_xc_main, build_xc, xc_close, &
+  public :: xc_setup, xc_build, xc_close, &
        & xc_hamiltonian_store, xc_hamiltonian_recover,&
        & xc_get_exc
 
@@ -231,28 +231,6 @@ module xc_hamiltonian
 
 contains
 
-
-  subroutine build_xc_main(loop)
-    ! purpose : wrapper for build_xc; it runs only on the master and sends
-    !           the message "execute build_xc" to the slaves. Subsequently
-    !           build_xc is called. build_xc_main is called in every scf-
-    !           cycle by main_scf.
-    ! ------ Modules -------------------------------------------
-    use msgtag_module, only: msgtag_build_xc
-    implicit none
-    integer(kind=i4_kind),optional :: loop ! number of the actual scf-cycle
-                                           ! (within the current SCF run)
-    !** End of interface *****************************************
-
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts, msgtag_build_xc)
-       call comm_send()
-    endif
-
-    call build_xc(loop=loop)
-  end subroutine build_xc_main
-
-  !***********************************************************
 
   subroutine xc_allocate()
     use xc_cntrl, only: is_on, xc_so_spatial, xc_nl_calc
@@ -545,7 +523,7 @@ contains
        !
 !!$       allocate(help_arr(vec_length),stat=alloc_stat)
        if(comm_i_am_master()) then
-          ! the old XC matrix now is a temporary array of build_xc
+          ! the old XC matrix now is a temporary array of xc_build
           ! and the XC matrix is no longer allocated in main_scf
           allocate(ham_xc_arr(xc_length),stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
@@ -700,7 +678,7 @@ contains
      endif
 
      if (comm_i_am_master()) then
-        ! the old XC matrix now is a temporary array of build_xc
+        ! the old XC matrix now is a temporary array of xc_build
         ! and the XC matrix is no longer allocated in main_scf
         if (options_spin_orbit) then
            deallocate(ham_xc_arr_real,ham_xc_arr_imag,stat=alloc_stat)
@@ -1051,15 +1029,16 @@ contains
 
     end subroutine calc_xcks
 
-    subroutine build_xc(loop)
-    ! purpose : main routine for calculation of the numerical
-    !           XC-Hamiltonian
-    !           The elements of the hamiltonian are stored in the
-    !           linear array ham_xc_arr
-    ! Input-Parameter:
-    !   loop               number of SCF-cycle (within current SCF run)
-    !   vpnm (optional)    if called from master, this is the VPN
-    !
+    subroutine xc_build (loop)
+      !
+      ! Main routine  for calculation of  the numerical XC-Hamiltonian
+      ! The elements of the hamiltonian are stored in the linear array
+      ! ham_xc_arr(:).
+      !
+      ! Input-Parameter:
+      !   loop number of SCF-cycle (within current SCF run)
+      !
+      !
     use timer_module
     use time_module
     use occupation_module, only: get_n_elec
@@ -1067,8 +1046,7 @@ contains
     use xc_cntrl, only: is_on, whatis, xc_so_spatial,&
          & xc_nl_calc, xc_gga_version, xc_sop_version
     use iounitadmin_module, only: output_unit
-!!$    use xc_ham_trafo, only: show_ham
-    integer(kind=i4_kind),optional :: loop
+    integer (i4_kind)  :: loop
     !** End of interface *****************************************
 
     integer(kind=i4_kind) :: alloc_stat
@@ -1138,25 +1116,25 @@ contains
           ! GGA calculation
           !
           ASSERT(whatis(xc_GGA_version)==2)
-          DPRINT "xch/build_xc: calling GGA ..."
+          DPRINT "xch/xc_build: calling GGA ..."
           call calc_xcks_nl(ham_xc_arr)
-          DPRINT "xch/build_xc: ... done"
+          DPRINT "xch/xc_build: ... done"
        endif
     else
        ! SPIN ORBIT
        if (spin_orbit_polarized) then
           ! OPEN SHELL
           ASSERT(whatis(xc_sop_version)==2)
-          DPRINT 'xch/build_xc: call calc_xcks_sop() ...'
+          DPRINT 'xch/xc_build: call calc_xcks_sop() ...'
           call calc_xcks_sop()
-          DPRINT 'xch/build_xc: ... done'
+          DPRINT 'xch/xc_build: ... done'
        else
           ! CLOSED SHELL
           if(is_on(xc_so_spatial))then
              call calc_xcks_space_so(ham_xc_arr_real, ham_xc_arr)
           else
              if(xc_nl_calc)then
-                call error_handler("xch/build_xc: for SO-GGA use eg. XC='bp,spatial' key")
+                call error_handler("xch/xc_build: for SO-GGA use eg. XC='bp,spatial' key")
              endif
              call calc_xcks_so()
           endif
@@ -1199,11 +1177,11 @@ contains
        if (options_spin_orbit) then
           deallocate(ham_xc_arr_old_real,ham_xc_arr_old_imag,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('deallocation failed in su build_xc')
+               ('deallocation failed in su xc_build')
        else
           deallocate(ham_xc_arr_old,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('deallocation failed in su build_xc')
+               ('deallocation failed in su xc_build')
        endif
     end if
     call xc_deallocate()
@@ -1213,18 +1191,18 @@ contains
        if (options_spin_orbit) then
           deallocate(ham_xc_arr_real,ham_xc_arr_imag,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('deallocation failed in su build_xc')
+               ('deallocation failed in su xc_build')
        else
           deallocate(ham_xc_arr,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('deallocation failed in su build_xc')
+               ('deallocation failed in su xc_build')
        endif
     endif
 
     if(options_spin_orbit.and.is_on(xc_so_spatial))then
        deallocate(ham_xc_arr,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('xcm/build_xc: ham_xc_arr dealloc failed')
+               ('xcm/xc_build: ham_xc_arr dealloc failed')
     endif
 
     if(comm_i_am_master()) then
@@ -1665,7 +1643,7 @@ contains
                        p_dn_real(1:vla,j,1)*p_dn_imag(1:vla,k,1)-&
                        p_dn_imag(1:vla,j,1)*p_dn_real(1:vla,k,1))*&
                        grdwts(1:vla)
-                  !call buggy("build_xc: now loop over partners")
+                  !call buggy("xc_build: now loop over partners")
                   do m=2,partners(i)
                      help_arr_real(1:vla)=help_arr_real(1:vla)+&
                           ( p_up_real(1:vla,j,m)*p_up_real(1:vla,k,m)+&
@@ -2025,7 +2003,7 @@ contains
 !!$                  do k=1,j
 !!$                     help_xc_real=0.0_r8_kind
 !!$                     help_xc_imag=0.0_r8_kind
-!!$                     !call buggy("build_xc: calculate help_arr_real")
+!!$                     !call buggy("xc_build: calculate help_arr_real")
 !!$                     ! <chij,up|chik,up>
 !!$                     help_arr_uu_real(1:vla)=&
 !!$                          ( p_up_real(1:vla,j,1)*p_up_real(1:vla,k,1)+&
@@ -2056,7 +2034,7 @@ contains
 !!$                          (p_dn_real(1:vla,j,1)*p_dn_imag(1:vla,k,1)-&
 !!$                          p_dn_imag(1:vla,j,1)*p_dn_real(1:vla,k,1))*&
 !!$                          grdwts(1:vla)
-!!$                     !call buggy("build_xc: now loop over partners")
+!!$                     !call buggy("xc_build: now loop over partners")
 !!$                     do m=2,partners(i)
 !!$                        ! <chij,up|chik,up>
 !!$                        help_arr_uu_real(1:vla)=help_arr_uu_real(1:vla)+&
@@ -2089,7 +2067,7 @@ contains
 !!$                             p_dn_imag(1:vla,j,m)*p_dn_real(1:vla,k,m))*&
 !!$                             grdwts(1:vla)
 !!$                     enddo! loop over partners
-!!$                     !call buggy("build_xc: building of xc_hamiltonian")
+!!$                     !call buggy("xc_build: building of xc_hamiltonian")
 !!$                     ! building of xc_hamiltonian
 !!$                     !
 !!$                     ! df/dn
@@ -2210,15 +2188,15 @@ contains
 !!$                  do k=1,j
 !!$                     help_xc_real=0.0_r8_kind
 !!$                     help_xc_imag=0.0_r8_kind
-!!$                     !call buggy("build_xc: calculate help_arr_real")
-!!$                     !print*,"build_xc: calculate help_arr_real"
+!!$                     !call buggy("xc_build: calculate help_arr_real")
+!!$                     !print*,"xc_build: calculate help_arr_real"
 !!$                     help_arr_real(1:vla)=&
 !!$                          ( p_up_real(1:vla,j,1)*p_up_real(1:vla,k,1)+&
 !!$                          p_up_imag(1:vla,j,1)*p_up_imag(1:vla,k,1)+&
 !!$                          p_dn_real(1:vla,j,1)*p_dn_real(1:vla,k,1)+&
 !!$                          p_dn_imag(1:vla,j,1)*p_dn_imag(1:vla,k,1))*&
 !!$                          grdwts(1:vla)
-!!$                     !call buggy("build_xc: calculate help_arr_imag")
+!!$                     !call buggy("xc_build: calculate help_arr_imag")
 !!$                     help_arr_imag(1:vla)=&
 !!$                          ( p_up_real(1:vla,j,1)*p_up_imag(1:vla,k,1)-&
 !!$                          p_up_imag(1:vla,j,1)*p_up_real(1:vla,k,1)+&
@@ -2289,7 +2267,7 @@ contains
 !!$                          p_dn_imag(1:vla,j,1)*q_dn_real(1:vla,3,k,1))*&
 !!$                          grdwts(1:vla)
 !!$
-!!$                     !call buggy("build_xc: now loop over partners")
+!!$                     !call buggy("xc_build: now loop over partners")
 !!$                     do m=2,partners(i)
 !!$                        help_arr_real(1:vla)=help_arr_real(1:vla)+&
 !!$                             ( p_up_real(1:vla,j,m)*p_up_real(1:vla,k,m)+&
@@ -2364,7 +2342,7 @@ contains
 !!$                             p_dn_imag(1:vla,j,m)*q_dn_real(1:vla,3,k,m))*&
 !!$                             grdwts(1:vla)
 !!$                     enddo! loop over partners
-!!$                     !call buggy("build_xc: building of xc_hamiltonian")
+!!$                     !call buggy("xc_build: building of xc_hamiltonian")
 !!$                     ! building of xc_hamiltonian
 !!$                     ! LDA-part of XC-Matrix
 !!$                     help_arr_real(1:vla) = help_arr_real(1:vla)*dfdrho(1:vla,1)
@@ -2412,7 +2390,7 @@ contains
 !!$      endif
     end subroutine calc_xcks_nl_so
 
-  end subroutine build_xc
+  end subroutine xc_build
 
    !*********************************************************
 
@@ -2630,7 +2608,7 @@ contains
      !          The procedure is analogous to the one for the analytical
      !          matrixelements. ( see integral_calc_quad_2cob3c)
      !
-     ! subroutine called by: 'build_xc'
+     ! subroutine called by: 'xc_build'
      !
      ! MS,8/97
      !------------ Modules ----------------------------------------

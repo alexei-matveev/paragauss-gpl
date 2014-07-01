@@ -80,7 +80,7 @@ module xcfit_hamiltonian
   !== Interrupt end of public interface of module =================
 
   !------------ public functions and subroutines ------------------
-  public :: build_xcfit_main, xcfit_setup, build_xcfit, xcfit_close
+  public :: xcfit_setup, xcfit_build, xcfit_close
 
 !================================================================
 ! End of public interface of module
@@ -103,22 +103,6 @@ module xcfit_hamiltonian
 
 
 contains
-
-  subroutine build_xcfit_main(loop)
-    ! purpose : wrapper for build_xcfit; it runs only on the master and sends
-    !           the message "execute build_xcfit" to the slaves. Subsequently
-    !           build_xc is called. build_xcfit_main is called in every scf-
-    !           cycle by main_scf
-    integer(kind=i4_kind),optional :: loop ! number of the actual scf-cycle
-    !** End of interface *****************************************
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts,msgtag_build_xcfit)
-       call comm_send()
-    endif
-    call build_xcfit(loop)
-  end subroutine build_xcfit_main
-
-  !***********************************************************
 
   subroutine xcfit_allocate()
     use machineparameters_module, only: machineparameters_veclen
@@ -263,9 +247,9 @@ contains
 
    !***************************************************************
 
-   subroutine build_xcfit(loop)
-     ! purpose : main routine for fitting the xc-hamiltonian
-     !           XC-Hamiltonian
+   subroutine xcfit_build (loop)
+     !
+     ! Main routine for fitting the xc-hamiltonian XC-Hamiltonian
      !
      use vwnc
      use time_module
@@ -274,8 +258,9 @@ contains
      use density_calc_module, only: density_calc
      use grid_module, only: more_grid, grid_loop_setup
      implicit none
-     integer(kind=i4_kind),optional :: loop ! number of the current scf cycle
+     integer (i4_kind) :: loop ! number of the current scf cycle
      !** End of interface *****************************************
+
      real(kind=r8_kind),parameter :: deps=1.0e-50_r8_kind
      integer(kind=i4_kind) :: i,j,s,vec_length_act,counter
      logical:: use_model_density
@@ -381,7 +366,7 @@ contains
         ! now mixing the xc-coefficients
         call mixing_xc(loop-1) ! iter=loop-1 instead of iter=loop : in order
                                ! to stay consistent with the V14alpha version
-                               ! of the PARAGAU program, where build_xcfit was
+                               ! of the PARAGAU program, where xcfit_build was
                                ! still located at the  e n d  of the SCF loop.
                                ! This way iter=1 at the first call of mixing_xc
         ! the old exchange coefficients are not needed anymore
@@ -392,7 +377,7 @@ contains
      end if
      call xcfit_deallocate()
 
-   end subroutine build_xcfit
+   end subroutine xcfit_build
 
    !***************************************************************
 

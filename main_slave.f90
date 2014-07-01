@@ -64,11 +64,7 @@ use ham_calc_module, only: ham_calc_main
 use comm_module, only: comm_save_recv, comm_msgtag, &
      comm_master_host, comm_any_message
 use msgtag_module
-use xc_hamiltonian, only: build_xc
-use xcfit_hamiltonian, only: build_xcfit
-use xcmda_hamiltonian, only: build_xcmda
 use density_data_module, only: density_data_free, open_densmat
-use occupied_levels_module, only: sndrcv_eigvec_occ1
 use virtual_levels_module, only: eigvec_vir_dealloc
 use pointcharge_module
 use induced_dipoles_module, only: send_receive_id
@@ -122,9 +118,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    msgtag = comm_msgtag()
    DPRINT 'main_slave: received msgtag=', msgtag
    select case (msgtag)
-   case( msgtag_occ_levels)
-      call say("receive_eigvec_occ")
-      call sndrcv_eigvec_occ1()
    case( msgtag_eigvec_vir_dealloc )
       ! if a sub needs to be executed on master AND slaves ---
       !  CALL IT PROM THE PARALLEL CONTEXT!
@@ -145,15 +138,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
 
    case (msgtag_commdata)
       ABORT('is handled by comm_enroll()')
-   case (msgtag_build_xc)
-      call say("build_xc")
-      call build_xc()
-   case (msgtag_build_xcfit)
-      call say("build_xcfit")
-      call build_xcfit()
-   case (msgtag_build_xcmda)
-      call say("build_xcmda")
-      call build_xcmda()
    case (msgtag_density_data_free)
       call say("density_data_free")
       call density_data_free()

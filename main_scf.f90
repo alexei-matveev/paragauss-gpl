@@ -78,8 +78,7 @@ subroutine main_scf()
        occupation_print_spectrum, occupation_get_holes
   use fermi_module, only: fermi_reoccup, fermi_level_broad, fermi_get_entropy, &
        fermi_write_input, fermi_read_scfcontrol
-  use occupied_levels_module, only: sndrcv_eigvec_occ, &
-       sndrcv_eigvec_occ1
+  use occupied_levels_module, only: sndrcv_eigvec_occ
   use options_module, only: xcmode_model_density, xcmode_extended_mda, &
        xcmode_numeric_exch, recover_fitcoeff, recover_scfstate, recover_ksmatrix, &
        xcmode_exchange_fit, recover_eigenvec, recover_fragment, options_save_ksmatrix, &
@@ -95,11 +94,11 @@ subroutine main_scf()
        write_to_trace_unit, write_to_output_units, openget_iounit, returnclose_iounit
   use grid_module, only: grid_main, grid_close
   use xc_cntrl, only: xc_is_on=>is_on, xc_ANY
-  use xc_hamiltonian, only: xc_setup, build_xc_main, &
+  use xc_hamiltonian, only: xc_setup, xc_build, &
        xc_hamiltonian_store, xc_hamiltonian_recover, xc_close, s_average
-  use xcfit_hamiltonian, only: xcfit_setup, build_xcfit_main, xcfit_close
+  use xcfit_hamiltonian, only: xcfit_setup, xcfit_build, xcfit_close
   use xcmda_hamiltonian, only: xcmda_setup, xcmda_coeff_store, &
-       build_xcmda_main, xcmda_coeff_recover, xcmda_close, &
+       xcmda_build, xcmda_coeff_recover, xcmda_close, &
        rho_exact, comp_exact
   use convergence_module, only: convergence_abort_calculation, convergence, &
        convergence_check_density_dev, convergence_max_iterations, &
@@ -110,7 +109,8 @@ subroutine main_scf()
        convergence_put_coulomb_dev, convergence_shutdown
   use eigen_data_module, only: print_eigendata, eigvec_write, eigen_data_dump
   use fit_coeff_module, only: print_coeff_charge, &
-       fit_coeff_store, fit_coeff_recover, fit_coeff_send, fit_coeff_normalize
+       fit_coeff_store, fit_coeff_recover, fit_coeff_send, fit_coeff_sndrcv, &
+       fit_coeff_normalize, ICHFIT
 #ifdef WITH_CORE_DENS
   use fit_coeff_module, only: write_coeff_core
 #endif
@@ -339,41 +339,46 @@ subroutine main_scf()
         end select
      endif
 
-     ! The code inside  this DO block is executed  on master only. The
-     ! slaves  are spinning  in  main_slave() and  waiting for  orders
-     ! during that time:
-     do while (toggle_legacy_mode ())
-
      ! Calculation of exchange-correlation hamiltonian:
      if (xc_is_on (xc_ANY)) then
+        ASSERT(comm_same(xcmode))
         select case (xcmode)
+
         case (xcmode_model_density, xcmode_extended_mda)
-           if (comm_parallel()) then
-              call say ("fit_coeff_send")
-              call fit_coeff_send()
+           ABORT("verify SPMD")
+           call say ("fit_coeff_sndrcv")
+           call fit_coeff_sndrcv (ICHFIT)
+           if ((rho_exact .or. comp_exact) .and. loop /= first_loop) then
+              call sndrcv_eigvec_occ()
            endif
-           if ((rho_exact .or. comp_exact) .and. loop /= first_loop) call sndrcv_eigvec_occ1()
            call start_timer (timer_scf_xc)
            call say ("xcmda_build_ham")
-           call build_xcmda_main ((loop == first_loop))
+           call xcmda_build ((loop == first_loop))
            call stop_timer (timer_scf_xc)
 
         case (xcmode_numeric_exch)
            if (loop /= first_loop) then
               call start_timer (timer_scf_xc)
-              call say ("build_xc_main")
-              call build_xc_main (loop-first_loop+1) ! <<< relative cycle number
+              call say ("xc_build")
+              ! Call with relative cycle number:
+              call xc_build (loop - first_loop + 1)
               call stop_timer (timer_scf_xc)
            endif
+
         case (xcmode_exchange_fit)
            if (loop /= first_loop) then
               call start_timer (timer_scf_xc)
-              call say ("xcfit_build_ham")
-              call build_xcfit_main (loop)
+              call say ("xcfit_build")
+              call xcfit_build (loop)
               call stop_timer (timer_scf_xc)
            endif
         end select
      endif
+
+     ! The code inside  this DO block is executed  on master only. The
+     ! slaves  are spinning  in  main_slave() and  waiting for  orders
+     ! during that time:
+     do while (toggle_legacy_mode ())
 
      if (calc_Pol_centers() .and. loop >= first_loop+1) then
         if (loop == first_loop+1) then
@@ -1053,7 +1058,8 @@ contains
         endif
           call say ("XC(MDA) coefficients re-computed during recover")
           call start_timer (timer_scf_xc)
-          call build_xcmda_main (.false.)
+          ABORT("SPMD?")
+          call xcmda_build (.false.)
           call stop_timer (timer_scf_xc)
        endif
 

@@ -134,8 +134,7 @@ module occupied_levels_module
 
 !------------ public functions and subroutines ------------------
   public :: eigvec_occ_dealloc!()
-  public sndrcv_eigvec_occ, sndrcv_eigvec_occ1
-
+  public :: sndrcv_eigvec_occ
   public :: update_eigvec_occ!(), to be executed in parallel context
 
 !================================================================
@@ -145,35 +144,11 @@ module occupied_levels_module
 !------------ Subroutines ---------------------------------------
 contains
 
-  !*************************************************************
-  subroutine sndrcv_eigvec_occ1()
-    !  Purpose: sometimes eigvec are sended from a complete master only
-    !           context, this functions enables the usage of sndrcv in
-    !             it
-    !             master sends command to join in his subroutine to slaves
-    !             slaves will also enter this routine
-    !------------ Modules used ------------------- ---------------
-    use comm_module, only: comm_init_send, comm_send, comm_i_am_master, &
-        comm_all_other_hosts
-    use msgtag_module, only: msgtag_occ_levels
-    implicit none
-    !------------ Declaration of formal parameters ---------------
-    !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
-
-    if (comm_i_am_master()) then
-      call comm_init_send(comm_all_other_hosts, msgtag_occ_levels)
-      call comm_send()
-    end if
-    call sndrcv_eigvec_occ()
-  end subroutine sndrcv_eigvec_occ1
-
-  !*************************************************************
   subroutine sndrcv_eigvec_occ()
-    !  Purpose: summarizes sending and receiving of the eigenvectors
-    !           of the occupied levels
-    !------------ Modules used ------------------- ---------------
+    !
+    ! Summarizes  sending and  receiving  of the  eigenvectors of  the
+    ! occupied levels.
+    !
     use comm
     use operations_module, only: operations_core_density
     use options_module, only: options_spin_orbit

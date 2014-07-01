@@ -71,15 +71,15 @@ INTEGER_T :: msgtag_commdata=              11
 INTEGER_T :: msgtag_debugorbitals=         13
 !NTEGER_T :: msgtag_pcalc_pert_coeff=      14
 INTEGER_T :: msgtag_SendBackEig=           15
-INTEGER_T :: msgtag_occ_levels=            16
+!NTEGER_T :: msgtag_occ_levels=            16
 INTEGER_T :: msgtag_eigvec=                17
 !NTEGER_T :: msgtag_gr_send=               18
 INTEGER_T :: msgtag_xcham_send=            19
-INTEGER_T :: msgtag_build_xc=              20
+!NTEGER_T :: msgtag_build_xc=              20
 !NTEGER_T :: msgtag_xc_setup=              21
 INTEGER_T :: msgtag_SendBackHam=           22
 INTEGER_T :: msgtag_xcfitham_send=         23
-INTEGER_T :: msgtag_build_xcfit=           24
+!NTEGER_T :: msgtag_build_xcfit=           24
 !NTEGER_T :: msgtag_xcfit_setup=           25
 !NTEGER_T :: msgtag_send_slavetiming=      26
 INTEGER_T :: msgtag_slavetiming=           27
@@ -318,15 +318,15 @@ contains
     CMP(msgtag_debugorbitals)
     !MP(msgtag_bounds)
     CMP(msgtag_SendBackEig)
-    CMP(msgtag_occ_levels)
+    !MP(msgtag_occ_levels)
     CMP(msgtag_eigvec)
     !MP(msgtag_gr_send)
     CMP(msgtag_xcham_send)
-    CMP(msgtag_build_xc)
+    !MP(msgtag_build_xc)
     !MP(msgtag_xc_setup)
     CMP(msgtag_SendBackHam)
     CMP(msgtag_xcfitham_send)
-    CMP(msgtag_build_xcfit)
+    !MP(msgtag_build_xcfit)
     !MP(msgtag_xcfit_setup)
     !CMP(msgtag_send_slavetiming)
     CMP(msgtag_slavetiming)

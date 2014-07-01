@@ -1939,7 +1939,7 @@ contains
     use comm_module
     use msgtag_module, only: msgtag_fit_coeff_send
     implicit none
-    integer(i4_kind), intent(in) :: IMOD
+    integer (i4_kind), intent(in) :: IMOD
     ! *** end of interface ***
 
     if (.not. comm_parallel ()) return
@@ -1954,27 +1954,29 @@ contains
   end subroutine fit_coeff_sndrcv
 
   !*************************************************************
-  subroutine fit_coeff_send(IMOD)
-    ! purpose: Send fit_coeffs to the slaves; the fitcoeffs are needed
-    !          on the slaves during the gradient run and during the SCF
-    !          SCF procedure as well if the model density approach is used.
+  subroutine fit_coeff_send (IMOD)
+    !
+    ! Send fit_coeffs to  the slaves; the fitcoeffs are  needed on the
+    ! slaves during the gradient run  and during the SCF SCF procedure
+    ! as well if the model density approach is used.
+    !
     use comm_module
     use msgtag_module
     use xpack, only: pck
     use options_module
     implicit none
-    !------------ Declaration of formal parameters -------------
-    integer(i4_kind), intent(in), optional :: IMOD
+    integer (i4_kind), intent (in), optional :: IMOD
     !** End of interface ***************************************
+
     integer(kind=i4_kind) :: n_spin
     logical               :: send_rho_coeff, send_pot_coeff, extended_mda
     integer(i4_kind) :: IMODE
 
     IMODE = ICHFIT ! send density fit, by default
-    if(present(IMOD)) IMODE = IMOD
+    if (present (IMOD)) IMODE = IMOD
 
-    send_rho_coeff = IAND(IMODE,ICHFIT) /= 0
-    send_pot_coeff = IAND(IMODE,IXCFIT) /= 0
+    send_rho_coeff = IAND (IMODE, ICHFIT) /= 0
+    send_pot_coeff = IAND (IMODE, IXCFIT) /= 0
 
     extended_mda = options_xcmode() == xcmode_extended_mda
 

@@ -145,12 +145,17 @@ module xc_hamiltonian
 !== Interrupt end of public interface of module =================
 
 !------------ public variables ----------------------------------
-  real(kind=r8_kind), allocatable, public :: ham_xc_arr(:)
-  ! Elements of the kohn-Sham-Matrix
-  real(kind=r8_kind), allocatable, public :: ham_xc_arr_real(:),ham_xc_arr_imag(:)
-  ! Elements of the kohn-Sham-Matrix (in case of spin orbit the KS-Matrix is complex)
-  logical, public :: mat_initialized, matold_initialized
-  real(kind=r8_kind),public  :: s_average
+
+  ! Elements of the Kohn-Sham matrix:
+  real (r8_kind), allocatable, public, protected :: ham_xc_arr(:)
+
+  ! Elements of  the Kohn-Sham  matrix (in case  of spin orbit  the KS
+  ! matrix is complex):
+  real (r8_kind), allocatable, public, protected :: &
+       ham_xc_arr_real(:), ham_xc_arr_imag(:)
+
+  logical, public, protected :: mat_initialized, matold_initialized
+  real (r8_kind), public, protected  :: s_average
 
 !------------ public functions and subroutines ------------------
   public :: xc_setup, xc_build, xc_close, &

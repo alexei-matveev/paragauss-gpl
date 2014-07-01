@@ -278,15 +278,12 @@ subroutine main_gradient(loop)
   use eri4c_options, only: J_exact, K_exact
 #endif
   implicit none
-
-
-  integer(i4_kind), intent(in) :: loop ! used only on master so far
+  integer (i4_kind), intent (in) :: loop ! used only on master so far
   ! *** end of interface ***
 
   integer :: rank
   logical :: model_density, split_gradients
   integer (kind=i4_kind) :: i, n_equal_max
-! real(kind=r8_kind),allocatable :: gradient_totalsym_fit(:)
   integer(i4_kind) :: IFIT
   integer(i4_kind) :: IREL
   logical :: tty                ! used in say() subprogram
@@ -409,55 +406,55 @@ subroutine main_gradient(loop)
   if (model_density) IFIT = IFIT + IXCFIT
   call fit_coeff_sndrcv (IFIT)
 
-     call say ("main_integral(1)")
+  if (options_relativistic) then
+     call integralpar_set ('RelGrads')
+  else
+     call integralpar_set ('Gradients')
+  end if
 
-     if(options_relativistic) then
-        call integralpar_set('RelGrads')
-     else
-        call integralpar_set('Gradients')
-     end if
-
-     !********Initial steps before computing the gradients in presence of electric field*****!
-     ! Passing the value of eletric field strength to master and slave.
-     !
-     call efield_send_recv()
+  ! Initial  steps  before  computing  the gradients  in  presence  of
+  ! electric field.   Passing the value  of eletric field  strength to
+  ! master and slave.
+  call efield_send_recv()
 
 
-     ! Computation of 2e integral derivatives with ERI4C library
-     ! TODO: AVOID GENERATING DENSITY MATRIX AGAIN....
+  ! Computation of 2e integral  derivatives with ERI4C library.  TODO:
+  ! AVOID GENERATING DENSITY MATRIX AGAIN....
 #if WITH_ERI4C == 1
-     IF ( K_exact .or. J_exact ) THEN
-       call gendensmat_occ()
-       !
-       call exact_2e_grads( densmat, gradient_totalsym )
-       ! TODO: in the case of enabled DFT+U densmat is generated again by init
-       call density_data_free()
-     ENDIF
+  IF (K_exact .or. J_exact) THEN
+     call gendensmat_occ()
+     !
+     call exact_2e_grads( densmat, gradient_totalsym )
+     ! TODO: in the case of enabled DFT+U densmat is generated again by init
+     call density_data_free()
+  ENDIF
 #endif
 
 #ifdef WITH_DFTPU
-     !
-     ! Inital steps before computing DFT+U gradients:
-     !
-     call dft_plus_u_grad_init()
-     call dft_plus_u_mo_grad_init()
+  !
+  ! Inital steps before computing DFT+U gradients:
+  !
+  call dft_plus_u_grad_init()
+  call dft_plus_u_mo_grad_init()
 #endif
 
-     ! DONE by integralpar_set(...):
-     ! integralpar_cpks_contribs=.false. ! explicit functional dervs only
+  ! DONE by integralpar_set(...): integralpar_cpks_contribs =
+  ! .false. Explicit functional dervs only
 
-     FPP_TIMER_START(int1)
-     call main_integral () ! (1) First call: gradients, maybe second derivatives
-     FPP_TIMER_STOP(int1)
-     DPRINT MyID,'main_gradient:  calc_3c=',FPP_TIMER_VALUE(t_calc_3center)
-     DPRINT MyID,'main_gradient:  int1=',FPP_TIMER_VALUE(int1)
+  call say ("main_integral(1)")
+
+  FPP_TIMER_START(int1)
+  call main_integral () ! (1) First call: gradients, maybe second derivatives
+  FPP_TIMER_STOP(int1)
+  DPRINT MyID,'main_gradient: calc_3c=',FPP_TIMER_VALUE(t_calc_3center)
+  DPRINT MyID,'main_gradient: int1=',FPP_TIMER_VALUE(int1)
 
 #ifdef WITH_DFTPU
-     !
-     ! Final steps after computing DFT+U gradients,
-     ! Deallocate internal structures and 'densmat'
-     !
-     call dft_plus_u_grad_finalize()
+  !
+  ! Final steps  after computing DFT+U  gradients, Deallocate internal
+  ! structures and 'densmat'
+  !
+  call dft_plus_u_grad_finalize()
 #endif
 
      if (integralpar_2dervs .and. rank == 0) then

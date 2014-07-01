@@ -28,14 +28,14 @@
 module efp_solv_module
   !---------------------------------------------------------------
   !
-  !  Purpose: 
+  !  Purpose:
   !
   !
   !  Module called by: ...
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: AS
   !  Date: 07.08
@@ -125,7 +125,7 @@ contains
              Z=pointcharge_array(iu_mp)%Z
              C=pointcharge_array(iu_mp)%C
              A=pointcharge_array(iu_mp)%A
-          
+
              do ie_mp=1,pointcharge_array(iu_mp)%N_equal_charges
 
                 r_mp=pointcharge_array(iu_mp)%position(:,ie_mp)
@@ -249,7 +249,7 @@ contains
     allocate(Q_mp(N_points),stat=status)
     ASSERT(status==0)
 
-    Q_mp= -((dielectric_constant-one)/(dielectric_constant))* & 
+    Q_mp= -((dielectric_constant-one)/(dielectric_constant))* &
          MATMUL(A_matrix_inv,V_buf)
 
     deallocate(V_buf,stat=status)
@@ -352,13 +352,13 @@ contains
        ASSERT(status==0)
        Q_id=zero
     end if
-    
+
     if(.not. allocated(Q_id1)) then
        allocate(Q_id1(N_points),stat=status)
        ASSERT(status==0)
        Q_id1=zero
     end if
-    
+
   end subroutine allocate_V_and_Q_id
   !*************************************************************
 
@@ -400,7 +400,7 @@ contains
     integer(i4_kind) :: status
     !--- executable code-------------------------------------
 
-    V_pot_id=zero;  V_pot_id1=zero 
+    V_pot_id=zero;  V_pot_id1=zero
 
     I_SP: do iu_sp=1,N_points
 
@@ -444,7 +444,7 @@ contains
        V_buf(i)=V_pot_id(i)/real(n_eql,kind=r8_kind)
     enddo
 
-    Q_id= -((dielectric_constant-one)/(dielectric_constant))* & 
+    Q_id= -((dielectric_constant-one)/(dielectric_constant))* &
          MATMUL(A_matrix_inv,V_buf)
 
     do i=1,N_points
@@ -452,7 +452,7 @@ contains
        V_buf(i)=V_pot_id1(i)/real(n_eql,kind=r8_kind)
     enddo
 
-    Q_id1= -((dielectric_constant-one)/(dielectric_constant))* & 
+    Q_id1= -((dielectric_constant-one)/(dielectric_constant))* &
          MATMUL(A_matrix_inv,V_buf)
 
     deallocate(V_buf,stat=status)
@@ -464,7 +464,7 @@ contains
   !*************************************************************
   subroutine calc_E_cav()
     ! Purpose: Calculate electrostatic field produced by the solute
-    !          cavity surface charges at positions of induced point 
+    !          cavity surface charges at positions of induced point
     !          dipoles
     !------------ Modules used -----------------------------------
     use potential_module, only: N_points, point_in_space
@@ -560,7 +560,7 @@ contains
   !*************************************************************
   subroutine calc_E_cav1(iu_id1,ie_id1)
     ! Purpose: Calculate electrostatic field produced by the solute
-    !          cavity surface charges at positions of induced point 
+    !          cavity surface charges at positions of induced point
     !          dipoles
     !------------ Modules used -----------------------------------
     use potential_module, only: N_points, point_in_space
@@ -598,7 +598,7 @@ contains
   !*************************************************************
   subroutine calc_E_cav11(iu_id1,ie_id1)
     ! Purpose: Calculate electrostatic field produced by the solute
-    !          cavity surface charges at positions of induced point 
+    !          cavity surface charges at positions of induced point
     !          dipoles
     !------------ Modules used -----------------------------------
     use potential_module, only: N_points, point_in_space

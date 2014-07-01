@@ -64,7 +64,6 @@ use comm_module, only: comm_save_recv, comm_msgtag, &
      comm_master_host, comm_any_message
 use msgtag_module
 use density_data_module, only: density_data_free
-use virtual_levels_module, only: eigvec_vir_dealloc
 use pointcharge_module
 use induced_dipoles_module, only: send_receive_id
 use calc_id_module, only: calc_Pol_ham
@@ -115,12 +114,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    msgtag = comm_msgtag()
    DPRINT 'main_slave: received msgtag=', msgtag
    select case (msgtag)
-   case( msgtag_eigvec_vir_dealloc )
-      ! if a sub needs to be executed on master AND slaves ---
-      !  CALL IT PROM THE PARALLEL CONTEXT!
-      ! no need for main_slave swiss-knife!
-      call say("eigvec_vir_dealloc")
-      call eigvec_vir_dealloc (ISLAV) ! MUSTDIE!
    case( msgtag_free_bnds_ptn )
       call say("free_bounds_poten")
       call bounds_free_poten()

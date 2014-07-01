@@ -461,7 +461,7 @@ contains
         !
         if (integralpar_cpksdervs) then
 
-            call eigvec_vir_dealloc (IPARA)
+            call eigvec_vir_dealloc ()
 
             ! FIXME: so far does not harm if not allocated:
             call integralstore_deallocate()

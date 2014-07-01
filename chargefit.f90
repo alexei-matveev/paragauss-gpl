@@ -636,7 +636,13 @@ subroutine chargefit (loop, coeff_dev, coulomb_dev)
   call free_coeff_charge_old
 
   pert_orbitals: if (perturbation_theory) then
-     if(.not.integralpar_cpksdervs)  call eigvec_vir_dealloc(IMAST)
+     ! FIXME: we  are not in parallel context  here.  But historically
+     ! the  master  does deallocation  here.  Slaves  ivoked this  via
+     ! main_slave()  but  now do  it  below  right  after joining  the
+     ! parallel contex:
+     if (.not. integralpar_cpksdervs) then
+        call eigvec_vir_dealloc ()
+     endif
 
      if (.not.eigen_kept) then
         ! allocate n_rot as temporary working array
@@ -821,6 +827,10 @@ subroutine chargefit (loop, coeff_dev, coulomb_dev)
   ! Here again, all workers run in a parallel context ...
   !
   if (perturbation_theory) then
+     ! FIXME: master did that above slaves do it here, hm ...
+     if (comm_rank() /= 0 .and. .not. integralpar_cpksdervs) then
+        call eigvec_vir_dealloc ()
+     endif
      !
      ! Rotated eigenvectors need to be updated on all workers:
      !

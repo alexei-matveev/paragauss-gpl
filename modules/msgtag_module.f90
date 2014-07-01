@@ -140,7 +140,7 @@ INTEGER_T :: msgtag_build_xcmda=           82
 !NTEGER_T :: msgtag_xcmda_setup=           83
 !NTEGER_T :: msgtag_pre_dens_slave=        84
 INTEGER_T :: msgtag_vir_levels=            85
-INTEGER_T :: msgtag_eigvec_vir_dealloc=    86
+!NTEGER_T :: msgtag_eigvec_vir_dealloc=    86
 INTEGER_T :: msgtag_rot_levels=            87
 !NTEGER_T :: msgtag_xcmda_close=           88
 !INTEGER_T :: msgtag_int_dipole_setup=      89
@@ -379,7 +379,7 @@ contains
     !MP(msgtag_xcmda_setup)
     !MP(msgtag_pre_dens_slave)
     CMP(msgtag_vir_levels)
-    CMP(msgtag_eigvec_vir_dealloc)
+    !MP(msgtag_eigvec_vir_dealloc)
     CMP(msgtag_rot_levels)
     !MP(msgtag_xcmda_close)
     !CMP(msgtag_int_dipole_setup)

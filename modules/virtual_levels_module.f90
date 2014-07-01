@@ -462,60 +462,50 @@ contains
 
   !***************************************************************
     
-  subroutine eigvec_vir_dealloc(context)
-    ! Purpose: deallocates the following variables:
-    !          -eigvec_vir
-    !          -eigval_vir
-    ! Subroutine called by:  xc_hamiltonian,main_slave,main_gradient
-    use interfaces, only: IPARA, IMAST
+  subroutine eigvec_vir_dealloc ()
+    !
+    ! Deallocates  the  following  variables: eigvec_vir,  eigval_vir.
+    ! Subroutine called by: chargefit(), modules/initialization.f90
+    !
     implicit none
-    integer(i4_kind), intent(in) :: context
     !** End of interface *****************************************
-    ! ---------- declaration of local variables --------------
-    integer(kind=i4_kind)    :: alloc_stat,i
-    ! --------- executable code ------------------------------
 
-    if(IAND(context,IPARA)==IMAST)then
-       ! tell slaves to call me
-       DPRINT ' eigvec_vir_dealloc comm_init_send + comm_send'
-       if (comm_parallel() .and. comm_i_am_master()) then
-          call comm_init_send(comm_all_other_hosts,msgtag_eigvec_vir_dealloc)
-          call comm_send()
-       endif
-       DPRINT 'done'
-    endif
+    integer (i4_kind) :: alloc_stat, i
 
     if (options_spin_orbit) then
        !
        ! SPIN ORBIT
        !
-       do i=1,size(eigvec_vir_real) ! n_irrep
-          deallocate(eigvec_vir_real(i)%m,eigvec_vir_imag(i)%m,STAT=alloc_stat)
+       do i = 1, size (eigvec_vir_real) ! n_irrep
+          deallocate (eigvec_vir_real(i) % m, eigvec_vir_imag(i) % m, STAT=alloc_stat)
           if (alloc_stat /= 0 ) call error_handler &
                ("eigvec_vir_dealloc : deallocation (1a) failed")
        enddo
-       deallocate(eigvec_vir_real,eigvec_vir_imag,STAT=alloc_stat)
+       deallocate (eigvec_vir_real, eigvec_vir_imag, STAT=alloc_stat)
        if (alloc_stat /= 0 ) call error_handler &
             ("eigvec_vir_dealloc : deallocation (1) failed")
     else
-     if(allocated(eigvec_vir)) then
-       do i=1,size(eigvec_vir) ! n_irrep
-          deallocate(eigvec_vir(i)%m,STAT=viralloc_stat(2))
-          ASSERT(viralloc_stat(2).eq.0)
-       enddo
-       deallocate(eigvec_vir,STAT=viralloc_stat(1))  !! in eigvec_vir_dealloc
-       ASSERT(viralloc_stat(1).eq.0)
-     endif
+       !
+       ! STANDARD SCF
+       !
+       if (allocated (eigvec_vir)) then
+          do i = 1, size (eigvec_vir) ! n_irrep
+             deallocate (eigvec_vir(i) % m, STAT=viralloc_stat(2))
+             ASSERT(viralloc_stat(2).eq.0)
+          enddo
+          deallocate (eigvec_vir, STAT=viralloc_stat(1)) ! in eigvec_vir_dealloc
+          ASSERT(viralloc_stat(1).eq.0)
+       endif
     endif
 
     ! SO and NO-SO:
-    if( allocated(eigval_vir) )then
-      do i=1,size(eigval_vir)
-        deallocate(eigval_vir(i)%m,STAT=viralloc_stat(4))
-        ASSERT(viralloc_stat(4).eq.0)
-      enddo
-      deallocate(eigval_vir,STAT=viralloc_stat(3))
-      ASSERT(viralloc_stat(3).eq.0)
+    if (allocated (eigval_vir) )then
+       do i = 1, size (eigval_vir)
+          deallocate (eigval_vir(i) % m, STAT=viralloc_stat(4))
+          ASSERT(viralloc_stat(4).eq.0)
+       enddo
+       deallocate (eigval_vir, STAT=viralloc_stat(3))
+       ASSERT(viralloc_stat(3).eq.0)
     endif
   end subroutine eigvec_vir_dealloc
 

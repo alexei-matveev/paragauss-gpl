@@ -695,38 +695,41 @@ subroutine main_master()
         call say ("main_epe_block")
         call main_epe_block()
 
-      call get_energy (tot=energy)
-      energy2 = energy
-         call get_epe_energies (lattice_energy=epe_latt_energy, &
-              epg_cluster_reg_I=cluster_regI, eshort_coupling_au=eshort)
-         energy = energy + epe_latt_energy
-         print*,'energy, energy2, eshort', energy, energy2, eshort
-         print*,'epe_side_optimized_energy', energy+eshort
-         epe_side_optimized_energy = energy + eshort
-         print*,'cluster_regI', cluster_regI
-         print*,'epe_latt_energy', epe_latt_energy
+        call get_energy (tot=energy)
+        energy2 = energy
+        call get_epe_energies (lattice_energy=epe_latt_energy, &
+             epg_cluster_reg_I=cluster_regI, eshort_coupling_au=eshort)
+        energy = energy + epe_latt_energy
+        print*,'energy, energy2, eshort', energy, energy2, eshort
+        print*,'epe_side_optimized_energy', energy+eshort
+        epe_side_optimized_energy = energy + eshort
+        print*,'cluster_regI', cluster_regI
+        print*,'epe_latt_energy', epe_latt_energy
 
-           call write_to_trace_unit ('epe_convergence_check')
-           call epe_convergence_check (epe_side_energy_converged, loop)
-         endif
+        call write_to_trace_unit ('epe_convergence_check')
+        call epe_convergence_check (epe_side_energy_converged, loop)
+     endif
 
-         ! calculate gradients
-        if (operations_gradients .and. .not. epe_relaxation .or. &
-           epe_relaxation .and. epe_side_energy_converged) then
-           call say ("Starting main_gradient() ...")
-           if (epe_relaxation .and. epe_side_energy_converged) then
-             call write_to_trace_unit ('epe_relaxation .and. epe_side_energy_converged')
-           endif
-
-           call main_gradient (loop) ! (2)
-           call say ("Done with the integral part for gradients routine.")
-        elseif (operations_gradients) then
-           !
-           ! FIXME: clean up is the task of finalize_geometry()
-           !        that is called anyway. Why doing it here?
-           !
-           ABORT ('please adapt')
+     ! Calculate gradients
+     if (operations_gradients .and. .not. epe_relaxation .or. &
+          epe_relaxation .and. epe_side_energy_converged) then
+        !
+        ! Regular branch here!
+        !
+        call say ("Starting main_gradient() ...")
+        if (epe_relaxation .and. epe_side_energy_converged) then
+           call write_to_trace_unit ('epe_relaxation .and. epe_side_energy_converged')
         endif
+
+        call main_gradient (loop) ! (2)
+        call say ("Done with the integral part for gradients routine.")
+     elseif (operations_gradients) then
+        !
+        ! FIXME: clean up is the task of finalize_geometry()
+        !        that is called anyway. Why doing it here?
+        !
+        ABORT ('please adapt')
+     endif
 #endif
 
 #ifdef WITH_MOLMECH

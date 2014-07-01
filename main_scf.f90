@@ -292,6 +292,7 @@ subroutine main_scf()
      ! from main_slave():
      !
      do while (toggle_legacy_mode ())
+        ! Master-only context here ...
         call do_recover (recover_mode, n_pairs, loop, tot_en, eof=etot_recovered)
      enddo
      call comm_bcast (loop)
@@ -379,42 +380,41 @@ subroutine main_scf()
      ! slaves  are spinning  in  main_slave() and  waiting for  orders
      ! during that time:
      do while (toggle_legacy_mode ())
-
-     if (calc_Pol_centers() .and. loop >= first_loop+1) then
-        if (loop == first_loop+1) then
-           do_update = .true.
-        else
-           do_update = (mod (loop - (first_loop + 1), n_update) == 0)
-        end if
-#ifdef WITH_EFP
-        if (operations_solvation_effect) then
-           if (do_pol_pcm .and. n_efp > 0) then
-              call allocate_V_and_Q_id()
-              call allocate_E_cav()
+        ! Master-only context here ...
+        if (calc_Pol_centers() .and. loop >= first_loop+1) then
+           if (loop == first_loop+1) then
+              do_update = .true.
+           else
+              do_update = (mod (loop - (first_loop + 1), n_update) == 0)
            end if
-           do_solv = (loop > first_loop+sol_start_cycle)
-        end if
-        call build_Pol_ham (print_id, do_update)
-#else
-        call build_Pol_ham (do_update)
-#endif
-     end if
-
-     ! Calculating solvation hamiltonian
-     if (operations_solvation_effect .and. &
-          loop >= first_loop+sol_start_cycle) then  !!!!!!!!!!!!!
-        if (mod (loop - (first_loop + sol_start_cycle), n_Q_update) == 0) then
-           call calc_Q_e()
-        end if
 #ifdef WITH_EFP
-        if (do_pol_pcm .and. n_efp > 0) then
-           call calc_V_and_Q_id()
-        end if
+           if (operations_solvation_effect) then
+              if (do_pol_pcm .and. n_efp > 0) then
+                 call allocate_V_and_Q_id()
+                 call allocate_E_cav()
+              end if
+              do_solv = (loop > first_loop+sol_start_cycle)
+           end if
+           call build_Pol_ham (print_id, do_update)
+#else
+           call build_Pol_ham (do_update)
 #endif
-        call charge_mix_wrapper (loop, first_loop + sol_start_cycle)
-        call build_solv_ham()
-     endif                                          !!!!!!!!!!!!!
+        end if
 
+        ! Calculating solvation hamiltonian
+        if (operations_solvation_effect .and. &
+             loop >= first_loop+sol_start_cycle) then
+           if (mod (loop - (first_loop + sol_start_cycle), n_Q_update) == 0) then
+              call calc_Q_e()
+           end if
+#ifdef WITH_EFP
+           if (do_pol_pcm .and. n_efp > 0) then
+              call calc_V_and_Q_id()
+           end if
+#endif
+           call charge_mix_wrapper (loop, first_loop + sol_start_cycle)
+           call build_solv_ham()
+        endif
      enddo                      ! while (toggle_legacy_mode())
      ! Parallel context from here on ...
 
@@ -451,19 +451,18 @@ subroutine main_scf()
      call stop_timer (timer_scf_ham)
 
      do while (toggle_legacy_mode ())
+        ! Master-only context here ...
+        if (operations_solvation_effect .and. &
+             loop >= first_loop + sol_start_cycle) then
+           call dealloc_ham_solv()
+           call solv_energy_el ()
+        endif
 
-     if (operations_solvation_effect .and. &
-          loop >= first_loop + sol_start_cycle) then
-        call dealloc_ham_solv()
-        call solv_energy_el ()
-     endif
-
-     if (calc_Pol_centers() .and. loop >= first_loop+1) then
-        call dealloc_Pol_ham()
-        call calc_id_energy()
-     end if
-
-     enddo                      ! while (toggle_legacy_mode())
+        if (calc_Pol_centers() .and. loop >= first_loop+1) then
+           call dealloc_Pol_ham()
+           call calc_id_energy()
+        end if
+     enddo
      ! Parallel context from here on ...
 
      ! Write calculated  energies. Slaves  could always print  that to
@@ -780,6 +779,7 @@ subroutine main_scf()
   call say ("write final calculated energies")
   if (operations_solvation_effect) then
      do while (toggle_legacy_mode ())
+        ! Master-only context here ...
         call calc_Q_e ()
         call solv_energy_el ()
         call Q_dealloc ()

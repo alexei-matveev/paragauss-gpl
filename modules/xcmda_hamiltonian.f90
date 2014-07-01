@@ -814,7 +814,7 @@ contains
      real(kind=r8_kind),parameter :: zero=0.0_r8_kind, half=0.5_r8_kind, &
                                      two =2.0_r8_kind
      real(kind=r8_kind),pointer :: ob(:,:), gr(:,:,:)
-     integer(kind=i4_kind) :: i,j,k,l,s,t,vec_length_act,info
+     integer (i4_kind) :: i, j, k, l, s, t, vec_length_act
      real(kind=r8_kind) :: a2, zero_target, rho_min
      integer :: status
      real(kind=r8_kind), allocatable :: r1(:), r2(:)

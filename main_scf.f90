@@ -109,7 +109,7 @@ subroutine main_scf()
        convergence_put_coulomb_dev, convergence_shutdown
   use eigen_data_module, only: print_eigendata, eigvec_write, eigen_data_dump
   use fit_coeff_module, only: print_coeff_charge, &
-       fit_coeff_store, fit_coeff_recover, fit_coeff_send, fit_coeff_sndrcv, &
+       fit_coeff_store, fit_coeff_recover, fit_coeff_sndrcv, &
        fit_coeff_normalize, ICHFIT
 #ifdef WITH_CORE_DENS
   use fit_coeff_module, only: write_coeff_core
@@ -291,13 +291,7 @@ subroutine main_scf()
      ! to slaves  from there, the correspondig  receives are initiated
      ! from main_slave():
      !
-     do while (toggle_legacy_mode ())
-        ! Master-only context here ...
-        call do_recover (recover_mode, n_pairs, loop, tot_en, eof=etot_recovered)
-     enddo
-     call comm_bcast (loop)
-     call comm_bcast (tot_en)
-     call comm_bcast (etot_recovered)
+     call do_recover (recover_mode, n_pairs, loop, tot_en, eof=etot_recovered)
 
      ! loop is incremented at the top of the scf_cycle:
      loop = loop - 1
@@ -1030,9 +1024,9 @@ contains
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
-    real (r8_kind)                :: energy(1)
+    real (r8_kind) :: energy(1)
 
-    ! recovery may  fail, to indicate  that the values of  output args
+    ! Recovery may  fail, to indicate  that the values of  output args
     ! are somehwat arbitrary this will be set to true:
     eof = .false.
 
@@ -1040,7 +1034,7 @@ contains
        call readwriteblocked_startread (recfile (frg_file), th, variable_length=.true.)
        call eigenstates_recover (n_vir, th)
 
-       ! no data to recover tot_en from:
+       ! No data to recover tot_en from:
        eof = .true.
 
        !
@@ -1052,6 +1046,7 @@ contains
 
     call readwriteblocked_startread (recfile (rec_file), th, variable_length=.true.)
     call fit_coeff_recover (th)
+    ASSERT(comm_same(options_reset_scfcycle()))
     call fit_coeff_normalize (spin_coeff=options_reset_scfcycle())
 
     call convergence_state_recover (th)
@@ -1062,10 +1057,8 @@ contains
     case (recover_fitcoeff)
        if (xcmode == xcmode_model_density .or. &
             xcmode == xcmode_extended_mda) then
-        if (comm_parallel()) then
-          call say ("fit_coeff_send during recover")
-          call fit_coeff_send()
-        endif
+          call say ("fit_coeff_sndrcv during recover")
+          call fit_coeff_sndrcv (ICHFIT) ! FIXME: redundant?
           call say ("XC(MDA) coefficients re-computed during recover")
           call start_timer (timer_scf_xc)
           ABORT("SPMD?")
@@ -1080,10 +1073,8 @@ contains
     case (recover_scfstate)
        if (xcmode == xcmode_model_density .or. &
             xcmode == xcmode_extended_mda) then
-        if (comm_parallel()) then
-          call say ("fit_coeff_send during recover")
-          call fit_coeff_send()
-        endif
+          call say ("fit_coeff_sndrcv during recover")
+          call fit_coeff_sndrcv (ICHFIT) ! FIXME: redundant?
        endif
        call xcmda_coeff_recover (th)
        call xc_hamiltonian_recover (th)
@@ -1116,6 +1107,10 @@ contains
           write (output_unit, '(4es20.13)') energy(1)
        endif
     endif
+    ! Should return the same values everywhere:
+    ASSERT(comm_same(loop))
+    ASSERT(comm_same(tot_en))
+    ASSERT(comm_same(etot_recovered))
   end subroutine do_recover
 
 

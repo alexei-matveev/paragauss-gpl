@@ -1989,27 +1989,35 @@ contains
 
   !*************************************************************
   subroutine fit_coeff_receive()
-    ! purpose: Receive fit_coeffs from  the master; the fitcoeffs are needed
-    !          on the slaves during the gradient run and during the SCF
-    !          SCF procedure as well if the model density approach is used.
+    !
+    ! Receive  (rather   unpack)  fit_coeffs  from   the  master.  The
+    ! fitcoeffs are needed  on the slaves during the  gradient run and
+    ! during the SCF  procedure as well if the  model density approach
+    ! is used.
+    !
     use comm_module
     use xpack, only: upck
     use options_module
-    !------------ Declaration of formal parameters -------------
+    implicit none
     !** End of interface ***************************************
-    integer(kind=i4_kind) :: alloc_stat, n_spin
-    logical               :: receive_rho_coeff, receive_pot_coeff, &
-                             extended_mda
+
+    integer (i4_kind) :: alloc_stat, n_spin
+    logical :: receive_rho_coeff, receive_pot_coeff, extended_mda
 
     extended_mda = options_xcmode() == xcmode_extended_mda
 
-    call upck(n_fit%n_ch)
-    call upck(receive_rho_coeff)
+    call upck (n_fit % n_ch)
+    call upck (receive_rho_coeff)
     if (receive_rho_coeff) then
-       allocate(coeff_charge(n_fit%n_ch),stat=alloc_stat)
-       if(alloc_stat/=0) call error_handler(&
-            'fit_coeff_receive: allocation of coeff_charge failed')
-       call upck(coeff_charge)
+       if (allocated (coeff_charge)) then
+          if (size (coeff_charge) /= n_fit % n_ch) then
+             ABORT("size (coeff_charge)?")
+          endif
+       else
+          allocate (coeff_charge (n_fit % n_ch), stat=alloc_stat)
+          ASSERT(alloc_stat==0)
+       endif
+       call upck (coeff_charge)
     endif
     if (options_xcmode() == xcmode_model_density .or. extended_mda) then
        n_spin = options_n_spin()

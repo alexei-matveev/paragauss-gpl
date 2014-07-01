@@ -404,8 +404,8 @@ contains
 
   subroutine comm_init_send (target, msgtag)
     !
-    ! Initialises send. First argument is only a dummy which is needed
-    ! to keep the PVM counterpart happy.
+    ! Initialises send.  Will be followed by commpack()  and closed by
+    ! comm_send().
     !
 #ifdef _DPRINT
     use msgtag_module, only: msgtag_name

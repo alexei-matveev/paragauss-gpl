@@ -175,44 +175,41 @@ contains
     call init_energy() ! initializes the energies
 
     !
-    ! For historical reasons much of the code is executed by master only (see
-    ! build_1e_hamiltonian). The Coulomb and exchange terms are computed in
-    ! parallel, however:
+    ! For historical  reasons much of  the code is executed  by master
+    ! only, see  the call to build_1e_hamiltonian().   The Coulomb and
+    ! exchange  terms  (FIXME:  non  functional in  GPL  version)  are
+    ! computed in parallel, however
     !
     if (.not. options_spin_orbit) then
       !
       ! STANDARD SCF
       !
-      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc                    &
-                               , h_matrix       = ham_tot                      &
-                               , d_matrix       = densmat                      )
+      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc, &
+           h_matrix = ham_tot, d_matrix = densmat)
     else
       !
       ! SPIN ORBIT
       !
-      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc                    &
-                               , h_matrix_real = ham_tot_real                  &
-                               , h_matrix_imag = ham_tot_imag                  &
-                               , d_matrix_real = densmat_real                  &
-                               , d_matrix_imag = densmat_imag                  )
+      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc, &
+           h_matrix_real = ham_tot_real, h_matrix_imag = ham_tot_imag, &
+           d_matrix_real = densmat_real, d_matrix_imag = densmat_imag)
     endif
 
-    if ( rank == 0 ) then
+    if (rank == 0) then
       if (.not. options_spin_orbit) then
         !
         ! STANDARD SCF
         !
-        call build_1e_hamiltonian( loop, ham_tot      = ham_tot                &
-                                       , densmat      = densmat                )
+        call build_1e_hamiltonian (loop, &
+             ham_tot = ham_tot, densmat = densmat)
         !
       else
         !
         ! SPIN ORBIT
         !
-        call build_1e_hamiltonian( loop, ham_tot_real = ham_tot_real           &
-                                       , ham_tot_imag = ham_tot_imag           &
-                                       , densmat_real = densmat_real           &
-                                       , densmat_imag = densmat_imag           )
+        call build_1e_hamiltonian (loop, &
+             ham_tot_real = ham_tot_real, ham_tot_imag = ham_tot_imag, &
+             densmat_real = densmat_real, densmat_imag = densmat_imag)
       endif
     endif
 

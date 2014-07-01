@@ -179,10 +179,9 @@ module xc_hamiltonian
          TWO  = 2.0_r8_kind     ,&
          ZERO = 0.0_r8_kind
 
-  real(kind=r8_kind),allocatable :: rho(:,:),&
-         dfdrho(:,:),&  ! derivative of f with respect to rho
-         ham_xc_arr_old(:), ham_xc_arr_old_real(:),ham_xc_arr_old_imag(:),&
-          !!$         & help_arr(:),&
+  real (r8_kind), allocatable :: rho(:,:), &
+         dfdrho(:,:), &  ! derivative of f with respect to rho
+         ham_xc_arr_old(:), ham_xc_arr_old_real(:), ham_xc_arr_old_imag(:),&
          & help_arr_real(:),help_arr_imag(:),help_arr2(:,:),& !<< GET RID OF THEM, they must be local vars
          & fxc(:),fxc_gga(:),&        ! funktion f according to JPG
          gamma(:,:),& ! norms of the density gradients
@@ -506,8 +505,11 @@ contains
          ('allocation failed (2core) in su xc_setup')
     end if
 #endif
-       if(comm_i_am_master()) then
-          allocate(ham_xc_arr_real(xc_length),ham_xc_arr_imag(xc_length),&
+       ! FIXME:   The  corresponding  allocation   on  slaves   is  in
+       ! xc_build().   Master may  need  to allocate  that earlier  to
+       ! e.g. read the saved SCF state from an earlier calculation:
+       if (comm_i_am_master()) then
+          allocate (ham_xc_arr_real(xc_length), ham_xc_arr_imag(xc_length),&
                stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
                ('allocation (3) failed in su xc_setup')
@@ -526,11 +528,10 @@ contains
        !
        ! STANDARD SCF (NO SPIN ORBIT)
        !
-!!$       allocate(help_arr(vec_length),stat=alloc_stat)
-       if(comm_i_am_master()) then
+       if (comm_i_am_master()) then
           ! the old XC matrix now is a temporary array of xc_build
           ! and the XC matrix is no longer allocated in main_scf
-          allocate(ham_xc_arr(xc_length),stat=alloc_stat)
+          allocate (ham_xc_arr(xc_length), stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
                ('allocation (3) failed in su xc_setup')
           if (options_recover() /= recover_scfstate .or. &
@@ -686,11 +687,11 @@ contains
         ! the old XC matrix now is a temporary array of xc_build
         ! and the XC matrix is no longer allocated in main_scf
         if (options_spin_orbit) then
-           deallocate(ham_xc_arr_real,ham_xc_arr_imag,stat=alloc_stat)
+           deallocate (ham_xc_arr_real, ham_xc_arr_imag, stat=alloc_stat)
            if(alloc_stat/=0) call error_handler &
                 ("xc_close : deallocation (5 spinor) failed ")
         else
-           deallocate(ham_xc_arr,stat=alloc_stat)
+           deallocate (ham_xc_arr, stat=alloc_stat)
            if(alloc_stat/=0) call error_handler &
                 ("xc_close : deallocation (5) failed ")
         endif
@@ -821,7 +822,7 @@ contains
       use density_calc_module, only: density_calc, density_calc_nl
       use grid_module, only: more_grid, grid_loop_setup
       implicit none
-      real(kind=r8_kind),intent(inout) :: ham_xc_arr(:) ! ...(xc_length_vec)
+      real (r8_kind), intent(inout) :: ham_xc_arr(:) ! (xc_length_vec)
       character(len=*), intent(in)     :: variant ! "orbitals" or "spinors"
       ! controls how the density is evaluated, integration is always
       ! over plain orbital functions
@@ -1057,32 +1058,36 @@ contains
     integer(kind=i4_kind) :: alloc_stat
 
     call xc_allocate()
-    if (.not.comm_i_am_master()) then
+
+    if (.not. comm_i_am_master()) then
+       ! FIXME:   The  corresponding  allocation   on  master   is  in
+       ! xc_setup().  Master  may need  to  allocate  that earlier  to
+       ! e.g. read the saved SCF state from an earlier calculation:
        if (options_spin_orbit) then
-          allocate(ham_xc_arr_real(xc_length),ham_xc_arr_imag(xc_length),stat=alloc_stat)
+          allocate (ham_xc_arr_real(xc_length), ham_xc_arr_imag(xc_length), stat=alloc_stat)
           ASSERT (alloc_stat==0)
        else
-          allocate(ham_xc_arr(xc_length),stat=alloc_stat)
+          allocate(ham_xc_arr(xc_length), stat=alloc_stat)
           ASSERT (alloc_stat==0)
        endif
     else ! on the master
        ! ham_xc_arr_old is now a temporary array which is deallocate
        ! directly after mixing again
        if (options_spin_orbit) then
-          allocate(ham_xc_arr_old_real(xc_length),ham_xc_arr_old_imag(xc_length),stat=alloc_stat)
+          allocate (ham_xc_arr_old_real(xc_length), ham_xc_arr_old_imag(xc_length), stat=alloc_stat)
           ASSERT (alloc_stat==0)
           ham_xc_arr_old_real = ham_xc_arr_real
           ham_xc_arr_old_imag = ham_xc_arr_imag
        else
-          allocate(ham_xc_arr_old(xc_length),stat=alloc_stat)
+          allocate (ham_xc_arr_old(xc_length), stat=alloc_stat)
           ASSERT (alloc_stat==0)
           ham_xc_arr_old = ham_xc_arr
        endif
        matold_initialized = mat_initialized
     endif
 
-    if(options_spin_orbit.and.is_on(xc_so_spatial))then
-       allocate(ham_xc_arr(xc_length_vec),stat=alloc_stat)
+    if (options_spin_orbit .and. is_on(xc_so_spatial)) then
+       allocate (ham_xc_arr(xc_length_vec), stat=alloc_stat)
        ASSERT (alloc_stat==0)
        ham_xc_arr = 0.0_r8_kind
     endif

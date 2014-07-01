@@ -53,7 +53,7 @@ module efp_solv_module
   ! Description: ...
   !
   !----------------------------------------------------------------
-#include <def.h>
+# include "def.h"
 
   use type_module ! type specification parameters
   use common_data_module

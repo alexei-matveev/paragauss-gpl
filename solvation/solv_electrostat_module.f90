@@ -817,6 +817,11 @@ contains
 
   !******************************************************
   subroutine calc_Q_e()
+    !
+    ! Computes  the charges  on the  surface  of the  cavity from  the
+    ! values of electrostatic  potential there. Called from main_scf()
+    ! and runs on master only, expects slaves to spin in main_slave().
+    !
     use solv_cavity_module, only: e => dielectric_constant ! and more
     use potential_module, only: point_in_space, N_points, V_pot_e, &
          start_read_poten_e
@@ -832,7 +837,9 @@ contains
     integer (i4_kind) :: i
 
     DPRINT 'slv:build_solv_ham: eneterd'
-    call start_read_poten_e
+
+    ! This sends a message to the slaves telling to call itself:
+    call start_read_poten_e()
 
     call get_n_elec(N_electrons)
 

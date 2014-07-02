@@ -387,7 +387,8 @@ subroutine main_scf()
                  call allocate_V_and_Q_id()
                  call allocate_E_cav()
               end if
-              do_solv = (loop > first_loop+sol_start_cycle)
+              ! This is a variable in a efp_solv_module:
+              do_solv = (loop > first_loop + sol_start_cycle)
            end if
            call build_Pol_ham (print_id, do_update)
 #else
@@ -443,20 +444,23 @@ subroutine main_scf()
 
      call stop_timer (timer_scf_ham)
 
-     do while (toggle_legacy_mode ())
-        ! Master-only context here ...
-        if (operations_solvation_effect .and. &
-             loop >= first_loop + sol_start_cycle) then
-           call dealloc_ham_solv()
-           call solv_energy_el ()
-        endif
+     if (operations_solvation_effect .and. &
+          loop >= first_loop + sol_start_cycle) then
+        ! FIXME:  slaves  did it  earlier,  see build_solv_ham(),  but
+        ! since it is idempotent we just call it again:
+        call dealloc_ham_solv () ! no comm, idempotent
 
-        if (calc_Pol_centers() .and. loop >= first_loop+1) then
+        ! This one does not do much on slaves:
+        call solv_energy_el ()   ! no comm
+     endif
+
+     if (calc_Pol_centers() .and. loop >= first_loop+1) then
+        do while (toggle_legacy_mode ())
+           ! Master-only context here ...
            call dealloc_Pol_ham()
            call calc_id_energy()
-        end if
-     enddo
-     ! Parallel context from here on ...
+        enddo
+     end if
 
      ! Write calculated  energies. Slaves  could always print  that to
      ! stdout, however the values are partial there.
@@ -768,15 +772,10 @@ subroutine main_scf()
      call say ("done xc_close()")
   endif
 
-  ! Write final calculated energies
-  call say ("write final calculated energies")
   if (operations_solvation_effect) then
      call calc_Q_e ()
-     do while (toggle_legacy_mode ())
-        ! Master-only context here ...
-        call solv_energy_el ()
-        call Q_dealloc ()
-     enddo
+     call solv_energy_el ()     ! no comm
+     call Q_dealloc ()          ! no comm, idempotent
   endif
 
   if (calc_Pol_centers()) then
@@ -797,6 +796,8 @@ subroutine main_scf()
 #endif
   end if
 
+  ! Write final calculated energies
+  call say ("write final calculated energies")
   call write_energies (output_unit)
   if (comm_rank() == 0) then
      if (output_main_scf) call write_energies (stdout_unit)

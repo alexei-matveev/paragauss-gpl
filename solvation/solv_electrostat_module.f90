@@ -1359,6 +1359,10 @@ contains
     ! stored  in  the  module  private  variable  "energy_core_n"  was
     ! pre-computed earlier by do_const_part_of_ham_and_energy().
     !
+    ! Does no communication.  Is executed  on all workers, but see the
+    ! body. Historically was executed by master only.
+    !
+    use comm, only: comm_rank
     use potential_module, only: N_points, V_pot_e, V_pot_n, V_pot_pc
 #ifdef WITH_EFP
     use solv_cavity_module, only: Q_id
@@ -1368,7 +1372,10 @@ contains
     implicit none
     !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: i
+    integer (i4_kind) :: i
+
+    ! FIXME: do slaves have all the data to perform computation?
+    if (comm_rank() /= 0) return
 
     energy_solv_el = 0.0
     do i = 1, N_points

@@ -109,7 +109,12 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    msgtag = comm_msgtag()
    DPRINT 'main_slave: received msgtag=', msgtag
    select case (msgtag)
-   case(msgtag_fit_coeff_send)
+   case (msgtag_fit_coeff_send)
+      !
+      ! FIXME: this is here  because of the unmatched fit_coeff_send()
+      ! main_epe_block() only. Make it run in parallel context and get
+      ! rid of this:
+      !
       call say("fit_coeff_receive")
       call fit_coeff_receive()
 #ifdef WITH_RESPONSE

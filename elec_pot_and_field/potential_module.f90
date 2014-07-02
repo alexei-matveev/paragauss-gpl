@@ -348,22 +348,24 @@ contains
 
   !******************************************************
   subroutine dealloc_space_points
-    ! deallocate "point_in_space" (information about surface points
-    ! of cavity
+    !
+    ! Deallocate "point_in_space" (information about surface points of
+    ! cavity
+    !
     !** End of interface *****************************************
 
-    integer(kind=i4_kind)           :: i, status
+    integer (i4_kind) :: i, status
 
-    do i=1,N_points
-       deallocate(point_in_space(i)%position,stat=status)
-       if ( status .ne. 0) call error_handler( &
-            "potential_module: deallocated point_in_space%position failed" )
+    do i = 1, N_points
+       deallocate (point_in_space(i) % position, stat=status)
+       if (status .ne. 0) call error_handler &
+            ("potential_module: deallocated point_in_space%position failed")
     enddo
 
     ! With only allocatable components this should be enough:
     deallocate (point_in_space, stat=status)
-    if ( status .ne. 0) call error_handler( &
-         "potential_module: deallocated point_in_space failed" )
+    if (status .ne. 0) call error_handler &
+         ("potential_module: deallocated point_in_space failed" )
   end subroutine dealloc_space_points
   !******************************************************
 
@@ -729,32 +731,34 @@ contains
 
   !*********************************************************
   subroutine deallocate_pot
+    !
+    ! Does no communication.
+    !
     !** End of interface *****************************************
 
-    integer(kind=i4_kind)       :: status
+    integer (i4_kind) :: status
 
-    if(allocated(V_pot_n)) then
-       deallocate(V_pot_n,stat=status)
+    if (allocated (V_pot_n)) then
+       deallocate (V_pot_n, stat=status)
        if ( status .ne. 0) call error_handler( &
             "potential:deallocation of V_pot_n failed" )
     endif
-    if(allocated(V_pot_e)) then
-       deallocate(V_pot_e,stat=status)
-       if ( status .ne. 0) call error_handler( &
-            "potential:deallocation of V_pot_e failed" )
+    if (allocated (V_pot_e)) then
+       deallocate (V_pot_e, stat=status)
+       if (status .ne. 0) call error_handler &
+            ("potential:deallocation of V_pot_e failed" )
     endif
-    if(allocated(V_pot_pc)) then
-       deallocate(V_pot_pc,stat=status)
-       if ( status .ne. 0) call error_handler( &
-            "potential:deallocation of V_pot_pc failed" )
+    if (allocated (V_pot_pc)) then
+       deallocate (V_pot_pc, stat=status)
+       if ( status .ne. 0) call error_handler &
+            ("potential:deallocation of V_pot_pc failed" )
     endif
 #ifdef WITH_EFP
-    if(allocated(V_pot_mp)) then
-       deallocate(V_pot_mp,stat=status)
+    if (allocated (V_pot_mp)) then
+       deallocate (V_pot_mp, stat=status)
        ASSERT(status==0)
     endif
 #endif
-
   end subroutine deallocate_pot
   !*********************************************************
 

@@ -29,9 +29,10 @@ subroutine build_mol_surfaces()
   !----------------------------------------------------------------
   !
   ! Build  molecular  surfaces   for  different  solvation  tasks  and
-  ! calculate cavitation and disp-rep energies.
-  !
-  ! Subroutine called by: main_master() and runs on all workers.
+  ! calculate cavitation and disp-rep energies.  Subroutine called by:
+  ! main_master()  and runs  on all  workers. Though  the bulk  of the
+  ! actual  work is  done on  master  only. Does  not seem  to do  any
+  ! communication.
   !
   !
   !  References: ...
@@ -55,45 +56,47 @@ subroutine build_mol_surfaces()
   !----------------------------------------------------------------
 
   !------------ Modules used --------------------------------------
-# include "def.h"
   use solv_cavity_module, only: cavitation_energy, &
        disp_rep_energy, do_cavitation, do_disp_rep, do_gradients, &
        points_on_cavity_surface, correction_param
   use solv_electrostat_module, only: matrix_generation, &
        solv_poten_transfer_data
-  use paragauss, only: toggle_legacy_mode
-  use comm, only: comm_same
+  use comm, only: comm_rank
   implicit none
   ! *** end of interface ***
 
+  integer :: rank
+
+  rank = comm_rank()
+
+  ! Flags used in the conditionals seem to have the same values on all
+  ! workers.
   do_gradients = .false.
-  ASSERT(comm_same(disp_rep_energy))
   if (disp_rep_energy) then
      do_cavitation = .false.
      do_disp_rep = .true.
-     do while (toggle_legacy_mode())
-        call disp_rep_wrap()
-     enddo
+     if (rank == 0) then
+        call disp_rep_wrap()    ! no comm?
+     endif
   endif
 
-  ASSERT(comm_same(cavitation_energy))
   if (cavitation_energy) then
      do_cavitation = .true.
      do_disp_rep = .false.
-     do while (toggle_legacy_mode())
-        call points_on_cavity_surface()
-        call energy_and_grad_of_cavity()
-     enddo
+     if (rank == 0) then
+        call points_on_cavity_surface()  ! no comm?
+        call energy_and_grad_of_cavity() ! no comm
+     endif
   endif
-  do while (toggle_legacy_mode())
-     call correction_param()
-  enddo
+  ! This one  sets a few  parameters, I think  there is no harm  to do
+  ! that on all workers:
+  call correction_param()       ! no comm
   do_cavitation = .false.
   do_disp_rep = .false.
 
-  do while (toggle_legacy_mode())
-     call points_on_cavity_surface()
-     call matrix_generation()
-     call solv_poten_transfer_data()
-  enddo
+  if (rank == 0) then
+     call points_on_cavity_surface() ! no comm?
+     call matrix_generation()        ! no comm
+     call solv_poten_transfer_data() ! no comm
+  endif
 end subroutine build_mol_surfaces

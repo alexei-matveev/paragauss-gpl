@@ -1325,8 +1325,12 @@ contains
        if (item_arr_poten /= 0) call poten_integral_close(th_poten)
     endif
 
-    ! FIXME: when is this done on master?
-    if (my_ind /= 1) call dealloc_ham_solv()
+    ! FIXME:  master does  it later  after  ham_calc_main() presumably
+    ! added all cotributions to  Fock matrix, see main_scf(). It looks
+    ! like the slaves try to free O(N^2) storage as soon as possible:
+    if (my_ind /= 1) then
+       call dealloc_ham_solv()  ! no comm, idempotent
+    endif
 
     deallocate(dim_irrep,stat=status)
     if ( status .ne. 0) call error_handler( &
@@ -1824,9 +1828,9 @@ ASSERT(all(unique_atoms(:)%zc==0))
 
   subroutine shutdown_solvation()
     !
-    ! Executed by all workers in a paralle context.
-    ! Deallocates some used variables, let us make an entry point
-    ! for a full shurdown.
+    ! Executed  by all  workers  in a  parallel  context. Called  from
+    ! finalize_geometry() every  geometry iteration.  Deallocates some
+    ! used variables. Let us make an entry point for a full shutdown.
     !
     use comm, only: comm_rank
     use potential_module, only: deallocate_pot, bounds_free_poten, &
@@ -1836,18 +1840,18 @@ ASSERT(all(unique_atoms(:)%zc==0))
     !** End of interface *****************************************
 
     !
-    ! Delete everything connected with solvation effect
+    ! Delete everything related to solvation effect
     !
-    if ( comm_rank() == 0 ) then
+    if (comm_rank() == 0) then
         ! FIXME: was historically different for master and slaves
         call deallocate_pot()
 
-        if(N_unique_atoms > 0) call bounds_free_poten()
+        if (N_unique_atoms > 0) call bounds_free_poten()
 
         call dealloc_A_inv()
     endif
 
-    if(N_unique_atoms > 0) call destroy_poten_file()
+    if (N_unique_atoms > 0) call destroy_poten_file()
 
     call dealloc_space_points()
   end subroutine shutdown_solvation

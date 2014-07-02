@@ -73,16 +73,16 @@ subroutine main_molmech (job, iwork, geo_steps)
   call start_mm_timer(full_time)
 
   qmmm=job
-  
+
   if(qmmm == 4) goto 4
-  
+
   call read_molmech_input()
 !!$print*,'READ INPUT DONE'
   if(qmmm == -1) return
 
   iwork=0
   geo_steps=1
-  if(with_optimizer) then 
+  if(with_optimizer) then
      iwork=int(-gx_work,i4_kind)
      geo_steps=n_iterations
   end if
@@ -91,7 +91,7 @@ subroutine main_molmech (job, iwork, geo_steps)
 !!$  call species_resorting()
 !!$  call resorting_Nb_lists()
 
-     if(coulomb) then 
+     if(coulomb) then
         if(trim(coulomb_type) == "DIPOLE-DIPOLE") then
            call dip_atom_pairs()
         end if
@@ -102,11 +102,11 @@ subroutine main_molmech (job, iwork, geo_steps)
      call stop_mm_timer(nbl_time)
 !!$print*,'N-BODY LISTS DONE'
 
-     call init_energy_and_forces() 
+     call init_energy_and_forces()
 !!$print*,'INIT ENERGY AND GRAD DONE'
 
      if(calc_optimization .or. calc_hessian) then
-        if(calc_optimization) then 
+        if(calc_optimization) then
            call init_hess()
            call minimize()
            if(to_pg_hess) then

@@ -1047,37 +1047,37 @@ contains
   !******************************************************
 
   !******************************************************
-  subroutine dealloc_ham_solv
-   !** End of interface *****************************************
+  subroutine dealloc_ham_solv()
+    !
+    ! Does no communication. Idempotent.
+    !
+    implicit none
+    !** End of interface *****************************************
 
-    use symmetry_data_module  ! provide ssym
+    integer (i4_kind) :: i, status
 
-
-    integer(kind=i4_kind)       :: n_irrep,status
-    integer(kind=i4_kind)       :: i
-
-    n_irrep = symmetry_data_n_irreps()
+    ! To make it idempotent:
+    if (.not. allocated (ham_solv_el)) return
 
 #if 0
        if(.not.allocated(ham_solv_el_keep)) &
        allocate( ham_solv_el_keep(size(ham_solv_el)))
 #endif
-    do i=1,n_irrep
+    do i = 1, size (ham_solv_el) ! n_irrep
 #if 0
        if(.not.associated(ham_solv_el_keep(i)%m)) &
        allocate(ham_solv_el_keep(i)%m(size(ham_solv_el(i)%m,1),size(ham_solv_el(i)%m,2)))
        ham_solv_el_keep(i)%m=ham_solv_el(i)%m
     print*,'scf ham_solv',sum(ham_solv_el_keep(i)%m)
 #endif
-       deallocate( ham_solv_el(i)%m,STAT=status)
+       deallocate (ham_solv_el(i) %m, STAT=status)
        if (status.ne.0) call error_handler &
             ("dealloc_ham_solv: deallocation of ham_solv_el(1) failed")
     enddo
 
-    deallocate (ham_solv_el,STAT=status)
+    deallocate (ham_solv_el, STAT=status)
     if (status.ne.0) call error_handler &
          ("dealloc_ham_solv: deallocation of ham_solv_el failed ")
-
   end subroutine dealloc_ham_solv
   !******************************************************
 

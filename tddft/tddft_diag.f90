@@ -132,8 +132,8 @@ CONTAINS
 
     if (comm_i_am_master()) CALL system("rm "//TRIM(outfile("nto.tmp")))
 
-    if (comm_i_am_master()) CALL write_to_output_units(&
-         & '  diag_init: start calculation of diagonal')
+    call write_to_output_units &
+         ('  diag_init: start calculation of diagonal')
 
    !if(gl_NTO.and.comm_i_am_master()) then
    !    inquire(file=TRIM(outfile("nto.tmp")), exist=it_exists)
@@ -179,8 +179,8 @@ CONTAINS
 !DBG::       print *,"MyID: ",comm_myindex()," For concrete ir c : ", i_ir
 
 
-       if (comm_i_am_master()) CALL write_to_output_units(&
-            '  diag_init: read of two-center Coulomb for irrep ',inte=i_ir)
+       call write_to_output_units &
+            ('  diag_init: read of two-center Coulomb for irrep ',inte=i_ir)
 
        !! Coul part
        call global_alloc_M('Qlm',NK)
@@ -192,8 +192,8 @@ CONTAINS
 
        call Q_calc(i_ir,gl_Q,QM1)
        if( gl_XC ) then
-          if (comm_i_am_master()) CALL write_to_output_units(&
-           & '  diag_init: read of two-center XC for irrep', inte=i_ir)
+          call write_to_output_units &
+               ('  diag_init: read of two-center XC for irrep', inte=i_ir)
           call XC_calc     (i_ir,n_sp,gl_T,QM1)
        end if
 
@@ -209,11 +209,11 @@ CONTAINS
        ALLOCATE(KERN(NK,NK), STAT=status)
        ASSERT(status==0)
 
-       if (comm_i_am_master()) CALL write_to_output_units(&
-           & '  diag_init: read of three-center Coulomb and calculation of diagonal for irrep ',inte=i_ir)
+       call write_to_output_units &
+            ('  diag_init: read of three-center Coulomb and calculation of diagonal for irrep ',inte=i_ir)
        i_sp_: do i_sp = 1, n_sp
-          if (comm_i_am_master()) CALL write_to_output_units(&
-           & '  diag_init: read of three-center Coulomb for spin',inte=i_sp)
+          call write_to_output_units &
+               ('  diag_init: read of three-center Coulomb for spin',inte=i_sp)
           call read_C( i_ir,i_sp,&
                gl_eta (i_ir,i_sp)%m, gl_eps(i_ir,i_sp)%m,&
                gl_N_as(i_ir,i_sp),   NK,&
@@ -290,8 +290,8 @@ CONTAINS
 
        if (gl_SS) then
 
-           if (comm_i_am_master()) CALL write_to_output_units(&
-           & '  diag_init: calculation of davidson for irrep ',inte=i_ir)
+           call write_to_output_units&
+                ('  diag_init: calculation of davidson for irrep ',inte=i_ir)
 
           FPP_TIMER_STOP (diag_timer)
           FPP_TIMER_START(dvdson_timer)

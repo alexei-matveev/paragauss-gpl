@@ -40,7 +40,7 @@ module molmech_slave_module
   use species_module, only :       &
        send_receive_species,       &
        shutdown_species_on_slaves, &
-       lattice_calc 
+       lattice_calc
   use ewald_module, only : &
        send_receive_ewald, &
        recipr_ew_E_and_F,  &
@@ -65,7 +65,7 @@ module molmech_slave_module
        shutdown_interacting_lists
 
   implicit none
-  private       
+  private
   save
   !== Interrupt end of public interface of module =================
   !------------ Declaration of public constants and variables -----

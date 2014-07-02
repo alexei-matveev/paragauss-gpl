@@ -94,10 +94,6 @@ use elec_static_field_module, only: receive_surf_point, &
      surf_points_gradinfo_dealloc,surf_points_grad_information,read_field_e,send_receive_field, &
      bounds_free_field
 use calc3c_switches
-#ifdef WITH_MOLMECH
-use molmech_msgtag_module, only: msgtag_start_molmech
-use qmmm_interface_module, only: slave_run
-#endif
 
 implicit none
 integer (i4_kind) :: msgtag
@@ -206,11 +202,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       call say("calc_Pol_ham")
       call calc_Pol_ham()
 
-#ifdef WITH_MOLMECH
-  case(msgtag_start_molmech)
-     ! molecular mechanics part
-     call main_molmech(slave_run)
-#endif
   case (msgtag_finito)
      call say("exiting")
      return

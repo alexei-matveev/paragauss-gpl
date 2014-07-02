@@ -155,11 +155,11 @@ module interfaces
   end interface
 
   interface
-     subroutine main_molmech(job,iwork,geo_steps)
+     subroutine main_molmech (job, iwork, geo_steps)
        use type_module
        implicit none
-       integer(i4_kind)           :: job
-       integer(i4_kind), optional :: iwork,geo_steps
+       integer (i4_kind) :: job
+       integer (i4_kind), optional :: iwork, geo_steps
      end subroutine main_molmech
   end interface
 

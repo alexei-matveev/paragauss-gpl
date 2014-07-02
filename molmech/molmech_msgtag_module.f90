@@ -27,11 +27,11 @@ module molmech_msgtag_module
   use type_module
 
   implicit none
-  private       
+  private
   save
   !== Interrupt end of public interface of module =================
   !------------ Declaration of public constants and variables -----
-  integer(i4_kind), public, parameter :: msgtag_start_molmech     = 2000
+  !nteger(i4_kind), public, parameter :: msgtag_start_molmech     = 2000
   integer(i4_kind), public, parameter :: msgtag_mm_initslaves     = 1000
   integer(i4_kind), public, parameter :: msgtag_mm_send_ntotal    = 1001
   integer(i4_kind), public, parameter :: msgtag_mm_send_species   = 1002

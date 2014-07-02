@@ -42,7 +42,7 @@ module qmmm_interface_module
   logical, public :: qm_mm_1 !see qmmm1_interface_module
   integer, public, parameter :: mm_run=0, qmmm_read_input=-1
   integer, public, parameter :: imomm_mm_small=2, imomm_mm_large=3
-  integer, public, parameter :: qm_mm_run=4, slave_run=-2
+  integer, public, parameter :: qm_mm_run=4
   integer, public :: qm_mm_1_task
   !--------------------------------------------------------------
 

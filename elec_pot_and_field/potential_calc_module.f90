@@ -372,17 +372,18 @@ contains
 
 !******************************************************************
   subroutine calc_plane_grid()
-    !------------ Modules used ------------------------------------
+    !
+    ! Does  no  communication  but   some  IO  to  disk.  Called  from
+    ! main_master() on master only.
+    !
     use unique_atom_module, only: N_unique_atoms,unique_atoms
-    !------------ Declaration of formal parameters ----------------
     !== End of interface ==========================================
-    !------------ Declaration of local variables ------------------
+
     real (r8_kind) :: center_coor(3), xaxis(3), yaxis(3), zaxis(3)
     real (r8_kind) :: length01, r01(3), rbuf(3), mat_rot(3,3)
     real(kind=r8_kind) :: atcoor(3,100),mat_rot_t(3,3)
     integer (i4_kind) :: iz(100), nat, atunit
     integer(kind=i4_kind) :: istat,i1,j1,k1
-    !------------ Executable code ---------------------------------
 
     allocate(pot_on_plane(xgrid,ygrid),stat=istat)
     if(istat /= 0) call error_handler( &

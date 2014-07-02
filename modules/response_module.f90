@@ -124,8 +124,8 @@ module response_module
   use density_calc_module, only: density_calc_setup,density_calc_nl
   use unique_atom_module
   use symmetry_data_module
-  USE init_tddft_module,   ONLY: init_tddft_start
-  USE tddft_diag,          ONLY: diag_init
+  USE init_tddft_module, only: init_tddft_start
+  USE tddft_diag, only: diag_init
   USE phys_param_module
   use resp_util_module
   use exchange
@@ -727,13 +727,14 @@ contains
     !
     ! Main routine of this module. Executed by all workers. FIXME: may
     ! need  some  work,  as  it  was previousely  executed  by  master
-    ! only. Controls  PostSCF calculation of data  needed for response
+    ! only. Controls post-SCF calculation  of data needed for response
     ! calculations.
     !
     USE int_send_2c_resp, only: int_send_2c_resp_rewrite
-    USE int_resp_module,  only: int_resp_Clb_3c
+    USE int_resp_module, only: int_resp_Clb_3c
     USE resp_dipole_module
-    USE noRI_module,      only: noRI_2c
+    USE noRI_module, only: noRI_2c
+    use comm, only: comm_rank
     implicit none
     !** End of interface *****************************************
 
@@ -786,12 +787,13 @@ contains
 
        ! *** Dipoles ***
        ! do we have to produce the tape with transition dipole moments ?
-       if(calc_osc_strength) then
+       if (calc_osc_strength) then
           call write_to_trace_unit  ("Rewrite tapes with transition dipole moments")
           call write_to_output_units("response_main: response_rewrite_dipoletape")
           call start_timer(timer_resp_dipole)
-!!          if (comm_i_am_master()) call response_rewrite_dipoletape()
-          if (comm_i_am_master()) call resp_dipole_rewrite()
+          if (comm_rank() == 0) then
+             call resp_dipole_rewrite() ! serial
+          endif
           call stop_timer(timer_resp_dipole)
        end if
 
@@ -848,7 +850,7 @@ contains
 
           call write_to_output_units("response_main: int_resp_Clb_3c")
 
-          call int_resp_Clb_3c
+          call int_resp_Clb_3c()
           call stop_timer(timer_resp_Coulomb)
        end if
 
@@ -963,9 +965,10 @@ contains
 
   !*************************************************************
   subroutine response_setup()
-    !  Purpose: For master and every slave:
-    !  Setup module private variables needed in several subroutines
-    !------------ Modules used ------------------- ---------------
+    !
+    ! For  master  and every  slave:  Setup  module private  variables
+    ! needed in several subroutines.
+    !
     use ch_response_module, only: dimension_of_fit_ch
     implicit none
     !** End of interface *****************************************

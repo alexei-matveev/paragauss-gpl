@@ -840,7 +840,7 @@ contains
 
     DPRINT 'slv:build_solv_ham: eneterd'
 
-    ! This sends a message to the slaves telling to call itself:
+    ! To be executed on all workers:
     call start_read_poten_e()
 
     ! FIXME: why not let all of the workers do the rest?

@@ -1069,10 +1069,10 @@ contains
 
   !*************************************************************
   subroutine response_write_header()
-    !  Purpose: write header-interface-file with information for
-    !           response program
-    !           Called by master through "response_main()"
-    !------------ Modules used ------------------- ---------------
+    !
+    ! Write  header  interface  file  with  information  for  response
+    ! program.  Called by master through response_main().
+    !
     use echo_input_module
     use ch_response_module,   only: dimension_of_fit_ch
     use symmetry_data_module, only: symmetry_data_n_irreps
@@ -1085,32 +1085,37 @@ contains
     integer(kind=i4_kind) :: occ_times_unocc_dim, nmult, nc, ou_dim
     integer(kind=i4_kind) :: i_mlt
     character(6)          :: Xw,Cw
-!!$    logical               :: flag_X, flag_C
-    !------------ Executable code --------------------------------
 
-    io_unit=openget_iounit(status='unknown',&
-         & file=trim(resp_dir)//'/'//trim(header_file))
+    io_unit = openget_iounit (status='unknown', &
+         file= trim (resp_dir) // '/' // trim (header_file))
 
-    n_irrep     = symmetry_data_n_irreps()
+    n_irrep = symmetry_data_n_irreps()
 
-    ! first write number of spins, irreps and chargefit functions
-    ! as namelist "system_data"
-    call start("SYSTEM_DATA","RESPONSE_WRITE_HEADER", io_unit, 1)  ! 1 = echo_level = default
-    call intg ("NUM_SPINS         ",n_spin ,-1)   ! -1 as default value i.e.
-    call intg ("NUM_IRREPS        ",n_irrep,-1)  ! suppress printing
-    do i_irrep = 1,n_irrep
+    ! First write  number of spins, irreps and  chargefit functions as
+    ! namelist  "system_data".  Set  echo level  to  suppress printing
+    ! defaults.  Most values have no meaningful defaults even.
+    call start ("SYSTEM_DATA","RESPONSE_WRITE_HEADER", io_unit, &
+         echo_level_full)
+    call intg ("NUM_SPINS         ", n_spin, -1)
+    call intg ("NUM_IRREPS        ", n_irrep, -1)
+    ! FIXME: this  is not a  standard namelist.  You cannot  have more
+    ! than one entry  with the same name there.  This precludes use of
+    ! standard namelist IO on the reader side!
+    do i_irrep = 1, n_irrep
        nc = dimension_of_fit_ch(i_irrep)
-       call intg("NUM_CHARGEFITFCTS ",nc,-1) ! of "default value"
+       call intg ("NUM_CHARGEFITFCTS ", nc, -1)
     end do
     call stop()
 
-    ! now write the input options for the response calculation as namelist
-    call start("RESPONSE_CONTROL","RESPONSE_WRITE_HEADER", io_unit,1)
+    ! Now  write the  input options  for the  response  calculation as
+    ! namelist
+    call start ("RESPONSE_CONTROL","RESPONSE_WRITE_HEADER", io_unit, &
+         echo_level_full)
 
-    if (n_spin==2) then
-       call word("TARGET            ",    "SS",df_target)
+    if (n_spin == 2) then
+       call word ("TARGET            ", "SS", df_target)
     else
-       call word("TARGET            ",    trim(adjustl(target)),df_target)
+       call word ("TARGET            ", trim (adjustl (target)), df_target)
     end if
 
     if (xalpha_resp ) X_KIND = X_XALPHA
@@ -1157,32 +1162,33 @@ contains
        Cw = "NONE"
     end select
 
-    call strng("EXCHANGE          ", TRIM(Xw),"NONE")
-    call strng("CORRELATION       ", TRIM(Cw),"NONE")
+    call strng("EXCHANGE          ", TRIM (Xw), "NONE")
+    call strng("CORRELATION       ", TRIM (Cw), "NONE")
 
-    call intg ("MAX_ITER          ",  max_iter,    df_max_iter)
-    call flag ("CALC_ALL          ",  calc_all,    df_calc_all)
-    call flag ("LANCZOS           ",  lanczos,     df_lanczos)
-    call flag ("noRI              ",  noRI,        df_noRI)
-    call flag ("S_APP             ",  S_App,       df_S_App)
-    call intg ("CALC_N_LOW        ",  calc_n_low,  df_calc_n_low)
-    call real ("LOWESTeV          ",  LOWESTeV,    df_LOWESTeV)
-    call intg ("MAX_SP_TRANS      ",  max_sp_trans,df_max_sp_trans)
+    call intg ("MAX_ITER          ",  max_iter, df_max_iter)
+    call flag ("CALC_ALL          ",  calc_all, df_calc_all)
+    call flag ("LANCZOS           ",  lanczos, df_lanczos)
+    call flag ("noRI              ",  noRI, df_noRI)
+    call flag ("S_APP             ",  S_App, df_S_App)
+    call intg ("CALC_N_LOW        ",  calc_n_low, df_calc_n_low)
+    call real ("LOWESTeV          ",  LOWESTeV, df_LOWESTeV)
+    call intg ("MAX_SP_TRANS      ",  max_sp_trans, df_max_sp_trans)
 
-    call flag ("NTO               ",  NTO         ,df_NTO)            !!!!!!MH NTO calculations
+    ! MH: NTO calculations
+    call flag ("NTO               ",  NTO, df_NTO)
 
     if (calc_osc_strength) then
-       call flag("CALC_OSC_STR      ",    .true.,.false.)
+       call flag("CALC_OSC_STR      ", .true., .false.)
     else
-       call flag("CALC_OSC_STR      ",   .false.,.false.)
+       call flag("CALC_OSC_STR      ", .false., .false.)
     end if
     call stop()
 
-    ! write the dimension (occupied * unoccupied) for each irrep/spin
-    write (io_unit,'("#   IR C  SPIN  NUMBER OF TRANSITIONS")',iostat=io_stat)
-    ASSERT( io_stat == 0 )
-    write (output_unit,'("#   IR C  SPIN  NUMBER OF TRANSITIONS")',iostat=io_stat)
-    ASSERT( io_stat == 0 )
+    ! Write the dimension (occupied * unoccupied) for each irrep/spin
+    write (io_unit, '("#   IR C  SPIN  NUMBER OF TRANSITIONS")', iostat=io_stat)
+    ASSERT(io_stat==0)
+    write (output_unit, '("#   IR C  SPIN  NUMBER OF TRANSITIONS")', iostat=io_stat)
+    ASSERT(io_stat==0)
 
     i_spin_: do i_spin=1,n_spin
        i_ir_c_: do i_ir_c = 1, n_irrep
@@ -1197,15 +1203,16 @@ contains
                 end do i_mlt_
              end do i_ir_b_
           end do i_ir_a_
-          write (io_unit,'(4X,I2,5X,I2,5X,I5)',iostat=io_stat) i_ir_c, i_spin, ou_dim
+          write (io_unit, '(4X,I2,5X,I2,5X,I5)', iostat=io_stat) &
+               i_ir_c, i_spin, ou_dim
           ASSERT(io_stat==0)
-          write (output_unit,'(4X,I2,5X,I2,5X,I5)',iostat=io_stat) i_ir_c, i_spin, ou_dim
+          write (output_unit, '(4X,I2,5X,I2,5X,I5)', iostat=io_stat) &
+               i_ir_c, i_spin, ou_dim
           ASSERT(io_stat==0)
        end do i_ir_c_
     end do i_spin_
 
     call return_iounit(io_unit)
-
   end subroutine response_write_header
   !*************************************************************
 

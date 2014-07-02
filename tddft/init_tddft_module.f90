@@ -155,9 +155,20 @@ CONTAINS
     INTEGER(KIND=i4_kind) :: io_stat
     INTEGER(KIND=i4_kind) :: i_spin, i_skip, in_spin,&
          & in_irrep_c, in_trans, n_procs
-    CHARACTER(LEN=255)    :: input_line
-    character(len=*), parameter :: prefix = "      * "
-    REAL   (KIND=r8_kind) :: LeV
+
+    ! 25 +  230 ==  255. FIXME:  the code here  does not  use namelist
+    ! input, instead it tries to  parse the inputs itself (badly). The
+    ! formats here  must skip the "NAME  =" part of  the namelist line
+    ! and have a wide enough field for the actual value:
+    character (len=255) :: input_line
+    character (len=*), parameter :: ifmt = "(25X, I230)"
+    character (len=*), parameter :: dfmt = "(25X, F230.10)"
+    character (len=*), parameter :: lfmt = "(25X, L230)"
+
+    ! This is for fancy output only:
+    character (len=*), parameter :: prefix = "      * "
+
+    REAL (r8_kind) :: LeV
 
     integer(i4_kind), parameter :: & !! VERY IMPORTANT
        & X_NONE  = 0, &
@@ -190,12 +201,14 @@ CONTAINS
 
     do i_skip = 1, 500
 
-       READ(io_unit,FMT='(A)',IOSTAT=io_stat) input_line
+       READ (io_unit, FMT='(A)', IOSTAT=io_stat) input_line
+       ASSERT(io_stat==0)
 
        call clean_default(input_line)
 
-       if (0/=index(input_line,'NUM_SPINS')) then
-          READ (input_line,fmt='(27X,I4)',IOSTAT=io_stat) gl_N_spin
+       if (0 /= index (input_line, 'NUM_SPINS')) then
+          READ (input_line, fmt=ifmt, IOSTAT=io_stat) gl_N_spin
+          ASSERT(io_stat==0)
 
           if (comm_i_am_master()) then
              if (gl_N_spin == 1) then
@@ -205,30 +218,28 @@ CONTAINS
              end if
           end if
 
-       elseif (0/=index(input_line,'NUM_IRREPS')) then
-          READ (input_line,'(27X,I4)',IOSTAT=io_stat) gl_N_irr
+       elseif (0 /= index (input_line, 'NUM_IRREPS')) then
+          READ (input_line, ifmt, IOSTAT=io_stat) gl_N_irr
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) &
                CALL write_to_output_units(prefix // "    IRREPS             = ", gl_N_irr)
           call global_alloc('chr',gl_N_irr)
           call global_alloc('nas',gl_N_irr)
           call global_alloc('mlt',gl_N_irr)
           call global_alloc('trs',gl_N_irr)
-       elseif (0/=index(input_line,'NUM_CHARGEFITFCTS')) then
+       elseif (0 /= index (input_line, 'NUM_CHARGEFITFCTS')) then
           in_chfit = in_chfit+1
-          READ (input_line,'(27X,I4)',IOSTAT=io_stat) gl_N_k(in_chfit)
-#if 0
-          if (comm_i_am_master()) &
-               PRINT *,"       fit_ch(",in_chfit,") = ", gl_N_k(in_chfit)
-#endif
+          READ (input_line, ifmt, IOSTAT=io_stat) gl_N_k(in_chfit)
+          ASSERT(io_stat==0)
 
-!!$//RESPONSE CONTROL BLOCK
-       elseif(0/=index(input_line,"TARGET")) then
+          ! RESPONSE CONTROL BLOCK
+       elseif (0 /= index (input_line, "TARGET")) then
           gl_SS = .false.
           gl_ST = .false.
-          if (0/=index(input_line,"SS")) then
+          if (0 /= index (input_line, "SS")) then
              gl_SS = .true.
           end if
-          if (0/=index(input_line,"ST")) then
+          if (0 /= index (input_line, "ST")) then
              gl_ST = .true.
           end if
           if (comm_i_am_master()) then
@@ -281,32 +292,37 @@ CONTAINS
           end if
 
 
-       elseif(0/=index(input_line,"CALC_ALL")) then
-          READ (input_line,'(25X,L5)',IOSTAT=io_stat) gl_calcall
+       elseif (0 /= index (input_line, "CALC_ALL")) then
+          READ (input_line, lfmt, IOSTAT=io_stat) gl_calcall
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
 
-       elseif(0/=index(input_line,"LANCZOS")) then
-          READ (input_line,'(25X,L5)',IOSTAT=io_stat) gl_lanczos
+       elseif (0 /= index (input_line, "LANCZOS")) then
+          READ (input_line, lfmt, IOSTAT=io_stat) gl_lanczos
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
 
-       elseif(0/=index(input_line,"S_APP")) then
-          READ (input_line,'(25X,L5)',IOSTAT=io_stat) gl_S_App
+       elseif (0 /= index (input_line, "S_APP")) then
+          READ (input_line, lfmt, IOSTAT=io_stat) gl_S_App
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
 
-       elseif(0/=index(input_line,"noRI")) then
-          READ (input_line,'(25X,L5)',IOSTAT=io_stat) gl_noRI
+       elseif (0 /= index (input_line, "noRI")) then
+          READ (input_line, lfmt, IOSTAT=io_stat) gl_noRI
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
 
-       elseif(0/=index(input_line,"CALC_N_LOW")) then
-          READ (input_line,'(25X,I8)',IOSTAT=io_stat) gl_Nlow
+       elseif (0 /= index (input_line, "CALC_N_LOW")) then
+          READ (input_line, ifmt,IOSTAT=io_stat) gl_Nlow
+          ASSERT(io_stat==0)
           if (.not. gl_calcall) then
              if (comm_i_am_master()) then
                 CALL write_to_output_units(trim(prefix // input_line))
@@ -315,50 +331,55 @@ CONTAINS
              gl_Nlow = 65535
           end if
 
-       elseif (0/=index(input_line,"LOWESTeV")) then
-          READ (input_line,'(25X,E15.10)',IOSTAT=io_stat) LeV
+       elseif (0 /= index (input_line, "LOWESTeV")) then
+          READ (input_line, dfmt, IOSTAT=io_stat) LeV
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
           gl_LOWESTeV = (LeV * 0.0367493090_r8_kind) ** 2
 
-       elseif(0/=index(input_line,"MAX_SP_TRANS")) then
-          READ (input_line,'(25X,I8)',IOSTAT=io_stat) gl_max_sp_trans
+       elseif (0 /= index (input_line, "MAX_SP_TRANS")) then
+          READ (input_line, ifmt, IOSTAT=io_stat) gl_max_sp_trans
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
 
-       elseif(0/=index(input_line,"MAX_ITER")) then
-          READ (input_line,'(25X,I8)',IOSTAT=io_stat) gl_MaxIt
+       elseif (0 /= index (input_line, "MAX_ITER")) then
+          READ (input_line, ifmt, IOSTAT=io_stat) gl_MaxIt
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
 
-       elseif(0/=index(input_line,"CALC_OSC_STR")) then
-          READ (input_line,'(25X,L5)',IOSTAT=io_stat) gl_oscstr
+       elseif (0 /= index (input_line, "CALC_OSC_STR")) then
+          READ (input_line, lfmt, IOSTAT=io_stat) gl_oscstr
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
 
-       elseif(0/=index(input_line,"NTO")) then                    !!!MH NTO Calculation
-          READ (input_line,'(25X,L5)',IOSTAT=io_stat) gl_NTO
+       elseif (0 /= index (input_line, "NTO")) then ! MH: NTO Calculation
+          READ (input_line, lfmt, IOSTAT=io_stat) gl_NTO
+          ASSERT(io_stat==0)
           if (comm_i_am_master()) then
              CALL write_to_output_units(trim(prefix // input_line))
           end if
 
-!!$//END OF RESPONSE CONTROL BLOCK
+          ! END OF RESPONSE CONTROL BLOCK
 
-       elseif (0/=index(input_line,'NUMBER OF TRANSITIONS')) then
+       elseif (0 /= index (input_line, 'NUMBER OF TRANSITIONS')) then
           do i_spin = 1, gl_N_spin
              do i_ir_c = 1, gl_N_irr
 !               if (eof(io_unit)) EXIT
-                READ  (io_unit,'(4X,I2,5X,I2,5X,I5)',IOSTAT=io_stat) in_irrep_c, in_spin, in_trans
-                if( io_stat == -1 ) EXIT ! the loop at EOF!
+                READ (io_unit, '(4X,I2,5X,I2,5X,I5)', IOSTAT=io_stat) in_irrep_c, in_spin, in_trans
+                if (io_stat == -1) EXIT ! the loop at EOF!
                 ASSERT(io_stat==0)
 
                 gl_N_as(in_irrep_c, in_spin) = in_trans
 
-                !! FIXME: WHAT THE HELL IS IT???
+                ! FIXME: What is it?
                 if (comm_parallel()) then
                    gl_N_as_slave(in_irrep_c, in_spin) = INT(gl_N_as(in_irrep_c,in_spin)/n_procs)
                    gl_N_as_mastr(in_irrep_c, in_spin) = gl_N_as(in_irrep_c, in_spin) &
@@ -370,7 +391,7 @@ CONTAINS
 
              end do
           end do
-          EXIT
+          EXIT                  ! ... without checking io_stat
        end if
        ASSERT(io_stat==0)
     end do
@@ -419,7 +440,6 @@ CONTAINS
     !     by -1.
     !------------ Modules used ----------------------------------
     USE filename_module, ONLY: data_dir
-    USE comm_module
     USE comm_module
 
     USE global_module, ONLY: &

@@ -452,8 +452,10 @@ subroutine main_master()
      ! generating suface charge distribution (solvation effect)
      if (operations_solvation_effect) then
         call say ("call build_mol_surfaces()")
-        ! Subroutine with an implicit (unchecked) interface:
-        call build_mol_surfaces()
+        ! Subroutine   with    an   implicit   (unchecked)   interface
+        ! here. Though  it runs  on all workers,  most of the  work is
+        ! done on master only:
+        call build_mol_surfaces() ! no comm?
         if (stop_solv) then
            call stop_timer (timer_initialisation)
            ! DONT exit geometry_loop

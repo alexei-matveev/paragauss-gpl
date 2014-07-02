@@ -737,26 +737,18 @@ contains
     implicit none
     !** End of interface *****************************************
 
-    real(r8_kind) :: tt
-
-    !------------ Executable code ------------------------------------
-
-    ! MASTER:
-
-    if (comm_i_am_master()) then
 #ifdef FPP_TIMERS
-       FPP_TIMER_ZERO(RESPONSE_ALL)
-       FPP_TIMER_ZERO(RESPONSE_SETUP)
-       FPP_TIMER_ZERO(RESPONSE_DIPOL)
-       FPP_TIMER_ZERO(COULOMB_2C)
-       FPP_TIMER_ZERO(XC_2C)
-       FPP_TIMER_ZERO(COULOMB_3C)
-       FPP_TIMER_ZERO(DIAG_PLUS_DVDSON)
-       FPP_TIMER_ZERO(RESPONSE_CLOSE)
+    FPP_TIMER_ZERO(RESPONSE_ALL)
+    FPP_TIMER_ZERO(RESPONSE_SETUP)
+    FPP_TIMER_ZERO(RESPONSE_DIPOL)
+    FPP_TIMER_ZERO(COULOMB_2C)
+    FPP_TIMER_ZERO(XC_2C)
+    FPP_TIMER_ZERO(COULOMB_3C)
+    FPP_TIMER_ZERO(DIAG_PLUS_DVDSON)
+    FPP_TIMER_ZERO(RESPONSE_CLOSE)
 #endif
-       FPP_TIMER_START(RESPONSE_ALL)
-       FPP_TIMER_START(RESPONSE_SETUP)
-    end if
+    FPP_TIMER_START(RESPONSE_ALL)
+    FPP_TIMER_START(RESPONSE_SETUP)
 
     call response_setup()
 
@@ -900,23 +892,26 @@ contains
 
 #ifdef FPP_TIMERS
        ! TIMER OUTPUT
-       tt = FPP_TIMER_VALUE(RESPONSE_SETUP)
-       WRITE (*,*) "[m] RESPONSE TIMER "
-       WRITE (*,*) "   * SETUP      ", tt
-       tt = FPP_TIMER_VALUE(RESPONSE_DIPOL)
-       WRITE (*,*) "   * DIPOLE     ", tt
-       tt = FPP_TIMER_VALUE(COULOMB_2C)
-       WRITE (*,*) "   * COULOMB 2C ", tt
-       tt = FPP_TIMER_VALUE(XC_2C)
-       WRITE (*,*) "   * XC 2C      ", tt
-       tt = FPP_TIMER_VALUE(COULOMB_3C)
-       WRITE (*,*) "   * COULOMB 3C ", tt
-       tt = FPP_TIMER_VALUE(DIAG_PLUS_DVDSON)
-       WRITE (*,*) "   * DIAG/DVDS  ", tt
-       tt = FPP_TIMER_VALUE(RESPONSE_CLOSE)
-       WRITE (*,*) "   * CLOSE      ", tt
-       tt = FPP_TIMER_VALUE(RESPONSE_ALL)
-       WRITE (*,*) "   * SUMMARY    ", tt
+       block
+          real (r8_kind) :: tt
+          tt = FPP_TIMER_VALUE(RESPONSE_SETUP)
+          WRITE (*,*) "[m] RESPONSE TIMER "
+          WRITE (*,*) "   * SETUP      ", tt
+          tt = FPP_TIMER_VALUE(RESPONSE_DIPOL)
+          WRITE (*,*) "   * DIPOLE     ", tt
+          tt = FPP_TIMER_VALUE(COULOMB_2C)
+          WRITE (*,*) "   * COULOMB 2C ", tt
+          tt = FPP_TIMER_VALUE(XC_2C)
+          WRITE (*,*) "   * XC 2C      ", tt
+          tt = FPP_TIMER_VALUE(COULOMB_3C)
+          WRITE (*,*) "   * COULOMB 3C ", tt
+          tt = FPP_TIMER_VALUE(DIAG_PLUS_DVDSON)
+          WRITE (*,*) "   * DIAG/DVDS  ", tt
+          tt = FPP_TIMER_VALUE(RESPONSE_CLOSE)
+          WRITE (*,*) "   * CLOSE      ", tt
+          tt = FPP_TIMER_VALUE(RESPONSE_ALL)
+          WRITE (*,*) "   * SUMMARY    ", tt
+       end block
 #endif
 
     end if !!i_am_master_

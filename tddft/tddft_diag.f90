@@ -456,6 +456,7 @@ CONTAINS
 
     FPP_TIMER_STOP(dvdDiag_all)
 
+#ifdef FPP_TIMERS
     tt = FPP_TIMER_VALUE(diag_timer)
     WRITE (*,*) MyID, "TDDFT DIAG TIMER "
     WRITE (*,*) "   * DIAGONAL        ", tt
@@ -465,6 +466,7 @@ CONTAINS
     WRITE (*,*) "   * OUTPUT          ", tt
     tt = FPP_TIMER_VALUE(dvdDiag_all)
     WRITE (*,*) "   * SUMMARY         ", tt
+#endif
 
     print *, MyID, "diag_init: entering the barrier BEFORE"
     call comm_barrier()

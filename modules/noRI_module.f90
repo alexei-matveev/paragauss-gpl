@@ -248,6 +248,7 @@ contains
     FPP_TIMER_STOP(XC_output)
     FPP_TIMER_STOP(XC_all)
 
+#ifdef FPP_TIMERS
     WRITE (*,*) MyID, "noRI TIMER      "
     tt = FPP_TIMER_VALUE(XC_all)
     WRITE (*,*) "   SUMMARY            ", tt
@@ -273,7 +274,7 @@ contains
     WRITE (*,*) "      |-  XC NOBLAS PART ", tt
     tt = FPP_TIMER_VALUE(XC_int_B)
     WRITE (*,*) "      \-  XC   BLAS PART ", tt
-
+#endif
   end subroutine noRI_2c
   !*************************************************************\
 
@@ -428,6 +429,7 @@ contains
     FPP_TIMER_STOP(XC_output)
     FPP_TIMER_STOP(XC_all)
 
+#ifdef FPP_TIMERS
     WRITE (*,*) MyID, "  RI TIMER      "
     tt = FPP_TIMER_VALUE(XC_all)
     WRITE (*,*) "   SUMMARY            ", tt
@@ -453,7 +455,7 @@ contains
     WRITE (*,*) "      |-  XC NOBLAS PART ", tt
     tt = FPP_TIMER_VALUE(XC_int_B)
     WRITE (*,*) "      \-  XC   BLAS PART ", tt
-
+#endif
   end subroutine noRI_4C
   !*************************************************************
 

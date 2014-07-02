@@ -898,7 +898,8 @@ contains
        FPP_TIMER_STOP(RESPONSE_CLOSE)
        FPP_TIMER_STOP(RESPONSE_ALL)
 
-       !! TIMER OUTPUT
+#ifdef FPP_TIMERS
+       ! TIMER OUTPUT
        tt = FPP_TIMER_VALUE(RESPONSE_SETUP)
        WRITE (*,*) "[m] RESPONSE TIMER "
        WRITE (*,*) "   * SETUP      ", tt
@@ -916,6 +917,7 @@ contains
        WRITE (*,*) "   * CLOSE      ", tt
        tt = FPP_TIMER_VALUE(RESPONSE_ALL)
        WRITE (*,*) "   * SUMMARY    ", tt
+#endif
 
     end if !!i_am_master_
 
@@ -2763,12 +2765,13 @@ contains
     enddo
 
     FPP_TIMER_STOP(all)
+#ifdef FPP_TIMERS
     print *,'2c_resp TIMER: rho_calc  = ',FPP_TIMER_VALUE(rho_calc)
     print *,'2c_resp TIMER: XC_calc   = ',FPP_TIMER_VALUE(XC_calc)
     print *,'2c_resp TIMER: khi_calc  = ',FPP_TIMER_VALUE(khi_calc)
     print *,'2c_resp TIMER: loop_calc = ',FPP_TIMER_VALUE(loop_calc)
     print *,'2c_resp TIMER: all       = ',FPP_TIMER_VALUE(all)
-
+#endif
   end subroutine response_calc_2index_int_v2
 
 

@@ -238,17 +238,12 @@ contains
 
   !*************************************************************
   function mix_charges()
-    !  Purpose: pass information on mixing out of module
-    !------------ Modules used -----------------------------------
+    ! Pass information on mixing out of module
     implicit none
     logical :: mix_charges
-    !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
 
-    mix_charges=do_mixing
-
+    mix_charges = do_mixing
   end function mix_charges
   !*************************************************************
 

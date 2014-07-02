@@ -744,13 +744,17 @@ contains ! of module
 
   !**************************************************************
   subroutine correction_param()
+    !
+    ! Does no communication.
+    !
     use solv_charge_mixing_module, only: mix_charges
+    implicit none
+    ! *** end of interface ***
 
-    if(mix_charges()) then
-       cor_el           =.false.
-       cor_nuc          =.false.
+    if (mix_charges()) then
+       cor_el =.false.
+       cor_nuc =.false.
     end if
-
   end subroutine correction_param
   !**************************************************************
 
@@ -774,8 +778,9 @@ contains ! of module
     ! 4) symm_sorted_centers(): find and store symmetry equivalent
     !    surface tesserae
     !
-    ! Called by main_master(), main_gradient() and (intern)
-    ! disp_rep_wrap().
+    ! Called  by  build_mol_surfaces(),  main_gradient() and  (intern)
+    ! disp_rep_wrap().    Does   not   look    like   it    does   any
+    ! communication. Runs on master only.
     !
     use unique_atom_module
     use pointcharge_module
@@ -7187,12 +7192,15 @@ DPRINT 'max cent',max_cent
   !************************************************************
 
   !******************************************************
-  subroutine dealloc_geom_deriv_part2
-   !dealloc darea,dcenter of cagr
-   !** End of interface *****************************************
-
-    use unique_atom_module, only : N_moving_unique_atoms,unique_atoms,moving_unique_atom_index
-    use pointcharge_module, only : pointcharge_array, pointcharge_N
+  subroutine dealloc_geom_deriv_part2()
+    !
+    ! Dealloc darea, dcenter of cagr (?). Does no communication.
+    !
+    use unique_atom_module, only: N_moving_unique_atoms, &
+         unique_atoms, moving_unique_atom_index
+    use pointcharge_module, only: pointcharge_array, pointcharge_N
+    implicit none
+    !** End of interface *****************************************
 
     integer(kind=i4_kind) :: status,N_pc
     integer(kind=i4_kind) :: i,j,l,na,ea
@@ -7247,7 +7255,6 @@ DPRINT 'max cent',max_cent
 
 1   deallocate(i_symm_sort,stat=status)
     ASSERT(status.eq.0)
-
   end subroutine dealloc_geom_deriv_part2
   !*****************************************************
 
@@ -7976,12 +7983,14 @@ DPRINT 'max cent',max_cent
   !****************************************************
 
   !******************************************************
-  subroutine dealloc_cavity
-   !deallocate tesserea
-   !** End of interface *****************************************
+  subroutine dealloc_cavity()
+    !
+    ! Deallocate tesserea. Does no communication.
+    !
+    implicit none
+    !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: status
-    integer(kind=i4_kind) :: i
+    integer (i4_kind) :: i, status
 
     DPRINT 'dealloc_cavity: enetered'
     DPRINT 'dealloc_cavity: size(tessarea)=',size(tessarea)
@@ -7993,36 +8002,35 @@ DPRINT 'max cent',max_cent
             "dealloc_cavity: deallocation of TESSAREA%XYZ  failed")
     enddo
     deallocate(tessarea,stat=status)
-    if ( status /= 0) call error_handler( &
+    if (status /= 0) call error_handler( &
          "dealloc_cavity: deallocation TESSAREA is failed")
 
     DPRINT 'dealloc_cavity: shape(r_sphere)=', shape(r_sphere)
     deallocate(r_sphere, stat=status)
-    if ( status /= 0) call error_handler( &
+    if (status /= 0) call error_handler( &
          "dealloc_cavity: deallocation r_sphere is failed")
-    if(allocated(iuniq))  then
+    if (allocated(iuniq))  then
         deallocate(iuniq,stat=status)
-       if ( status /= 0) call error_handler( &
+       if (status /= 0) call error_handler( &
             "dealloc_cavity: deallocation of iuniq is failed")
     endif
 
     DPRINT 'dealloc_cavity: shape(xyz_sphere)=',shape(xyz_sphere)
     deallocate(xyz_sphere, stat=status)
-    if ( status /= 0) call error_handler( &
+    if (status /= 0) call error_handler( &
          "dealloc_cavity: deallocation xyz_sphere is failed")
 
-    if(allocated(parents)) then
+    if (allocated(parents)) then
        deallocate(parents, stat=status)
-       if ( status /= 0) call error_handler( &
+       if (status /= 0) call error_handler( &
             "dealloc_cavity: deallocation of parents is failed")
     endif
 
-    if(allocated(zero_area)) then
+    if (allocated(zero_area)) then
        deallocate(zero_area, stat=status)
-       if ( status /= 0) call error_handler( &
+       if (status /= 0) call error_handler( &
             "dealloc_cavity: deallocation of zero_area is failed")
     endif
-
   end subroutine dealloc_cavity
   !******************************************************
 end module solv_cavity_module

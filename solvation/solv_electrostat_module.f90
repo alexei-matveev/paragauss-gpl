@@ -58,7 +58,7 @@ module solv_electrostat_module
   use solv_cavity_module, only: tessarea, to_calc_grads, Q_e, Q_n, &
        Q_e_old, n_size, center2sphere, with_pc, fixed_pc, &
        cor_el, cor_nuc, &
-       grad_solv_totsym, grad_solv_totsym_tes, n_Q_update, dealloc_cavity
+       grad_solv_totsym, grad_solv_totsym_tes, n_Q_update
 #ifdef WITH_EFP
   use efp_module, only: efp, n_efp
 #endif
@@ -166,7 +166,7 @@ contains
     !
     ! Generate the "interaction" matrix of charged surface areas.  The
     ! inverse = matrix for calculating the induced surface charge from
-    ! the molecule potential on the surface
+    ! the molecule potential on the surface. Does no communucation.
     !
     use math_module, only: invert_matrix
     implicit none
@@ -178,10 +178,10 @@ contains
     real (r8_kind) :: distance, A_matrix_fs
     real (r8_kind) :: vect(3)
 
-    ! generating direct matrix A for the main COSMO equation
-    allocate(A_matrix_inv(n_size,n_size),stat=status)
-    if ( status /= 0) call error_handler( &
-         "matrix_generation: allocation of A_MATRIX is failed")
+    ! Generating direct matrix A for the main COSMO equation
+    allocate (A_matrix_inv(n_size, n_size), stat=status)
+    if (status /= 0) call error_handler &
+         ("matrix_generation: allocation of A_MATRIX is failed")
 
 !!$call cpu_time(tt)
 !!$print*,tt
@@ -228,8 +228,6 @@ contains
 !     deallocate(A_matrix,stat=status)
 !     if ( status /= 0) call error_handler( &
 !          "matrix_generation: deallocation of A_MATRIX is failed")
-
-
   end subroutine matrix_generation
   !********************************************************************
 
@@ -608,32 +606,36 @@ contains
   !*************************************************************
 
   !***************************************************
-  subroutine solv_poten_transfer_data
-   !** End of interface *****************************************
+  subroutine solv_poten_transfer_data()
+    !
+    ! Copies data from solv_cavity_module to potential_module. Does no
+    ! communication.
+    !
+    use potential_module, only: N_points, point_in_space
+    use solv_cavity_module, only: tessarea, dealloc_cavity
+    implicit none
+    !** End of interface *****************************************
 
-    use potential_module, only: N_points,point_in_space
+    integer (i4_kind) :: status
+    integer (i4_kind) :: i, j
+    N_points = n_size
 
-    integer(kind=i4_kind) :: status
-    integer(kind=i4_kind) :: i,j
-    N_points=n_size
+    allocate (point_in_space(N_points), stat=status)
+    if (status /= 0) call error_handler &
+         ("solv_poten_transfer_data: allocation of point_in_space is failed")
 
-    allocate(point_in_space(N_points),stat=status)
-    if ( status /= 0) call error_handler( &
-         "solv_poten_transfer_data: allocation of point_in_space is failed")
-
-    do i=1,N_points
-       point_in_space(i)%N_equal_points=tessarea(i)%n_equal
-       allocate(point_in_space(i)%position(3,point_in_space(i)%N_equal_points), &
+    do i = 1, N_points
+       point_in_space(i) % N_equal_points = tessarea(i) % n_equal
+       allocate (point_in_space(i) % position(3, point_in_space(i) % N_equal_points), &
             stat=status)
-       if ( status /= 0) call error_handler( &
-            "solv_poten_transfer_data: allocation of point_in_space%N_equal_points is failed")
-       do j=1,point_in_space(i)%N_equal_points
-          point_in_space(i)%position(:,j)=tessarea(i)%xyz(j,:)
+       if (status /= 0) call error_handler &
+            ("solv_poten_transfer_data: allocation of point_in_space%N_equal_points is failed")
+       do j = 1, point_in_space(i) % N_equal_points
+          point_in_space(i) % position(:,j) = tessarea(i) % xyz(j, :)
        enddo
     enddo
 
-    call dealloc_cavity()
-
+    call dealloc_cavity()       ! no comm
   end subroutine solv_poten_transfer_data
   !******************************************************
 

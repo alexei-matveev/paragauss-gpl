@@ -26,7 +26,8 @@
 subroutine disp_rep_wrap()
   !
   ! Calls the routines for calculating the dispersion/repulsion energy
-  ! or its gradients and 2nd derivatives
+  ! or its gradients  and 2nd derivatives. Does not  look like it does
+  ! any communication.
   !
 # include "def.h"
   use type_module ! type specification parameters

@@ -26,7 +26,7 @@
 subroutine energy_and_grad_of_cavity()
   !
   ! Calculates the cavitation energy or its gradients (scaled particle
-  ! theory) formulas from
+  ! theory) formulas from. Does no communication.
   !
 # include "def.h"
   use type_module, only: i4_kind, r8_kind ! type specification parameters
@@ -249,11 +249,11 @@ subroutine energy_and_grad_of_cavity()
      end if
   endif
 
-  if(do_gradients) then
-     call dealloc_geom_deriv_part2
+  if (do_gradients) then
+     call dealloc_geom_deriv_part2() ! no comm
   endif
 
-  call dealloc_cavity()
+  call dealloc_cavity()         ! no comm
 
   if(allocated(skip_short)) then
      !maybe not allocated if dispersion repulsion not calculated

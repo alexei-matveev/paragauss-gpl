@@ -220,20 +220,19 @@ contains
   !*************************************************************
 
   !*************************************************************
-  subroutine Q_dealloc
-    !------------ Modules used -----------------------------------
+  subroutine Q_dealloc()
+    !
+    ! Does no communication, idempotent.
+    !
     implicit none
-    !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    integer(i4_kind)           :: status
-    !------------ Executable code --------------------------------
 
-    if(allocated(Q_in)) then
-       deallocate(Q_in,Q_out,stat=status)
+    integer (i4_kind) :: status
+
+    if (allocated (Q_in)) then
+       deallocate (Q_in, Q_out, stat=status)
        ASSERT(status==0)
     end if
-
   end subroutine Q_dealloc
   !*************************************************************
 

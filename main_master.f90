@@ -116,6 +116,7 @@ subroutine main_master()
   use type_module, only: i4_kind, r8_kind
   use operations_module ! defines which operations are to be performed
   use paragauss, only: toggle_legacy_mode
+  use comm, only: comm_rank
   use filename_module, only: filesystem_is_parallel
   use iounitadmin_module, only: output_unit, stdout_unit, &
        write_to_output_units, write_to_trace_unit
@@ -606,9 +607,9 @@ subroutine main_master()
            endif
            call potential_calculate ('Potential')
            call collect_poten_3d()
-           do while (toggle_legacy_mode())
-              call calc_poten_derive_charges()
-           enddo
+           if (comm_rank() == 0) then
+              call calc_poten_derive_charges() ! no comm
+           endif
         endif
         call say ("Done with the potential routines.")
      endif

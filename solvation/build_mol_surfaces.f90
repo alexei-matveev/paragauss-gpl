@@ -35,7 +35,7 @@ subroutine build_mol_surfaces()
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: AS
   !  Date: 12.07.2007
@@ -55,41 +55,32 @@ subroutine build_mol_surfaces()
   !----------------------------------------------------------------
 
   !------------ Modules used --------------------------------------
-  use type_module ! type specification parameters
-  use solv_cavity_module
-  use solv_electrostat_module
-
+  use solv_cavity_module, only: cavitation_energy, &
+       disp_rep_energy, do_cavitation, do_disp_rep, do_gradients, &
+       points_on_cavity_surface, correction_param
+  use solv_electrostat_module, only: matrix_generation, &
+       solv_poten_transfer_data
   implicit none
+  ! *** end of interface ***
 
-  !== Interrupt end of public interface of module =================
-  !------------ Declaration of formal parameters ------------------
-  !================================================================
-  ! End of public interface of module
-  !================================================================
-
-  !------------ Declaration of subroutines ------------------------
-  !------------ Declaration of local constants --------------------
-  !------------ Declaration of local variables --------------------
-  !----------------------------------------------------------------
-  !------------ Executable code -----------------------------------
-
-  do_gradients=.false.
-  if(disp_rep_energy) then
-     do_cavitation=.false.
-     do_disp_rep=.true.
+  do_gradients = .false.
+  if (disp_rep_energy) then
+     do_cavitation = .false.
+     do_disp_rep = .true.
      call disp_rep_wrap()
   endif
-  if(cavitation_energy) then
-     do_cavitation=.true.
-     do_disp_rep=.false.
+
+  if (cavitation_energy) then
+     do_cavitation = .true.
+     do_disp_rep = .false.
      call points_on_cavity_surface()
      call energy_and_grad_of_cavity()
   endif
   call correction_param()
-  do_cavitation=.false.
-  do_disp_rep=.false.
+  do_cavitation = .false.
+  do_disp_rep = .false.
+
   call points_on_cavity_surface()
   call matrix_generation()
   call solv_poten_transfer_data()
-
 end subroutine build_mol_surfaces

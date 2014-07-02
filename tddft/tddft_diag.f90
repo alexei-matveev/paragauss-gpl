@@ -120,7 +120,7 @@ CONTAINS
     INTEGER(KIND=i4_kind),ALLOCATABLE :: MO_ALL(:,:),IRR(:,:)
     INTEGER(KIND=i4_kind)             :: i_sp
     ! LOGICAL                           :: it_exists
-    REAL   (KIND=r8_kind)             :: CC(4),tt
+    REAL (r8_kind) :: CC(4)
     INTEGER(KIND=i4_kind)             :: DIMWR(2) ,&
          DIMMS(gl_N_spin), DIMSL(gl_N_spin)
     LOGICAL                           :: tSS
@@ -457,15 +457,18 @@ CONTAINS
     FPP_TIMER_STOP(dvdDiag_all)
 
 #ifdef FPP_TIMERS
-    tt = FPP_TIMER_VALUE(diag_timer)
-    WRITE (*,*) MyID, "TDDFT DIAG TIMER "
-    WRITE (*,*) "   * DIAGONAL        ", tt
-    tt = FPP_TIMER_VALUE(dvdson_timer)
-    WRITE (*,*) "   * DAVIDSON/FULLXC ", tt
-    tt = FPP_TIMER_VALUE(output_timer)
-    WRITE (*,*) "   * OUTPUT          ", tt
-    tt = FPP_TIMER_VALUE(dvdDiag_all)
-    WRITE (*,*) "   * SUMMARY         ", tt
+    block
+       real (r8_kind) ::  tt
+       tt = FPP_TIMER_VALUE(diag_timer)
+       WRITE (*,*) MyID, "TDDFT DIAG TIMER "
+       WRITE (*,*) "   * DIAGONAL        ", tt
+       tt = FPP_TIMER_VALUE(dvdson_timer)
+       WRITE (*,*) "   * DAVIDSON/FULLXC ", tt
+       tt = FPP_TIMER_VALUE(output_timer)
+       WRITE (*,*) "   * OUTPUT          ", tt
+       tt = FPP_TIMER_VALUE(dvdDiag_all)
+       WRITE (*,*) "   * SUMMARY         ", tt
+    end block
 #endif
 
     print *, MyID, "diag_init: entering the barrier BEFORE"

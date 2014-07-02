@@ -52,10 +52,13 @@ module potential_calc_module
   !----------------------------------------------------------------
   !------------ Modules used --------------------------------------
 # include "def.h"
-  use type_module
-  use comm_module
-  use iounitadmin_module
-  use potential_module
+  use type_module, only: i4_kind, r8_kind
+  use iounitadmin_module, only: output_unit, openget_iounit, &
+       returnclose_iounit
+  use potential_module, only: spacepoint_type, point_in_space, &
+       N_points, V_pot_e, V_pot_n, V_pot_pc, dealloc_space_points, &
+       deallocate_pot, start_read_poten_e, get_poten_n, bounds_free_poten, &
+       send_recv_space_point, get_poten_pc
   use filename_module, only: inpfile
 #ifdef FPP_AIX_XLF
   use matrix_module, only: matmult

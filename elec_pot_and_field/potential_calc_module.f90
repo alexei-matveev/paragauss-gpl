@@ -1760,14 +1760,17 @@ contains
 
 !********************************************************************
   subroutine calc_poten_derive_charges()
-    !------------ Modules used --------------------------------------
+    !
+    ! Does  not  seem  to   use  any  communication.  Runs  on  master
+    ! only. Called from main_master().
+    !
     use occupation_module, only : get_charge
     use unique_atom_module, only : N_unique_atoms,unique_atoms
 !!$    use pointcharge_module, only: pointcharge_N, pointcharge_array !@@@@@@@@@@@@@@
     use dipole_module, only : dipole_total
-    !------------ Declaration of formal parameters ------------------
+    implicit none
     !== End of interface ============================================
-    !------------ Declaration of local variables --------------------
+
     integer(kind=i4_kind) :: N_charges,N_dim,N_dim_old
     integer(kind=i4_kind), allocatable :: IPIV(:),b_help(:)
     real(kind=r8_kind), allocatable :: V_fix_at(:),a_matrix(:,:),b_vector(:,:)
@@ -2180,8 +2183,8 @@ contains
 
        if((.not.symm_restr .or. icycle == 2) .or. &
             (symm_restr .and. N_cycles == 1)) then
-          call dealloc_space_points()
-          call deallocate_pot()
+          call dealloc_space_points() ! no comm
+          call deallocate_pot()       ! no comm
        end if
 
     end do N_cyc

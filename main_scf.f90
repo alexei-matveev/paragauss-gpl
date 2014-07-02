@@ -717,15 +717,12 @@ subroutine main_scf()
 
   if (scf_conv) then
      call write_to_output_units ("")
-     call write_to_output_units ("")
      call write_to_output_units ("####### convergence was reached in cycle ", inte=loop)
-     call write_to_output_units ("")
      call write_to_output_units ("")
      call write_to_trace_unit ("MAIN_SCF: convergence was reached in cycle ", inte=loop)
   else
      call write_to_output_units ("")
      call write_to_output_units ("####### aborting at maximal number of cycles: ", inte=loop)
-     call write_to_output_units ("")
      call write_to_output_units ("")
      call write_to_trace_unit ("MAIN_SCF: aborting at maximal number of cycles: ", inte=loop)
   endif

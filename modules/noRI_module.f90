@@ -174,7 +174,6 @@ contains
     integer(i4_kind)             :: n_spin, n_ir, i_ir, n_dim, i, X_KIND, C_KIND
     type(arrmat2), allocatable   :: RM(:)
     integer(i4_kind)             :: status
-    real   (r8_kind)             :: tt
 !!$
 !!$    FPP_TIMER_ZERO(input)
 !!$    FPP_TIMER_ZERO(OB_calc)
@@ -249,31 +248,34 @@ contains
     FPP_TIMER_STOP(XC_all)
 
 #ifdef FPP_TIMERS
-    WRITE (*,*) MyID, "noRI TIMER      "
-    tt = FPP_TIMER_VALUE(XC_all)
-    WRITE (*,*) "   SUMMARY            ", tt
-    tt = FPP_TIMER_VALUE(XC_input)
-    WRITE (*,*) "   |- PREPARATION     ", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym)
-    WRITE (*,*) "   |- XC  PROD. BAS.SYM. ", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_OC)
-    WRITE (*,*) "      |- XC  PROD. BAS.SYM. ORB.  CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_PC)
-    WRITE (*,*) "      |- XC  PROD. BAS.SYM. PHI.  CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_dRC)
-    WRITE (*,*) "      \- XC  PROD. BAS.SYM. dRHO. CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_functional)
-    WRITE (*,*) "   |- XC  FUNCTIONAL  ", tt
-    tt = FPP_TIMER_VALUE(XC_output)
-    WRITE (*,*) "   |- OUTPUT          ", tt
-    tt = FPP_TIMER_VALUE(XC_int)
-    WRITE (*,*) "   \- XC  INTEGRATION ", tt
-    tt = FPP_TIMER_VALUE(XC_int_dV)
-    WRITE (*,*) "      |-  XC deltaV PART ", tt
-    tt = FPP_TIMER_VALUE(XC_int_NB)
-    WRITE (*,*) "      |-  XC NOBLAS PART ", tt
-    tt = FPP_TIMER_VALUE(XC_int_B)
-    WRITE (*,*) "      \-  XC   BLAS PART ", tt
+    block
+       real (r8_kind) :: tt
+       WRITE (*,*) MyID, "noRI TIMER      "
+       tt = FPP_TIMER_VALUE(XC_all)
+       WRITE (*,*) "   SUMMARY            ", tt
+       tt = FPP_TIMER_VALUE(XC_input)
+       WRITE (*,*) "   |- PREPARATION     ", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym)
+       WRITE (*,*) "   |- XC  PROD. BAS.SYM. ", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_OC)
+       WRITE (*,*) "      |- XC  PROD. BAS.SYM. ORB.  CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_PC)
+       WRITE (*,*) "      |- XC  PROD. BAS.SYM. PHI.  CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_dRC)
+       WRITE (*,*) "      \- XC  PROD. BAS.SYM. dRHO. CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_functional)
+       WRITE (*,*) "   |- XC  FUNCTIONAL  ", tt
+       tt = FPP_TIMER_VALUE(XC_output)
+       WRITE (*,*) "   |- OUTPUT          ", tt
+       tt = FPP_TIMER_VALUE(XC_int)
+       WRITE (*,*) "   \- XC  INTEGRATION ", tt
+       tt = FPP_TIMER_VALUE(XC_int_dV)
+       WRITE (*,*) "      |-  XC deltaV PART ", tt
+       tt = FPP_TIMER_VALUE(XC_int_NB)
+       WRITE (*,*) "      |-  XC NOBLAS PART ", tt
+       tt = FPP_TIMER_VALUE(XC_int_B)
+       WRITE (*,*) "      \-  XC   BLAS PART ", tt
+    end block
 #endif
   end subroutine noRI_2c
   !*************************************************************\
@@ -298,7 +300,7 @@ contains
     integer(i4_kind)             :: n_spin
     integer(i4_kind)             :: status, i, j, ii
     integer(i4_kind)             :: counter
-    real   (r8_kind)             :: CC, tt
+    real   (r8_kind)             :: CC
     real   (r8_kind),ALLOCATABLE :: D(:,:)
     real   (r8_kind),ALLOCATABLE :: eps_full(:), eta_full(:)
     type   (arrmat2),ALLOCATABLE :: RM(:), DSP(:)
@@ -430,31 +432,34 @@ contains
     FPP_TIMER_STOP(XC_all)
 
 #ifdef FPP_TIMERS
-    WRITE (*,*) MyID, "  RI TIMER      "
-    tt = FPP_TIMER_VALUE(XC_all)
-    WRITE (*,*) "   SUMMARY            ", tt
-    tt = FPP_TIMER_VALUE(XC_input)
-    WRITE (*,*) "   |- PREPARATION     ", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym)
-    WRITE (*,*) "   |- XC  PROD. BAS.SYM. ", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_OC)
-    WRITE (*,*) "      |- XC  PROD. BAS.SYM. ORB.  CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_PC)
-    WRITE (*,*) "      |- XC  PROD. BAS.SYM. PHI.  CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_dRC)
-    WRITE (*,*) "      \- XC  PROD. BAS.SYM. dRHO. CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_functional)
-    WRITE (*,*) "   |- XC  FUNCTIONAL  ", tt
-    tt = FPP_TIMER_VALUE(XC_output)
-    WRITE (*,*) "   |- OUTPUT          ", tt
-    tt = FPP_TIMER_VALUE(XC_int)
-    WRITE (*,*) "   \- XC  INTEGRATION ", tt
-    tt = FPP_TIMER_VALUE(XC_int_dV)
-    WRITE (*,*) "      |-  XC deltaV PART ", tt
-    tt = FPP_TIMER_VALUE(XC_int_NB)
-    WRITE (*,*) "      |-  XC NOBLAS PART ", tt
-    tt = FPP_TIMER_VALUE(XC_int_B)
-    WRITE (*,*) "      \-  XC   BLAS PART ", tt
+    block
+       real (r8_kind) :: tt
+       WRITE (*,*) MyID, "  RI TIMER      "
+       tt = FPP_TIMER_VALUE(XC_all)
+       WRITE (*,*) "   SUMMARY            ", tt
+       tt = FPP_TIMER_VALUE(XC_input)
+       WRITE (*,*) "   |- PREPARATION     ", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym)
+       WRITE (*,*) "   |- XC  PROD. BAS.SYM. ", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_OC)
+       WRITE (*,*) "      |- XC  PROD. BAS.SYM. ORB.  CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_PC)
+       WRITE (*,*) "      |- XC  PROD. BAS.SYM. PHI.  CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_dRC)
+       WRITE (*,*) "      \- XC  PROD. BAS.SYM. dRHO. CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_functional)
+       WRITE (*,*) "   |- XC  FUNCTIONAL  ", tt
+       tt = FPP_TIMER_VALUE(XC_output)
+       WRITE (*,*) "   |- OUTPUT          ", tt
+       tt = FPP_TIMER_VALUE(XC_int)
+       WRITE (*,*) "   \- XC  INTEGRATION ", tt
+       tt = FPP_TIMER_VALUE(XC_int_dV)
+       WRITE (*,*) "      |-  XC deltaV PART ", tt
+       tt = FPP_TIMER_VALUE(XC_int_NB)
+       WRITE (*,*) "      |-  XC NOBLAS PART ", tt
+       tt = FPP_TIMER_VALUE(XC_int_B)
+       WRITE (*,*) "      \-  XC   BLAS PART ", tt
+    end block
 #endif
   end subroutine noRI_4C
   !*************************************************************

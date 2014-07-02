@@ -63,7 +63,6 @@ use type_module
 use comm_module, only: comm_save_recv, comm_msgtag, &
      comm_master_host, comm_any_message
 use msgtag_module
-use density_data_module, only: density_data_free
 use pointcharge_module
 use induced_dipoles_module, only: send_receive_id
 use calc_id_module, only: calc_Pol_ham
@@ -91,11 +90,9 @@ use main_epe_module, only : main_epe,                      &
                             defect_contributions,          &
                             defect_contributions_fin
 #endif
-use potential_module, only: bounds_free_poten, start_read_poten_e
 use elec_static_field_module, only: receive_surf_point, &
      surf_points_gradinfo_dealloc,surf_points_grad_information,read_field_e,send_receive_field, &
      bounds_free_field
-use interfaces, only: ISLAV
 use calc3c_switches
 #ifdef WITH_MOLMECH
 use molmech_msgtag_module, only: msgtag_start_molmech
@@ -112,17 +109,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
    msgtag = comm_msgtag()
    DPRINT 'main_slave: received msgtag=', msgtag
    select case (msgtag)
-   case( msgtag_free_bnds_ptn )
-      call say("free_bounds_poten")
-      call bounds_free_poten()
-   case (msgtag_start_poten)
-      call say("start_read_poten_e")
-      call start_read_poten_e()
-   case (msgtag_density_data_free)
-      ! FIXME: density_data_free1() called from
-      ! elec_pot_and_field/potential_calc_module.f90 uses this tag.
-      call say("density_data_free")
-      call density_data_free()
    case(msgtag_fit_coeff_send)
       call say("fit_coeff_receive")
       call fit_coeff_receive()

@@ -173,13 +173,13 @@ INTEGER_T :: msgtag_resp_3Clb_tmptape_2=  113
 !NTEGER_T :: msgtag_eigen_data_send=      118
 !NTEGER_T :: msgtag_free_eigen=           119
 !NTEGER_T :: msgtag_alloc_eigen=          120
-INTEGER_T :: msgtag_density_data_free =   121
+!NTEGER_T :: msgtag_density_data_free =   121
 INTEGER_T :: msgtag_grid_send_n_points =  122
 INTEGER_T :: msgtag_grid_send_points=     123
 INTEGER_T :: msgtag_int_setup=            124
 INTEGER_T :: msgtag_space_point=          125
 !NTEGER_T :: msgtag_bounds_poten=         126
-INTEGER_T :: msgtag_start_poten=          127
+!NTEGER_T :: msgtag_start_poten=          127
 INTEGER_T :: msgtag_finish_poten=         128
 !NTEGER_T :: msgtag_prescf_init =         129
 INTEGER_T :: msgtag_geom_grad=            130
@@ -194,7 +194,7 @@ INTEGER_T :: msgtag_finish_field=         138
 INTEGER_T :: msgtag_start_rho=            139
 INTEGER_T :: msgtag_finish_rho=           140
 !NTEGER_T :: msgtag_bounds_field=         141
-INTEGER_T :: msgtag_free_bnds_ptn=        142
+!NTEGER_T :: msgtag_free_bnds_ptn=        142
 INTEGER_T :: msgtag_free_bnds_fld=        143
 !NTEGER_T :: msgtag_del_poten=            144
 !NTEGER_T :: msgtag_del_field=            145
@@ -434,14 +434,14 @@ contains
 !   CMP(msgtag_eigen_data_send)
 !   CMP(msgtag_free_eigen)
 !   CMP(msgtag_alloc_eigen)
-    CMP(msgtag_density_data_free)
+!   CMP(msgtag_density_data_free)
 !   CMP(msgtag_prescf_finalize)
     CMP(msgtag_grid_send_n_points)
     CMP(msgtag_grid_send_points)
     CMP(msgtag_int_setup)
     CMP(msgtag_space_point)
 !   CMP(msgtag_bounds_poten)
-    CMP(msgtag_start_poten)
+!   CMP(msgtag_start_poten)
     CMP(msgtag_finish_poten)
 !   CMP(msgtag_prescf_init)
     CMP(msgtag_geom_grad)
@@ -456,7 +456,7 @@ contains
     CMP(msgtag_start_rho)
     CMP(msgtag_finish_rho)
 !   CMP(msgtag_bounds_field)
-    CMP(msgtag_free_bnds_ptn)
+!   CMP(msgtag_free_bnds_ptn)
     CMP(msgtag_free_bnds_fld)
 !   CMP(msgtag_del_poten)
 !   CMP(msgtag_del_field)

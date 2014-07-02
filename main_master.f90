@@ -588,9 +588,7 @@ subroutine main_master()
               endif
               call potential_calculate ('Potential')
            endif
-           do while (toggle_legacy_mode())
-              call get_poten_and_shutdown_2d()
-           enddo
+           call get_poten_and_shutdown_2d()
            if (.not. V_electronic) then
              tasks = tasks - 1
              cycle geometry_loop
@@ -602,8 +600,8 @@ subroutine main_master()
               call open_densmat() ! no comm, reads disk
            endif
            call potential_calculate ('Potential')
+           call collect_poten_3d()
            do while (toggle_legacy_mode())
-              call collect_poten_3d()
               call calc_poten_derive_charges()
            enddo
         endif

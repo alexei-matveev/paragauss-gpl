@@ -371,15 +371,11 @@ contains
 
   !*********************************************************
   subroutine start_read_poten_e()
+    !
+    ! Executed on all workers.
+    !
     implicit none
     !** End of interface *****************************************
-
-    if (comm_parallel()) then
-       if (comm_i_am_master()) then
-          call comm_init_send (comm_all_other_hosts, msgtag_start_poten)
-          call comm_send()
-       endif
-    endif
 
     call read_poten_e_3()
     call send_receive_poten()
@@ -807,18 +803,14 @@ contains
 
   !*************************************************************
   subroutine bounds_free_poten()
-    !  Purpose: Release the private bounds pointer
+    !
+    ! Release the private bounds pointer. Does no communication.
+    !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    integer(kind=i4_kind) :: status
-    !------------ Executable code --------------------------------
 
-    if (comm_parallel() .and. comm_i_am_master()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_free_bnds_ptn)
-       call comm_send()
-    endif
+    integer (i4_kind) :: status
 
-    deallocate (bounds%item_arr,STAT=status)
+    deallocate (bounds % item_arr, STAT=status)
     if (status /= 0) call error_handler&
          ("potential: deallocation of BOUNDS failed ")
   end subroutine bounds_free_poten

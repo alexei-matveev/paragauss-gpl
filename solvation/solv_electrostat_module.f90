@@ -820,13 +820,15 @@ contains
     !
     ! Computes  the charges  on the  surface  of the  cavity from  the
     ! values of electrostatic  potential there. Called from main_scf()
-    ! and runs on master only, expects slaves to spin in main_slave().
+    ! and starts on on all workers, but does not do the same on all of
+    ! them.
     !
     use solv_cavity_module, only: e => dielectric_constant ! and more
     use potential_module, only: point_in_space, N_points, V_pot_e, &
          start_read_poten_e
     use occupation_module, only: get_n_elec
     use solv_charge_mixing_module, only: mix_charges
+    use comm, only: comm_rank
     implicit none
     !** End of interface *****************************************
 
@@ -840,6 +842,9 @@ contains
 
     ! This sends a message to the slaves telling to call itself:
     call start_read_poten_e()
+
+    ! FIXME: why not let all of the workers do the rest?
+    if (comm_rank() /= 0) return
 
     call get_n_elec(N_electrons)
 

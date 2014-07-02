@@ -51,6 +51,7 @@ module potential_calc_module
   !
   !----------------------------------------------------------------
   !------------ Modules used --------------------------------------
+# include "def.h"
   use type_module
   use comm_module
   use iounitadmin_module
@@ -663,82 +664,112 @@ contains
 
 !********************************************************************
   subroutine get_poten_and_shutdown_2d()
-    !------------ Modules used --------------------------------------
-    use density_data_module, only: density_data_free1
-    !------------ Declaration of formal parameters ------------------
+    !
+    ! Executed on all workers.  Called from main_master(). Writes some
+    ! output  to disk.   Historically this  procedure was  executed on
+    ! master only  while slaves were spinning  in main_slave() waiting
+    ! for orders.
+    !
+    use density_data_module, only: density_data_free
+    use comm, only: comm_size, comm_rank
     !== End of interface ============================================
-    !------------ Declaration of local variables --------------------
-    real(kind=r8_kind) :: x,y,conv
-    integer(kind=i4_kind) :: v_unit,i,j,k,l,m,istat
-    !------------ Executable code -----------------------------------
 
-    if(V_electronic) call start_read_poten_e()
-    if(V_nuclear) call get_poten_n()
-    if(V_pc) call get_poten_pc()
+    real (r8_kind) :: x, y, conv
+    integer (i4_kind) :: v_unit, i, j, k, l, m, istat
 
-    if(index(potential_task,"esp_map")/=0) then
-       if(scilab) then
-          v_unit=openget_iounit(trim(inpfile('Vpoints')),  &
+    if (V_electronic) then
+       call start_read_poten_e()
+    endif
+
+    ! FIXME:  may  need some  tweaking  to  run  on all  workers.   In
+    ! particular  wiriting  to  the  same  file  will  never  work  in
+    ! parallel. Maybe just goto towards the end?
+    if (comm_size() > 1) then
+       ABORT("verify SPMD")
+    endif
+    ! FIXME: here or below?
+    if (comm_rank() /= 0) goto 999 ! clean up and exit
+
+    if (V_nuclear) call get_poten_n()
+    if (V_pc) call get_poten_pc()
+
+    if (index (potential_task, "esp_map") /= 0) then
+       if (scilab) then
+          v_unit = openget_iounit (trim (inpfile ('Vpoints')),  &
                form='formatted', status='unknown')
-       else if(worksheet) then
-          v_unit=openget_iounit(trim(inpfile('V.txt')),  &
+       else if (worksheet) then
+          v_unit = openget_iounit (trim (inpfile ('V.txt')),  &
                form='formatted', status='unknown')
-       else if(gnuplot) then
-          v_unit=openget_iounit(trim(inpfile('V.gpl')),  &
+       else if (gnuplot) then
+          v_unit = openget_iounit (trim (inpfile ('V.gpl')),  &
                form='formatted', status='unknown')
        endif
-       conv=1.0_r8_kind
-       if(index(output_units,"eV-a")/=0) conv=au2ang
-       do i=1,Xgrid
-          if(worksheet .or. gnuplot) then
-             x=(Xlimits(1)+(i-1)*(Xlimits(2)-Xlimits(1))/(xgrid-1))*conv
+       conv = 1.0_r8_kind
+       if (index (output_units, "eV-a") /= 0) conv = au2ang
+       do i = 1, Xgrid
+          if (worksheet .or. gnuplot) then
+             x = (Xlimits(1) + (i - 1) * (Xlimits(2) - Xlimits(1)) / (xgrid - 1)) * conv
           endif
-          do j=1,Ygrid
-             if(worksheet .or. gnuplot) then
-                y=(Ylimits(1)+(j-1)*(Ylimits(2)-Ylimits(1))/(ygrid-1))*conv
+          do j = 1, Ygrid
+             if (worksheet .or. gnuplot) then
+                y = (Ylimits(1) + (j - 1) * (Ylimits(2) - Ylimits(1)) / (ygrid - 1)) * conv
              endif
-             pot_on_plane(i,j)%pot=0.0_r8_kind
-             kk: do k=1,N_points
-                do l=1,point_in_space(k)%N_equal_points
-                   if(dot_product(pot_on_plane(i,j)%r-point_in_space(k)%position(:,l), &
-                        pot_on_plane(i,j)%r-point_in_space(k)%position(:,l)) == 0.0_r8_kind) then
-                      m=k
-                      exit kk
-                   endif
+             pot_on_plane(i, j) % pot = 0.0_r8_kind
+             kk: do k = 1, N_points
+                do l = 1, point_in_space(k) % N_equal_points
+                   ! Maybe  norm2()  fortran  intrinsic  if  an  extra
+                   ! sqrt() is not too expensive?:
+                   associate (v => pot_on_plane(i, j) % r - point_in_space(k) % position(:, l))
+                     if (dot_product (v, v) == 0.0) then
+                        m = k
+                        exit kk
+                     endif
+                   end associate
                 enddo
              enddo kk
-             if(V_electronic) &
-                  pot_on_plane(i,j)%pot=pot_on_plane(i,j)%pot+V_pot_e(m)/point_in_space(m)%N_equal_points
-             if(V_nuclear) &
-                  pot_on_plane(i,j)%pot=pot_on_plane(i,j)%pot+V_pot_n(m)/point_in_space(m)%N_equal_points
-             if(V_pc) &
-                  pot_on_plane(i,j)%pot=pot_on_plane(i,j)%pot+V_pot_pc(m)/point_in_space(m)%N_equal_points
-             if(V_abs_limit > 0.0_r8_kind .and. abs(pot_on_plane(i,j)%pot) > V_abs_limit) then
-                pot_on_plane(i,j)%pot=sign(V_abs_limit,pot_on_plane(i,j)%pot)
+             if (V_electronic) then
+                pot_on_plane(i, j) % pot = pot_on_plane(i, j) % pot + &
+                     V_pot_e(m) / point_in_space(m) % N_equal_points
+             endif
+             if (V_nuclear) then
+                pot_on_plane(i, j) % pot= pot_on_plane(i, j) % pot + &
+                     V_pot_n(m) / point_in_space(m) % N_equal_points
+             endif
+             if (V_pc) then
+                pot_on_plane(i, j) % pot = pot_on_plane(i, j) % pot + &
+                     V_pot_pc(m) / point_in_space(m) % N_equal_points
+             endif
+             if (V_abs_limit > 0.0_r8_kind .and. &
+                  abs (pot_on_plane(i, j) % pot) > V_abs_limit) then
+                pot_on_plane(i, j) % pot = sign (V_abs_limit, pot_on_plane(i, j) % pot)
              end if
-             if(index(output_units,"eV-a")/=0) pot_on_plane(i,j)%pot=pot_on_plane(i,j)%pot*27.211652_r8_kind
-             if(scilab) then
-                write(v_unit,'(f25.15)') pot_on_plane(i,j)%pot
-             else if(worksheet .or. gnuplot) then
-                write(v_unit,'(3f25.15)') x,y,pot_on_plane(i,j)%pot
-                if(gnuplot .and. j==Ygrid) write(v_unit,'(a)') ""
+             if (index (output_units, "eV-a") /= 0) then
+                pot_on_plane(i, j) % pot = pot_on_plane(i, j) % pot * 27.211652_r8_kind
+             endif
+             if (scilab) then
+                write (v_unit, '(f25.15)') pot_on_plane(i, j) % pot
+             else if (worksheet .or. gnuplot) then
+                write (v_unit, '(3f25.15)') x, y, pot_on_plane(i, j) % pot
+                if (gnuplot .and. j == Ygrid) write (v_unit, '(a)') ""
              endif
           enddo
        enddo
-       call returnclose_iounit(v_unit)
+       call returnclose_iounit (v_unit)
 
-       deallocate(pot_on_plane, stat=istat)
+       deallocate (pot_on_plane, stat=istat)
        if ( istat /= 0) call error_handler( &
               "potential_calc_module: deallocation pot_on_plane failed")
     endif
 
-    call dealloc_space_points()
-    call deallocate_pot()
-    if(V_electronic) then
-       call bounds_free_poten()
-       call density_data_free1()
-    endif
+    ! FIXME: I assume this staff should be executed on all workers?
+999 continue
+    call dealloc_space_points() ! no comm
+    call deallocate_pot()       ! no comm
 
+    if (V_electronic) then
+       call bounds_free_poten() ! no comm
+       call density_data_free() ! no comm
+    endif
   end subroutine get_poten_and_shutdown_2d
 !********************************************************************
 
@@ -1708,7 +1739,10 @@ contains
 
 !********************************************************************
   subroutine collect_poten_3d()
-    use density_data_module, only: density_data_free1
+    !
+    ! Runs on all workers.
+    !
+    use density_data_module, only: density_data_free
     !== End of interface ============================================
 
 
@@ -1717,7 +1751,7 @@ contains
 !!$    call get_poten_pc() !@@@@@@@@@@@@@@@@@@@@@@@
 
     call bounds_free_poten()
-    call density_data_free1()
+    call density_data_free()
   end subroutine collect_poten_3d
 !********************************************************************
 

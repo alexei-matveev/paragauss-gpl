@@ -132,10 +132,6 @@ module density_data_module
 
   public :: density_data_alloc!(), does no communication
   public :: density_data_free!(), does no communication
-
-  ! MUSTDIE:
-  public :: density_data_free1!(), does density_data_free() and tells slaves to do so
-
   public :: gendensmat_occ!(density_deviation), to be executed in parallel context
   public :: gendensmat_tot!( irrep, dmat ), for one irepp only
 
@@ -277,29 +273,6 @@ contains
     endif
   end subroutine density_data_free
 
-  subroutine density_data_free1()
-    !
-    ! MUSTDIE!
-    !
-    ! Rather call density_data_free() from a parallel context instead.
-    !
-    use comm_module, only: comm_init_send, comm_all_other_hosts &
-                         , comm_send, comm_i_am_master
-    use msgtag_module, only: msgtag_density_data_free
-    implicit none
-    ! *** end of interface ***
-
-    ASSERT(comm_i_am_master())
-
-    WARN('call density_data_free() directly')
-
-    call comm_init_send(comm_all_other_hosts, msgtag_density_data_free)
-    call comm_send()
-
-    call density_data_free()
-  end subroutine density_data_free1
-
-  !*************************************************************
 
   subroutine print_densmat(loop)
     ! Purpose: print out the density matrix to file

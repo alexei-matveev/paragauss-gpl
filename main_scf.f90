@@ -401,9 +401,7 @@ subroutine main_scf()
      if (operations_solvation_effect .and. &
           loop >= first_loop+sol_start_cycle) then
         if (mod (loop - (first_loop + sol_start_cycle), n_Q_update) == 0) then
-           do while (toggle_legacy_mode())
-              call calc_Q_e()
-           enddo
+           call calc_Q_e()
         end if
 #ifdef WITH_EFP
         if (do_pol_pcm .and. n_efp > 0) then
@@ -773,9 +771,9 @@ subroutine main_scf()
   ! Write final calculated energies
   call say ("write final calculated energies")
   if (operations_solvation_effect) then
+     call calc_Q_e ()
      do while (toggle_legacy_mode ())
         ! Master-only context here ...
-        call calc_Q_e ()
         call solv_energy_el ()
         call Q_dealloc ()
      enddo

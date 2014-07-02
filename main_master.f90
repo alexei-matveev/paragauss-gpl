@@ -115,7 +115,7 @@ subroutine main_master()
 # include "def.h"
   use type_module, only: i4_kind, r8_kind
   use operations_module ! defines which operations are to be performed
-  use comm, only: comm_rank
+  use comm, only: comm_rank, comm_same
   use filename_module, only: filesystem_is_parallel
   use iounitadmin_module, only: output_unit, stdout_unit, &
        write_to_output_units, write_to_trace_unit
@@ -667,8 +667,9 @@ subroutine main_master()
 
 #endif
 
-     ! do PostSCF calculation of matrix elements needed for
-     ! response calculations with tdfrt response program
+     ! Do post-SCF calculation of  matrix elements needed for response
+     ! calculations with tdfrt response program:
+     ASSERT(comm_same(operations_response))
      if (operations_response) then
 #ifdef WITH_RESPONSE
         call say ("call response_main()")

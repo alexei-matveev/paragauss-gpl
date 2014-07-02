@@ -209,16 +209,17 @@ subroutine main_master()
   DPRINT 'main_master: entered'
 
   !
-  ! If  you are  thinking  about adding  code  to be  executed on  all
-  ! workers, consider  adding it outside  of the "legacy"  mode blocks
-  ! enclosed by
+  ! NOTE:  The  code  has  been  converted to  SPMD  (single  program,
+  ! multiple data) so that all  workers execute this code. Some rarely
+  ! used branches not  covered by the testsuite have  not been tested,
+  ! though.
   !
-  !   do while (toggle_legacy_mode())
-  !      ...
-  !   enddo
-  !
-  ! Alternatively add  it to main.f90 or  pick one of the  subs in the
-  ! body such as
+  ! If you are thinking about adding code, try making sure that can be
+  ! executed  on  all workers.   Usually  it  is  sufficient to  avoid
+  ! writing to  the same file  and making sure the  pre-requisites are
+  ! available and  the same on  all workers.  You may  consider adding
+  ! such code  to main.f90 or  other high-level procedure  called from
+  ! here, such as
   !
   !     - initialize_with_input()
   !     - main_gradient()
@@ -226,12 +227,6 @@ subroutine main_master()
   !     - finalize_geometry()
   !     - ...
   !
-  ! that are executed by all workers and augment them.
-  !
-  ! FIXME: finish  converting to SPMD (single  program, multiple data)
-  ! so that all  workers execute the same code.  There  is still a few
-  ! cases of  a master-slave mode ---  search for toggle_legacy_mode()
-  ! blocks.
 
   !
   ! Print the  version info and  machine config, uses  output_unit, so

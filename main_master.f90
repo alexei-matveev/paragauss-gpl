@@ -115,7 +115,6 @@ subroutine main_master()
 # include "def.h"
   use type_module, only: i4_kind, r8_kind
   use operations_module ! defines which operations are to be performed
-  use paragauss, only: toggle_legacy_mode
   use comm, only: comm_rank
   use filename_module, only: filesystem_is_parallel
   use iounitadmin_module, only: output_unit, stdout_unit, &
@@ -583,9 +582,9 @@ subroutine main_master()
 1111 if (operations_potential) then
         call say ("Starting the potential routines ...")
         if (esp_map) then
-           do while (toggle_legacy_mode())
+           if (comm_rank() == 0) then
               call calc_plane_grid()
-           enddo
+           endif
            call grid2space_2d()
            if (V_electronic) then
               call say ("call potential_calculate (Vel)")

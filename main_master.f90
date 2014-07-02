@@ -136,7 +136,7 @@ subroutine main_master()
        integralstore_deallocate_pcm
   use initialization, only: initialize_with_input, finalize_geometry
   use xc_cntrl, only: xc_is_on=>is_on, xc_ANY
-  use post_scf_module
+  use post_scf_module, only: post_scf_main
   use energy_calc_module, only: write_energies, get_energy
 #ifdef FPP_DEBUG
   use error_module, only: MyID
@@ -144,8 +144,8 @@ subroutine main_master()
 #ifdef WITH_RESPONSE
   use response_module, only: response_main
 #endif
-  use efield_module, only: efield_calculate_integrals, efield_applied
-  use efield_module, only: efield_intensity, efield_change
+  use efield_module, only: efield_calculate_integrals, &
+       efield_applied, efield_intensity, efield_change
   use unique_atom_module, only: unique_atom_iwork
   use unique_atom_methods, only: unique_atom_make_gx
   use occupation_module, only: occupation_symmetry_check
@@ -164,22 +164,26 @@ subroutine main_master()
 #endif
 #endif
 #ifdef WITH_EFP
-  use efp_module, only: n_efp, read_gx_qm, def_efp_arrays, calc_X_points, calc_efield_points
-  use efp_module, only: print_id, qm_fixed
+  use efp_module, only: n_efp, read_gx_qm, def_efp_arrays, &
+       calc_X_points, calc_efield_points, print_id, qm_fixed
   use efp_efp_module, only: efp_efp_energy
   use efp_only_opt_module, only: geom_converged
 #endif
   use density_data_module, only: open_densmat
   use solv_cavity_module, only: stop_solv
   use potential_module, only: send_recv_space_point
-  use elec_static_field_module
+  ! DONT use elec_static_field_module, and nothing breaks?
   use symmetry, only: main_symm
   use interfaces, only: main_integral
   use interfaces, only: potential_calculate
   use interfaces, only: main_molmech
 #ifdef WITH_MOLMECH
-  use qmmm_interface_module  !!!!!!!!!!!!!AS
-  use qmmm1_interface_module !!!!!!!!!!!!AS
+  use qmmm_interface_module, only: imomm, imomm_mm_large, &
+       imomm_mm_small, mm_run, qm_mm, qm_mm_1, qm_mm_run, &
+       qm_mm_1_task, qmmm_read_input, &
+       sum_up_grads_and_write_gx
+  use qmmm1_interface_module, only: def_qm_mm_1_tasks, &
+       read_gx_qmmm, qmmm2pc, qmfield_at_mm_points, write_gx_qmmm
 #endif
   use calc3c_switches, only: print_epe
 #ifdef WITH_OPTIMIZER

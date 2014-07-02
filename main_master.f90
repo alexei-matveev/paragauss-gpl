@@ -452,9 +452,8 @@ subroutine main_master()
      ! generating suface charge distribution (solvation effect)
      if (operations_solvation_effect) then
         call say ("call build_mol_surfaces()")
-        do while (toggle_legacy_mode())
-           call build_mol_surfaces()
-        enddo
+        ! Subroutine with an implicit (unchecked) interface:
+        call build_mol_surfaces()
         if (stop_solv) then
            call stop_timer (timer_initialisation)
            ! DONT exit geometry_loop

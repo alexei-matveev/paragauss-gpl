@@ -28,10 +28,10 @@
 subroutine build_mol_surfaces()
   !----------------------------------------------------------------
   !
-  !  Purpose: build molecular surfaces for different solvation tasks
-  !           and calculate cavitation and disp-rep energies
+  ! Build  molecular  surfaces   for  different  solvation  tasks  and
+  ! calculate cavitation and disp-rep energies.
   !
-  !  Subroutine called by: main_master
+  ! Subroutine called by: main_master() and runs on all workers.
   !
   !
   !  References: ...
@@ -60,27 +60,31 @@ subroutine build_mol_surfaces()
        points_on_cavity_surface, correction_param
   use solv_electrostat_module, only: matrix_generation, &
        solv_poten_transfer_data
+  use paragauss, only: toggle_legacy_mode
   implicit none
   ! *** end of interface ***
 
-  do_gradients = .false.
-  if (disp_rep_energy) then
+  do while (toggle_legacy_mode())
+     ! Master-only context here ...
+     do_gradients = .false.
+     if (disp_rep_energy) then
+        do_cavitation = .false.
+        do_disp_rep = .true.
+        call disp_rep_wrap()
+     endif
+
+     if (cavitation_energy) then
+        do_cavitation = .true.
+        do_disp_rep = .false.
+        call points_on_cavity_surface()
+        call energy_and_grad_of_cavity()
+     endif
+     call correction_param()
      do_cavitation = .false.
-     do_disp_rep = .true.
-     call disp_rep_wrap()
-  endif
-
-  if (cavitation_energy) then
-     do_cavitation = .true.
      do_disp_rep = .false.
-     call points_on_cavity_surface()
-     call energy_and_grad_of_cavity()
-  endif
-  call correction_param()
-  do_cavitation = .false.
-  do_disp_rep = .false.
 
-  call points_on_cavity_surface()
-  call matrix_generation()
-  call solv_poten_transfer_data()
+     call points_on_cavity_surface()
+     call matrix_generation()
+     call solv_poten_transfer_data()
+  enddo
 end subroutine build_mol_surfaces

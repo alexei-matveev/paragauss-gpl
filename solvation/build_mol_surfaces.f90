@@ -55,34 +55,43 @@ subroutine build_mol_surfaces()
   !----------------------------------------------------------------
 
   !------------ Modules used --------------------------------------
+# include "def.h"
   use solv_cavity_module, only: cavitation_energy, &
        disp_rep_energy, do_cavitation, do_disp_rep, do_gradients, &
        points_on_cavity_surface, correction_param
   use solv_electrostat_module, only: matrix_generation, &
        solv_poten_transfer_data
   use paragauss, only: toggle_legacy_mode
+  use comm, only: comm_same
   implicit none
   ! *** end of interface ***
 
-  do while (toggle_legacy_mode())
-     ! Master-only context here ...
-     do_gradients = .false.
-     if (disp_rep_energy) then
-        do_cavitation = .false.
-        do_disp_rep = .true.
+  do_gradients = .false.
+  ASSERT(comm_same(disp_rep_energy))
+  if (disp_rep_energy) then
+     do_cavitation = .false.
+     do_disp_rep = .true.
+     do while (toggle_legacy_mode())
         call disp_rep_wrap()
-     endif
+     enddo
+  endif
 
-     if (cavitation_energy) then
-        do_cavitation = .true.
-        do_disp_rep = .false.
+  ASSERT(comm_same(cavitation_energy))
+  if (cavitation_energy) then
+     do_cavitation = .true.
+     do_disp_rep = .false.
+     do while (toggle_legacy_mode())
         call points_on_cavity_surface()
         call energy_and_grad_of_cavity()
-     endif
+     enddo
+  endif
+  do while (toggle_legacy_mode())
      call correction_param()
-     do_cavitation = .false.
-     do_disp_rep = .false.
+  enddo
+  do_cavitation = .false.
+  do_disp_rep = .false.
 
+  do while (toggle_legacy_mode())
      call points_on_cavity_surface()
      call matrix_generation()
      call solv_poten_transfer_data()

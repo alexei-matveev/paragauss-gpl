@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 #define FPP_DEBUG
 #include <def.h>
 Subroutine ll_calculate_hfc (na, nb, la, lb)
@@ -36,16 +36,16 @@ Subroutine ll_calculate_hfc (na, nb, la, lb)
   !  Author: DG
   !  Date:   1/2003
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
       Use unique_atom_module
       Use gamma_module
       Use type_module
@@ -58,15 +58,15 @@ Subroutine ll_calculate_hfc (na, nb, la, lb)
       Use int_data_dipole_module, Only: prim_int_2cob_hfc, center1,center2
       Implicit None
 !
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 !
       Integer (Kind=i4_kind), Intent (In) :: na ! number of unique atom a
       Integer (Kind=i4_kind), Intent (In) :: nb ! number of unique atom b
       Integer (Kind=i4_kind), Intent (In) :: la ! angular momentum of unique atom a
       Integer (Kind=i4_kind), Intent (In) :: lb ! angular momentum of unique atom b
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 !
       Integer (Kind=i4_kind) :: naexps, nbexps
       Real (Kind=r8_kind), Pointer :: aexps (:), bexps (:)

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module potential_module
 !
 !  Calculate electrostatic potential (nuclear and electronic parts)
@@ -36,9 +36,9 @@ module potential_module
 !  Author: AS
 !  Date: 11/99
 !
-!================================================================
+  !===================================================================
 !== Interrupt of public interface of module =========
-!================================================================
+  !===================================================================
 !----------------------------------------------------------------
 ! Modifications
 !----------------------------------------------------------------
@@ -116,9 +116,9 @@ module potential_module
 
   integer(kind=i4_kind) :: n_irrep
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 !To calculate electrostatic potential:
 !1. Define points where electrostatic potential has to be calculated P(3,N)
 !2. call fill_points(P,N)
@@ -822,7 +822,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     type(poten_bounds),intent(out)          :: bounds1
     integer(kind=i4_kind)             :: alloc_stat,i_pr
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     bounds1%lower1 = bounds%lower1
     bounds1%upper1 = bounds%upper1
@@ -844,12 +844,12 @@ contains
     use readwriteblocked_module
     !------------ Declaration of formal parameters ---------------
     type(readwriteblocked_tapehandle),intent(out) :: th_poten2
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 !!$ integer(kind=i4_kind)        :: alloc_stat
 !!$ integer(kind=i4_kind)        :: mynumber
 !!$ type(poten_bounds)             :: bounds2
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !!$    mynumber = comm_myindex()
 !!$

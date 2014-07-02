@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module solid_harmonics_module
   !-----------------------------------------------------------
   !
@@ -50,11 +50,11 @@ module solid_harmonics_module
   !  Date: 26.06.95
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: MS
@@ -85,7 +85,7 @@ module solid_harmonics_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
   type solid_harmonics_ltype
@@ -125,7 +125,7 @@ module solid_harmonics_module
   end type solid_harmonics_sec_der_type
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: solid_harmonics_ltype
   public :: solid_harmonics_type
   public :: solid_harmonics_grads_ltype
@@ -143,9 +143,9 @@ module solid_harmonics_module
   public :: solid_harmonics_calc_3rd_der
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
   !------------ Declaration of private constants and variables ----
@@ -154,8 +154,8 @@ module solid_harmonics_module
   integer, private :: vec_len = 0
   logical, private :: allocated = .false.
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains 
 
   !******************************************************************

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module occupation_module
   !
   !  Purpose: Contains  routines and information connected
@@ -124,18 +124,18 @@ module occupation_module
   !
   !  Author: Folke Noertemann
   !  Date: 10/95
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification: added occ_num_occ,send_occ_num_occ,
   !              recv_occ_num_occ,alloc_occ_num_occ,
   !              seek_occupied_levels
   ! Author: F.Noertemann
   ! Date:   12/95
   ! Description: see above documentation
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: Uwe Birkenheuer
   ! Date:   6/97
@@ -182,9 +182,9 @@ module occupation_module
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module ! type specification parameters
   use datatype    ! user defined datatypes
   use symmetry_data_module  ! symmetry information
@@ -198,7 +198,7 @@ module occupation_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public constants and variables -----
   type, private :: irrep_t
@@ -241,7 +241,7 @@ module occupation_module
   logical                                  :: hole_localization
   logical                                  :: hole_update
   logical                                  :: fixed_spin_diff
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: occupation_read,  occupation_write, &
        get_n_elec, get_n_core_elec, reoccup, read_ocup, print_occ_num, &
        occupation_level_sort, occupation_2d_correct, &
@@ -265,9 +265,9 @@ module occupation_module
   ! allocatable component instead of pointer.
   !
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   real(kind=r8_kind),parameter :: convert1 = 27.211652_r8_kind, &
                                   convert2 = 1.0_r8_kind / convert1
 
@@ -308,8 +308,8 @@ module occupation_module
                         fixed_spin_diff, force_spectrum
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -318,14 +318,14 @@ contains
     !  Purpose: allocate the appropriate space for n_occo
     !** End of interface *****************************************
     use options_module, only: options_spin_orbit
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(sym),intent(in)       :: ssym
     integer(kind=i4_kind)       :: alloc_stat
     ! dimensions of irreps
     ! (in order to account for SPIN ORBIT more easily)
     integer(kind=i4_kind)                :: n_irrep
     ! n_irrep    : number of irreps
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! set appropriate dimensions of irreps
     ! (use projective irreps in case of spin orbit)
@@ -925,7 +925,7 @@ contains
     use unique_atom_module, only: N_unique_atoms, unique_atoms
     use input_module
     integer :: i_ua
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_elec      = 0.0_r8_kind
     n_core_elec = 0.0_r8_kind
@@ -968,7 +968,7 @@ contains
     real(kind=r8_kind), intent(out ) :: n_dummy
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_dummy = n_elec
 
   end subroutine get_n_elec
@@ -983,7 +983,7 @@ contains
     real(kind=r8_kind), intent(out ) :: n_dummy
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_dummy = n_core_elec
 
   end subroutine get_n_core_elec
@@ -997,7 +997,7 @@ contains
     real(kind=r8_kind), intent(out ) :: spin_diff
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     spin_diff = magn_moment
 
   end subroutine get_spin_diff
@@ -1011,7 +1011,7 @@ contains
     real(kind=r8_kind), intent(out ) :: df_spin_diff
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     df_spin_diff = df_magn_moment
 
   end subroutine get_df_spin_diff
@@ -1025,7 +1025,7 @@ contains
     real(kind=r8_kind), intent(in) :: fermi_unp
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     magn_moment = fermi_unp
 
   end subroutine put_magn_moment
@@ -1039,7 +1039,7 @@ contains
     logical, intent(out ) :: fixed_spin
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     fixed_spin = fixed_spin_diff
 
   end subroutine get_fix_spin_switch
@@ -1053,7 +1053,7 @@ contains
     logical, intent(out ) :: df_fixed_spin
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     df_fixed_spin = df_fixed_spin_diff
 
   end subroutine get_df_fix_spsw
@@ -1067,7 +1067,7 @@ contains
     logical, intent(in) :: fermi_fix_ud
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     fixed_spin_diff = fermi_fix_ud
 
   end subroutine put_fix_spin_switch
@@ -1082,7 +1082,7 @@ contains
     real(kind=r8_kind), intent(out ) :: offset
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     offset = diag_offset_ev / convert1
 
   end subroutine get_diagonal_offset
@@ -1094,7 +1094,7 @@ contains
     !           UB
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     get_min_spin_diff = min_spin_diff
 
   end function get_min_spin_diff
@@ -1106,7 +1106,7 @@ contains
     !          AS (04.02)
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     get_charge=charge
 
   end function get_charge
@@ -1145,7 +1145,7 @@ contains
     use output_module, only: output_reoccup
     use options_module, only: options_spin_orbit
     !------------ Declaration of formal parameters ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: i,m,n,is,degen,num_orb,index, &
          n_elec_int,num_spin,i_hole, alloc_stat
     logical :: hole
@@ -1166,7 +1166,7 @@ contains
     ! External an intrisic routines
     intrinsic max,nint
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! set appropriate dimensions of irreps
     ! (use projective irreps in case of spin orbit)
@@ -1566,7 +1566,7 @@ contains
     !** End of interface *****************************************
     !------------ Modules ----------------------------------------
     use filename_module, only: tmpfile
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)          :: io_u,num_orb, &
          icount,m,is,i
     real(kind=r8_kind),allocatable :: arr_help(:)
@@ -1641,7 +1641,7 @@ contains
     integer(kind=i4_kind),allocatable    :: dim_irrep(:)
     ! n_irrep    : number of irreps
     ! dim_irrep : number of independent functions in irrep
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)   :: i,is,m,n,mm,mstart,istart, &
          ii,iss,icount,alloc_stat
     logical                 :: separate
@@ -1877,7 +1877,7 @@ contains
     use options_module, only: options_spin_orbit
     integer(kind=i4_kind),intent(in),optional :: loop
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)   :: io_u,i_gamma,m,is,i_dim
     ! number and dimensions of irreps (spin orbit and vector case)
     integer(kind=i4_kind)               :: n_irrep
@@ -2267,7 +2267,7 @@ contains
     logical  :: reset
     integer  :: status
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( options_spin_orbit ) then
       ABORT('SAVE_EIGENVEC not yet with SO')
@@ -2430,7 +2430,7 @@ contains
                              spin_stored, n_save(:,:), n_need(:,:)
     real(kind=r8_kind)    :: spin(1), buffer(:), half = 0.5_r8_kind
     integer               :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     external error_handler
 
     if (output_main_scf) call write_to_output_units &
@@ -2627,7 +2627,7 @@ contains
          alloc_stat,counter,i_hole,hole_count
     integer(kind=i4_kind) :: n_irreps
     integer(kind=i4_kind),allocatable :: dim_irrep(:),n_partners(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 #ifdef WITH_MOLMECH
     if(operations_mol_mech) return
@@ -2821,5 +2821,5 @@ contains
   end function occupation_jz
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module occupation_module

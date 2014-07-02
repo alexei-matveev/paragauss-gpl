@@ -22,26 +22,26 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module symm_adapt_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only:&
@@ -50,10 +50,10 @@ module symm_adapt_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   !=======================================================
   !
@@ -100,7 +100,7 @@ module symm_adapt_module
   end type symm_adapt_dmat
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
  
   interface alloc
      module procedure alloc_symm_adapt_dmat
@@ -129,7 +129,7 @@ module symm_adapt_module
      module procedure load_ua_to_symm_adapt_ul
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: symm_adapt_module_setup!()
   public :: symm_adapt_module_close!()
@@ -139,7 +139,7 @@ module symm_adapt_module
   public :: symm_adapt_2cv
   public :: symm_adapt_3cv
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 
   logical,parameter :: YES = .true., NO = .false.
@@ -150,7 +150,7 @@ module symm_adapt_module
   logical,private   :: SpinOrbit
   logical,private   :: Small
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine symm_adapt_module_setup()
@@ -1163,5 +1163,5 @@ contains
     enddo
   end function n_equiv_atoms
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module symm_adapt_module

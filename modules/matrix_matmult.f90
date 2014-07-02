@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module matrix_matmult
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: We have a fundamental problem, intrinsic MATMUL
   !           having access to array descriptors may be able to
@@ -43,18 +43,18 @@ module matrix_matmult
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only:&
@@ -65,16 +65,16 @@ module matrix_matmult
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   real(RK), parameter :: one  = 1.0_rk
   real(RK), parameter :: zero = 0.0_rk
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface matmult
      !
@@ -90,21 +90,21 @@ module matrix_matmult
   end interface
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public matmult
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function matmult_2_2(A, B) result(C)
@@ -283,7 +283,7 @@ contains
     enddo
   end function matmult_col_cc
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module matrix_matmult
 
 

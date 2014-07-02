@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module  vff_hessian 
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose : returns the appropriate force parameters for
   !           calculation the force constants (diagonals of
@@ -34,11 +34,11 @@ module  vff_hessian
   !  Date  : -- 
   !  References:  H.B.Schlegel, Theor.Chim.Acta 66,333-340 (1984)
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   !  Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: Contains new data for estimate initial hessian (at B3LYP 
   !  level of theory)
   !  Modification:   
@@ -47,14 +47,14 @@ module  vff_hessian
   !  References: Wittbrodt, J.M., Schlegel, B.H. Estimating stretching 
   !  force constants for geometry optimization // Theochem.- 1997. - V. 
   !  398-399. - P. 55-61.
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   use type_module ! type specification parameters
   implicit none
   save            ! save all variables defined in this module

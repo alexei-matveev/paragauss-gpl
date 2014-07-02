@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  result_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: 
   !  The routines in this module are used to create the readable
@@ -63,18 +63,18 @@ MODULE  result_module
   !  Date:   2/1999
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: 
   ! Date:   ...
   ! Description: rebuilded by SB
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
   USE type_module          ! type specification parameters
   USE iounitadmin_module   ! routines for I/O
@@ -83,25 +83,25 @@ MODULE  result_module
   IMPLICIT NONE
   SAVE            ! save all variables defined in this module
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   PUBLIC result_main
   PUBLIC result_osc_strengths
   PUBLIC results_exc
   PUBLIC results_SPc
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
 
 
@@ -116,7 +116,7 @@ CONTAINS
     REAL   (KIND=r8_kind),INTENT(IN) :: eps(:), eta(:)
     INTEGER(KIND=i4_kind),INTENT(IN) :: MO_ALL(:,:), IRR(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind)             :: status, N1
     INTEGER(KIND=i4_kind),ALLOCATABLE :: as_index(:,:,:)
     INTEGER(KIND=i4_kind),ALLOCATABLE :: as_irrep(:,:,:)
@@ -128,7 +128,7 @@ CONTAINS
     INTEGER(KIND=i4_kind)             :: NSPTR
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! get the eigenvector
     N1 = min(gl_NLow,N)
@@ -194,14 +194,14 @@ CONTAINS
     REAL(KIND=r8_kind),    INTENT(out) :: as_delta_eps(:,:)
     REAL(KIND=r8_kind),    INTENT(out) :: as_val(:,:)    
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind)                :: status,n_as,i_as,as_max(1), j
     REAL   (KIND=r8_kind),ALLOCATABLE    :: eigvec(:,:), local_vec(:)
     LOGICAL              ,ALLOCATABLE    :: mask(:)
     INTEGER(KIND=i4_kind)                :: num_indices
     !------------ Declaration of external procedures ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     IF(gl_calcall) THEN
        ALLOCATE(eigvec(N,N),STAT = status)
@@ -282,7 +282,7 @@ CONTAINS
     REAL(KIND=r8_kind),   INTENT(in)   ,OPTIONAL :: f_osc(:)
     REAL(KIND=r8_kind),   INTENT(in)   ,OPTIONAL :: f_comp(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind)                :: alloc_stat, io_unit, wirr, nto_unit
     INTEGER(KIND=i4_kind)                :: iter, n_iter, j, il
     REAL(KIND=r8_kind)                   :: omega_value
@@ -293,7 +293,7 @@ CONTAINS
 
     !------------ Declaration of external procedures ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ALLOCATE(eigval(min(gl_NLow,N)),STAT=alloc_stat)
     ASSERT(alloc_stat==0)
@@ -538,7 +538,7 @@ CONTAINS
     REAL(KIND=r8_kind), INTENT(inout) :: f_osc(:)
     REAL(KIND=r8_kind), INTENT(INOUT) :: f_comp(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind)                :: alloc_stat, i_f
     INTEGER(KIND=i4_kind)                :: NS, NF, i_spin
     REAL   (KIND=r8_kind),ALLOCATABLE    :: h1_vec(:)
@@ -546,7 +546,7 @@ CONTAINS
     REAL   (KIND=r8_kind),ALLOCATABLE    :: eigvec(:,:),vec_i(:)
     !------------ Declaration of external procedures ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ((.not. gl_SS) .and. gl_ST) return 
 
@@ -620,14 +620,14 @@ CONTAINS
     REAL(KIND=r8_kind),    INTENT(inout) :: real_arr(:)
     INTEGER(KIND=i4_kind), INTENT(inout) :: int_arr(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind), PARAMETER ::  max_iterations=10000_i4_kind
     INTEGER(KIND=i4_kind) :: N,I,IR,J,L,iter,iter_2, help_int
     REAL(KIND=r8_kind)    :: help_real
 
     !------------ Declaration of external procedures ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     ! first get the number of eigenvalues
@@ -703,11 +703,11 @@ CONTAINS
     !------------ Declaration of formal parameters ---------------
     INTEGER (KIND=i4_kind),INTENT(in )   :: irr_c
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     character(len=4) :: irc_char
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     
     filename="exc_"
 
@@ -733,5 +733,5 @@ CONTAINS
   END FUNCTION filename
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE result_module

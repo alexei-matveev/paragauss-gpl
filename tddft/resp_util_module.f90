@@ -23,11 +23,11 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 #include <def.h>
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module resp_util_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -42,18 +42,18 @@ module resp_util_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   use iounitadmin_module
   use symmetry_data_module
   use eigen_data_module, only : eigvec, eigval
@@ -65,10 +65,10 @@ module resp_util_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   ! integer flag array indicating how the MO "i_mo" shall be used in the
   ! calculation of 3-index-integrals, where "i_mo=1,...,dim(i_irrep)".
   ! "MO_status(i_mo, i_irrep, i_spin)":
@@ -101,9 +101,9 @@ module resp_util_module
   ! such transitions will be ignored.
   real(kind=r8_kind), parameter, public :: min_diff = 0.00000001_r8_kind 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public resp_util_set_level_index, &
        resp_util_upck_level_index, &
        resp_util_set_trans_bounds, &
@@ -114,13 +114,13 @@ module resp_util_module
        resp_util_buildi, &
        resp_util_buildr
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -178,7 +178,7 @@ contains
          & max_level_index, &
          & num_spectrum_levels
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical               :: was_found(3)
     integer(kind=i4_kind) :: alloc_stat, i_irrep, i_spin, i_dim,&
          & print_dim
@@ -189,7 +189,7 @@ contains
     ! symmetry information
 
     integer(kind=i4_kind) :: n_spin, n_irrep 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     !## then allocate memory for the array MO_status
 
@@ -420,9 +420,9 @@ contains
     use msgtag_module, only: msgtag_response_level_send
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: max_dim, n_spin, n_irrep, alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     !## then allocate memory for the array MO_status
 
@@ -483,9 +483,9 @@ contains
     integer(kind=i4_kind), intent(out)           :: occ_start, occ_end
     integer(kind=i4_kind), intent(out)           :: unocc_start, unocc_end
     !** End of interface ***************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) ::  i_full, i_partial, i_empty, i_mo
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! define some internal abbreviations
     i_full    = n_full   (i_irrep, i_spin)
@@ -563,11 +563,11 @@ contains
     integer(kind=i4_kind), intent(IN   ) :: i_ir_c, i_spin
     integer(kind=i4_kind), intent(OUT  ) :: dim_ou
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: occs, occe,unoccs, unocce,i_occ, i_unocc
     integer(kind=i4_kind) :: i_ir_a,i_ir_b, n_irr
     integer(kind=i4_kind) :: imlt, nmult
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irr  = symmetry_data_n_irreps()
     dim_ou = 0_i4_kind
@@ -607,9 +607,9 @@ contains
     integer(kind=i4_kind), intent(IN ) :: i_ira, i_irb, i_spin
     integer(kind=i4_kind), intent(OUT) :: occs,occe,unoccs,unocce
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)              :: shift, i_shift
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     occs = 0
     occe = 0
@@ -667,7 +667,7 @@ contains
     !------------ Declaration of local types ---------------------
     character(len=4) :: irc_char,isp_char
     character(len=5) :: fnm_char
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     
     write (irc_char, '(i4)') i_ir
     write (isp_char, '(i1)') i_sp
@@ -702,10 +702,10 @@ contains
     integer(kind=i4_kind), intent(out):: occ_times_unocc_dim
     logical, optional                 :: print_info
     !** End of interface ***************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_full, i_parta, i_partb, i_empty !!, i_resta, i_restb
     integer(kind=i4_kind) :: occs, occe, unocce, unoccs, i_occ, i_unocc
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (cg(i_irc,i_ira,i_irb)%mult==0) then
        occ_times_unocc_dim = 0
@@ -778,10 +778,10 @@ contains
     real(kind=r8_kind),    intent(IN   ) :: WM(:)
     real(kind=r8_kind),    intent(OUT  ) :: RM(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)           :: NST,NFN, i_proc, status
     real(kind=r8_kind), ALLOCATABLE :: AM(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if (comm_i_am_master()) then
        RM(1:NM) = WM
 
@@ -818,10 +818,10 @@ contains
     integer(kind=i4_kind), intent(IN   ) :: WM(:)
     integer(kind=i4_kind), intent(OUT  ) :: RM(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)               :: NST,NFN, i_proc, status
     integer(kind=i4_kind) , ALLOCATABLE :: AM(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (comm_i_am_master()) then
        RM(1:NM) = WM
@@ -848,5 +848,5 @@ contains
 
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module resp_util_module

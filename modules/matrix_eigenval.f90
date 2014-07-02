@@ -22,27 +22,27 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module matrix_eigenval
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   ! Copyright (c) Raghunathan Ramakrishnan
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 #include "def.h"
 
@@ -54,14 +54,14 @@ module matrix_eigenval
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
   interface eigs
      !
      ! Eigensolver (Simple Eigenvalue Problem)
@@ -94,23 +94,23 @@ module matrix_eigenval
      module procedure zgesvd90
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: eigs, geigs, svd
   public :: jacobi
 
   public :: dgesvd90!(A, U, s, VT)
   public :: dsygv90!(A, B, e)
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !------------ Declaration of constants and variables ---------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine geigs_dsygv(H,S,eigval,EVEC)
@@ -1063,5 +1063,5 @@ contains
     end subroutine sjacobi
   end subroutine jacobi
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module matrix_eigenval

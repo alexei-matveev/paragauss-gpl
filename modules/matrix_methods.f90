@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module matrix_methods
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -49,18 +49,18 @@ module matrix_methods
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   ! TO BE DONE:
   ! 1) remove check for hermiteanity(?) from pck- and from_h__c
@@ -77,12 +77,12 @@ module matrix_methods
 
   save
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface matrix
      !
@@ -262,7 +262,7 @@ module matrix_methods
      module procedure size_c_i!(cmatrix, axis)
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: assignment(=)                               ! [cr]matrix = array
   public :: operator(*), mult                           ! multiplication
   public :: operator(**)                                ! exponentiation
@@ -274,17 +274,17 @@ module matrix_methods
   public :: diag                                        ! extracting diagonal
   public :: size                                        ! dimension
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of constants and variables -----
 
   real(RK), parameter :: zero = 0.0_rk
   real(RK), parameter :: one = 1.0_rk
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 #define AT_ENTRY(proc)  ! if ( verbose ) print *, __STRING(proc), "entered"
@@ -1461,5 +1461,5 @@ contains
     n = size(a%re, axis)
   end function size_c_i
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module matrix_methods

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module int_send_2cob3c_spor
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module int_send_2cob3c_spor
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only:&
        & IK=>i4_kind,&
@@ -61,14 +61,14 @@ module int_send_2cob3c_spor
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface MaxFitIndex
      module procedure MaxFitIndex_Which
@@ -79,7 +79,7 @@ module int_send_2cob3c_spor
      module procedure free_SplitDims
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: &
        FitBorders, &
@@ -88,12 +88,12 @@ module int_send_2cob3c_spor
        MyFitIndex, &
        SyncBorders
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   type,private :: SplitDims
      integer(IK)          :: first,last
@@ -101,7 +101,7 @@ module int_send_2cob3c_spor
      !...(first:last)
   end type SplitDims
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   logical,parameter :: YES=.true.,NO=.false.
   integer(IK)       :: i_
@@ -119,8 +119,8 @@ module int_send_2cob3c_spor
 
 
   logical,private :: initialized=NO  
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine init()
@@ -361,5 +361,5 @@ contains
     call error(memstat,"is23s/free_SplitDims: dealloc failed")
   end subroutine free_SplitDims
     
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module int_send_2cob3c_spor

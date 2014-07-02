@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module print_module
 !-------------- Module specification ---------------------------
 !
@@ -68,7 +68,7 @@ module print_module
   implicit none
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
  
   interface printout
      module procedure print_real_vec
@@ -83,9 +83,9 @@ public banner, print_int_vec, print_real_vec, print_real_mat, &
        print_arrmat3_vec, print_arrmat2_vec
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !----------------------------------------------------------------
 !------------ Subroutines ---------------------------------------

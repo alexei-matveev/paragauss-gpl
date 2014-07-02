@@ -23,9 +23,9 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module ls_calculate_grads_module
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
   !
   !  Purpose: calculation of gradients of all primitive 2 center orbital
   !           and 3 center integrals for a given set of indizes
@@ -37,20 +37,20 @@ module ls_calculate_grads_module
   !  Author: MS
   !  Date:   8/96
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Author: AH
   ! Date:   4/99
   ! Description: gradients for pseudopotentials has 
   !              been added
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use unique_atom_module, noname=>pseudopot_present
   use gamma_module
@@ -78,15 +78,15 @@ module ls_calculate_grads_module
 
   implicit none
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   ! these globals are set from the sub:
   integer(kind=i4_kind) :: la
   integer(kind=i4_kind) :: equalb ! number of equal atom b
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 !..............................................................................
 ! << OUTPUT ARRAYS >>

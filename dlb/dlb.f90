@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module dlb
 !---------------------------------------------------------------
 !
@@ -256,7 +256,7 @@ contains
     integer (lk), intent(in   ) :: N(:)
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer (ik)              :: ierr
     integer (lk)                :: i, number_jobs
 
@@ -383,7 +383,7 @@ contains
     logical                              :: more ! result
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer (lk)                :: i,  w, jobs_all, jobs_color
     integer (ik)              :: ierr
     ASSERT (stride < 0)
@@ -453,7 +453,7 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     integer (ik), intent(in)  :: output_level
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     call dlb_timers(output_level)
   end subroutine dlb_print_statistics
 

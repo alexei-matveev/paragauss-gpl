@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module opt_data_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:This module consists of main_data_module,
   !          coordinates_data_module and read_input subroutine.
@@ -36,16 +36,16 @@ module opt_data_module
   !  Author: AS
   !  Date: 12/98
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use coortype_module
@@ -62,9 +62,9 @@ module opt_data_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind),    public :: OPT_STDOUT = -1
 #ifndef MAX_PATH
 # define MAX_PATH 100
@@ -262,7 +262,7 @@ module opt_data_module
        hesse_method,step_parameters,convergence,ts_parameters,&
        orientation
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: filename_setup_opt
   public :: opt_read_input
@@ -367,11 +367,11 @@ module opt_data_module
   !                  of the atoms in cartesian coordinates.
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public coordinates_read,coordinates_write,read_internals, frequency_parameters
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   
 
 !----------------------------------------------------------------
@@ -379,7 +379,7 @@ module opt_data_module
 contains
 
 
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Contains Hesse-Matrix  (in internal coordinates)
   !           Routines for input and output of the Hesse-Matrix,
@@ -391,16 +391,16 @@ contains
   !  Author: FN
   !  Date: 6/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   subroutine filename_setup_opt(optonly)
     !
@@ -434,7 +434,7 @@ contains
     !------------ Modules used ------------------- ---------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind),intent(inout) :: io_gx
     real(kind=r8_kind),intent(inout)    :: geo_loop
     integer(kind=i4_kind),intent(in)    :: step_counter
@@ -442,7 +442,7 @@ contains
 
     integer(kind=i4_kind) :: io_gx_reactant
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (zmat_format) then
 
@@ -508,9 +508,9 @@ contains
     !------------ Modules used ----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     print *,'n_tot_atoms:'
     do i=1,n_tot_atoms
        print *,'i',i
@@ -530,8 +530,8 @@ contains
     integer(kind=i4_kind)            :: io_gx
     real(kind=r8_kind)               :: geo_loop
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
 
     if (zmat_format) then
@@ -649,7 +649,7 @@ contains
     integer(kind=i4_kind)   :: io_ts_scan
     real(kind=r8_kind)::    xyz_dummy(3,max_atoms),geo_loop_dummy
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! first initialize the input variables
     DPRINT "zmatformat_read: entered",io_gx
     x=0.0_r4_kind
@@ -752,7 +752,7 @@ contains
     logical :: trq
 #endif
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! first initialize the input variables
     DPRINT "cartformat_read: entered",io_gx
     x=0.0_r4_kind
@@ -1318,24 +1318,24 @@ contains
   !*************************************************************
 
 subroutine opt_read_input(task, convert_internal)
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: read the input of the optimizer-program
   !
   !  Subroutine called by: main_opt
   !  Author: FN
   !  Date: 2/98
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module ! type specification parameters
 #ifndef FPP_OPTIMIZER
   use operations_module, only: operations_task, namelist_tasks_used, operations_qm_epe
@@ -1348,7 +1348,7 @@ subroutine opt_read_input(task, convert_internal)
   logical, optional, intent(in)::convert_internal 
   ! *** end of interface ***
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !------------ Executable code -----------------------------------
 
   integer(kind=i4_kind)   :: status,io_optinput, i, alloc_stat, n,j

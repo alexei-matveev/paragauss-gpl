@@ -22,26 +22,26 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module dimensions
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module,only:&
@@ -50,10 +50,10 @@ module dimensions
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   !=======================================================
   !
@@ -74,7 +74,7 @@ module dimensions
      ! (by default n_rad == 1)
   end type SubSpaceDim
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(IK), parameter, public :: UNCONTRACTED = 0
   integer(IK), parameter, public :: CONTRACTED   = 1
   integer(IK), parameter, public :: ANGULAR      = -1
@@ -143,7 +143,7 @@ module dimensions
   integer(IK), allocatable, public, protected :: uaL_vec_dims(:, :) ! (uaL_max, n_vec_irrep)
   integer(IK), allocatable, public, protected :: uaL_proj_dims(:, :) ! (uaL_max, n_proj_irrep)
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface dimens
      module procedure dimens_sym     ! (SYM)
@@ -163,7 +163,7 @@ module dimensions
      module procedure dealloc_arr_SubSpaceDim
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: dimens
   public :: dimoff
@@ -171,14 +171,14 @@ module dimensions
   public :: dimensions_free
   public :: alloc !,dealloc
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 ! /* integer parameter bug on SGI */
 #ifdef _SGI
@@ -208,9 +208,9 @@ module dimensions
 
   integer(IK), private :: REFCOUNT = 0
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 contains
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 
   !*************************************************************
   function dimens_sym(SYM, c) result(N)
@@ -792,5 +792,5 @@ contains
     enddo
   end subroutine dealloc_arr_SubSpaceDim
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module dimensions

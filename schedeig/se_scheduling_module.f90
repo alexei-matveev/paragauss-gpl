@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module se_scheduling_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Generates a scheduling for the diagonalization of
   !           a set of matrices on a set of processors. The runtime
@@ -48,18 +48,18 @@ module se_scheduling_module
   !  Date: 4/2010
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   ! FIXME:  original  code  use  single  precision  for  real  numbers
@@ -71,10 +71,10 @@ module se_scheduling_module
   private
 
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   !
   ! The  optimal   scheduling  is  stored  in   the  following  nested
@@ -105,12 +105,12 @@ module se_scheduling_module
      integer(IP), public :: size = -1
   end type taskType
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: se_scheduling_run
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of interface blocks --------------------
   interface sort
@@ -128,13 +128,13 @@ module se_scheduling_module
      real(WP) :: span = -1. ! = getExecTime(%slots, %size)
   end type npts_task
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   type(se_timefunction_type), allocatable :: timeFunctions(:)
   real(WP), parameter :: STD_TIME = 0.001_WP
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine se_scheduling_run(tasks, task_sizes, np)
@@ -910,11 +910,11 @@ contains
     real(WP),    intent(inout) :: A(:)
     integer(IP), intent(out)   :: marker
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IP) :: i, j
     real(WP)    :: temp
     real(WP)    :: x      ! pivot point
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     x = A(1)
     i= 0
@@ -980,11 +980,11 @@ contains
     integer(IP), intent(inout) :: A(:)
     integer(IP), intent(out)   :: marker
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IP) :: i, j
     integer(IP) :: temp
     integer(IP) :: x      ! pivot point
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     x = A(1)
     i= 0

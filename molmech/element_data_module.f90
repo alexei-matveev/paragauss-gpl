@@ -23,13 +23,13 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module element_data_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
 
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   type, public :: eledata
      character(len=2) :: name
@@ -194,10 +194,10 @@ module element_data_module
                                            eledata("BK",0.00, 0.00, 0.00, 0.00, 1.20, 1.125), &
                                            eledata("CF",0.00, 0.00, 0.00, 0.00, 1.20, 1.125)  /)
 
-  !------------ public functions and subroutines ------------------
-  !================================================================
+  !------------ public functions and subroutines ---------------------
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   !------------ Subroutines -----------------------------------------

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module relgrads_store
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -50,18 +50,18 @@ module relgrads_store
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 !define FPP_TIMERS 1
 # include "def.h"
@@ -72,11 +72,11 @@ module relgrads_store
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   integer(IK), parameter, public :: &
          RGNUCL =  1 &
@@ -86,9 +86,9 @@ module relgrads_store
        , RGPSEU =  5 &
        , RGOTHR =  6
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: rg_open
   public :: rg_close
@@ -105,12 +105,12 @@ module relgrads_store
   public :: rg_xx_get
   public :: rg_flag
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   integer(IK), parameter, private :: MAXHASH=9 ! 'SSSXXXYYY'
   character(len=MAXHASH), private :: ANYHASH=    '?????????'
@@ -160,7 +160,7 @@ module relgrads_store
     type(swap_t), pointer  :: next => NULL()
   end type
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   integer(IK), parameter   :: MAXORD =  2
 
@@ -183,8 +183,8 @@ module relgrads_store
   FPP_TIMER_DECL(bcst)
   FPP_TIMER_DECL(dist)
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -1800,5 +1800,5 @@ ASSERT(n_gr==size(gradient_der_index,2))
     blk%bits = IAND( blk%bits, NOT(IMARK) )
   end subroutine clear_mark
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module relgrads_store

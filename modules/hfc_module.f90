@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 Module hfc_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: database to hold hfc matrix elements
   !           as well as calculated hfc matrix elements.
@@ -43,7 +43,7 @@ Module hfc_module
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
 #define DEBUG
       Use type_module ! type specification parameters
@@ -194,11 +194,11 @@ Contains
     implicit none
     ! *** end of interface ***
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     Integer (Kind=i4_kind) :: i_irrep, i_unique, i_l, n_irreps
     Integer (Kind=i4_kind) :: status
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     DPRINT 'hfc::dimensions_calculate: entered'
 
@@ -243,10 +243,10 @@ Contains
     ! routine called by: read_input
     !** End of interface *****************************************
     Use input_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     Integer (Kind=i4_kind) :: unit, status, counter
     External error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     read_from_list = df_read_from_list
     n_orbitals = df_n_orbitals
     exclude_atom_orbitals = df_exclude_atom_orbitals
@@ -384,16 +384,16 @@ Subroutine reltrafo_hfc
   !  Author: DG
   !  Date:   6/2003
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   Use symmetry_data_module
   use matrix_module, only: &
         pgfree, tr, sim, eigs, alloc, cmatrix, rdmatrix, rmatrix, &
@@ -610,16 +610,16 @@ Subroutine reltrafo_hfc_one_comp
   !  Author: DG
   !  Date:   8/2004
   !  A one component version
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   Use symmetry_data_module
   use matrix_module, only: &
         pgfree, tr, sim, eigs, alloc, cmatrix, rmatrix, rdmatrix, &
@@ -1013,16 +1013,16 @@ Subroutine load_matrix (n, A, i_ir, filename)
   !  Author: DG
   !  Date:   6/2003
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   use type_module, only:&
        & IK=>i4_kind,&
        & RK=>r8_kind  ! type specification parameters
@@ -1049,16 +1049,16 @@ Subroutine load_vector(n, A, i_ir, filename)
   !  Author: DG
   !  Date:   6/2003
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   use type_module, only:&
        & IK=>i4_kind,&
        & RK=>r8_kind  ! type specification parameters

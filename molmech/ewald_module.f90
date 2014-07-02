@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module ewald_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use inp_out_module
@@ -39,15 +39,15 @@ module ewald_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public init_ewald, self_ewald_energy,direct_ew_E_and_F,recipr_ew_E_and_F, &
        send_receive_ewald, calc_gauss, shutdown_ewald,recipr_ew_E_and_F_t, &
        erf_erfc,calc_3d_poten
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   real(r8_kind) :: w_factor=one
@@ -67,7 +67,7 @@ module ewald_module
   integer(i4_kind) :: n_proc
 
   real(r8_kind) :: E_self,E_self0
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine init_ewald()

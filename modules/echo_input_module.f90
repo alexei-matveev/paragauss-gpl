@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module echo_input_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module provides a couple of utilities for
   !           echoing the input into output files
@@ -34,11 +34,11 @@ module echo_input_module
   !  Author: UB
   !  Date: 8/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: AS
   ! Date:   5/01
@@ -48,15 +48,15 @@ module echo_input_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module, only: r8_kind, i4_kind
   implicit none
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ public parameters ---------------------------------
   integer(i4_kind), public, parameter :: echo_level_short   = 0, &
@@ -87,13 +87,13 @@ module echo_input_module
        real_format2 = '("    ",a2," = ",f10.8:" # ",a2)', &
        word_format  = '("    ",a," = ",a10  :" # ",a)'
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: start, flag, intg, real, word, stop, echo
   public :: strng, intg_d, real_d
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ private variables ----------------------------------
   character(len=78), private :: list_name, prog_name
@@ -109,7 +109,7 @@ module echo_input_module
     integer(i4_kind), intent(in) :: unit
     integer(i4_kind), intent(in) :: level
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer  status
     external error_handler
 
@@ -170,7 +170,7 @@ module echo_input_module
     logical, optional :: empty_line    ! default = .true.
     logical, optional :: drop_namelist ! default = echo_level controlled
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     character(len=9) :: format, comment*33
     integer     :: status, pos
     logical     :: keep, drop
@@ -235,7 +235,7 @@ module echo_input_module
     ! namelist has been echoed to the output or not.
     logical, optional :: keep_namelist ! default = echo_level controlled
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical     :: keep
 
     if (present(keep_namelist)) then
@@ -516,7 +516,7 @@ module echo_input_module
     character(len=*), intent(in) :: name
     character(len=*), intent(in) :: value, default
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind)             :: status
 
     status = 0

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module efp_only_opt_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module efp_only_opt_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
   use type_module ! type specification parameters
   use elec_static_field_module, only: totalsym_field, E_ele, E_nuc,totsym_field_length
@@ -63,25 +63,25 @@ module efp_only_opt_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public efp_opt_main, geom_converged
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   real(r8_kind) :: qm_qm_energy,total_energy,total_energy_save
 
   integer(i4_kind), parameter :: snd_epe=499_i4_kind
@@ -89,7 +89,7 @@ module efp_only_opt_module
   integer(i4_kind), parameter :: get_fld=497_i4_kind
   integer(i4_kind), parameter :: get_grd=496_i4_kind
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -109,13 +109,13 @@ contains
     use induced_dipoles_module, only: send_receive_id1
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i, n_iter
     character(len=80) :: trace_buff
     real(r8_kind) :: max_grad
     logical :: geo_conv
     real(r8_kind) :: previous_t,next_t,sum_t
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(comm_i_am_master()) then
        call write_to_trace_unit("======================================================")
@@ -276,11 +276,11 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(inout) :: n_iterations
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind),parameter :: i_am_ready=500
     integer(i4_kind),parameter :: begin_cycle=501
     integer(i4_kind) :: n_procs,i,info
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(comm_i_am_master()) then
        n_procs=comm_get_n_processors()
@@ -323,11 +323,11 @@ contains
          comm_master_host
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind),parameter :: i_am_ready=510
     integer(i4_kind),parameter :: leave_cycle=511
     integer(i4_kind) :: n_procs,i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(comm_i_am_master()) then
        n_procs=comm_get_n_processors()
@@ -359,11 +359,11 @@ contains
     logical,intent(inout) :: conv
     integer(i4_kind),intent(inout) :: iter
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind),parameter :: i_am_ready=520
     integer(i4_kind),parameter :: leave_cycle=521
     integer(i4_kind) :: n_procs,i,info
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(comm_i_am_master()) then
        n_procs=comm_get_n_processors()
@@ -407,11 +407,11 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind),intent(in) :: iter
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind),parameter :: i_am_ready=530
     integer(i4_kind),parameter :: next_cycle=531
     integer(i4_kind) :: n_procs,i,info,iter_slave
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(comm_i_am_master()) then
        n_procs=comm_get_n_processors()
@@ -450,11 +450,11 @@ contains
          comm_master_host, commpack, communpack
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind),parameter :: i_am_ready=540
     integer(i4_kind),parameter :: stop_opt=541
     integer(i4_kind) :: n_procs, i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(comm_i_am_master()) then
        n_procs=comm_get_n_processors()
@@ -485,8 +485,8 @@ contains
     use iounitadmin_module, only: no_output_unit_output
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call read_gx_qm()
     call def_efp_arrays()
@@ -506,8 +506,8 @@ contains
     use induced_dipoles_module, only: pol_centers_bcast
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
     !
     call pointcharge_bcast()
     !
@@ -529,8 +529,8 @@ contains
     use point_dqo_module, only : calc_nuc_dqo_energy
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     qm_efp_energy=0.0_r8_kind
 
@@ -563,10 +563,10 @@ contains
     use comm_module, only: comm_get_n_processors, comm_save_recv, communpack
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: info,n_procs,i
     real(r8_kind) :: e_buf
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_procs=comm_get_n_processors()
 
@@ -589,9 +589,9 @@ contains
     use comm_module, only: comm_init_send,comm_master_host,comm_send, commpack
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: info
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call comm_init_send(comm_master_host,get_en)
 
@@ -612,8 +612,8 @@ contains
     use comm_module, only:  comm_i_am_master, comm_parallel
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call integralpar_set("Field_at_EFP")
 
@@ -644,10 +644,10 @@ contains
     use comm_module, only: comm_get_n_processors,comm_save_recv, communpack
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: info,n_procs,i
     real(r8_kind) :: help_arr(totsym_field_length)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_procs=comm_get_n_processors()
 
@@ -669,9 +669,9 @@ contains
     use comm_module, only: comm_init_send,comm_master_host,comm_send, commpack
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: info
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call comm_init_send(comm_master_host,get_fld)
 
@@ -693,8 +693,8 @@ contains
     use efp_rep_module, only: init_repf_grads
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     if (moving_pc) call init_pointcharges_grads()
     if (moving_X_centers .or. moving_R_centers) call init_X_centers_grads()
@@ -714,8 +714,8 @@ contains
     use efp_rep_module, only: repf_grads_shutdown
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     if (moving_pc) call pc_grads_shutdown()
     if (moving_X_centers .or. moving_R_centers) call X_centers_grads_shutdown()
@@ -738,8 +738,8 @@ contains
     use calc_id_module, only: calc_id_grads
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call integralpar_set("EFP_gradients")
 
@@ -773,9 +773,9 @@ contains
     use induced_dipoles_module, only: moving_Pol_centers,totsym_id_grad_unpack
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: n_procs,i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_procs=comm_get_n_processors()
 
@@ -802,8 +802,8 @@ contains
     use induced_dipoles_module, only: moving_Pol_centers,totsym_id_grad_pack
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call comm_init_send(comm_master_host,get_grd)
 
@@ -834,8 +834,8 @@ contains
     use efp_module, only: efp_sum_up_grads, efp_grad_cart_write
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     if(moving_pc) then
        call transform_PC_grad_to_cart()
@@ -868,10 +868,10 @@ contains
     !------------ Declaration of formal parameters ---------------
     logical         , intent(out) :: geo_conv
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical :: conv
     character(len=32) :: optimizer_task='GeoOpt'
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call main_opt( task=optimizer_task,converged=conv )
 
@@ -888,7 +888,7 @@ contains
     logical :: conv
     integer(i4_kind) :: qm_cycle
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     conv=.false.
 
@@ -915,8 +915,8 @@ print*,total_energy_save,total_energy,abs(total_energy-total_energy_save),'@@@@@
     use comm_module, only:  comm_i_am_master
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call unique_atom_close()
 
@@ -948,11 +948,11 @@ print*,total_energy_save,total_energy,abs(total_energy-total_energy_save),'@@@@@
     !------------ Declaration of formal parameters ---------------
     real(r8_kind), intent(inout) ::previous,next,sum
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: previous1
     character(len=10) :: date,time,zone
     integer(i4_kind) :: values(8)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     previous1=previous
     call date_and_time(date,time,zone,values)

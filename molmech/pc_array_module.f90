@@ -24,7 +24,7 @@
 !
 module pc_array_module
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use inp_out_module
@@ -33,13 +33,13 @@ module pc_array_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_pc_array_options, read_embed_cluster, gen_pc_array
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   type screep_point_type

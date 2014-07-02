@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  coortype_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Contains the data types for coordinates:
   !           -bond_length, bond_angle, dihedral_angle
@@ -35,24 +35,24 @@ module  coortype_module
   !           -b_length, b_angle, d_angle
   !  Author: FN
   !  Date: 2/98
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module ! type specification parameters
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type,public ::  bond_length
      integer(kind=i4_kind)  :: partner1,partner2
   end type bond_length
@@ -101,9 +101,9 @@ module  coortype_module
   character(len=20),public               :: bond_type(3)
   data bond_type /'bond_length','bond_angle','dihedral_angle'/
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 
 !--------------- End of module ----------------------------------

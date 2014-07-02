@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  int_data_2cff_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This is the module containing the data used when
   !           calculating the 2 center fitfuncyion
@@ -59,11 +59,11 @@ module  int_data_2cff_module
   !  Author: TB
   !  Date: 5/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: FN
   ! Date:   8/96
@@ -87,8 +87,8 @@ module  int_data_2cff_module
   ! Author:      ...
   ! Date:        ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !== Interrupt end of public interface of module =================
+  !-------------------------------------------------------------------
+  !== Interrupt end of public interface of module ====================
   !------------ all modules used are public !! ------------------
 # include <def.h>
   use type_module
@@ -98,10 +98,10 @@ module  int_data_2cff_module
   use integralpar_module
   use fit_coeff_module
   use datatype, only: arrmat4
-  !== Interrupt of public interface of module =====================
+  !== Interrupt of public interface of module ========================
   implicit none
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of constants and variables ----------
   type(quadrupel_type), public :: quadrupel
   ! quadrupel ( unique atom 1, l 1, unique atom 2, l 2 )
@@ -187,9 +187,9 @@ module  int_data_2cff_module
   !------------ public functions and subroutines ----------------
   public int_data_2cff_setup, int_data_2cff_shutdown
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   !------------ Subroutines -------------------------------------
 
 contains

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  line_search_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: Contains all necessary routines for the line-search
   !           subproblem. Currently only a cubic fit to the
   !           Energy along the line q_last-q is implemented.
@@ -37,16 +37,16 @@ module  line_search_module
   !  Author: FN
   !  Date: 7/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   use type_module ! type specification parameters
   use coortype_module
   use math_module
@@ -58,8 +58,8 @@ module  line_search_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
-  !------------ Declaration of constants and variables ------------
+  !== Interrupt end of public interface of module ====================
+  !------------ Declaration of constants and variables ---------------
   integer(kind=i4_kind):: io_linmin = 20
   real(kind=r8_kind),allocatable        :: q_last(:),g_last(:),line_step(:)
   real(kind=r8_kind)                    :: e_last
@@ -77,11 +77,11 @@ module  line_search_module
   !                 once I know how this is done.
   
   public line_search_main, line_search_main2
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !===================================================================
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -98,7 +98,7 @@ contains
     !------------ Modules used ---------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: alloc_stat
     !------------ Executable code -------------------------------
     allocate(q_last(n_internal),STAT=alloc_stat)
@@ -135,7 +135,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     logical,optional    :: dealloc
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: alloc_stat
     !------------ Executable code -------------------------------
     
@@ -195,12 +195,12 @@ contains
     !------------ Declaration of formal parameters ---------------
     logical,intent(out)                :: do_newton
     integer(kind=i4_kind),intent(in)   :: geo_loop
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),allocatable     :: delta_q(:),help_grad(:)
     integer(kind=i4_kind)              :: alloc_stat,i,info_fit
     real(kind=r8_kind),parameter       :: small_alpha = 1.0e-4_r8_kind
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)   :: alpha
     
     allocate(delta_q(n_internal),STAT=alloc_stat)
@@ -455,7 +455,7 @@ contains
     ! polynimial, i.e. the size of the new step along the line
     ! q-q_last.
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)    :: x1,x2,d,q1,q2,test
     integer(kind=i4_kind) :: counter
     logical               :: is1,is2
@@ -584,7 +584,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     logical,intent(out)                :: do_newton
     integer(kind=i4_kind),intent(in)   :: geo_loop
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),allocatable     :: delta_q(:)
     integer(kind=i4_kind)              :: alloc_stat,i
     real(kind=r8_kind),parameter       :: small_alpha = 1.0e-4_r8_kind

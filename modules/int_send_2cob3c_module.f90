@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  int_send_2cob3c_module
 !---------------------------------------------------------------
 !
@@ -167,9 +167,9 @@ public int_send_2cob3c_setup, int_send_2cob3c_shutdown, &
 public :: int_send_2cob3c_receive
 public :: int_send_2cob3c_receive_all
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of private types ----
 
@@ -250,7 +250,7 @@ contains
     use options_module, only: options_directaccess_integrals,quadrupels_reclength
     implicit none
     integer(kind=i4_kind), intent(in)  :: n_quad
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: i_ir, n_hosts, status, n_hosts_larger, &
          n_per_host, i_border, i_host, n_ch, n_xc, n_poten, n_field, &
          i_ua1, i_ua2, &
@@ -273,7 +273,7 @@ contains
            need_2cob_ol_rel, need_2cob_pvec, need_3c_xc, need_3c_co, &
            need_3c_poten, need_3c_field
 !! norge end
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     ! Nothing to be communicated for gradeints

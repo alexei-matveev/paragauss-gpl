@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module calc_energy_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use tasks_main_options_module
@@ -43,17 +43,17 @@ module calc_energy_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public total_energy_and_grad
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine total_energy_and_grad(do_corr)

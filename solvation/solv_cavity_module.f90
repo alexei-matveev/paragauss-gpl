@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module solv_cavity_module
 !
 !  This module are used to
@@ -89,8 +89,8 @@ module solv_cavity_module
        dealloc_geom_deriv_part1, dealloc_geom_grad, dealloc_cavity, &
        correction_param
 
-!================================================================
-!================================================================
+  !===================================================================
+  !===================================================================
 !== Interrupt of public interface of module =========
 !----private types
 # define MAX_POL_VER 30
@@ -180,7 +180,7 @@ module solv_cavity_module
   type(cavity_data), public, allocatable :: tessarea(:)
   integer(i4_kind),public,allocatable :: center2sphere(:,:)
 
-! End of public interface of module
+  ! End of public interface of module
 
   logical :: save_cav
   type(symm_transformation_int), pointer :: point_trafos(:)

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module density_calc_module
 !---------------------------------------------------------------
 !
@@ -153,7 +153,7 @@ module density_calc_module
                             , TWO     = 2.0_r8_kind
   logical :: fitted_density_is_closed_priv=.true.
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: density_calc,&
        density_calc_nl,&
        density_calc_nl_v2,&
@@ -181,9 +181,9 @@ module density_calc_module
   public :: density_calc_response
 #endif
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ public types of subroutines formal parameters ---
   public :: orbital_type, orbital_gradient_type

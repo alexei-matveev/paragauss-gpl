@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module overlap_module
   !-------------- Module specification ---------------------------
   !
@@ -39,11 +39,11 @@ module overlap_module
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification 
   ! Author: MM
@@ -55,9 +55,9 @@ module overlap_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype    ! user defined types
@@ -66,20 +66,20 @@ module overlap_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public constants and variables -----
   public arrmat2
   type(arrmat2), allocatable, public, protected :: overlap(:)
   type(arrmat2), allocatable, public, protected :: overlap_real(:),overlap_imag(:)
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_overlap, dealloc_overlap
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 
   character(len=32), private :: overlap_state = 'deallocated'
@@ -103,7 +103,7 @@ contains
     use integralstore_module, only: integralstore_2cob_ol
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: i_gamma,m,n,io_u,io_u_help,i,i_meta
 
     ! dimensions of irreps
@@ -112,7 +112,7 @@ contains
     integer(kind=i4_kind),allocatable    :: dim_irrep(:)
     ! n_irrep    : number of irreps
     ! dim_irrep : number of independent functions in irrep
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     DPRINT 'ovl::read_overlap: entered, overlap_state=',overlap_state
     if( overlap_state == 'valid' )then
@@ -293,9 +293,9 @@ ASSERT(allocated(integralstore_2cob_ol))
     use init_module, only: init
     type(sym),intent(in)   :: ssym
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     DPRINT 'ovl::alloc_overlap: entered, overlap_state=',overlap_state
 
@@ -360,5 +360,5 @@ ASSERT(allocated(integralstore_2cob_ol))
   end subroutine dealloc_overlap
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module overlap_module

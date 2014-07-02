@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module polyhedron_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -37,18 +37,18 @@ module polyhedron_module
   !  Date: 03/2010
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include <def.h>
   use type_module ! type specification parameters
@@ -58,10 +58,10 @@ module polyhedron_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type, public :: triangles
      real(r8_kind),pointer    :: xyz(:,:)
      real(r8_kind),pointer    :: xyz_centers(:,:)
@@ -70,7 +70,7 @@ module polyhedron_module
      real(r8_kind)            :: area
   end type triangles
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   type(triangles) ,public,target    :: surf_elem    
   integer(i4_kind),public           :: N_points_of_triangles
   integer(i4_kind),public           :: N_centers_on_sphere
@@ -81,22 +81,22 @@ module polyhedron_module
   real(r8_kind), public             :: radius
   integer(i4_kind), public          :: local_point_factor
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public generate_octahedron,generate_cube,generate_dodecahedron, &
          generate_doublepyramide,more_triangles
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -109,7 +109,7 @@ contains
     integer(i4_kind),intent(in) :: N_atom_spheres
     logical,intent(in)          :: do_cavitation, do_gradients
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind),pointer     :: xyz(:,:),xyz_cent(:,:)
     integer(i4_kind), pointer :: indexx(:,:)
     real(r8_kind)             :: a,d
@@ -117,7 +117,7 @@ contains
     integer(i4_kind)          :: N_dim_xyz,N_dim_cent,N_dim_xyz_st,N_dim_cent_st
     integer(i4_kind)          :: N_dim_xyz_next,N_dim_cent_next
     integer(i4_kind)          :: i, j, l1, n1, i1, status1
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     
     a=1.0_r8_kind
     radius=a
@@ -240,7 +240,7 @@ contains
     integer(i4_kind),intent(in) :: point_factor
     logical,intent(in)          :: do_cavitation,do_gradients
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind),pointer     :: xyz(:,:),xyz_cent(:,:)
     integer(i4_kind), pointer :: indexx(:,:)
     real(r8_kind)             :: a,d
@@ -251,7 +251,7 @@ contains
     integer(i4_kind)          :: N_dim_xyz_next,N_dim_cent_next
 !!!MF <<<<
     integer(i4_kind)          :: i,j,k,l,m,n,l1,n1,ind,i1,status1
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     a=sqrt(2.0_r8_kind)/2.0_r8_kind
     radius=sqrt(1.5_r8_kind)
@@ -412,7 +412,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     logical,intent(in)          :: do_cavitation,do_gradients
     character(len=4),intent(in)      :: name_point_group
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind),pointer     :: xyz(:,:),xyz_cent(:,:)
     integer(i4_kind), pointer :: indexx(:,:)
     real(r8_kind)             :: x,y,z
@@ -430,7 +430,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     real(r8_kind), parameter  :: sin20=0.3090169943749_r8_kind
 !!!MF <<<<
     integer(i4_kind)          :: i,j,k,l,m,n,l1,n1,ind,i1,status2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     !definition a pentakis dodecahedron 
     t=(sqrt(5.0_r8_kind)+1.0_r8_kind)/2.0_r8_kind
@@ -700,7 +700,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     integer(i4_kind),intent(in) :: point_factor
     logical,intent(in)          :: do_cavitation, do_gradients
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind),pointer     :: xyz(:,:),xyz_cent(:,:)
     integer(i4_kind), pointer :: indexx(:,:)
     real(r8_kind)             :: xyz_buf(3)
@@ -711,7 +711,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     real(r8_kind), parameter  :: pi = 3.14159265355897932368_r8_kind
     real(r8_kind), parameter  :: cos12=0.8660254037844_r8_kind
     real(r8_kind), parameter  :: sin12=0.5_r8_kind
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     radius=1.0_r8_kind 
 
@@ -842,14 +842,14 @@ DPRINT 'maximum allowd centers',N_dim_cent
     integer(i4_kind), intent(in)    :: n_ind
     integer(i4_kind), intent(inout) :: n_xyz_st,n_ind_st
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind)                 :: xyz_t_buf(3),xyz_tt(3)
     integer(i4_kind), allocatable :: ind_buf(:,:)
     integer(i4_kind)              :: new_numbers(6)
     integer(i4_kind)              :: status,next_i,neighbour,i1,i2
     integer(i4_kind)              :: i,j,k,l,m,m1,n,n1
     real(r8_kind), parameter      :: small=1.0e-11_r8_kind
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 #ifdef _LINUX1
     xyz_t=>surf_elem%xyz
@@ -922,6 +922,6 @@ DPRINT 'maximum allowd centers',N_dim_cent
   end subroutine more_triangles
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module polyhedron_module
 

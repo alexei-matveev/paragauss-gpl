@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module noRI_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module noRI_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 #include "def.h"
   use iounitadmin_module, only: write_to_output_units,output_unit
@@ -76,15 +76,15 @@ module noRI_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public noRI_2c, noRI_4c
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   integer(i4_kind), parameter :: UP = 1, DN = 2
   integer(i4_kind), parameter :: C2 = 1, C4 = 2 !!TWO CENTER / FOUR CENTER
   integer(i4_kind), parameter :: & !! VERY IMPORTANT
@@ -134,7 +134,7 @@ module noRI_module
        & BBAB = 5, &
        & ABAB = 6
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   type(orbital_type),pointer             :: fcts_orbs_ch(:)
   type(orbital_gradient_type),pointer    :: grads_ch(:)
 
@@ -143,7 +143,7 @@ module noRI_module
 
   type(arrmat4),     allocatable, target :: phi (:)
   type(arrmat5),     allocatable, target :: gphi(:)
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 
   FPP_TIMER_DECL(XC_all)
   FPP_TIMER_DECL(XC_input)
@@ -478,7 +478,7 @@ contains
     type   (arrmat2),intent( IN),OPTIONAL :: DSP(:)
     integer(i4_kind)            ,OPTIONAL :: K
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     integer(i4_kind)                    :: vla, i_atom, n_spin
     integer(i4_kind)                    :: i_sp, i_ira
@@ -512,7 +512,7 @@ contains
 
     logical :: XLDA,CLDA,LDAON
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     vla    = vec_length                      !! GRID
     n_spin = symmetry_data_n_spin()          !! SPIN
@@ -915,7 +915,7 @@ contains
     type(arrmat5),optional,target, intent(IN )   :: gphi(:)
     real(r8_kind),optional, intent(INOUT) :: gdeltaRHO(:,:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: n_irr, as, as_tmp
     integer(kind=i4_kind)      :: i_ir_a, i_ir_s
     integer(kind=i4_kind)      :: oo_dim
@@ -927,7 +927,7 @@ contains
     integer(kind=i4_kind)      :: i_mlt, na, ns, i
 
     real(r8_kind),pointer      :: pcg(:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irr  = symmetry_data_n_irreps() ! number of irreps
 
@@ -992,13 +992,13 @@ contains
     integer(kind=i4_kind), intent(INOUT) :: as
     real(kind=r8_kind),    intent(INOUT) :: Uout(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_pa_c,i_pa_a,i_pa_s
     integer(kind=i4_kind) :: npa,nps,npc
     integer(kind=i4_kind) :: a, s
     real(kind=r8_kind)    :: Xas(na,ns)
     real(kind=r8_kind)    :: r1(vla)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     npc = size(pcg,1)
     npa = size(pcg,2)
     nps = size(pcg,3)
@@ -1044,7 +1044,7 @@ contains
     type(arrmat5), target, intent(IN   ), optional :: gphi(:)
     real(kind=r8_kind),    intent(IN   ), optional :: deltaVg  (:,:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)          :: n_irr, as_tmp, n_spin
     integer(kind=i4_kind)          :: as, i_ir_a
     integer(kind=i4_kind)          ::     i_ir_s, oo_dim
@@ -1054,7 +1054,7 @@ contains
     integer(kind=i4_kind)          :: na, ns
     integer(kind=i4_kind)          :: i_mlt
     real(kind=r8_kind),pointer     :: pcg(:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_irr  = symmetry_data_n_irreps() ! number of irrps
     n_spin = symmetry_data_n_spin()   ! number of spins
 
@@ -1128,7 +1128,7 @@ contains
     integer(kind=i4_kind), intent(INOUT) :: as
     real(kind=r8_kind),    intent(INOUT) :: Uout(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_pa_c,i_pa_a,i_pa_s
     integer(kind=i4_kind) :: npa,nps,npc
     integer(kind=i4_kind) :: a, s, i, status
@@ -1136,7 +1136,7 @@ contains
     real(kind=r8_kind)    :: coeff
 
     real(kind=r8_kind),allocatable    :: phiv(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     npc = size(pcg,1)
     npa = size(pcg,2)
     nps = size(pcg,3)
@@ -1235,7 +1235,7 @@ contains
     integer(kind=i4_kind), intent(INOUT) :: as
     real(kind=r8_kind),    intent(INOUT) :: Uout(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_pa_c,i_pa_a,i_pa_s
     integer(kind=i4_kind) :: npa,nps,npc
     integer(kind=i4_kind) :: a, s, i, status,r
@@ -1243,7 +1243,7 @@ contains
     real(kind=r8_kind)    :: coeff
 
     real(kind=r8_kind),allocatable    :: phiv(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     npc = size(pcg,1)
     npa = size(pcg,2)
     nps = size(pcg,3)
@@ -1310,7 +1310,7 @@ contains
     integer(kind=i4_kind), intent(INOUT) :: as
     real(kind=r8_kind),    intent(INOUT) :: Uout(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_pa_c,i_pa_a,i_pa_s
     integer(kind=i4_kind) :: npa,nps,npc,r
     integer(kind=i4_kind) :: a, s, i, status
@@ -1318,7 +1318,7 @@ contains
     real(kind=r8_kind)    :: coeff
 
     real(kind=r8_kind),allocatable    :: phiv(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     npc = size(pcg,1)
     npa = size(pcg,2)
     nps = size(pcg,3)
@@ -1385,12 +1385,12 @@ contains
     !** End of interface *****************************************
     integer(i4_kind), INTENT(IN)     :: n_spin
     type(arrmat2),    INTENT(INOUT)  :: M4i(:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: status,n_procs,i_proc
     integer(kind=i4_kind) :: i_spin,i_dim,dim_ou_a,dim_ou_b
     integer(kind=i4_kind) :: idx
     real(kind=r8_kind),allocatable :: help_mat(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     ! loop over all slave processors
@@ -1435,10 +1435,10 @@ contains
     !** End of interface *****************************************
     integer(i4_kind), INTENT(IN)     :: n_spin
     type(arrmat2),    INTENT(INOUT)  :: M4i(:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_dim,i_spin
     integer(kind=i4_kind) :: idx
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i_spin = 1,n_spin
        do i_dim=1, 2 !! dim_factor
@@ -1467,10 +1467,10 @@ contains
     integer(i4_kind), INTENT(IN)  :: X, i_ir, n_spin
     type(arrmat2),    INTENT(IN)  :: M4i(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !!    type(readwriteblocked_tapehandle) :: th_2index
     integer(kind=i4_kind)             :: i_spin,i_dim,idx
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i_spin=1, n_spin
        do i_dim=1, 2
@@ -1527,7 +1527,7 @@ contains
     real(kind=r8_kind),                intent(IN ) :: gw(:), rho(:,:), gamma(:,:)
     real(kind=r8_kind),dimension(:,:), intent(OUT) :: dFdg,dFdndn,dFdndg,dFdgdg
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind), dimension(vla  ) :: &
          Fx, Fc, Flda, eps
     real(kind=r8_kind), dimension(vla,2) :: &
@@ -1685,12 +1685,12 @@ contains
     type(orbital_gradient_type),optional,intent(IN ) :: gorbs(:)
     type(arrmat5),optional, target,      intent(inout) :: gphi(:) ! comes allocated
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: i_ir_a, i_sp, npa, i_pa,i
     real(kind=r8_kind),pointer :: eigv(:,:,:)
     real(kind=r8_kind),pointer :: phi_p(:,:,:,:), orbs_p(:,:,:)
     real(kind=r8_kind),pointer :: gphi_p(:,:,:,:,:), gorbs_p(:,:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do i_ir_a = 1, n_irr
 
        npa     =  symmetry_data_n_partners(i_ir_a)
@@ -1736,7 +1736,7 @@ contains
     type   (arrmat1),  intent(   IN) :: EPSETA(:)
     type   (arrmat2),  intent(INOUT) :: DSP(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: j, counter, ias, ias_dn
     !------------ Executable code -------------------------------- 
 
@@ -1784,5 +1784,5 @@ contains
 !!$  !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module noRI_module

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 logical function  precision_check(org,new)
 !----------------------------------------------------------------
 !
@@ -57,11 +57,11 @@ logical function  precision_check(org,new)
   implicit none
 
 !== Interrupt end of public interface of module =================
-  !------------ Declaration of formal parameters ------------------
+  !------------ Declaration of formal parameters ---------------------
   real(kind=r8_kind), intent(in) :: org, new
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   if ( abs(org) .gt. machineparameters_checkpreci ) then
      precision_check = abs((org-new)/org) .gt. machineparameters_checkpreci

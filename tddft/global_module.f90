@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  global_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !  Database to hold GENERAL information needed in various parts
@@ -45,27 +45,27 @@ MODULE  global_module
   !  Date:   11/98
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: SB
   ! Date:   11/04
   ! Description: totally rebuilded
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
   USE type_module ! type specification parameters
   USE iounitadmin_module
@@ -77,9 +77,9 @@ MODULE  global_module
   IMPLICIT NONE
   SAVE            ! save all variables defined in this module
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   LOGICAL, PUBLIC               :: &
        gl_calcall, gl_oscstr, &
@@ -115,19 +115,19 @@ MODULE  global_module
   REAL(KIND=r8_kind), PUBLIC, ALLOCATABLE :: gl_Q(:,:)
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   PUBLIC global_alloc,global_alloc_M,global_dealloc_M,global_dealloc
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
 
   !*************************************************************
@@ -469,5 +469,5 @@ CONTAINS
 !!$  END FUNCTION global_data_get_S_index
 !!$  !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE global_module

@@ -23,9 +23,9 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 #include <def.h>
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  eigensolve_module
 !---------------------------------------------------------------
 !
@@ -119,15 +119,15 @@ MODULE  eigensolve_module
   IMPLICIT NONE
   SAVE            ! save all variables defined in this module
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
 !------------ public functions and subroutines ------------------
 PUBLIC eigensolve_main
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !----------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
@@ -164,7 +164,7 @@ CONTAINS
     LOGICAL,INTENT(in   ),OPTIONAL :: debug
     REAL   (KIND=r8_kind) :: DIAG(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     ! -- Variables used as arguments for DVDSON subroutine
     LOGICAL               :: HIEND

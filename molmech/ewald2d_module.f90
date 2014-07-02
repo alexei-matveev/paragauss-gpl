@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module ewald2d_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use inp_out_module
@@ -41,16 +41,16 @@ module ewald2d_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public init_ewald2d, self_ewald2d_energy,direct_ew2d_E_and_F, &
        recipr_ew2d_E_and_F, recipr_ew2d_E_self, &
        calc_2d_slab_vec, shutdown_ewald2d, send_receive_ewald2d, &
        calc_2d_poten
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   real(r8_kind) :: accuracy=small
@@ -67,7 +67,7 @@ module ewald2d_module
   integer(i4_kind) :: first_index,last_index
 
   real(r8_kind) :: E_self,E_self0,E_self1
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine init_ewald2d()

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  commpack_module
 !-----------------------------------------------------------
 !
@@ -80,9 +80,9 @@ module  commpack_module
 !             routines implemented here are packed. Thus,
 !             PvmDataInPlace does not work for these types !!!
 !
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 !
 !           For strings, the the following subroutines are defined
 !

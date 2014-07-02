@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module shgi_sym
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Convert  derivatives to  those with  respect to  totally symmetric
   ! modes.
@@ -34,18 +34,18 @@ module shgi_sym
   ! Copyright (c) 2005-2013 Alexei Matveev
   ! Copyright (c) 2006-2008 Alexey Shor
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only: &
        IK=>i4_kind, RK=>r8_kind ! type specification parameters
@@ -55,14 +55,14 @@ module shgi_sym
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 !!$  type, public ::  shgi_sym_
 !!$  end type shgi_sym_
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 !!$  integer(kind=i4_kind), parameter, public  :: shgi_sym_
 !!$  real(kind=r8_kind),    parameter, public  :: shgi_sym_
 !!$  logical,               parameter, public  :: shgi_sym_
@@ -73,12 +73,12 @@ module shgi_sym
 !!$  character,                        public  :: shgi_sym_
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 !!$  interface shgi_sym_
 !!$  end interfaceshgi_sym_
 !!$  public shgi_sym_
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: shgi_sym_ve_rot    ! vector version of shgi_sym_gr_rot
   public :: shgi_sym_gr_rot    ! array version of shgi_sym_ve_rot
 
@@ -93,16 +93,16 @@ module shgi_sym
   public :: shgi_sym_fl_rot
   public :: shgi_sym_X_rot
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 !!$  type
 !!$  end type
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 !!$  integer(kind=i4_kind), parameter ::
 !!$  real(kind=r8_kind),    parameter ::
 !!$  logical,               parameter ::
@@ -114,8 +114,8 @@ module shgi_sym
 
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine shgi_sym_X_rot(Xc,UC,EC,GR,SY,NGR)
@@ -562,5 +562,5 @@ contains
 #endif
   end subroutine gradinfo
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module shgi_sym

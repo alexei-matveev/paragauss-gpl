@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module io
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Yet another IO interface...
   !           Fortran IO is very fragile, and one often needs
@@ -51,18 +51,18 @@ module io
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only:&
        & IK => i4_kind,&
@@ -70,12 +70,12 @@ module io
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   integer(IK), parameter, public ::&
        & IO_OK            =  0, &
@@ -87,7 +87,7 @@ module io
          IO_SILENT        =  3
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface file_open
      module procedure file_open          ! (iou,file-name,rwa-mode)
@@ -152,7 +152,7 @@ module io
      module procedure file_read_file_real_3D  ! (file-name,buf(:,:,:))
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: file_open
   public :: file_close
@@ -167,14 +167,14 @@ module io
   public :: io_set_error_handler
   public :: io_status
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   integer(IK), parameter :: line_length = 256
   character(line_length) :: line
 
@@ -184,8 +184,8 @@ module io
 
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function io_status() result(stat)
@@ -1018,5 +1018,5 @@ contains
 999 CONTINUE
   end subroutine file_read_file_real_buf
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module io

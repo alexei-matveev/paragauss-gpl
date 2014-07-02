@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  gradient_data_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module contains the data for the
   !           nuclear displacement gradients, and
@@ -48,19 +48,19 @@ module  gradient_data_module
   !              Split_Gradients concept introduced
   !              Gradients for Model_Density_Approach introduced
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !== Interrupt end of public interface of module =================
+  !-------------------------------------------------------------------
+  !== Interrupt end of public interface of module ====================
 #ifdef _LINUX
 # ifdef _UNDERSCORE
 #  define GETENV getenv_
@@ -103,12 +103,12 @@ module  gradient_data_module
 #endif
     USE_MEMLOG
 
-  !== Interrupt of public interface of module =====================
+  !== Interrupt of public interface of module ========================
   implicit none
   save ! save all variables defined in this module
   private
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of types ----------------------------
 
@@ -221,9 +221,9 @@ module  gradient_data_module
 
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
 

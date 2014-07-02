@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine chargefit (loop, coeff_dev, coulomb_dev)
   !
   !  Purpose: This subroutine performs the charge fit.

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module ch_response_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Correct allocated, calculate and deallocated charge
   !    fit basis function with all irreps and partners.
@@ -49,18 +49,18 @@ module ch_response_module
   !  Date: 12/2004
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use symmetry_data_module ! description of irreps
@@ -72,7 +72,7 @@ module ch_response_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   type solid_harmonics_array_type
      ! solid harmonics of all equal atoms of one unique atome
@@ -138,17 +138,17 @@ module ch_response_module
 
   logical :: parameters_calculated = .false.
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public fit_fct_allocate_response,fit_fct_free_response,fit_fct_calculate_response, &
        orbital_setup_response, dimension_of_fit_ch, orb_position, fit_position
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -166,12 +166,12 @@ contains
     type(orbital_gradient_type)        , pointer , optional :: grads(:)
     type(orbital_sec_der_type)         , pointer , optional :: sec_ders(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: n_dim, i_ir, n_partn
     integer :: stat_alloc, vec_len, n_irreps
     !------------ Declaration of local handles -------------------
 !!$type(unique_atom_type), pointer :: ua
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irreps = symmetry_data_n_irreps() !! Number of irreps
 
@@ -231,9 +231,9 @@ contains
     type(orbital_gradient_type)                 , optional :: grads(:)
     type(orbital_sec_der_type)                  , optional :: sec_ders(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: as, i_ir, n_irreps
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irreps = symmetry_data_n_irreps()
 
@@ -265,12 +265,12 @@ contains
     logical, optional, intent(in) :: do_gradients, do_sec_der
     ! default: false
     !** End of interface ***************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)       :: i_ua,i_ea,N_ea,i_l
     type(unique_atom_type), pointer   :: ua
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     !!    vl = machineparameters_veclen
 
@@ -416,7 +416,7 @@ contains
     type(orbital_sec_der_type)         , target, optional :: sec_ders(:) ! (n_irr)
     ! the various types of fit function arrays to load (all intent(out))
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind), parameter :: zero = 0.0_r8_kind
     integer(kind=i4_kind) :: vl, i_ua, i_ea, i_ir, &
          i_bas, i_l, i_exp, i_c, i_if, i_fu, m, &
@@ -457,7 +457,7 @@ contains
     real(kind=r8_kind) :: NORMAB, n_eq
     !------------ Declaration of external functions --------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_sec_ders  = present(sec_ders)
     do_grads     = do_sec_ders .or. present(grads)
@@ -935,7 +935,7 @@ contains
     type(unique_atom_partner_type),pointer :: uap
     integer(i4_kind) :: counter
     type(unique_atom_type), pointer :: ua
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! charge fitfunctions
     counter = 0
@@ -1083,5 +1083,5 @@ contains
 !!  !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module ch_response_module

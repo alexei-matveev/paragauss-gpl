@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  output_module
 !---------------------------------------------------------------
 !
@@ -183,9 +183,9 @@ public :: output_read, output_write
 public :: output_bcast!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of private input variables ------------
 
@@ -388,7 +388,7 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use input_module, only: input_error
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     df_output_n_density_dev = 5
     df_output_n_coeff_dev   = 5
@@ -755,12 +755,12 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use input_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: status, unit
     character(len=32) :: namelist_name
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     unit = input_intermediate_unit()
     ! read level
     output_level = df_output_level
@@ -1199,11 +1199,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: commpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call commpack(output_level,info)
     if (info .ne. 0) call error_handler("output_pack: output_level")
     call commpack(output_scfloops,info)
@@ -1354,11 +1354,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: communpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call communpack(output_level,info)
     if (info .ne. 0) call error_handler("output_unpack: output_level")
     ! restore the output leve dependent default values

@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module help_cavity_module
 !== Interrupt of public interface of module =========
 !  Author: AS

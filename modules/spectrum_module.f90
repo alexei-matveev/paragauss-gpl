@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  spectrum_module
 !---------------------------------------------------------------
 !
@@ -67,9 +67,9 @@ private         ! by default, all names are private
 public spectrum_complex,spectrum_real,spectrum_complex_g,spectrum_real_g,&
      spectrum_coeff_complex,spectrum_coeff_real
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   interface rsg
      SUBROUTINE RSG(NM,N,A,B,W,MATZ,Z,IERR)

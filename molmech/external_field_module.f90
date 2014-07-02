@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module external_field_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use inp_out_module
   use common_data_module
@@ -32,7 +32,7 @@ module external_field_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   logical, public :: ext_field
   logical, public :: ext_pc
@@ -54,19 +54,19 @@ module external_field_module
   type(pc_species), allocatable, public :: p_charges(:)
 
   integer(i4_kind) :: n_ext_pc_types
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_ext_field_type, write_ext_field_type_to_output, read_ext_field, &
        pc_name2type, shutdown_ext_pc
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   character(len=6) :: type
   character(len=6), parameter :: df_type="NONE" !"PC"
 
   namelist /external_field_type/ type
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   function read_ext_field_type()

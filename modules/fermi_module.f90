@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module fermi_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains routines for the level broadening. None of the
   !  procedures here use any communication.
@@ -39,11 +39,11 @@ module fermi_module
   !  Author: FN
   !  Date: 4/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   !
   ! Author: Thomas Seemueller
@@ -55,13 +55,13 @@ module fermi_module
   !              (1 - 1e-12) and (1e-12)
   !              added: get_spin_diff_parameters
   !
-  !----------------------------------------------------------------
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype    ! user defined datatypes
@@ -80,20 +80,20 @@ module fermi_module
   private         ! by default, all names are private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public variables -------------------
   public :: fermi_level_broad, &
             fermi_fix_up_and_down ! kept for compatibility
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public fermi_reoccup, fermi_read, fermi_write_input, fermi_get_entropy, &
        fermi_read_scfcontrol, check_occ_fermi
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   ! --------- private interface ----------------
   interface e_fermi_start
@@ -101,7 +101,7 @@ module fermi_module
      module procedure ef_start_spin
   end interface
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   ! these constants are mainly used in the erfc-function
   real(kind=r8_kind), parameter    :: zero = 0.0_r8_kind,       &
        half=0.5_r8_kind,                                        &
@@ -177,7 +177,7 @@ module fermi_module
   ! dim_irrep : number of independent functions in irrep
 
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 contains
 
 
@@ -323,7 +323,7 @@ contains
     logical                          :: hole
 
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(n_irrep/=-1)
 
@@ -1386,7 +1386,7 @@ contains
     real(kind=r8_kind), intent(in) :: x
     real(kind=r8_kind)             :: erfc
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind),parameter :: na=25,nc=22
     real(kind=r8_kind)              :: a(0:na),c(0:nc)
     real(kind=r8_kind)              :: d,dd,alpha,z,sv
@@ -1811,10 +1811,10 @@ contains
     ! Author: TS
     ! Date  : 12/99
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical   :: fixed_spdiff,df_fixed_spdiff
     real(kind=r8_kind) :: magn_momt,df_magn_momt
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! make the input switches fixed_spin_diff and
     ! magn_moment (occuptaion_module) available
@@ -1858,5 +1858,5 @@ contains
   end subroutine check_occ_fermi
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module fermi_module

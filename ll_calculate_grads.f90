@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine ll_calculate_grads(na,nb,equalb,la,lb,imode)
   !
   !  Purpose: calculation of the gradints of all primitive 2 center orbital
@@ -37,20 +37,20 @@ subroutine ll_calculate_grads(na,nb,equalb,la,lb,imode)
   !  Author: MS
   !  Date:  1/97
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Author: AH
   ! Date:   4/99
   ! Description: gradients for pseudopotentials has 
   !              been added
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 #include "def.h"
  use ll_calculate_grads_module
@@ -59,7 +59,7 @@ subroutine ll_calculate_grads(na,nb,equalb,la,lb,imode)
   implicit none
 
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   integer(kind=i4_kind),intent(in) :: na ! number of unique atom a
   integer(kind=i4_kind),intent(in) :: nb ! number of unique atom b
@@ -70,9 +70,9 @@ subroutine ll_calculate_grads(na,nb,equalb,la,lb,imode)
 
   integer(kind=i4_kind) alloc_status(10)
   
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
 !..............................................................................

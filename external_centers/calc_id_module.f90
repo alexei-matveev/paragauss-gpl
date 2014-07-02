@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module calc_id_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: calculate induced point dipoles
   !           (accounting for polarization of eXternal centers)
@@ -42,18 +42,18 @@ module calc_id_module
   !  Date: 12.02.2008
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
   use type_module ! type specification parameters
   use datatype
@@ -66,29 +66,29 @@ module calc_id_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   !------------ Interface statements -----------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public calc_nuc_id_grads, calc_id_energy, transform_id_grad_to_cart
   public id_grad_cart_write, calc_id_grads, calc_induced_dipmom
   public build_Pol_ham, calc_Pol_ham, dealloc_Pol_ham
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -813,8 +813,8 @@ contains
     real(r8_kind) :: vector_product(3)
     real(r8_kind) :: v1(3),v2(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
     
     vector_product(1)=v1(2)*v2(3)-v1(3)*v2(2)
     vector_product(2)=v1(3)*v2(1)-v1(1)*v2(3)
@@ -829,9 +829,9 @@ contains
     !** End of interface *****************************************
     !------------ modules used -----------------------------------
      use iounitadmin_module, only: output_unit
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(N_ipd > 0) then
 #ifdef WITH_EFP
@@ -861,5 +861,5 @@ contains
 
   end subroutine id_grad_cart_write
   !*************************************************************
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module calc_id_module

@@ -23,11 +23,11 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 # include "def.h"
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module int_resp_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -42,35 +42,35 @@ module int_resp_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module ! type specification parameters
   use comm_module  
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public int_resp_Clb_3c
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -93,7 +93,7 @@ contains
     use io
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)              :: n_ir, i_ir_c, i_ir_a, i_ir_b, na, nb, nc
     integer(kind=i4_kind)              :: i_spin
     integer(kind=i4_kind)              :: is_counter
@@ -112,7 +112,7 @@ contains
 
     integer(kind=i4_kind)              :: n_spin, dim_factor
     
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if(comm_i_am_master()) then
        if(comm_parallel()) then 
           call comm_init_send(comm_all_other_hosts,msgtag_response_3Clb_start)
@@ -302,5 +302,5 @@ contains
   !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module int_resp_module

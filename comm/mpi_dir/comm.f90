@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module comm
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Hides the ugliest pieces of MPI behind a slimer interface.
   !
@@ -35,18 +35,18 @@ module comm
   ! Copyright (c) 2011 Thomas Soini
   ! Copyright (c) 2012 Bo Li
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only:&
        IK=>i4_kind, RK=>r8_kind ! type specification parameters
@@ -57,16 +57,16 @@ module comm
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   interface comm_send
     module procedure comm_send_int
@@ -181,14 +181,14 @@ module comm
 
   integer, parameter, public :: COMM_ANY_SOURCE = MPI_ANY_SOURCE
 #endif
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! *** KEEP GLOBALS TO MINUMUM!
   ! *** USE PRIVATE SUBROUTINE VARIABLES WHERE POSSIBLE!
@@ -206,8 +206,8 @@ module comm
   logical, private :: we_called_mpi_init = .false.
 #endif
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function comm_parallel() result(yes)
@@ -1615,5 +1615,5 @@ contains
     call comm_gatherv_in_place_double_buf(buf, counts)
   end subroutine comm_gatherv_in_place_double1D
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module comm

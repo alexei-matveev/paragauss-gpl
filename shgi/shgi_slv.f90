@@ -22,29 +22,29 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module shgi_slv
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Integrals due to the charges of the solvation shell.
   !
   ! Copyright (c) 2006-2008 Alexey Shor
   ! Copyright (c) 2007-2013 Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! use CPU_TIME for timers:
 ! define FPP_TIMERS 2
 # include "def.h"
@@ -55,29 +55,29 @@ module shgi_slv
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: shgi_gr_solv_drv
   public :: shgi_gr_solv_drv_vtn
   public :: shgi_gr_Q_solv_drv
   public :: shgi_sd_solv_drv
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! ALL INTEGER CONSTANTS, LIKE GAX,GAY,GAZ ARE NOW IN
   !                     shgi_cntrl.f90
@@ -90,8 +90,8 @@ module shgi_slv
   ! *** KEEP GLOBALS TO MINUMUM!
   ! *** USE PRIVATE SUBROUTINE VARIABLES WHERE POSSIBLE!
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !****************************************************************
@@ -869,5 +869,5 @@ DPRINT  'SHGI: shgi_sd_solv_drv: UAs=',IU1,IU2,' EAs=',IE1,IE2,' Ls=',IL1,IL2
     call shgi_timing()
   end subroutine shgi_sd_solv_drv
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module shgi_slv

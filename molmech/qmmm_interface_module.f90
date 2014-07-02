@@ -24,7 +24,7 @@
 !
 module qmmm_interface_module
 #include "def.h"
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use iounitadmin_module
   use filename_module
@@ -33,7 +33,7 @@ module qmmm_interface_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   !------------ General qmmm interface variables
   logical, public :: efp     !see efp_module
@@ -68,11 +68,11 @@ module qmmm_interface_module
   type(gradient),public :: grad_mm3(max_atom)
 
   real(r8_kind),public :: energy_qm, energy_mm2, energy_mm3
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public qmmm_read,qmmm_write,read_qmmm_input,sum_up_grads_and_write_gx
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   character(len=10) :: method
@@ -127,7 +127,7 @@ module qmmm_interface_module
 
   namelist /link_atom_number/  n_link_atoms
   namelist /link_atom/         qm_atom,mm_atom,fixed_distance,distance,ratio,atom_type
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine qmmm_read()

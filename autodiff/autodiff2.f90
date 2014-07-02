@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 !
 ! MODULE AUTODIFF, MASTER FILE
 !
@@ -78,10 +78,10 @@ module autodiff
   implicit none
   ! save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   type ad
     private
@@ -131,10 +131,10 @@ SND real(RK) :: d2(TR(NVAR,NVAR)) ! only (a,b) with a <= b is used
 
 #endif
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface operator(+)
       module procedure add_cv
@@ -253,7 +253,7 @@ SND real(RK) :: d2(TR(NVAR,NVAR)) ! only (a,b) with a <= b is used
 #endif
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
     public :: ad
 
@@ -304,19 +304,19 @@ SND public :: snd ! type(ad) -> second derivative
 
   public :: show!(ad)
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   ! derivvar
@@ -1026,5 +1026,5 @@ SND print *, "snd:", ((snd(i, j, v), j=1,i), i=1,NVAR)
 #endif
   end subroutine show
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module autodiff

@@ -22,12 +22,12 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 !define FPP_TIMERS 2
 module fitcontract_2c_grad_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Perform fitcontractions + renormaliation +
   !           multiplication with fitcoefficients +
@@ -41,17 +41,17 @@ module fitcontract_2c_grad_module
   !
   !  Author: FN
   !  Date: 12/96
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author:
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
   use type_module ! type specification parameters
 #ifdef _COMPAC_FORTRAN
@@ -70,18 +70,18 @@ USE_MEMLOG
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
-  !------------ Declaration of constants and variables ------------
+  !== Interrupt end of public interface of module ====================
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public fitcontract_2c_grad,fitcontract_2c_dervs
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 !..............................................................................
 ! << OUTPUT ARRAYS >>
@@ -127,7 +127,7 @@ USE_MEMLOG
      real(kind=r8_kind), pointer :: coefs(:)
   end type glob_con_simple_type
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   real(kind=r8_kind), parameter :: zero=0.0_r8_kind, one=1.0_r8_kind, &
                                    half=0.5_r8_kind, two=2.0_r8_kind
   type(unique_atom_basis_type), pointer :: basis1,basis2
@@ -142,8 +142,8 @@ USE_MEMLOG
 
 !  integer(kind=i4_kind),pointer :: glob_loc_contrib(:), loc_glob_contrib(:)
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -179,7 +179,7 @@ contains
     !  = 2 : [ f_k | d/dR f_l ] are passed in fit_int_grad(:,:,:,:,1:3)
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !   renormalization1 => renormalization1_ch
 !   renormalization2 => renormalization2_ch
@@ -240,7 +240,7 @@ contains
     !  = 2 : [ f_k | d/dR f_l ] are passed in fit_int_grad(:,:,:,:,1:3)
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !   renormalization1 => renormalization1_ch
 !   renormalization2 => renormalization2_ch

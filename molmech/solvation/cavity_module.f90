@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module cavity_module
 
 # include <def.h>
@@ -48,7 +48,7 @@ module cavity_module
   public dealloc_cavity_mm
   public dealloc_geom_deriv_part1,dealloc_geom_deriv_part2
 
-!================================================================
+  !===================================================================
   !if I will ever calculate this:
   logical, public :: electr_energy
   logical, public :: cavitation_energy

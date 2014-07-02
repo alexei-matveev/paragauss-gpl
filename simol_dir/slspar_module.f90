@@ -500,9 +500,9 @@ end function energy_3_body
 	endif ! ex_epe_parameters
         
 	end subroutine make_epe_namelist
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine error_handler(message)
   ! Purpose: substitute for the larger, pvm-infected subroutine
   !          'error_handler' used by ParaGAU.

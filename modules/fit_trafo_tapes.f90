@@ -22,26 +22,26 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module fit_trafo_tapes
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only: IK => i4_kind, RK => r8_kind
@@ -53,17 +53,17 @@ module fit_trafo_tapes
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public init_fit_trafo_tapes,&
        & done_fit_trafo_tapes,&
@@ -71,12 +71,12 @@ module fit_trafo_tapes
        & OpenTapes, CloseTapes,&
        & ReadTape,  WriteTape
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   !
   ! FIXME: unifiy with istore.f90 functionality?
@@ -86,7 +86,7 @@ module fit_trafo_tapes
      integer(IK)           :: length, n_ff
   end type FileHandle
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 !!$  integer(IK),parameter :: MAX_ALLOC_REALS = 16*1048576_ik
 !!$  integer(IK),parameter :: NDAMP  =   8_ik
@@ -129,8 +129,8 @@ module fit_trafo_tapes
 
   integer(IK),parameter    :: NO_IRREP = -1
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine init_fit_trafo_tapes()
@@ -935,5 +935,5 @@ contains
 !!$    call error(n.eq.0,"ftt/MaxAllocSize: low of memory")
   end function MaxAllocSize
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module fit_trafo_tapes

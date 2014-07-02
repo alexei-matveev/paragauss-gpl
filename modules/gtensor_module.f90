@@ -35,16 +35,16 @@ Module gtensor_module
   !  Author: DG
   !  Date:   1/2003
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
  !
   Use type_module
@@ -556,7 +556,7 @@ Contains
     Implicit None
 
     ! transformations to momentum space and back
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     Integer (Kind=i4_kind) :: i_ir, n_ir, n_pa, n_ip, &
          & i_orb, n_orb, i_xyz !, i_pa
     Integer (Kind=i4_kind) :: i_ip1
@@ -574,7 +574,7 @@ Contains
          & exclude_atom_n_1, exclude_atom_n_2
     Integer(i4_kind), pointer :: cc_coupling(:)
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     !
     DPRINT 'gtensor_calculate: entered'
     spin_orbit: If (.not.options_spin_orbit) then

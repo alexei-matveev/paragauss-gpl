@@ -22,29 +22,29 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module shgi_relfit
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Nuclear   attraction,  fit   integrals,  and   their  relativistic
   ! correction terms.
   !
   ! Copyright (c) 2005 Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! use CPU_TIME for timers:
 # include "def.h"
   use type_module, only:&
@@ -54,16 +54,16 @@ module shgi_relfit
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: shgi_nuc
   public :: shgi_nuc_so
   public :: shgi_nuc_sr
@@ -76,14 +76,14 @@ module shgi_relfit
   public :: shgi_r2_so
   public :: shgi_r2_sr
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! ALL INTEGER CONSTANTS, LIKE GAX,GAY,GAZ ARE NOW IN
   !                     shgi_cntrl.f90
@@ -93,7 +93,7 @@ module shgi_relfit
   !                     shgi_common.f90
   ! THIS HAS BEEN DONE TO SPLIT THIS FILE INTO PARTS LATER
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine shgi_nuc(z,nuc,RAD)
@@ -530,5 +530,5 @@ contains
     enddo
   end subroutine shgi_r2_sr
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module shgi_relfit

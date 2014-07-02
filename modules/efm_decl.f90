@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  efm_decl
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains subroutines which perform the Eigen Function 
   !           Method (EFM)
@@ -37,18 +37,18 @@ module  efm_decl
   !  Author: MM
   !  Date: 10/96
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module, only:&
        & IK=>i4_kind,&
@@ -171,7 +171,7 @@ module  efm_decl
      module procedure efm_inv_rgauge_io
   end interface
   
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: &
        & efm_direct_product,&
        & efm_alloc,&
@@ -190,9 +190,9 @@ module  efm_decl
        & efm_find_one
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 
 contains
@@ -523,11 +523,11 @@ contains
     real(RK),    intent(out) :: ab(:,:)
     ! product matrix
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     integer(IK) :: ia,ja,ib,jb,iab,jab
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     iab = 0
     ia_:do ia=1,size(a,1)
@@ -556,11 +556,11 @@ contains
     complex(CK),intent(out) :: ab(:,:)
     ! product matrix
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     integer(IK) :: ia,ja,ib,jb,iab,jab
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     iab = 0
     ia_:do ia=1,size(a,1)
@@ -589,11 +589,11 @@ contains
     complex(CK),intent(out) :: ab(:,:)
     ! product matrix
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     integer(IK) :: ia,ja,ib,jb,iab,jab
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     iab = 0
     ia_:do ia=1,size(a,1)
@@ -622,11 +622,11 @@ contains
     complex(CK),intent(out) :: ab(:,:)
     ! product matrix
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     integer(IK) :: ia,ja,ib,jb,iab,jab
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     iab = 0
     ia_:do ia=1,size(a,1)
@@ -654,7 +654,7 @@ contains
     !** End of interface *****************************************
     type(efm_cscoII_diag_invspace)      :: efm_type_inv
     !------------ Modules used ------------------- ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)   :: i,j,i_irrep,i_partner
     integer(IK)   :: dim_trafo,dim_irrep,multiplicity
     external error_handler
@@ -662,7 +662,7 @@ contains
     type(efm_csco_eigenspace)  , pointer :: efm_type_inv_eigenspace
     type(efm_cscoII_eigenspace), pointer :: efm_type_inv_subspace
     logical :: io
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! Slaves do not always have output_unit open:
     io = output_unit > 0 .and. .not. no_output_unit_output

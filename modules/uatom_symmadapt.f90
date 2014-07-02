@@ -22,26 +22,26 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module uatom_symmadapt
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only:&
@@ -50,10 +50,10 @@ module uatom_symmadapt
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   type, public :: symadapt_type
      ! describes the symmetry adaption of contracted or primitive basis functions
@@ -141,7 +141,7 @@ module uatom_symmadapt
      ! information for symmetry adaption of any basis of the spin orbitals
   end type uatom
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   type(uatom), allocatable, public :: uaSymm(:)
   type(uatom), allocatable, public :: uas_Large(:)
@@ -152,7 +152,7 @@ module uatom_symmadapt
   ! coefficients. Lousy solution, I know.
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface sa_alloc ! public alloc
      module procedure alloc_uatom
@@ -175,7 +175,7 @@ module uatom_symmadapt
      module procedure calc_sa_int_uatom
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: uatom_symmadapt_init
   public :: uatom_symmadapt_done
@@ -186,14 +186,14 @@ module uatom_symmadapt
   public :: sa_cbcast
   public :: uatom_prune
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   logical ::&
        & op_SpinOrbit       = .false.,&
@@ -204,8 +204,8 @@ module uatom_symmadapt
        &                   b_Small = 2
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine uatom_symmadapt_init(spor, n_ua, Large, Small)
@@ -774,5 +774,5 @@ contains
     sat%n_fcts = -1
   end subroutine dealloc_symadapt_type
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module uatom_symmadapt

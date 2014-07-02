@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module convergence_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains a collection of routines to check
   !           convergence on set of variables.
@@ -41,24 +41,24 @@ module convergence_module
   !  Author: FN
   !  Date: 1/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   implicit none
   save
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public convergence, convergence_max_iterations, convergence_setup, &
          convergence_shutdown, convergence_read, convergence_write, &
          convergence_clear_buffers, &
@@ -77,9 +77,9 @@ module convergence_module
   public :: convergence_resize_buffers!()
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   ! ----------- Default values for input parameters -------------
   real(kind=r8_kind) :: df_energy_criterion  = 1.0E-5_r8_kind, &
@@ -132,8 +132,8 @@ module convergence_module
   ! auxiliary variable needed to keep change freom previous
   ! geometry loop
   integer(kind=i4_kind)       :: maxgeo_change = huge(1_i4_kind)
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -986,7 +986,7 @@ contains
     type(readwriteblocked_tapehandle), optional, intent(inout) :: th
     integer(kind=i4_kind), optional, intent(in) :: mode
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)          :: energy, coeff, coulomb, density
     real(kind=r8_kind), save    :: energy_kept, coeff_kept, &
                                    coulomb_kept, density_kept
@@ -997,7 +997,7 @@ contains
     integer(kind=i4_kind)       :: energy_num_conv, coeff_num_conv, &
                                    coulomb_num_conv, density_num_conv, &
                                    index
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if (.not.present(th)) then
        ! keep modus
        if (mode /= recover_ksmatrix) then
@@ -1196,7 +1196,7 @@ contains
     integer(kind=i4_kind)           :: energy_load_size, coeff_load_size, &
                                        coulomb_load_size, density_load_size
     integer(kind=i4_kind)           :: alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (output_main_scf) call write_to_output_units &
          ("CONVERGENCE_STATE_RECOVER: reading convergence state")

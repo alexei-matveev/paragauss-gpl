@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module gxfile
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module gxfile
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only:&
@@ -61,14 +61,14 @@ module gxfile
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 !!$  type, public ::  gxfile_
 !!$  end type gxfile_
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 !!$  integer(kind=IK), parameter, public  :: gxfile_
 !!$  real(kind=RK),    parameter, public  :: gxfile_
 !!$  logical,               parameter, public  :: gxfile_
@@ -79,24 +79,24 @@ module gxfile
 !!$  character,                        public  :: gxfile_
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 !!$  interface gxfile_
 !!$  end interfacegxfile_
 !!$  public gxfile_
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public gxfile_read
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 !!$  type
 !!$  end type
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 !!$  integer(IK), parameter :: max_atoms = 999
 !!$  real(kind=RK),    parameter ::
 !!$  logical,               parameter ::
@@ -108,8 +108,8 @@ module gxfile
 
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -137,7 +137,7 @@ contains
     ! the first one that is missing makes
     ! ALL the subsequent to be ignored
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)  :: new_numx(size(charge))
     integer(IK)  :: i,j, max_atoms
     integer(IK)  :: stat
@@ -146,7 +146,7 @@ contains
 #if FPP_NO_F90_IO
     character (len=128) :: line
 #endif
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     DPRINT 'gxfile_read: enetered'
     if(present(calc_epeff_hessian)) then
@@ -323,5 +323,5 @@ endif
   !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module gxfile

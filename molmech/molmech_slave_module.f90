@@ -24,7 +24,7 @@
 !
 module molmech_slave_module
 #include "def.h"
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use comm_module, only: &
        comm_save_recv,   &
@@ -67,16 +67,16 @@ module molmech_slave_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public molmech_slave
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine molmech_slave()

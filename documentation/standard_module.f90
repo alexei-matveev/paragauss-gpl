@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module <name>
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,31 +41,32 @@ module <name>
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module ! type specification parameters
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !-------------------------------------------------------------------
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type, public ::  <name>_
   end type <name>_
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind), parameter, public :: <name>_
   real(r8_kind), parameter, public :: <name>_
   logical, parameter, public :: <name>_
@@ -76,24 +77,24 @@ module <name>
   character, public :: <name>_
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
   interface <name>_
   end interface<name>_
   public :: <name>_
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: <name>_
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type
   end type
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind), parameter ::
   real(r8_kind), parameter ::
   logical, parameter ::
@@ -104,7 +105,7 @@ module <name>
   character(len=...) ::
 
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine <name>_
@@ -119,16 +120,16 @@ contains
     character, intent( ) ::
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) ::
     real(r8_kind) ::
     logical ::
     character(len=...) ::
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
   end subroutine <name>_
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module <name>

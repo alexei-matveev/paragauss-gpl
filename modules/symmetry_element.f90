@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 ! Public interface of module
-!================================================================
+  !===================================================================
 module symmetry_element
 !-------------------------------------------------------------------------
 !
@@ -59,7 +59,7 @@ module symmetry_element
   private         ! by default, all names are private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
   type, public :: s_elements
@@ -72,16 +72,16 @@ module symmetry_element
   type(s_elements), public :: sym_element, sym_element_local
   logical, private         :: allocated_sym_element_local = .false. ! SAVE by default
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public set_sym_element
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine set_sym_element(ptgrp)

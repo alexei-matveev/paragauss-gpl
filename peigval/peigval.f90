@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module peigval
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Distribute a matrices between processors and find
   !  an eigenvalue in optimal time
@@ -41,18 +41,18 @@ module peigval
   !  Date: 2.3.2004
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 #include "def.h"
   use type_module, only: IK=>i4_kind, RK=>r8_kind, RK_=>r4_kind ! type specification parameters
@@ -63,22 +63,22 @@ module peigval
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 !  public :: arrmat2, arrmat3
 !  type(arrmat2),allocatable,public           :: eigval(:)
 !  type(arrmat3),allocatable,public           :: eigvec(:)
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public parallelization_subroutine, eigs_entry 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine eigs_entry(eigvec, eigval) 
@@ -727,7 +727,7 @@ contains
                          DESCINIT, PDSYGVX, DSYGVX, DSYGVD, PDSYTTRD, &
                          BLACS_SETUP
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
       if( p == 1 ) then
@@ -1028,10 +1028,10 @@ contains
     ! *** end of interface ***
 
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: help,i,j,sj,si
     integer(kind=i4_kind) :: n_irrep ! number of irreps
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irrep = size(dim_irrep)
 
@@ -1052,6 +1052,6 @@ contains
     enddo
   end subroutine sort_irreps
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module peigval
 

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine lin_search_epe
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Perform primitive line search during epe relaxation
   !           around QM cluster 
@@ -41,20 +41,20 @@ subroutine lin_search_epe
   !  Date: 23.11.09
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module ! type specification parameters
   use epecom_module, only: n_ls, output_epe, reg_I_n_ions
   use epecom_module, only: n_vacancies,regI_previous,relax_shells_only
@@ -62,11 +62,11 @@ subroutine lin_search_epe
 
   implicit none
 
-  !== Interrupt end of public interface of module =================
-  !------------ Declaration of formal parameters ------------------
-  !================================================================
+  !== Interrupt end of public interface of module ====================
+  !------------ Declaration of formal parameters ---------------------
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of subroutines ------------------------
   external error_handler
@@ -77,7 +77,7 @@ subroutine lin_search_epe
   real(r8_kind), allocatable, dimension(:) :: rs_dim,rs0_dim,rn_dim,rn0_dim,dsn,step
   integer(i4_kind) :: status,i,j,k
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !------------ Executable code -----------------------------------
 
   n_ls=n_ls+1

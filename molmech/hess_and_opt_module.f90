@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module hess_and_opt_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use tasks_main_options_module
@@ -38,16 +38,16 @@ module hess_and_opt_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   integer(kind=i4_kind), public :: n_iterations
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_opt_options, read_hess_options, init_hess, calc_hess, minimize, &
        write_opt_options_to_output, write_hess_options_to_output, shutdown_hess, &
        alloc_H_on_slaves,shutdown_H_on_slaves
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   real(kind=r8_kind), allocatable :: Hess(:)
@@ -81,7 +81,7 @@ module hess_and_opt_module
   real(kind=r8_kind) :: df_weight_hess=one
 
   namelist /hess_options/ hess_type, update_type, save_hessian
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   function read_opt_options()

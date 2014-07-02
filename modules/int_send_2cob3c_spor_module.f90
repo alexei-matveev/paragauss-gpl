@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  int_send_2cob3c_spor_module
 !---------------------------------------------------------------
 !
@@ -173,9 +173,9 @@ public int_send_2cob3c_spor_setup, int_send_2cob3c_spor_shutdown, &
        int_send_2cob3c_s_rec_filesizes
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of private types ----
 
@@ -282,7 +282,7 @@ contains
     integer (i4_kind), pointer :: metaindex(:)
     type (index_ind1_exp1_ua2_type), pointer :: ind1_exp1_ua2(:,:,:)
 #endif
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! calculate borders
     first_host = 1
@@ -685,7 +685,7 @@ contains
        integer(kind=i4_kind), pointer ::  n_floats_if_c_uc(:)
     end type quadrupel_file_handle_type
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: status, i_ir, i_unique,i_l, &
          i_file1, i_file2, n_file2, n_integrals, n_free_iounits, &
          i_file2_new, n_file2_new, n_concat, n_tot_records, n_tot_records_rel,&
@@ -737,7 +737,7 @@ contains
     integer(kind=i4_kind) :: chklength
     integer(kind=i4_kind) :: n_if_ChFit
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(.not.options_integrals_on_file())then
        call error_handler(&
@@ -2019,7 +2019,7 @@ contains
                                     , Pack2cIntBlock                           &
                                     , Pack3cIntBlock
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_host, i_ir, n_ir, n_if_c_max, &
          n_if_c_uc_max
     type(readwriteblocked_tapehandle),target :: th
@@ -3720,7 +3720,7 @@ contains
     !** End of interface *****************************************
     use symm_adapt_int, only: UnPackIntBlock
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle) :: th
     type(quadrupel_type) :: quadrupel
     integer(kind=i4_kind) :: i_ir, n_ir, n_if_c_max, n_if_c_uc_max
@@ -3730,7 +3730,7 @@ contains
          n_floats_if_c_uc(:,:), n_floats_if_c_uc_max(:), n_if_c_uc(:)
     ! n_floats_if_c(i_if_c,i_ir), n_floats_if_c_max(i_ir), n_if_c(i_ir)
     ! n_floats_if_c_uc(i_if_c,i_ir), n_floats_if_c_uc_max(i_ir), n_if_c_uc(i_ir)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( timer_int_idle_2cob3c(integralpar_i_int_part)%running ) then
        call stop_timer(timer_int_idle_2cob3c(integralpar_i_int_part))

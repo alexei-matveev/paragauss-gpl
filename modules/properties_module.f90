@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  properties_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Contains various routines for calculting properties up to now the
   !  following properties are available
@@ -52,11 +52,11 @@ module  properties_module
   !  Author: MS
   !  Date: 12/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: AS
@@ -68,24 +68,24 @@ module  properties_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: properties_read, properties_write, properties_main
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   ! defaults for input switches
   logical :: df_mulliken          = .false., &
              df_frag_orb_analysis = .false., &
@@ -178,7 +178,7 @@ contains
     implicit none
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle)   :: th
     integer(i4_kind) :: loop
     external error_handler
@@ -281,5 +281,5 @@ contains
 
   end subroutine properties_main
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module properties_module

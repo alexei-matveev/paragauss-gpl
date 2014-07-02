@@ -23,11 +23,11 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module response_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module generates the ground state data which
   !           is needed for calculation of dynamic linear response
@@ -48,11 +48,11 @@ module response_module
   !  Date: 10/97
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: HH
   ! Date:   11/98
@@ -63,7 +63,7 @@ module response_module
   !   differences -> new version  response_write_eigenval_occ()
   ! - reorganization of the transformation of Coulomb integrals
   !   to MO basis in response_trans_Clb_integrals()
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: HH
   ! Date:   3/99
@@ -74,7 +74,7 @@ module response_module
   !   now dump of <rho*fxc> and <vxc> possible.
   !   Note: rho & Vxc may be read in from file
   !         -> allows finite difference test on matrix elements
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: HH
   ! Date:   7/99
@@ -84,19 +84,19 @@ module response_module
   !               ttfs_hh_V20alpha-version was merged into V2.1
   !               it was easier to completely overwrite that version
   !               and to redo the changes)
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: HH
   ! Date:   10/99
   ! Description: Add treatment of hyperpolarizabilities
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 # include "def.h"
   use type_module ! type specification parameters
@@ -134,10 +134,10 @@ module response_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: response_read_input
   public :: response_write_input
   public :: response_input_bcast
@@ -168,9 +168,9 @@ module response_module
 
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------- Physical constants etc. ------------------------
   ! conversion factor from eV in hartree atomic units from NST
@@ -458,8 +458,8 @@ module response_module
   FPP_TIMER_DECL(all)
   !!#endif
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -470,11 +470,11 @@ contains
     !           what kind of interface data for the response
     !           program shall be calculated.
     !** End of interface **************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     USE global_module, ONLY: gl_eig_crite
     integer(kind=i4_kind) :: unit,status !!$,iounit
 !!$    character(len=255)    :: pathname
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! default values
     if (n_spin==2) then
@@ -739,7 +739,7 @@ contains
 
     real(r8_kind) :: tt
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! MASTER:
 
@@ -973,7 +973,7 @@ contains
     implicit none
     !** End of interface *****************************************
     integer(kind=i4_kind)  :: i_ir, status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(comm_i_am_master() .and. comm_parallel()) then
        call comm_init_send(comm_all_other_hosts,msgtag_response_setup)
@@ -1228,11 +1228,11 @@ contains
     implicit none
     integer(i4_kind) :: n_irrep, n_spin
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: alloc_stat,n_procs,i_proc
     integer(kind=i4_kind) :: n_dim,i_ir,dcm
     real(kind=r8_kind),allocatable :: help_mat(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_procs=comm_get_n_processors()
     do i_proc=2,n_procs
@@ -1274,9 +1274,9 @@ contains
     implicit none
     integer(i4_kind), intent(in) :: n_irrep
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_irrep
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i_irrep = 1,n_irrep
        call comm_init_send(comm_master_host,msgtag_response_2in_send)
@@ -1297,10 +1297,10 @@ contains
     implicit none
     integer(kind=i4_kind), intent(in) :: n_irrep,n_spin,dim_factor
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: i_spin,i_dim,i_ir,idx
 !   integer(kind=i4_kind)             :: io_unit
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i_ir = 1, n_irrep
        do i_spin=1, n_spin
@@ -1346,7 +1346,7 @@ contains
     !------------ Modules used ------------------- ---------------
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)   :: io_unit, io_stat
     integer(kind=i4_kind)   :: i_ir_a, i_ir_b, i_spin, i_occ, i_unocc, i_ir_c
     integer(kind=i4_kind)   :: is_counter
@@ -1354,7 +1354,7 @@ contains
     integer(kind=i4_kind)   :: occs, occe, unoccs, unocce
     real(kind=r8_kind)      :: eig_diff, occ_diff
     integer(kind=i4_kind)   :: na, nb, npaa, npab, nmult, i_mlt
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_spin  = symmetry_data_n_spin()
     n_irrep = symmetry_data_n_irreps()
@@ -1419,9 +1419,9 @@ contains
     !  Purpose: Clean up (deallocate private objects etc.)
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     ! todo:
@@ -1467,7 +1467,7 @@ contains
     use constants
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: vla, &
          & i_atom,i_fit,i_fit2,&
          & i_vec, counter, i_dim, i_spin
@@ -1539,7 +1539,7 @@ contains
 
     integer(i4_kind) :: CC
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (( .not. xalpha_resp ) .and. &
          ( .not. vwn_resp    ) .and. &
@@ -2270,7 +2270,7 @@ contains
     use constants
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical :: lda_case
     integer(kind=i4_kind) :: vla, &
          & i_atom,i_fit,i_fit2,&
@@ -2353,7 +2353,7 @@ contains
 
     integer(i4_kind) :: dim
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( ( .not. xalpha_resp ) .and. &
          ( .not. vwn_resp    ) .and. &
@@ -2772,5 +2772,5 @@ contains
   end subroutine response_calc_2index_int_v2
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module response_module

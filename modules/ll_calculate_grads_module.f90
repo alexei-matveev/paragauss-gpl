@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module ll_calculate_grads_module
   !
   !  Purpose: calculation of the gradints of all primitive 2 center orbital
@@ -37,20 +37,20 @@ module ll_calculate_grads_module
   !  Author: MS
   !  Date:  1/97
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Author: AH
   ! Date:   4/99
   ! Description: gradients for pseudopotentials has
   !              been added
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 #include "def.h"
   use unique_atom_module, noname=>pseudopot_present
@@ -89,7 +89,7 @@ module ll_calculate_grads_module
 
   implicit none
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   public :: l_coulomb
   public :: unity_matrix_p!(matrix) -> logical
@@ -103,9 +103,9 @@ module ll_calculate_grads_module
   ! This comment is not quite true, sadly everything in this module is
   ! public yet:
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 !..............................................................................
 ! << OUTPUT ARRAYS >>

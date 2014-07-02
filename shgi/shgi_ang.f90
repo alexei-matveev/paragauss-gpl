@@ -22,29 +22,29 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module shgi_ang
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! For  integrals  involving the  third  center  C precompute  common
   ! (angular) quantities.
   !
   ! Copyright (c) 2005-2013 Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! use CPU_TIME for timers:
 ! define FPP_TIMERS 2
 # include "def.h"
@@ -56,27 +56,27 @@ module shgi_ang
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: shgi_set_lcde
   public :: shgi_set_c
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! ALL INTEGER CONSTANTS, LIKE GAX,GAY,GAZ ARE NOW IN
   !                     shgi_cntrl.f90
@@ -86,13 +86,13 @@ module shgi_ang
   !                     shgi_common.f90
   ! THIS HAS BEEN DONE TO SPLIT THIS FILE INTO PARTS LATER
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! a copy from shgi_shr.f90:
   integer(IK)   :: L_,M_
   integer(IK), parameter :: MAXL = 6 ! s,p,d,f,g,h,i
   integer(IK), parameter :: lof( (MAXL+1)**2 ) = (/((L_,M_=1,2*L_+1),L_=0,MAXL)/)
   integer(IK), parameter :: mof( (MAXL+1)**2 ) = (/((M_,M_=1,2*L_+1),L_=0,MAXL)/)
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine shgi_set_lcde(ILC,ILD,ILE,ILF)
@@ -325,5 +325,5 @@ contains
     FPP_TIMER_STOP(tsc)
   end subroutine shgi_set_c
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module shgi_ang

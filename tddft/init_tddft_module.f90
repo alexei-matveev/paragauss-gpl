@@ -22,18 +22,18 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  init_tddft_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
   USE type_module          ! contains standard data types
   USE iounitadmin_module   ! to open output units
@@ -43,21 +43,21 @@ MODULE  init_tddft_module
 
   IMPLICIT NONE
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   PUBLIC init_tddft_start
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
 
 
@@ -71,10 +71,10 @@ CONTAINS
     IMPLICIT NONE
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(comm_i_am_master()) then
        if(comm_parallel()) then
@@ -149,7 +149,7 @@ CONTAINS
     USE global_module
     USE exchange
     IMPLICIT NONE
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     INTEGER(KIND=i4_kind) :: io_unit, i_ir_c, in_chfit
     INTEGER(KIND=i4_kind) :: io_stat
@@ -181,7 +181,7 @@ CONTAINS
 
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_procs = comm_get_n_processors()
 
@@ -458,7 +458,7 @@ CONTAINS
     USE phys_param_module, ONLY: hartree2eV
 
     IMPLICIT NONE
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind) :: io_unit,io_stat, i_ir_c, i_spin
     INTEGER(KIND=i4_kind) :: as_c, dummy, ir_a, ir_b
     INTEGER(KIND=i4_kind) :: n_spin, n_irrep
@@ -473,7 +473,7 @@ CONTAINS
 
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_spin  = gl_N_spin
     n_irrep = gl_N_irr
@@ -557,7 +557,7 @@ CONTAINS
     !------------ Declaration of local types ---------------------
     character(len=4) :: irc_char,isp_char
     character(len=5) :: fnm_char
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     write (irc_char, '(i4)') i_ir
     write (isp_char, '(i1)') i_sp
@@ -594,5 +594,5 @@ CONTAINS
 !!$  !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE init_tddft_module

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module cavity_image_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module cavity_image_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module ! type specification parameters
   use iounitadmin_module, only: openget_iounit,returnclose_iounit
@@ -60,30 +60,30 @@ module cavity_image_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public save_cavity_image, save_tess_image
   public save_points_image, save_cavity_and_points_image
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   real(kind=r8_kind) , parameter :: ang2au = 0.529177249_r8_kind
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -98,10 +98,10 @@ contains
     real(r8_kind), intent(in)    :: xyz_sphere(:,:),r_sphere(:)
     logical, intent(in)          :: zero_area(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: file_id
     integer(i4_kind) :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !!$    file_id=openget_iounit(trim(outfile('cavity.wrl')), &
 !!$            form='formatted', status='unknown')
@@ -183,11 +183,11 @@ contains
     real(r8_kind), intent(in)    :: tess_export(:,:,:)
     integer(i4_kind), intent(in) :: vert_bouns(:,:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: buffer(30)
     integer(i4_kind) :: file_id
     integer(i4_kind) :: i,j,k,n
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     file_id=openget_iounit(trim(outfile('tessera.wrl')), &
             form='formatted', status='unknown')
@@ -246,9 +246,9 @@ contains
     integer(i4_kind)              :: size
     integer(i4_kind), intent(in)  :: in_dim(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     out_dim(1)=1
     out_dim(2)=in_dim(1,1)
@@ -274,10 +274,10 @@ contains
     integer (i4_kind), intent (in) :: N_points
     real (r8_kind), intent (in) :: xyz_points(:,:) ! (N_points, 1:3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: file_id
     integer(i4_kind) :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     file_id=openget_iounit(trim(outfile('points.wrl')), &
             form='formatted', status='unknown')
@@ -329,10 +329,10 @@ contains
     real(r8_kind), intent(in)    :: xyz_points(:,:)
     integer(i4_kind), intent(in), optional :: N_spheres1
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: file_id
     integer(i4_kind) :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     file_id=openget_iounit(trim(outfile('cavity_points.wrl')), &
             form='formatted', status='unknown')
@@ -392,5 +392,5 @@ contains
     call returnclose_iounit(file_id)
 
   end subroutine save_cavity_and_points_image
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module cavity_image_module

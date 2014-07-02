@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  valence_coord_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: routines to establish the (redundant) valence
   !           coordinates of the molecule. Valence coordinates
@@ -43,16 +43,16 @@ module  valence_coord_module
   !  Author: ...
   !  Date: ...
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use atom_data_module
@@ -64,19 +64,19 @@ module  valence_coord_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
-  !------------ Declaration of constants and variables ------------
+  !== Interrupt end of public interface of module ====================
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: valence_setup
   public :: set_hesse
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   integer(kind=i4_kind), private :: n_valence ! number of valence coords
   
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -94,7 +94,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: total,alloc_stat
     integer(kind=i4_kind),parameter :: n_col=10
     real(kind=r8_kind),allocatable  :: hesse_diagonal(:)
@@ -103,7 +103,7 @@ contains
     real(kind=r8_kind),allocatable  :: bmat_valence(:,:)
     type(int_coor), allocatable     :: v(:) ! (n_valence)
     integer(i4_kind)                :: numa
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     DPRINT 'valence_setup: entered'
 

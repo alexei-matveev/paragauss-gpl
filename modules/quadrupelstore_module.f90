@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  quadrupelstore_module
 !---------------------------------------------------------------
 !
@@ -99,9 +99,9 @@ module  quadrupelstore_module
   public quadrupelstore_construct, &
          quadrupelstore_give_num
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   ! for knowing which one number belongs to the current job
   integer(kind=i4_kind) :: current_num

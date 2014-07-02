@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 module frequency_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: module for calculation of the vibrational frequencies
   !
   !
@@ -35,7 +35,7 @@ module frequency_module
   ! Author: M. Staufer
   ! Date:   3/98
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use iounitadmin_module
@@ -49,17 +49,17 @@ module frequency_module
   save            ! save all variables defined in this module
   private         ! by default, all names are private
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   real(kind=r8_kind), parameter :: freq_coeff=5143.05_r8_kind
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: frequency_main
   public :: freq ! (k,m,w,x), m -- diagonal
   public :: freq_print !(iou,m,w,x), w--frequency, x--mode
   public :: dipole_der !(n_mode,dipder)
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !*************************************************************
   subroutine frequency_main(hesse)

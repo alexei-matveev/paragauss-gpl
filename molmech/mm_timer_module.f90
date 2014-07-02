@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module mm_timer_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use inp_out_module
@@ -32,7 +32,7 @@ module mm_timer_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   type, public :: timer_data
      real(r8_kind) :: tot_rt,tot_ut,tot_st
@@ -57,11 +57,11 @@ module mm_timer_module
   type(timer_data), public :: comm_time !communication time
   type(timer_data), public :: hinv_time !time of hessian inversion
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public init_timer, start_mm_timer, stop_mm_timer, print_timing, print_time
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   type :: curr_time
@@ -77,7 +77,7 @@ module mm_timer_module
      character(len=10) :: real_clock(3)
   end type date_time
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine init_timer()

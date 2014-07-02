@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module xcfit_hamiltonian
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module creates the XC-part of the hamiltionian by
   !           the fitting technique
@@ -37,11 +37,11 @@ module xcfit_hamiltonian
   !  Author: MS
   !  Date: 2/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: UB
   ! Date:   6/97
@@ -56,8 +56,8 @@ module xcfit_hamiltonian
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module  ! type specification parameters
   use orbitalstore_module
@@ -77,14 +77,14 @@ module xcfit_hamiltonian
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: xcfit_setup, xcfit_build, xcfit_close
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   real(kind=r8_kind),allocatable :: rho(:,:),&
          dfdrho(:,:),&  ! derivative of f with respect to rho

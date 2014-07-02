@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  tddft_diag
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !
@@ -46,16 +46,16 @@ MODULE  tddft_diag
   !  Date:   01/06
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 # include "def.h"
   USE type_module          ! contains standard data types
@@ -69,25 +69,25 @@ MODULE  tddft_diag
 
   IMPLICIT NONE
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   PUBLIC diag_init
 
   INTEGER(KIND=i4_kind), PUBLIC, PARAMETER :: UP = 1, DN = 2
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   FPP_TIMER_DECL(diag_timer)
   FPP_TIMER_DECL(dvdson_timer)
   FPP_TIMER_DECL(output_timer)
   FPP_TIMER_DECL(dvdDiag_all)
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
   !*************************************************************
   SUBROUTINE diag_init()
@@ -106,7 +106,7 @@ CONTAINS
     USE comm, only: comm_bcast, comm_barrier
     IMPLICIT NONE
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     REAL   (KIND=r8_kind),ALLOCATABLE :: QM1(:,:)
     REAL   (KIND=r8_kind),ALLOCATABLE :: auxdiag(:)
@@ -126,7 +126,7 @@ CONTAINS
     LOGICAL                           :: tSS
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     print *, MyID, "diag_init: entering"
 
@@ -513,11 +513,11 @@ CONTAINS
     INTEGER(KIND=i4_kind),INTENT(IN)    :: NM, NS, NK 
     REAL   (KIND=r8_kind),INTENT(INOUT) :: DIAG(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     REAL(KIND=r8_kind),ALLOCATABLE      :: DA(:)
     INTEGER(KIND=i4_kind) :: status, i, ias, j, i_proc, &
          NS_UP, NF_UP, Nas, NN
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (comm_i_am_master()) then
        NN = NM
@@ -579,10 +579,10 @@ CONTAINS
     integer(i4_kind), intent(IN   ) :: ir
     real   (r8_kind), intent(OUT)   :: Qm(:,:), Qdm1(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 !!    integer(i4_kind) :: NSP
 !!    real   (r8_kind) :: AP(size(Qm,1),size(Qm,1))
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     
     CALL read_Q(ir,Qm) ! read from file Qm:=gl_Q
 
@@ -619,10 +619,10 @@ CONTAINS
     TYPE(arrmat2),         intent(INOUT) :: XC(:)
     real(kind=r8_kind),    intent(IN   ) :: Qdm1(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i
     real(kind=r8_kind)    :: AP(size(Qdm1,1),size(Qdm1,1))
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call read_R(ir,XC)
 
@@ -656,9 +656,9 @@ CONTAINS
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: irc, ira, irb, mlt
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do irc = nirr+1, size(cgr,1)
        do ira = 1, nirr
@@ -706,5 +706,5 @@ CONTAINS
 
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE tddft_diag

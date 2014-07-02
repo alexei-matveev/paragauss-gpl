@@ -22,26 +22,26 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module clebsch_gordan
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only:&
@@ -51,10 +51,10 @@ module clebsch_gordan
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   type, public :: prod_bas
      !
@@ -121,7 +121,7 @@ module clebsch_gordan
      type(prod_bas), allocatable :: sub(:) ! sub(mult)
   end type sym_prod
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   type(sym_prod), allocatable, public ::   cg(:,:,:) ! Vector * Vector     Irreps
   !                                  cg(n_irr,n_irr,n_irr)
@@ -140,7 +140,7 @@ module clebsch_gordan
   type(sym_prod), pointer, public :: vpcg_eliminated(:,:,:) => NULL()   ! Vector * Projective Irreps
   type(sym_prod), pointer, public :: vsu2cg_eliminated(:,:) => NULL()   ! Vector * Projective SU(2) Irrep
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface cg_alloc ! public
      module procedure alloc_sym_prod
@@ -153,7 +153,7 @@ module clebsch_gordan
      module procedure dealloc_prod_bas
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: clebsch_gordan_new!(mult, na, nb, nc, cmplx) -> sym_prod
   public :: clebsch_gordan_dimensions!(sp, mult, na, nb, nc)
@@ -173,17 +173,17 @@ module clebsch_gordan
   public :: assignment(=)
 #endif
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !
@@ -669,5 +669,5 @@ contains
   end subroutine assign_sym_prod
 #endif
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module clebsch_gordan

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine error_handler(message)
   ! Purpose: substitute for the larger, pvm-infected subroutine
   !          'error_handler' used by ParaGAU.

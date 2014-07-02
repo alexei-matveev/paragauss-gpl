@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  iounitadmin_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: administers unit numbers for read and write to files.
   !           All unit numbers should be demanded with the
@@ -51,19 +51,19 @@ module  iounitadmin_module
   !  Author: TB
   !  Date: 16.06.95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module
@@ -74,7 +74,7 @@ module  iounitadmin_module
   private         ! by default, all names are private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public constants and variables -----
 
@@ -96,7 +96,7 @@ module  iounitadmin_module
 #else
   logical, parameter, public :: no_output_unit_output=.false.
 #endif
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public get_iounit, return_iounit, get_nbr_free_iounits, &
        openget_iounit, returnclose_iounit
 #ifndef FPP_OPTIMIZER
@@ -105,9 +105,9 @@ module  iounitadmin_module
 #endif
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
 
@@ -139,8 +139,8 @@ module  iounitadmin_module
 #define FPP_HAVE_FLUSH
 #endif
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -151,7 +151,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of variables -----------------------
     integer :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     get_iounit = first_free_unit
     if ( first_free_unit .ne. 0 ) then
        unit_free(first_free_unit) = .false.
@@ -175,7 +175,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of formal parameters ---------------
     integer, intent(in ) :: unit
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if ( unit .ge. startunit .and. &
          .not. unit_free(unit)      ) then
        unit_free(unit) = .true.
@@ -193,7 +193,7 @@ contains
   integer function get_nbr_free_iounits()
     !  Purpose: returns number of free units
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     get_nbr_free_iounits = nbr_free_units
     return
   end function get_nbr_free_iounits
@@ -224,7 +224,7 @@ contains
     integer irecl
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     DPRINT 'ioua::openget_iounit: entered, file=',file,'<<'
     if(present(status)) then
        istatus = trim(status)
@@ -326,7 +326,7 @@ contains
     character(len=20) :: istatus
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     DPRINT 'ioua::returnclose_iounit: close unit(',unit,')'
     istatus='keep'
     if(present(status)) istatus=status
@@ -354,7 +354,7 @@ contains
     integer      :: iostat
     character(len=120) :: message
     logical, parameter :: append_local = .false.
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! We  used  to have  slaves  do some  output  too.   At many,  but
     ! possibly not all  places IO to output_unit will  only be done if
@@ -613,5 +613,5 @@ contains
 #endif
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module iounitadmin_module

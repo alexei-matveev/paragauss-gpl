@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module eigen_data_module
   !-------------- Module specification ---------------------------
   !
@@ -56,11 +56,11 @@ module eigen_data_module
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: TG
@@ -91,9 +91,9 @@ module eigen_data_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype    ! user defined types
@@ -107,7 +107,7 @@ module eigen_data_module
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   integer(kind=i4_kind) :: allocate_stat(5)
   !------------ Declaration of public constants and variables -----
   public :: arrmat2,arrmat3
@@ -132,7 +132,7 @@ module eigen_data_module
   ! allocatable component instead of pointer.
   !
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: eigen_data_solve!(), to be called from a parallel context
   public :: eigen_data_alloc!(), does no communication
@@ -149,9 +149,9 @@ module eigen_data_module
   public :: eigen_data_dump!(file), to dump hamiltonian, eigenvectors and eigenvalues to file
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 ! interface rsg
 !    SUBROUTINE RSG(NM,N,A,B,W,MATZ,Z,IERR)
@@ -366,10 +366,10 @@ contains
     ! *** end of interface ***
 
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: help,i,j,sj,si
     integer(kind=i4_kind) :: n_irrep ! number of irreps
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irrep = size(dim_irrep)
 
@@ -1898,7 +1898,7 @@ contains
     integer(kind=i4_kind) :: i,alloc_stat
 
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! if variables were already allocated then reallocate them to
     ! ensure proper size

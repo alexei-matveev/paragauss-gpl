@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module diis_fock_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:  direct inversion of  iterative subspace  routine (DIIS)
   !           which  accelerates the convergence  of the  SCF-cycle of
@@ -74,11 +74,11 @@ module diis_fock_module
   !  Date: 05.05.09
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification include stop_pert
   ! Author: AN
@@ -97,7 +97,7 @@ module diis_fock_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype
@@ -106,7 +106,7 @@ module diis_fock_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: diis_read_input, diis_write_input
 
   public :: diis_fock_module_close!(), cleans up the module state
@@ -126,9 +126,9 @@ module diis_fock_module
   !
   real(r8_kind), public, protected :: diis_fock_beta = HUGE(1.0D0)
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Default values for input parameters -------------
   integer(i4_kind), parameter       :: df_mmax = 8
@@ -222,8 +222,8 @@ module diis_fock_module
   integer(kind=i4_kind)       :: diis_ndim, cc_estep, cc_control, cc_danf
   integer(kind=i4_kind)           :: cc_diis_loop ! diis_loop for diismixing
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -428,7 +428,7 @@ contains
     type(arrmat2),         intent(in) :: overlap(:)
     type(arrmat3),         intent(inout) :: ermatact(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)          :: i_gamma, sval, n_irrep, n_spin, n_partner
   !------------ Executable code --------------------------------
     ! first: e = (FDS - k.c.)
@@ -471,7 +471,7 @@ contains
     logical,               intent(inout) :: diis_start, diis_step
     integer(kind=i4_kind) , intent(inout)            :: diis_loop
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: i_gamma, sval, n_irrep, n_spin
     real(kind=r8_kind)                :: ermax
   !------------ Executable code --------------------------------
@@ -606,7 +606,7 @@ contains
     integer(kind=i4_kind), intent(inout) :: diis_loop, diis_loop_m
     logical,               intent(inout) :: diis_step
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: i_gamma, sval, j, n_irrep, n_spin, n_partner
     real(kind=r8_kind)                :: bwork
   !------------ Executable code --------------------------------
@@ -662,11 +662,11 @@ contains
     implicit none
     real(kind=r8_kind),    intent(in   ) :: B(:,:), diagdampin
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)                   :: ccal(size(B,1)+1), rhs(size(B,1)+1)
     real(kind=r8_kind)                   :: Bcal(size(B,1)+1,size(B,2)+1), c(size(B,1))
     integer(kind=i4_kind)                :: sb, i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     sb = size(B,1)
     ! first the right hand side of the equation is build
     rhs(1:sb) = 0.0_r8_kind
@@ -727,9 +727,9 @@ contains
     type(arrmat3),         intent(in) :: hamold(:,:)
     real(kind=r8_kind),        intent(in) :: c(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: i_gamma, j, n_irrep, n_spin, n_dim
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 ! call octave("Hold",hamact(1)%m(:,:,1))
     n_irrep = size(hamact)
     n_spin = size(hamact(1)%m,3)
@@ -758,7 +758,7 @@ contains
     type(arrmat2),         intent(in) :: overlap(:)
     type(arrmat3),         intent(in) :: hamact(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)              :: allocate_state, i_gamma, j, n, n_irrep, n_spin
   !------------ Executable code --------------------------------
     print*, "DIIS-Fock matrix: start allocation"
@@ -825,7 +825,7 @@ contains
     logical, intent(in), optional :: scfcontrol
     !** End of interface ***************************************
     integer(kind=i4_kind) :: unit,status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mmax = df_mmax
     start_steps = df_start_steps
     everystep = df_everystep
@@ -1032,9 +1032,9 @@ contains
     implicit none
     real(kind=r8_kind), intent(in) :: x
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)             :: f
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     f = 1.0_r8_kind / sqrt( x )
   end function invsqrt
 
@@ -1053,12 +1053,12 @@ contains
     ! Separate output variable to make the real coeff_charge protected
     real(kind=r8_kind)              :: coeff_charge(size(coeff_charge_now))! out
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: alloc_stat, c_dim, actsize, cc_diis_loop_m, i
     real(kind=r8_kind)                   :: c(diis_ndim)
     real(kind=r8_kind)                   :: coeff_chargdis(size(coeff_charge_now))
     logical                              :: cc_start, cc_step
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     c_dim = size(coeff_charge_now)
 
     ! in the first loop there need some parameters to be allocated, they will be
@@ -1130,10 +1130,10 @@ contains
     integer(kind=i4_kind), intent(inout)       :: loop
     real(kind=r8_kind),intent(in) :: metric(:)
     logical,               intent(inout) :: step
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: j, i, k, ik, c_dim
     real(kind=r8_kind)                :: bwork
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     c_dim = size(valdif)
     val_diisdp(:, loop_m) = valdif
     val_diis(:, loop_m) = val
@@ -1186,7 +1186,7 @@ contains
     integer(kind=i4_kind),    intent(in) :: control, estep
     integer(kind=i4_kind),    intent(inout) :: d_loop
     logical,               intent(inout) :: start, step
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     select case (control)
 
       ! only charge coeff. diis mixing, so it has to deside on its own when to work
@@ -1260,7 +1260,7 @@ contains
     integer(kind=i4_kind),    intent(inout) :: d_loop
     logical,               intent(inout) :: start, step
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)                :: errmax
   !------------ Executable code --------------------------------
 
@@ -1330,5 +1330,5 @@ contains
 
   end function diis_pertstop
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module diis_fock_module

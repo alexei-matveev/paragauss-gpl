@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module orbital_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Calcualation  of contracted  and symmetry  adapted  orbital basis
   !  functions and charge and  exchange fitfunction basis functions on
@@ -58,11 +58,11 @@ module orbital_module
   !  Date: 10/95
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: TB
@@ -111,9 +111,9 @@ module orbital_module
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 #ifdef FPP_DEBUG
 ! define FPP_TIMERS 2
 #endif
@@ -132,7 +132,7 @@ module orbital_module
   save ! save all variables defined in this module
   private         ! by default, all names are private
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   ! The various types of derivatives of symmetry adapted orbitals xi_i
   ! which are evaluated in this module are
@@ -185,7 +185,7 @@ module orbital_module
   ! d/dR_n d/dR_m xi[ua]_i(r_a) = <var>(ua)%o(a,lin(n,m),R,i)
   ! type, public :: core_orbital_nuc_sec_der_type
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public orbital_allocate, orbital_free, &
        orbital_setup, orbital_shutdown, &
        orbital_calculate, orbital_write, &
@@ -199,9 +199,9 @@ module orbital_module
   public :: core_orbital_free
 #endif
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
   !------------ Declaration of private types ----------------------
@@ -329,8 +329,8 @@ module orbital_module
 
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine print_orbmod_alloc()
@@ -371,11 +371,11 @@ contains
     integer(i4_kind)       ,intent(in),   optional :: num_gr_nuc
     type(spinor_type), pointer,           optional :: orbs_spinor_ob(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_ir, n_orbitals, i_unique, i_l
     integer(i4_kind) :: bas_dim,n_partn !,ic
     integer(i4_kind) :: n_v_irr, n_ea, n_spin, n_ff
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (present (orbs_ob)) then
        if (orbitalstore_initialized) then
@@ -628,9 +628,9 @@ contains
     type(core_orbital_nuc_sec_der_type), pointer, optional :: &
                                                  nuc_sec_der_core(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer              :: n_orbitals, i_unique
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if ( present(orbs_ob_core) ) then
           allocate( orbs_ob_core%o( vec_len, &
                fit_coeff_n_cd()), &
@@ -945,13 +945,13 @@ contains
     logical, optional, intent(in) :: do_gradients, do_sec_der,do_3rd_der
     ! default: false
     !** End of interface ***************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)       :: i_ua,i_ea,N_ea,i_l
     type(unique_atom_type), pointer   :: ua
     logical :: do_grad_local, do_sec_der_local, do_3rd_der_local
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( present(do_gradients) ) then
        do_grad_local = do_gradients
@@ -1193,9 +1193,9 @@ contains
     type(glob_con_intermediate_type), pointer    :: uncont_orbs(:)
     integer                         , intent(in) :: lmax(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: i_ua
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     allocate( uncont_orbs(N_unique_atoms), stat=status(57) )
     if ( status(57) /= 0 ) call error_handler("glob_con_setup:&
          & allocation of uncont_orbs failed")
@@ -1219,11 +1219,11 @@ contains
     implicit none
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: i_ua,i_ea
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( .not. memory_allocated ) then
         WARN('why calling?')
@@ -1361,9 +1361,9 @@ contains
     implicit none
     type(glob_con_intermediate_type), pointer    :: uncont_orbs(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: i_ua
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do i_ua = 1, size(uncont_orbs)
        deallocate( uncont_orbs(i_ua)%l, stat=status(26) )
        if ( status(26)/= 0 ) call error_handler("glob_con_shutdown:&
@@ -1397,7 +1397,7 @@ contains
 !AG #ifdef FPP_NOMDA
 !AG     call error_handler("om/uncont_fit_fct_allocate: recompile w/o FPP_NOMDA")
 !AG #else
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: i_ir, i_ua, lmax, i_bas
     logical :: is_charge_fit, moving_atom, alloc_fcts, alloc_grads, &
                alloc_sec_ders, alloc_nuc_grads, alloc_sec_nuc_ders, &
@@ -1407,7 +1407,7 @@ contains
     type(unique_atom_partner_type),     pointer :: uap
     type(glob_con_intermediate_l_type), pointer :: uncont_orb(:)
     type(glob_con_intermediate_l_type), pointer :: uncont_orb_l
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     select case (type)
     case ("ch")
        is_charge_fit = .true.
@@ -1558,7 +1558,7 @@ contains
 #ifdef FPP_NOMDA
     call error_handler("om/uncont_fit_fct_free: recompile w/o FPP_NOMDA")
 #else
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: i_ua, lmax, i_bas
     logical :: is_charge_fit, moving_atom, dealloc_fcts, dealloc_grads, &
                dealloc_sec_ders, dealloc_nuc_grads, dealloc_sec_nuc_ders, &
@@ -1566,7 +1566,7 @@ contains
     type(unique_atom_type),             pointer :: ua
     type(glob_con_intermediate_l_type), pointer :: uncont_orb(:)
     type(glob_con_intermediate_l_type), pointer :: uncont_orb_l
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     select case (type)
     case ("ch")
        is_charge_fit = .true.
@@ -1976,7 +1976,7 @@ contains
     type(orbital_type), intent(out), optional :: orb_ch ! intent(out)
     type(orbital_type), intent(out), optional :: orb_xc ! intent(out)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer             :: i_ua, i_ir, n_ir, i_ea, gridlength, i_l
     logical             :: last_atom
     ! loop indices
@@ -1987,7 +1987,7 @@ contains
     FPP_TIMER_DECL(sh)
     FPP_TIMER_DECL(oco)
     FPP_TIMER_DECL(ini)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     FPP_TIMER_START(oc)
     DLPRINT(9) 'om/orbital_calculate: entered'
@@ -4156,13 +4156,13 @@ contains
     logical, intent(in), optional :: complete ! write complete list for all
     ! gridpoints, otherwise only for point 10. default: .false.
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer  :: i_vec, i_sa, i_pa, i_ir, i, i_x
     ! loop indices
     real(kind=r8_kind), pointer :: so(:,:,:), sog(:,:,:,:)
     real(kind=r8_kind), pointer :: sosd(:,:,:,:)
     logical :: complete_local
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( present( complete ) ) then
        complete_local = complete
@@ -4318,12 +4318,12 @@ contains
 !AG #ifdef FPP_NOMDA
 !AG     call error_handler("om/fit_fct_allocate: recompile w/o FPP_NOMDA")
 !AG #else
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: n_dim, i_ir,  i_ua, i_ma, n_atoms, n_orbs
     logical :: is_charge_fit
     !------------ Declaration of local handles -------------------
     type(unique_atom_type), pointer :: ua
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     select case (type)
     case ("ch")
        is_charge_fit = .true.
@@ -4457,10 +4457,10 @@ contains
 !AG #ifdef FPP_NOMDA
 !AG     call error_handler("om/fit_fct_free: recompile w/o FPP_NOMDA")
 !AG #else
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: i_ma
     logical :: is_charge_fit
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     select case (type)
     case ("ch")
        is_charge_fit = .true.
@@ -4552,7 +4552,7 @@ contains
 !AG #ifdef FPP_NOMDA
 !AG     call error_handler("om/fit_fct_calculate: recompile w/o FPP_NOMDA")
 !AG #else
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind), parameter :: zero = 0.0_r8_kind
     integer(kind=i4_kind) :: vl, i_ma, i_ua, i_ea, i_ir, &
                              i_bas, i_l, i_exp, i_c, i_if, i_fu, m, &
@@ -4611,7 +4611,7 @@ contains
                                        help_yy(:), help_yz(:), help_zz(:)
     !------------ Declaration of external functions --------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do_sec_ders  = present(sec_ders) .or. present(sec_nuc_ders)
     do_grads     = do_sec_ders .or. present(grads) .or. present(nuc_grads)
     do_fcts      = do_grads .or. present(fcts)
@@ -5405,7 +5405,7 @@ contains
     type(core_orbital_nuc_sec_der_type)     , target, optional :: sec_nuc_ders(:)
     ! the various types of fit function arrays to load (all intent(out))
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind), parameter :: zero = 0.0_r8_kind
     integer(kind=i4_kind) :: vl, i_ma, i_ua, i_ea, &
                              i_bas, i_l, i_exp, &
@@ -5445,7 +5445,7 @@ contains
                                        help_yy(:), help_yz(:), help_zz(:)
     !------------ Declaration of external functions --------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do_sec_ders  = present(sec_ders) .or. present(sec_nuc_ders)
     do_grads     = do_sec_ders .or. present(grads) .or. present(nuc_grads)
     do_fcts      = do_grads .or. present(fcts)
@@ -6022,7 +6022,7 @@ contains
     real(kind=r8_kind), intent(inout) :: prim_int_array(:)
     logical, intent(in) :: is_r2function
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: allo_stat
     ! working arrays
     real(kind=r8_kind), allocatable :: gam_arg(:),gam_fct(:,:)
@@ -6030,7 +6030,7 @@ contains
     real(kind=r8_kind),parameter :: pi=3.14159265358979324_r8_kind, two=2.0_r8_kind
     !------------ Declaration of external functions --------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     prim_int_array(1:N_points) = 0.0_r8_kind
 

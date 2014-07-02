@@ -61,7 +61,7 @@ module thermodyn_prop_module
   !== Interrupt end of public interface of module ========================================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public                        :: thermodynamic_properties
 
   !------------ Declaration of constants and variables -----------------------------------
@@ -113,7 +113,7 @@ module thermodyn_prop_module
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
     use constants , only             : ZERO, HALF ,ONE , THREE_HALF, TWO, PI, FIVE_HALF &
                                      , THREE, TWO_PI, THOUSAND &
                                      , R_gas &                        ! Ideal gas constant

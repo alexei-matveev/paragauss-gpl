@@ -594,7 +594,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), optional :: i_density_dummy
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: alloc_stat,i,j,i_start, i_density
     real(kind=r8_kind)    :: help_real(1),help_arr(5),help_irrep(3),&
          help_name(20)
@@ -603,7 +603,7 @@ contains
     character(len=3),allocatable       :: irrep_list(:)
     real(kind=r8_kind)                 :: help_step(4)
     character(len=7)                   :: inter
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if(present(i_density_dummy)) then
        i_density=i_density_dummy
     else
@@ -784,8 +784,8 @@ contains
                              w,     & ! length in x -direction
                              h        ! length in y_direction
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
     ! open graphic file
     open(67,file='ZZZG67')
     call sheet(real(u),real(w),real(h))
@@ -800,9 +800,9 @@ contains
     !------------ Modules used -----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: alloc_stat 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! close graphics file
     ! do deallocations
     deallocate(z_mat, cont_arr, &
@@ -837,11 +837,11 @@ contains
     integer(kind=i4_kind) :: i_plot    ! number of plot, i.e. this
     !                                  ! runs over all splitted contribs.
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_orb, orb_to_skip,&
          alloc_stat,i,j
     real(kind=r8_kind),pointer    :: z_pointer(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     if (.not.allocated(z_mat)) then
@@ -907,14 +907,14 @@ contains
     !------------ Modules used -----------------------------------    
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind),intent(in)  :: i_orb,i_plot
     integer(kind=i4_kind) :: irb, mue, nue ! parameter for bicub
     integer(kind=i4_kind) :: ier, i_cont
     character(len=10)     :: string
     character(len=27)     :: text_string
     real(kind=r8_kind)    :: aa,ab,ac,ad
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (density_plot) then
        write(text_string,'("Density Plot")')

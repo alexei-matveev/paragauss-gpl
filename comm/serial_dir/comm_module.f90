@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module comm_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !comm_module.f90 - version for serial work
   !
   !    This module contains all necessary changes in communicated
@@ -36,20 +36,20 @@ module comm_module
   !  Author: AS, TB
   !  Date: 7/98
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use commpack_module ! interface for packing and unpacking of comm data
@@ -58,7 +58,7 @@ module comm_module
   implicit none
   save ! save all variables defined in this module
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
 
@@ -67,7 +67,7 @@ module comm_module
   integer(kind=i4_kind), parameter, public :: comm_all_slave_hosts = -2
   integer(kind=i4_kind), parameter, public :: comm_any_message = -1
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public comm_enroll, &
        comm_abort, &
        comm_get_n_processors, &
@@ -82,15 +82,15 @@ module comm_module
 
   public :: comm_barrier
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   !------------ Declaration of private constants and variables ----
   integer(kind=i4_kind), private :: n_procs
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -120,7 +120,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of local variables ----------------
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     write(io_u,*)
     write(io_u,*) 'This is a seriall run:'
     write(io_u,*)

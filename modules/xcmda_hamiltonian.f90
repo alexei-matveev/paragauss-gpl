@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module xcmda_hamiltonian
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module creates the XC-part of the hamiltionian
   !           within the model density approach (MDA)
@@ -38,17 +38,17 @@ module xcmda_hamiltonian
   ! Author:      Uwe Birkenheuer
   ! Date:        8/98
   ! Description: Potential extended model density approach introduced
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module  ! type specification parameters
   use time_module, only: init_timer, start_timer, stop_timer
@@ -67,9 +67,9 @@ module xcmda_hamiltonian
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: xcmda_setup
   public :: xcmda_build
@@ -85,9 +85,9 @@ module xcmda_hamiltonian
   public :: mda_rho_cutoff
   public :: erf
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !..............................................................................
 ! model density approach (basic version)
@@ -1727,7 +1727,7 @@ endif
     real(kind=r8_kind), intent(in) :: x
     real(kind=r8_kind)             :: erf
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind),parameter :: na=25,nc=22
     real(kind=r8_kind)              :: a(0:na),c(0:nc)
     real(kind=r8_kind)              :: d,dd,alpha,z,sv
@@ -1890,7 +1890,7 @@ endif
     !  Purpose: pack the structure mda_options into a comm buffer
     !** End of interface *****************************************
     use comm, only: comm_bcast
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call comm_bcast(rho_shape_eps)
     call comm_bcast(rho_cutoff)
     call comm_bcast(constrain_rhospin)
@@ -1907,7 +1907,7 @@ endif
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mda_rho_shape_eps = rho_shape_eps
 
   end function mda_rho_shape_eps
@@ -1920,7 +1920,7 @@ endif
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mda_rho_cutoff = rho_cutoff
 
   end function mda_rho_cutoff
@@ -1933,7 +1933,7 @@ endif
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mda_constrain_rhospin = constrain_rhospin
 
   end function mda_constrain_rhospin
@@ -1958,7 +1958,7 @@ endif
     !------------ Declaration of local variables   ---------------
     integer(kind=i4_kind) :: s, n_spin
     real(kind=r8_kind) :: yes(1) = (/1.0_r8_kind/), no(1) = (/0.0_r8_kind/)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin = options_n_spin()
 
     if (output_main_scf) call write_to_output_units &
@@ -2028,7 +2028,7 @@ endif
     logical               :: use_model_density
     integer               :: status
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin = options_n_spin()
     use_model_density = options_xcmode() == xcmode_model_density .or. &
                         options_xcmode() == xcmode_extended_mda

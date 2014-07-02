@@ -33,11 +33,11 @@ module potential_calc_module
   !  Author: AS
   !  Date: 02/2001
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: AS
   ! Date:   03/2002
@@ -49,8 +49,8 @@ module potential_calc_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module, only: i4_kind, r8_kind
   use iounitadmin_module, only: output_unit, openget_iounit, &
@@ -68,14 +68,14 @@ module potential_calc_module
   save
   private
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public poten_calc_read, poten_calc_write, calc_plane_grid, grid2space_2d, &
        get_poten_and_shutdown_2d, calc_shell_grid, collect_poten_3d, &
        calc_poten_derive_charges
 !==================================================================
-! End of public interface of module
+  ! End of public interface of module
 !==================================================================
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !-- Declaration of privat constant and variable  ----------------
   type poten
      real(kind=r8_kind) :: r(3)

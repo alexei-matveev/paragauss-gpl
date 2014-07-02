@@ -22,10 +22,10 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 !       
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine ll_calculate_dipoleg(na,nb,la,lb)
   !
   !  Purpose: calculation of all primitive dipole integrals
@@ -50,9 +50,9 @@ subroutine ll_calculate_dipoleg(na,nb,la,lb)
   integer(kind=i4_kind),intent(in) :: nb ! number of unique atom b
   integer(kind=i4_kind),intent(in) :: la ! angular momentum of unique atom a
   integer(kind=i4_kind),intent(in) :: lb ! angular momentum of unique atom b
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   ! constants
   real(kind=r8_kind),parameter    :: pi=3.14159265358979324_r8_kind

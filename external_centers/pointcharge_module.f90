@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  pointcharge_module
 !---------------------------------------------------------------
 !
@@ -155,9 +155,9 @@ public :: calc_nuc_pc_energy
 public :: unique_timp_grad_information
 public :: unique_timp_symadapt_bcast
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 
 !------------ Declaration of constants and variables ----
@@ -518,12 +518,12 @@ contains
     use comm,                only: comm_bcast                                  &
                                  , comm_rank
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(pointcharge_type), pointer :: pc
     type(unique_atom_type), pointer :: ut
     integer(i4_kind)                :: i_pc, i_timp, l_pseudo, status
     logical                         :: do_alloc
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     !
     call comm_bcast( n_timps)
     call comm_bcast( N_moving_unique_timps)

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  frag_orb_analysis_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: module performs a fragment_orbital_analysis
   !           every molecular system can be divided into
@@ -60,18 +60,18 @@ module  frag_orb_analysis_module
   !  Author: MS
   !  Date: 12/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   use type_module ! type specification parameters
   use datatype
   use occupation_module
@@ -85,19 +85,19 @@ module  frag_orb_analysis_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public frag_orb_analysis_read, frag_orb_analysis_write, frag_orb_analysis_main
   !external dgeco, dgedi !!!!!!!!!!!!!!!!!!!!!
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   type(pop_store_type), allocatable :: pop_store(:,:,:)
   ! pop_store(n_irrep,n_spin,n_fragments)
@@ -126,8 +126,8 @@ module  frag_orb_analysis_module
 
   namelist /fragment/ n_atoms
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -141,7 +141,7 @@ contains
     use input_module
     integer :: unit, status, alloc_stat, i_frag, i_atom
     logical :: atom_check(n_unique_atoms), true=.true.
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! population_level = df_population_level
     n_fragments=df_n_fragments
     pop_limit=df_pop_limit
@@ -255,7 +255,7 @@ contains
     use occupation_module
     use datatype
     use math_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle)   :: th
     integer(kind=i4_kind) :: n_spin, i_frag, i_ir, dimi, i_atom, atom_index, &
          n_ir, skip_length, alloc_stat, index, &
@@ -271,7 +271,7 @@ contains
 
     external error_handler
     intrinsic transpose
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     write(output_unit,'(A30)') 'Fragment orbital analysis:'
     write(output_unit,'(A22,i4)') 'Number of fragments:',n_fragments
     do i_frag=1,n_fragments
@@ -505,5 +505,5 @@ contains
 
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module frag_orb_analysis_module

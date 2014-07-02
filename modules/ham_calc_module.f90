@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module ham_calc_module
   !
   !  Purpose: Contains routines for calculating the
@@ -51,11 +51,11 @@ module ham_calc_module
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: TG
@@ -104,8 +104,8 @@ module ham_calc_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype    ! user defined types
@@ -120,18 +120,18 @@ module ham_calc_module
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: ham_calc_main!(loop)
 
   !------------ public formal parameters types to subroutines ---
   public :: arrmat3, arrmat2, readwriteblocked_tapehandle
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ Declaration of constants  -----------------------
 
@@ -787,7 +787,7 @@ contains
     type(arrmat2), optional, intent(inout) :: h_matrix_imag(:)
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical                                :: numeric_exch                     &
                                             , exchange_fit                     &
                                             , model_density
@@ -825,7 +825,7 @@ contains
     real(r8_kind), allocatable             :: f_array(:)
     real(r8_kind), allocatable             :: x_array(:)
     !
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     !
     ! Check input variables
     if (.not. options_spin_orbit) then
@@ -1308,7 +1308,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind),           intent(out)   :: trace_K
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !
     real(r8_kind)                          :: factor_K_mat
     real(r8_kind)                          :: factor_K_eny
@@ -1523,7 +1523,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), optional, intent(inout) :: x_array(:)
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle) :: th_ch,th_xc,th_ch_imag,th_xc_imag
     integer(kind=i4_kind) :: n_xc, n_ch, info, i_gamma, i_spin, &
          i_meta_ch, i_meta_xc
@@ -1550,7 +1550,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), allocatable :: koeff_xc(:, :), koeff_en_xc(:)
     real(r8_kind) :: coeff_unused(0)
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     exchange_fit  = options_xcmode() == xcmode_exchange_fit
     numeric_exch  = options_xcmode() == xcmode_numeric_exch
@@ -1941,7 +1941,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), dimension(:),       optional, intent(inout) :: m_subsection
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !
     integer(i4_kind)           :: item_arr_ch
     integer(i4_kind)           :: i_last
@@ -2167,7 +2167,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), dimension(:),                 intent(inout) :: x_subsection
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind)           :: alloc_stat
     integer(i4_kind)           :: item_arr_xc
     integer(i4_kind)           :: i_last
@@ -2266,7 +2266,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), intent(out)   :: e_efield
     ! *** end of interface ***
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle)    :: th_efield
     integer(kind=i4_kind)                :: i_gamma,m,n_dim,i_meta,i_last
     real(kind=r8_kind),pointer           :: buffer_den(:),buffer_efield(:)

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  solhrules_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Coding of Product and differentiation rule of solid
   !           harmonics of arbitrary l
@@ -77,11 +77,11 @@ module  solhrules_module
   !  Date: 1/95
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: MS
@@ -89,7 +89,7 @@ module  solhrules_module
   ! Description: Two functions for easy implimentation of product- 
   !              and differentialrule have been added 
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification 
   ! Author: AM
@@ -97,23 +97,23 @@ module  solhrules_module
   ! Description: scalar version and common interface to 
   !              diff_rule subroutine have been added
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only: IK => i4_kind, RK => r8_kind ! type specification parameters
 
   implicit none
   private         ! by default, all names are private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type, public ::  solhrules_product_type
      ! to implement the product rule one given lm_result of solid harmonic
      ! solid harmonic of gradient operator
@@ -154,7 +154,7 @@ module  solhrules_module
     end type nested2_vars
 
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   type(solhrules_product_type), allocatable, target, public :: solhrules_product(:)
   ! solhrules_product(lm_max), lm index of solid harmonic of gradient operator
   type(solhrules_differential_type), allocatable, target, public :: solhrules_differential(:,:)
@@ -176,7 +176,7 @@ module  solhrules_module
   ! solhrules_l_and_m_of_lm(2,lm_max)
   ! first dimension: 1 l, 2 m
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: solhrules_setup!(lmax)
   public :: solhrules_free!()
@@ -226,11 +226,11 @@ module  solhrules_module
      !end function diff_rule_vec
   end interface
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   !
   ! This is set in solhrules_setup(lmax), reset to illegal value
@@ -245,8 +245,8 @@ module  solhrules_module
 
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -798,10 +798,10 @@ contains
     !  Purpose: calculates array solhrules_dfac(lm) = (2*l(lm) + 1)!!
     !** End of interface *****************************************
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                :: lm,l,m,f
     real(RK)                   :: dfac  
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     solhrules_dfac(1) =  1.0_RK
     f = 1
     lm = 1
@@ -824,9 +824,9 @@ contains
     !  for product rule
     !** End of interface *****************************************
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                :: lm1, lm2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do lm1 = 1, lm_max
        do lm2 = 1, lm_max
@@ -845,12 +845,12 @@ contains
     !------------ Declaration of formal parameters -------------
     integer(IK), intent(in)  :: lm1,lm2
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                      :: status, i, n
     real(RK)                         :: dfac
     type(solhrules_product_type), pointer      :: shrp
     type(solhrules_differential_type), pointer :: shrd
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     shrp => solhrules_product(lm2)
     shrd => solhrules_differential(lm1,lm2)
 

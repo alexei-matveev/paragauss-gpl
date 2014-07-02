@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module disp_rep_module
 !
 !  Author: AS,MF
@@ -111,9 +111,9 @@ module disp_rep_module
   integer(kind=i4_kind), public :: ndsa
   ! if I shall use data from Rappe
   logical, public :: use_rappe_data
-!===============================================================
-! End of public interface of module
-!===============================================================
+!=====================================================================
+  ! End of public interface of module
+!=====================================================================
 
   real(kind=r8_kind), allocatable :: K_solv(:),R_solv(:),K_solu(:),R_solu(:)
 

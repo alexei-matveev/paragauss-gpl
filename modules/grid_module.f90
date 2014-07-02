@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module grid_module
   !
   !  This modules generates the 3D numerical integration grid which is
@@ -69,11 +69,11 @@ module grid_module
   !  Date: 11/95
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification: - Parallel algorithm for generation of the grid
   !               - post_scf grid implemented
@@ -84,7 +84,7 @@ module grid_module
   !              the grid is spread to the slaves. The calculation of
   !              the becke weights is done on the slaves.
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: MS
   ! Date:   3/97
@@ -105,7 +105,7 @@ module grid_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module
@@ -120,10 +120,10 @@ module grid_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: grid_main
   public :: grid_read
   public :: grid_write
@@ -160,9 +160,9 @@ module grid_module
   logical, public :: weight_grads ! decide if for gradient calculation also
   ! the gradients of integration weights have to be calculated
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   logical, private :: adjust_cell_size = .false.
   ! Base grid weights on Voronoj cells that are built by

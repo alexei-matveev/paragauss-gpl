@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module efp_efp_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Calculate interfragment interactions
   !
@@ -41,18 +41,18 @@ module efp_efp_module
   !  Date: 11.07
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
 
   use type_module ! type specification parameters
@@ -61,29 +61,29 @@ module efp_efp_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   real(r8_kind), public :: efp_efp_en=zero
   real(r8_kind), public :: qm_efp_energy
-  !------------ Interface statements ------------------------------
-  !------------ public functions and subroutines ------------------
+  !------------ Interface statements ---------------------------------
+  !------------ public functions and subroutines ---------------------
   public efp_efp_energy, efp_efp_gradients
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind), parameter :: energy=1
   integer(i4_kind), parameter :: gradient=2
   logical :: print_id_scc
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !*************************************************************
   subroutine efp_efp_energy(print_id_conv)
@@ -100,8 +100,8 @@ contains
     !------------ Declaration of formal parameters ---------------
     logical, intent(in) :: print_id_conv
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     print_id_scc=print_id_conv
 
@@ -186,8 +186,8 @@ contains
     use unique_atom_module, only: N_unique_atoms
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     if(efp_fixed) return
 
@@ -258,8 +258,8 @@ contains
     real(r8_kind) :: vector_product(3)
     real(r8_kind) :: v1(3),v2(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
      
     vector_product(1)=v1(2)*v2(3)-v1(3)*v2(2)
     vector_product(2)=v1(3)*v2(1)-v1(1)*v2(3)
@@ -278,7 +278,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_unique1,i_equal1,i_unique2,i_equal2,i1,i2
     integer(i4_kind) :: n_equal1,n_equal2,ind1,ind2
     integer(i4_kind) :: i_grp1,i_grp2,ityp
@@ -287,7 +287,7 @@ contains
     logical :: do_energy, do_grads
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     integer(i4_kind) :: grad_dim1,index1,grad_dim2,index2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -383,7 +383,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_unique1,i_equal1,i_unique2,i_equal2,i1,i2
     integer(i4_kind) :: n_equal1,n_equal2,ind1,ind2
     integer(i4_kind) :: i_grp1,i_grp2
@@ -393,7 +393,7 @@ contains
     real(r8_kind) :: efp_efp_pc_pc_energy,gradient1(3),gradient2(3)
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     integer(i4_kind) :: grad_dim1,index1,grad_dim2,index2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -515,7 +515,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_unique1,i_equal1,i_unique2,i_equal2,i1,i2
     integer(i4_kind) :: n_equal1,n_equal2
     integer(i4_kind) :: i_grp1,i_grp2
@@ -525,7 +525,7 @@ contains
     real(r8_kind) :: efp_efp_pc_pd_energy,gradient1(3),gradient2(3),torque2(3)
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     integer(i4_kind) :: grad_dim1,index1,grad_dim2,index2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -628,7 +628,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_unique1,i_equal1,i_unique2,i_equal2,i,j,k
     integer(i4_kind) :: n_equal1,n_equal2,i1,i2
     integer(i4_kind) :: i_grp1,i_grp2
@@ -638,7 +638,7 @@ contains
     logical :: do_energy, do_grads
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     integer(i4_kind) :: grad_dim1,index1,grad_dim2,index2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -757,7 +757,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_unique1,i_equal1,i_unique2,i_equal2,i,j,k,l
     integer(i4_kind) :: n_equal1,n_equal2,i1,i2
     integer(i4_kind) :: i_grp1,i_grp2
@@ -767,7 +767,7 @@ contains
     real(r8_kind) :: efp_efp_pc_po_energy,gradient1(3),gradient2(3),torque2(3)
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     integer(i4_kind) :: grad_dim1,index1,grad_dim2,index2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -899,7 +899,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_unique1,i_equal1,i_unique2,i_equal2,i1,i2
     integer(i4_kind) :: n_equal1,n_equal2,ind1,ind2
     integer(i4_kind) :: i_grp1,i_grp2
@@ -909,7 +909,7 @@ contains
     logical :: do_energy, do_grads
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     integer(i4_kind) :: grad_dim1,index1,grad_dim2,index2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -1026,7 +1026,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_unique1,i_equal1,i_unique2,i_equal2,i,j,k
     integer(i4_kind) :: n_equal1,n_equal2,i1,i2
     integer(i4_kind) :: i_grp1,i_grp2
@@ -1036,7 +1036,7 @@ contains
     logical :: do_energy, do_grads
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     integer(i4_kind) :: grad_dim1,index1,grad_dim2,index2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -1176,7 +1176,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i_unique1,i_equal1,i_unique2,i_equal2,i,j,k,l,m,n,i1,i2
     integer(i4_kind) :: n_equal1,n_equal2,ind1,ind2
     integer(i4_kind) :: i_grp1,i_grp2
@@ -1186,7 +1186,7 @@ contains
     logical :: do_energy, do_grads
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     integer(i4_kind) :: grad_dim1,index1,grad_dim2,index2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -1385,12 +1385,12 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind), intent(in) :: to_do
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: efp_efp_pol_energy,efp_efp_pol_energy_old,d_En,efp_pol_solv_energy
     logical :: do_energy, do_grads
     integer(i4_kind) :: id_cycle
     real(r8_kind), parameter :: small_en=1.0e-14_r8_kind
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_energy=to_do==energy
     do_grads=to_do==gradient
@@ -1460,5 +1460,5 @@ contains
   end subroutine efp_efp_polar
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module efp_efp_module

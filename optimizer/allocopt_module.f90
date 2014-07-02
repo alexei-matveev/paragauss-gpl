@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module allocopt_module
   use type_module
   integer(kind=i4_kind):: allocopt_stat(31)=1

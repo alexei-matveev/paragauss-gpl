@@ -22,26 +22,26 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module quadrupel_fname
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only:&
@@ -50,7 +50,7 @@ module quadrupel_fname
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   public :: init!()
   public :: done!()
@@ -59,12 +59,12 @@ module quadrupel_fname
   public :: bipel_index
   public :: max_bipel_index
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   logical,private             :: initialized = .false.
   integer(IK),private         :: refcount = 0
@@ -74,8 +74,8 @@ module quadrupel_fname
   integer(IK),allocatable,private :: ua_fileindex(:)
   integer(IK),private             :: max_bipel_index_ = -1
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine init()
@@ -239,5 +239,5 @@ contains
     if ( absolute ) path = tmpfile(path)
   end function qfilename
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module quadrupel_fname

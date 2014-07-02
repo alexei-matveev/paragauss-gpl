@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine ls_calculate_grads(na,nb,equalb_,la_in,lb,imode)
   !
   !  Purpose: calculation of gradients of all primitive 2 center orbital
@@ -37,20 +37,20 @@ subroutine ls_calculate_grads(na,nb,equalb_,la_in,lb,imode)
   !  Author: MS
   !  Date:   8/96
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Author: AH
   ! Date:   4/99
   ! Description: gradients for pseudopotentials has 
   !              been added
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module
@@ -66,7 +66,7 @@ subroutine ls_calculate_grads(na,nb,equalb_,la_in,lb,imode)
      end subroutine ls_grad_pseudo
   end interface
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   integer(kind=i4_kind),intent(in) :: na ! number of unique atom a
   integer(kind=i4_kind),intent(in) :: nb ! number of unique atom b

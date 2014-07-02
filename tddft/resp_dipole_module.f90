@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module resp_dipole_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,33 +41,33 @@ module resp_dipole_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 #include "def.h"
   use type_module ! type specification parameters
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   public resp_dipole_rewrite
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -93,7 +93,7 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)      :: tm_xyz(3), dip, tma(3),tmb(3)
     real(kind=r8_kind)      :: coeff_abc, coeff_xyz
     integer(kind=i4_kind)   :: i_ir_c, nirr, i_pa_c, mult, isym, i_xyz
@@ -121,7 +121,7 @@ contains
 
     integer(i4_kind), parameter:: X = 1, Y = 2, Z = 3
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call write_to_output_units('response_rewrite_dipoletape: preparations')
 
@@ -346,5 +346,5 @@ contains
   !*************************************************************
   
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module resp_dipole_module

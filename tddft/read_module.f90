@@ -23,11 +23,11 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 #include <def.h>
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  read_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !
@@ -47,16 +47,16 @@ MODULE  read_module
   !  Date:   04/05
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   USE debug, only: show
   USE type_module          ! contains standard data types
@@ -68,20 +68,20 @@ MODULE  read_module
 
   IMPLICIT NONE
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   PUBLIC read_C, read_R, read_Q, read_noRI_XC
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
 
   !*************************************************************
@@ -100,7 +100,7 @@ CONTAINS
     IMPLICIT NONE
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind), INTENT(in)    :: i_ir, i_sp, N, NK
     REAL   (KIND=r8_kind), INTENT(in)    :: eta(:),eps(:)
     INTEGER(KIND=i4_kind), INTENT(in)    :: NAS(:)
@@ -113,7 +113,7 @@ CONTAINS
 
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !!#if 0
     inquire(file = trim(data_dir)//"/"//trim(fname('co_3c',i_ir,i_sp)), exist=file_exist )
@@ -185,7 +185,7 @@ CONTAINS
     INTEGER(KIND = i4_kind), INTENT(in   ) :: i_ir
     TYPE(ARRMAT2),           INTENT(inout) :: XC(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind)             :: alloc_stat,i_fit_k,i_fit_l,&
          & nmat,counter, n_k, i
     INTEGER(KIND=i4_kind)             :: n_spin
@@ -193,7 +193,7 @@ CONTAINS
     LOGICAL                           :: file_exist
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate memory for auxiliary array
     n_k = gl_N_k(i_ir)
@@ -258,7 +258,7 @@ CONTAINS
     INTEGER(KIND=i4_kind),intent(in)  :: i_ir
     REAL(KIND=r8_kind),intent(inout)  :: tmp_ptr(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind)             :: alloc_stat, ia, ib, counter, dim
     INTEGER(KIND=i4_kind)             :: n_k
     character(len=4)                  :: ir_char
@@ -266,7 +266,7 @@ CONTAINS
     LOGICAL                           :: file_exist
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_k = size(tmp_ptr,1)
     write (ir_char, '(i4)') i_ir
@@ -321,7 +321,7 @@ CONTAINS
     IMPLICIT NONE
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind), INTENT(IN )          :: i_ir_c
     REAL   (KIND=r8_kind), INTENT(IN )          :: eta_up(:),eps_up(:)
     TYPE   (     ARRMAT2), INTENT(OUT)          :: XC(:)
@@ -340,7 +340,7 @@ CONTAINS
 
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !!    print *,"i_ir_c = ",i_ir_c
 
@@ -434,7 +434,7 @@ CONTAINS
     !------------ Declaration of local types ---------------------
     character(len=4) :: irc_char,isp_char
     character(len=5) :: fnm_char
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     write (irc_char, '(i4)') i_ir
     write (isp_char, '(i1)') i_sp
@@ -470,5 +470,5 @@ CONTAINS
 !!$  !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE read_module

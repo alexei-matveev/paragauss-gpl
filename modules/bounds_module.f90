@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module bounds_module
   !
   !  Purpose: provide the bounds when sending the splitted
@@ -52,11 +52,11 @@ module bounds_module
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: UB
   ! Date:   8/97
@@ -78,36 +78,36 @@ module bounds_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use fit_coeff_module, only: fit
   implicit none
   private
   save
-  !== Interrupt of public interface of module =====================
+  !== Interrupt of public interface of module ========================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   integer(i4_kind), allocatable, public, protected :: bounds_ch(:) ! (NPROCS)
   integer(i4_kind), allocatable, public, protected :: bounds_xc(:) ! (NPROCS)
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: bounds_calc!(n_fit_struct) allocates or re-allocates public arrays
   public :: bounds_free!()
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !--- public types of formal parameters of subroutines ---------
   public :: fit
 
   !------------ Declaration of private constants and variables ----
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function work_shares(n, np) result(work)

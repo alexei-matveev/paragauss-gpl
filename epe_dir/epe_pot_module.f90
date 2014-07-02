@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module epe_pot_module
   !
   !  Purpose : Calculate a electrostatic potential of epe
@@ -33,18 +33,18 @@ module epe_pot_module
   !  Author: AS
   !  Date: 02/2001
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use iounitadmin_module
   use epecom_module
@@ -53,11 +53,11 @@ module epe_pot_module
   private
   save
 
-  !== Interrupt end of public interface of module =================
-  !------------ public functions and subroutines ------------------
+  !== Interrupt end of public interface of module ====================
+  !------------ public functions and subroutines ---------------------
   public get_plane_grid,calc_pot
 !==================================================================
-! End of public interface of module
+  ! End of public interface of module
 !==================================================================
   !-- Declaration of privat constant and variable  ----------------
   type poten

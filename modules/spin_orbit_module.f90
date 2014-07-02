@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module spin_orbit_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains steering parameters of spin orbit variant
   !
@@ -41,18 +41,18 @@ module spin_orbit_module
   !  Date: 7/98
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only:&
        & IK=>i4_kind,&
@@ -60,9 +60,9 @@ module spin_orbit_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: spin_orbit_read_input
   public :: spin_orbit_write_input
   public :: spin_orbit_input_bcast
@@ -70,12 +70,12 @@ module spin_orbit_module
   public :: is_on
   public :: max_alloc_reals
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! ----------- Spin Orbit control parameters ---------------------------
 
@@ -119,8 +119,8 @@ module spin_orbit_module
 
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine fingerprint()
@@ -508,7 +508,7 @@ contains
          relfit_maxexp, &
          relfit_minZ  , &
          max_alloc ! let it be undocumented
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! default values >>>
     call set_defaults()
@@ -577,5 +577,5 @@ contains
   end function max_alloc_reals
 
   !*************************************************************
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module spin_orbit_module

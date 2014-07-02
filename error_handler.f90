@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine error_handler(message)
 !
 !  Purpose: printing an error message and terminating
@@ -67,9 +67,9 @@ implicit none
 !== Interrupt end of public interface of module ================
 !------------ Declaration of formal parameters ------------------
 character(LEN=*) :: message
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 !------------ Declaration of local variables --------------------
 logical, save                       :: already_called = .false.
 !------------ Executable code -----------------------------------

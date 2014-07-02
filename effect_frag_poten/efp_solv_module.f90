@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module efp_solv_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !
@@ -41,18 +41,18 @@ module efp_solv_module
   !  Date: 07.08
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
 
   use type_module ! type specification parameters
@@ -62,30 +62,30 @@ module efp_solv_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   logical, public :: do_solv
 
-  !------------ Interface statements ------------------------------
-  !------------ public functions and subroutines ------------------
+  !------------ Interface statements ---------------------------------
+  !------------ public functions and subroutines ---------------------
   public calc_mp_potential, deallocate_V_mp, efp_mp_solv_energy
   public allocate_V_and_Q_id, allocate_E_cav, deallocate_E_cav, calc_E_cav1
   public efp_id_mp_solv_energy, deallocate_V_id, calc_V_and_Q_id, calc_E_cav11
   public calc_E_cav
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !*************************************************************
   subroutine calc_mp_potential()
@@ -100,11 +100,11 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status, iu_sp,ie_sp,n_eq,iu_mp,ie_mp,i,j,k
     real(r8_kind) :: V,V1,r_sp(3),r_mp(3),rr(3),dr,dr2
     real(r8_kind) :: Z,D(3),Q(3,3),O(3,3,3),C,A
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(V_pot_mp(N_points),stat=status)
     ASSERT(status==0)
@@ -209,9 +209,9 @@ contains
     use potential_module, only: V_pot_mp
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     deallocate(V_pot_mp,stat=status)
     ASSERT(status==0)
@@ -231,12 +231,12 @@ contains
     !------------ Declaration of formal parameters ---------------
     real(r8_kind) :: efp_efp_en
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind), allocatable :: V_buf(:)
     real(r8_kind) :: efp_mpl_solv_energy
     integer(i4_kind) :: status,n_eql
     integer(i4_kind) :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(V_buf(N_points),stat=status)
     ASSERT(status==0)
@@ -272,9 +272,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i,n_eq
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(.not.allocated(E_cav)) then
        allocate(E_cav(N_ipd), stat=status)
@@ -306,9 +306,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i=1,N_ipd
        deallocate(E_cav(i)%m, stat=status)
@@ -659,5 +659,5 @@ contains
   end subroutine efp_id_mp_solv_energy
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module efp_solv_module

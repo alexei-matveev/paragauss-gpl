@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module integral_calc_quad_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module integral_calc_quad_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #if defined (_COMPAC_FORTRAN) || (_ITANIUM_NSK)
 # define FPP_NO_BIG_AUTOMATIC_ARRAYS
 #endif
@@ -62,12 +62,12 @@ module integral_calc_quad_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(IK), parameter, public :: IDONT_CONTRACT          = 1
   integer(IK), parameter, public :: IDONT_SUM_OVER_PARTNERS = 2
 
@@ -78,9 +78,9 @@ module integral_calc_quad_module
   type(arrmat2), pointer, public :: quad_wmat(:)   ! (n_irr)
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: integral_calc_quad_densmat ! (U1,L1,U2,L2,quad_pmat,quad_wmat,use_spin_dens)
   public :: integral_calc_quad_close   ! ()
@@ -96,18 +96,18 @@ module integral_calc_quad_module
   public :: symmetrize_block
   public :: unsymadaptvec
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -1284,5 +1284,5 @@ ASSERT(associated(quad_pmat))
   end subroutine integral_calc_quad_close
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module integral_calc_quad_module

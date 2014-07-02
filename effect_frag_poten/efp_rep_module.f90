@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module efp_rep_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Calculate interfragment interactions
   !
@@ -41,18 +41,18 @@ module efp_rep_module
   !  Date: 11.07
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
 
   use type_module ! type specification parameters
@@ -61,9 +61,9 @@ module efp_rep_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type, public :: repulsive_f_type
      character(len=12) :: name
      integer(i4_kind) :: N_equal_centers
@@ -74,7 +74,7 @@ module efp_rep_module
      integer(i4_kind), pointer :: type(:)
   end type repulsive_f_type
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind), public :: N_rcf=0_i4_kind
   type(repulsive_f_type), pointer, public :: rcf_array(:)
   type(arrmat3), pointer, public :: repf_grad_info(:)
@@ -84,21 +84,21 @@ module efp_rep_module
   type(arrmat2), public,allocatable :: gradient_repf_cartesian(:)
   type(arrmat2), public,allocatable :: torque_repf_cartesian(:)
 
-  !------------ Interface statements ------------------------------
-  !------------ public functions and subroutines ------------------
+  !------------ Interface statements ---------------------------------
+  !------------ public functions and subroutines ---------------------
   public symm_repf_points, dealloc_repf, init_repf_grads, repf_grads_shutdown
   public dealloc_repf_inform, transform_repf_grad_to_cart, repf_grad_cart_write
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
   type(unique_atom_type), pointer :: unique_external_points(:)
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   subroutine symm_repf_points (N_total, P, ef_grp, type, name, C, A)
     ! Symmetrize repulsive centers
@@ -120,7 +120,7 @@ contains
     !------------ Declaration of local constants  ----------------
     real(r8_kind),parameter :: small = 1.e-10_r8_kind
     ! very small value
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer (i4_kind) :: i, j, k, n, l, alloc_stat, n_size
     ! counters
     integer (i4_kind) :: n_equal, n_equal_check, N_eq
@@ -136,7 +136,7 @@ contains
     logical, allocatable :: help_dim(:)
     type(repulsive_f_type), allocatable :: buffer_r(:)
     logical :: do_alloc
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(help_dim(N_total),stat=alloc_stat)
     ASSERT(alloc_stat==0)
@@ -411,9 +411,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(associated(rcf_array)) then
 
@@ -463,9 +463,9 @@ contains
     !** End of interface *****************************************
     !------------ modules used -----------------------------------
     use point_dqo_module, only: moving_R_centers
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i,n_eq
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(N_rcf > 0) then
        allocate(gradient_repf_cartesian(N_rcf),stat=status)
@@ -497,9 +497,9 @@ contains
     !** End of interface *****************************************
     !------------ modules used -----------------------------------
     use point_dqo_module, only: moving_R_centers
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(moving_R_centers) then
        if(N_rcf > 0) then
@@ -576,8 +576,8 @@ contains
     real(r8_kind) :: vector_product(3)
     real(r8_kind) :: v1(3),v2(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     vector_product(1)=v1(2)*v2(3)-v1(3)*v2(2)
     vector_product(2)=v1(3)*v2(1)-v1(1)*v2(3)
@@ -593,9 +593,9 @@ contains
     !------------ modules used -----------------------------------
     use iounitadmin_module, only: output_unit
     use point_dqo_module, only: print_R_grad
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(print_R_grad) then
        if(N_rcf > 0) then
@@ -613,5 +613,5 @@ contains
   end subroutine repf_grad_cart_write
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module efp_rep_module

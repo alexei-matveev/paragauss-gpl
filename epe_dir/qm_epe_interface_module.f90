@@ -35,7 +35,7 @@ module qm_epe_interface_module
   save        
   private
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   type, public :: ff_param
      real(r8_kind) :: b
@@ -49,13 +49,13 @@ module qm_epe_interface_module
 
   integer(i4_kind), allocatable, public :: at_type(:)
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
    public read_interface_param, free_ff_arrays
    public find_block, read_block_line, check_comment, check_empty_line, wrong_line
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   integer(i4_kind), public :: line_number
   character(len=80), public :: current_block
@@ -73,7 +73,7 @@ module qm_epe_interface_module
 
   integer(i4_kind) :: n_type_atm
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 !====================================================================================
 

@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module solv_electrostat_module
 !
 !  This module are used to calculate electrostatic
@@ -83,7 +83,7 @@ module solv_electrostat_module
        shutdown_solvation, &
        init_forces_on_pc,solv_forces_on_pc,dealloc_solv_pc
 
-!================================================================
+  !===================================================================
 !== Interrupt end of public interface of module =====
 !--public variables ---
 
@@ -97,7 +97,7 @@ module solv_electrostat_module
 #if 0
   type(arrmat2),allocatable,public :: ham_solv_el_keep(:)
 #endif
-! End of public interface of module
+  ! End of public interface of module
 
   real(kind=r8_kind), allocatable :: A_matrix(:,:)
   real (r8_kind), public, allocatable :: A_matrix_inv(:,:) ! not protected
@@ -406,7 +406,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(in) :: grad_index(N_moving_unique_atoms + 1)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind) , parameter :: pi = 3.14159265355897932368_r8_kind
     integer(kind=i4_kind) :: i, i1, j, k, l, m, ng, na, na1, ea
     integer(kind=i4_kind) :: first_index,second_index,first_equal,second_equal
@@ -421,7 +421,7 @@ contains
     real(kind=r8_kind) :: torque(3),rc(3),vect_c(3)
     integer(i4_kind) :: center1(2), center2(2),grp,grp1,grp2
 #endif
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     eps_help=to_calc_grads%dielconst/(2.0_r8_kind*(to_calc_grads%dielconst-1.0_r8_kind))
 
@@ -1569,7 +1569,7 @@ ASSERT(all(unique_atoms(:)%zc==0))
     real(kind=r8_kind),pointer  :: xa(:,:),xb(:,:),rotmat(:,:)
     real(kind=r8_kind) :: gradient(3)
     integer :: sphere_c,sphere_t
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! FIXME: sanity check, remove when confident:
     if (.not. pseudopot_present) then

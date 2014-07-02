@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine ls_calculate_dipole(na,nb,la_in,lb)
   !
   !  Purpose: calculation of all primitive dipole integrals
@@ -48,9 +48,9 @@ subroutine ls_calculate_dipole(na,nb,la_in,lb)
   integer(kind=i4_kind),intent(in) :: la_in ! angular momentum of unique atom a
   integer(kind=i4_kind),intent(in) :: lb ! angular momentum of unique atom b
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   ! constants
   real(kind=r8_kind),parameter    :: pi=3.14159265358979324_r8_kind

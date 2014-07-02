@@ -23,11 +23,11 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 #include <def.h>
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  lan_solve_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !  Contains wrap around subroutines for the F77
@@ -87,18 +87,18 @@ MODULE  lan_solve_module
   !  Date:   11/04
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   USE type_module ! type specification parameters
   USE iounitadmin_module 
@@ -106,18 +106,18 @@ MODULE  lan_solve_module
   IMPLICIT NONE
   SAVE            ! save all variables defined in this module
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   PUBLIC lan_solve_main
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
   REAL   (KIND=r8_kind),POINTER :: QS(:,:)
 CONTAINS
 
@@ -143,7 +143,7 @@ CONTAINS
     !------------ Declaration of formal parameters ---------------
     REAL   (KIND=r8_kind) :: DIAG(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     ! -- Variables used as arguments for DVDSON subroutine
     INTEGER(KIND=i4_kind) :: N,NFIG,NMVAL,NMVEC,NBLOCK
@@ -285,7 +285,7 @@ CONTAINS
     REAL   (KIND=r8_kind), intent(IN   ) :: P(N,M)
     REAL   (KIND=r8_kind), intent(INOUT) :: Q(N,M)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind) :: counter, j
     REAL   (KIND=r8_kind) :: A(N*M), D(N*M)
 
@@ -333,5 +333,5 @@ CONTAINS
   END SUBROUTINE IOVECT
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE lan_solve_module

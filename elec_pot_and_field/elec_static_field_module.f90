@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module elec_static_field_module
 !
 !  Calculate electrostatic field
@@ -117,9 +117,9 @@ module elec_static_field_module
   real(kind=r8_kind),allocatable :: E_n_tmp(:)
 
   type(field_bounds), public      :: bounds
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 !To calculate electrostatic field:
 !1. Define points where electrostatic field has to be calculated P(3,N)
 !2. calc_normal = .false.
@@ -681,11 +681,11 @@ contains
     !------------ modules used ------------------- ---------------
     use comm_module, only: commpack
     !------------ Declaration of formal parameters ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,status
     integer(i4_kind) :: n1,n2,n3,nn
     !------------ Declaration of subroutines used ----------------
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i=1,N_surface_points
        n1=size(surf_points_grad_info(i)%m,1)
@@ -719,11 +719,11 @@ contains
     !------------ modules used ------------------- ---------------
     use comm_module, only: communpack
     !------------ Declaration of formal parameters ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,status
     integer(i4_kind) :: n1,n2,n3,nn
     logical :: do_alloc
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_alloc=.false.
     if(.not. associated(surf_points_grad_info)) then
@@ -1311,8 +1311,8 @@ contains
     !------------ Declaration of formal parameters ---------------
     type(readwriteblocked_tapehandle),intent(out) :: th_field2
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call readwriteblocked_startread(trim(tmpfile('field.dat')), th_field2)
 
@@ -1413,9 +1413,9 @@ contains
   subroutine bounds_free_field()
     !  Purpose: Release the private bounds pointer
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (comm_parallel() .and. comm_i_am_master()) then
        call comm_init_send(comm_all_other_hosts,msgtag_free_bnds_fld)

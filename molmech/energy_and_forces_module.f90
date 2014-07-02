@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module energy_and_forces_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use inp_out_module
@@ -38,23 +38,23 @@ module energy_and_forces_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   real(kind=r8_kind), public :: E_total,E(100),E_coulomb,E_ew_d,E_ew_r
   real(kind=r8_kind), public :: E_solv_tot,E_solv_el,E_solv_dr,E_solv_cav
   real(kind=r8_kind), allocatable, public :: Grad(:,:)
   real(kind=r8_kind), allocatable, public :: Grad_s(:) ! Energy gradients in respect to strain
   real(kind=r8_kind), allocatable, public :: H(:,:)
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public init_energy_and_forces,write_energy_and_gradients,write_gxfile
   public shutdown_gradients, grads_to_qmmm, send_receive_e_g_h, send_receive_e_g_h_cascad
   public grad2frac, print_lat_param_and_grad
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine init_energy_and_forces()

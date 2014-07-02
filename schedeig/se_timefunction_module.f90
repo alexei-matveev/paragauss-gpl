@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module se_timefunction_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: provides functions to read the coefficients of a polynomial
   !           cost function from a standardized ASCII file.
@@ -39,27 +39,27 @@ module se_timefunction_module
   !  Date: 04/2010
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module ! type specification parameters
   !use iounitadmin_module, only: openget_iounit, returnclose_iounit
   implicit none
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type, public :: se_timefunction_type
     integer(kind=i4_kind)           :: procCount
     real(kind=r8_kind), allocatable :: coefficients(:)
@@ -70,21 +70,21 @@ module se_timefunction_module
 
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: se_timefunction_init
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   integer(kind=i4_kind), parameter :: fileUnit = 9898
   integer(kind=i4_kind), parameter :: dummyLen = 200
 
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine se_timefunction_init(timeFunctions)
@@ -258,10 +258,10 @@ contains
     integer(kind=i4_kind), intent(out) :: polyDegr
     integer(kind=i4_kind), intent(out) :: iostatus
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)   :: ios
     character(len=dummyLen) :: stringDummy
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     !fileUnit = openget_iounit( trim(filename), status='old' ) !!FIXME: in paragauss ersetzen
     open(unit=fileUnit, file=trim(filename), status='old', iostat=iostatus)!!!FIXME: zeile loeschen
@@ -305,10 +305,10 @@ contains
     type(se_timefunction_type), intent(inout) :: timeFunctions(:)
     integer(kind=i4_kind),      intent(out)   :: iostatus
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)   :: i, j, ios
     character(len=dummyLen) :: stringDummy
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     open(unit=fileUnit, file=trim(filename), status='old', iostat=iostatus)
     if( iostatus .ne. 0 ) then    ! I/O error handling FIXME: Stderr von Paragauss???
@@ -350,9 +350,9 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(in) :: procCount
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind), parameter :: blocksize=64
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     if( .not. procCount .eq. 1 ) then
@@ -369,5 +369,5 @@ contains
   !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module se_timefunction_module

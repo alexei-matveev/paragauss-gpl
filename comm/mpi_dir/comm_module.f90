@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module comm_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !comm_module.f90
   !
   !  Purpose: This  module contains all the necessary entities
@@ -73,11 +73,11 @@ module comm_module
   !  Author: TG
   !  Date: 8/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: AS
@@ -89,9 +89,9 @@ module comm_module
   ! Date:   ...
   ! Description: ...
   !
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
 #ifdef _COMPAC_FORTRAN
 #  define MPI_COMM_RANK MPI_Comm_rank_
@@ -111,14 +111,14 @@ module comm_module
   implicit none
   save ! save all variables defined in this module
   private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of constants public variables----------
   integer(kind=i4_kind), parameter, public :: comm_master_host = 1
   integer(kind=i4_kind), parameter, public :: comm_all_other_hosts = -1
   integer(kind=i4_kind), parameter, public :: comm_any_message = -1
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   !
   ! All public nams should be prefixed with "comm_"
@@ -139,9 +139,9 @@ module comm_module
 
   public :: comm_save_recv
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
 
@@ -164,7 +164,7 @@ module comm_module
 
   !------------ Declaration of private functions and subroutines --
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   !---------------- Interface statements ---------------------------
   ! The routines described by the following interfaces are defined in comm.c
@@ -218,8 +218,8 @@ module comm_module
   end interface
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine comm_enroll(world)
@@ -285,7 +285,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of local variables ----------------
     integer(i4_kind) :: i, n
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     write(io_u,*)
     write(io_u,*) 'MPI configuration:'
     write(io_u,*)
@@ -606,5 +606,5 @@ contains
   end subroutine comm_set_verbose
 #endif
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module comm_module

@@ -22,27 +22,27 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module exchange
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   ! Copyright (c) 2010-2012 Thomas Soini
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
 # define AUTODIFF ad2x1
@@ -52,12 +52,12 @@ module exchange
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   integer(ik), parameter, public :: &
        X_PW91      =  1, &
@@ -82,22 +82,22 @@ module exchange
        X_LONGTRANS = X_LONG + X_TRANS, & !=48
        X_RELAT     = X_LONG + X_TRANS    !=48
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: exchange_gga
   public :: exchange_lda
   public :: correlation_lda
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   !! SB variant (no more in use)
   !! NOTE for second derivatives packing:
@@ -116,8 +116,8 @@ module exchange
   !! dfdgdg    AAAA BBBB AABB AAAB BBAB ABAB
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !********************************************************************
@@ -1158,5 +1158,5 @@ contains
     y = nomin / denom
   end subroutine pade22
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module exchange

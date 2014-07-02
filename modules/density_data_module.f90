@@ -22,13 +22,13 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module density_data_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !-------------- Module specification ---------------------------
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains the density matrix DENSMAT and all
   !           routines for
@@ -63,11 +63,11 @@ module density_data_module
   !  Author: Folke Noertemann
   !  Date: 11/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: UB
@@ -101,7 +101,7 @@ module density_data_module
   ! Date:   ...
   ! Description: ...
   !
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
 ! define FPP_SERIAL /* if parallel version of gendensmat() breaks */
   use type_module ! type specification parameters
@@ -113,7 +113,7 @@ module density_data_module
   implicit none
   save
   private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
   !------------ Declaration of public constants and variables -----
@@ -126,7 +126,7 @@ module density_data_module
   ! in case of creating a core density
   type(arrmat3), allocatable, public, protected :: core_densmat(:)
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: print_densmat, &
        save_densmat, open_densmat
 
@@ -135,9 +135,9 @@ module density_data_module
   public :: gendensmat_occ!(density_deviation), to be executed in parallel context
   public :: gendensmat_tot!( irrep, dmat ), for one irepp only
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   public :: arrmat3 !,sym
 
   integer(i4_kind), parameter :: &
@@ -146,7 +146,7 @@ module density_data_module
        DM_CORE = 3
 
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -287,7 +287,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind),intent(in),optional :: loop
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: io_u,count,i,is,m,n,i_dim
     data count / 0 /
 
@@ -913,9 +913,9 @@ contains
     use filename_module, only: inpfile
     use iounitadmin_module, only : get_iounit,return_iounit
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i,j,k,io_u
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     io_u = get_iounit()
     open(unit= io_u, form='unformatted',status='replace', &

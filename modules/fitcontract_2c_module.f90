@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module fitcontract_2c_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Perform fitcontractions on two-center fit integrals
   !           Re-Normaliation included.
@@ -37,11 +37,11 @@ module fitcontract_2c_module
   !
   !  Author: FN, TB
   !  Date: 8/96
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author:      Uwe Birkenheuer
   ! Date:        8/98
@@ -53,7 +53,7 @@ module fitcontract_2c_module
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use unique_atom_module
@@ -62,18 +62,18 @@ module fitcontract_2c_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
-  !------------ Declaration of constants and variables ------------
+  !== Interrupt end of public interface of module ====================
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public fitcontract_2c
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   type glob_con_simple_type
      ! to hold contribution of one independent function
@@ -83,7 +83,7 @@ module fitcontract_2c_module
      real(kind=r8_kind), pointer :: coefs(:)
   end type glob_con_simple_type
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   real(kind=r8_kind), parameter :: zero=0.0_r8_kind, one=1.0_r8_kind
   type(unique_atom_basis_type), pointer :: basis1,basis2
   logical :: do_glob_cons1, do_glob_cons2, calc_norm, calc_int
@@ -93,8 +93,8 @@ module fitcontract_2c_module
        loc_glob_int(:,:,:), glob_loc_int(:,:,:), glob_glob_int(:,:)
   integer(kind=i4_kind),pointer :: glob_loc_contrib(:), loc_glob_contrib(:)
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -111,7 +111,7 @@ contains
     ! attention: fit_int is spoiled afterwards
     character(*), intent(in) :: flag ! "ch_ch", "xc_xc", "ch_xc", "xc_ch", or "pre"
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! << set pointer to the first type of basis functions >>
     select case ( flag )
     case ( 'ch_ch', 'ch_xc', 'pre' ) ! charge fit basis functions f_k

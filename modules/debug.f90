@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module debug
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module debug
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only: &
        IK=>i4_kind, &
@@ -60,14 +60,14 @@ module debug
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 !!$  type, public ::  debug_
 !!$  end type debug_
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 !!$  integer(kind=IK), parameter, public  :: debug_
 !!$  real(kind=RK),    parameter, public  :: debug_
 !!$  logical,               parameter, public  :: debug_
@@ -78,7 +78,7 @@ module debug
 !!$  character,                        public  :: debug_
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
   interface show
      module procedure show_real_matrix
      ! show_real_matrix(name,real(:,:))
@@ -151,7 +151,7 @@ module debug
      module procedure count_NInf_5D
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: isInf
   public :: countInf
 #endif
@@ -181,21 +181,21 @@ module debug
 
   public :: dump
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 !!$  type
 !!$  end type
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   real(RK), parameter :: zero = 0.0_RK
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 #if 0 /* seems to be unused */
@@ -535,11 +535,11 @@ contains
     real(RK),dimension(:,:),intent(in) :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK),parameter       :: zmax=5
     integer(IK)           :: i,j,n,m,zn,zm
     integer(IK)           ::         dn,dm
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n  = size(MM,1)
     m  = size(MM,2)
@@ -605,12 +605,12 @@ contains
     real(RK),optional      ,intent(in) :: cut
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)           :: i,j,n,m
     integer(IK),parameter :: many=128
     integer(IK)           :: d_n,d_m
     real(RK)              :: cut_
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if( size(mat) == 0 ) RETURN
 
@@ -676,9 +676,9 @@ contains
     real(RK),dimension(:,:),intent(in) :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)           :: i,j,n,m
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n = size(MM,1)
     m = size(MM,2)
@@ -711,9 +711,9 @@ contains
     real(RK),dimension(:),intent(in)   :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)           :: i,n
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n = size(MM)
 
@@ -734,8 +734,8 @@ contains
     real(RK),dimension(:,:,:),intent(in)   :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     write(*,'(A)') '<octave>'
     write(*,*)     '# ',trim(var(name)),' (',shape(MM),') in fortran order'
@@ -754,8 +754,8 @@ contains
     real(RK),dimension(:,:,:,:),intent(in)   :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     write(*,'(A)') '<octave>'
     write(*,*)     '# ',trim(var(name)),' (',shape(MM),') in fortran order'
@@ -1270,5 +1270,5 @@ select case(M_mod_nc)
     call dump_real_buf(iou, buf, size(buf))
   end subroutine dump_real_3D
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module debug

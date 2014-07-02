@@ -23,19 +23,19 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module common_data_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
 
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   real(kind=r8_kind), parameter :: zero=0.0_r8_kind
-  !------------ public functions and subroutines ------------------
-  !================================================================
+  !------------ public functions and subroutines ---------------------
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   !------------ Subroutines -----------------------------------------

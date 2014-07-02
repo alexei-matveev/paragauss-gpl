@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module orbitalstore_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains the orbitals calculated on grid
   !           &MAIN_OPTIONS :
@@ -45,18 +45,18 @@ module orbitalstore_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module            ! type specification parameters
   use options_module, only : options_orbitals_in_memory, &
@@ -198,9 +198,9 @@ module orbitalstore_module
      ! only the upper half of the hessian matrix is stored
   end type core_orbital_nuc_sec_der_type
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type orbitalstore_type
      type(orbital_type),                  pointer :: orbs_ob(:)
      type(orbital_type)                           :: fcts
@@ -243,7 +243,7 @@ module orbitalstore_module
   real(r8_kind), parameter :: cutoff=1.0E-10_r8_kind ! see how much of storage is nonzero
   integer(i4_kind)         :: counts(2,OS_N_OPTIONS)
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind) :: orbitalstore_mem
   logical, public, protected :: orbitalstore_initialized = .false., &
                       stored_orbs_ob         , &
@@ -257,16 +257,16 @@ module orbitalstore_module
                       stored_phi_ob          , &
                       stored_nuc_sec_der
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: orbitalstore_setup,    orbitalstore_shutdown, &
             orbitalstore_allocate, orbitalstore_free,  &
             orbitalstore_rw
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type(orbitalstore_type), private, allocatable    :: orbitalstore(:)
 !!$  type(chanel_type),                     parameter :: chanel = (1,2,3,4,5,6,7,8)
 !!$  character(len=15),       dimension(8), parameter :: ch_name = (/&
@@ -279,7 +279,7 @@ module orbitalstore_module
 !!$                                                      "phi_ob         ",&
 !!$                                                      "orbs_spinor_ob "/)
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   integer(kind=i4_kind) :: vec_len
   integer(kind=i4_kind) :: &
        N_grid_blocks,         &
@@ -294,7 +294,7 @@ module orbitalstore_module
        grid_block_orbs_spinor_ob, &
        grid_block_spinor_grads
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -307,11 +307,11 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(in) :: vector_length
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),dimension(:,:),pointer :: grdpts
     real(kind=r8_kind),dimension(:),  pointer :: grdwts
     integer(kind=i4_kind) :: alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if(.not.orbitalstore_initialized) then
        vec_len = vector_length
        ! simply to avoid writting new function in "grid_module"
@@ -369,9 +369,9 @@ contains
     use error_module, only: MyID
     implicit none
     !------------ Declaration of formal parameters ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if( .not. orbitalstore_initialized ) RETURN
 
@@ -412,13 +412,13 @@ contains
     type(orbital_gradient_type),                  optional :: fcts_grads
     integer(kind=i4_kind),            intent(in), optional :: fcts_dim
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),  parameter            :: zero = 0.0_r8_kind
     integer(kind=i4_kind)                     :: i_block, i_ir, i_unique, i_l, &
                                                  n_orbitals, alloc_stat
     logical                                   :: first_block
     integer(kind=i4_kind)                     :: mem
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     DPRINT 'orbstore_alloc: initialized=', orbitalstore_initialized,' n_b=', N_grid_blocks
 
     if( present(orbs_ob)        ) using(OS_ORBS_OB)        = .true.
@@ -697,10 +697,10 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_block, i_ir, i_unique,alloc_stat
     integer(kind=i4_kind) :: mem
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if( options_orbitals_in_memory() ) then
        grid_blocks : do i_block = 1,N_grid_blocks
@@ -878,8 +878,8 @@ contains
     type(orbital_spin_type),             pointer, optional :: phi_ob(:)         !
     type(spinor_type),                   pointer, optional :: orbs_spinor_ob(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
     !        CLEAN ORBITALS BEFORE READING FROM FILE !!!!!!!
 
     if( present(orbs_ob)        )   then
@@ -977,5 +977,5 @@ contains
   end subroutine orbitalstore_rw
   !****************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module orbitalstore_module

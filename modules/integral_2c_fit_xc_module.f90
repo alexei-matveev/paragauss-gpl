@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  integral_2c_fit_xc_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains all routines necessary to perform
   !           the two center fitfct integrals:
@@ -38,11 +38,11 @@ module  integral_2c_fit_xc_module
   !  References: ...
   !  Author: FN
   !  Date: 8/96
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing) 
   ! Author:      Uwe Birkenheuer
   ! Date:        8/98
@@ -55,7 +55,7 @@ module  integral_2c_fit_xc_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   use type_module ! type specification parameters
   use symmetry_data_module, only : get_totalsymmetric_irrep
   use unique_atom_module
@@ -71,14 +71,14 @@ module  integral_2c_fit_xc_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
-  !------------ public functions and subroutines ------------------
+  !== Interrupt end of public interface of module ====================
+  !------------ public functions and subroutines ---------------------
   public xc_overlap
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   ! constants
   real(kind=r8_kind),parameter    :: expmax=50.0_r8_kind
   real(kind=r8_kind),parameter    :: pi=3.14159265358979324_r8_kind
@@ -97,8 +97,8 @@ module  integral_2c_fit_xc_module
   integer(kind=i4_kind)           :: num,i_ir
   character(len=5)                :: flag ! "xc_xc", "xc_ch", or "ch_xc"
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -111,9 +111,9 @@ contains
     implicit none
     !------------ Declaration of formal parameter ----------------
     character(len=5) :: int_type ! "xc_xc", "xc_ch", or "ch_xc"
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)     :: la,lb,na,nb
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     select case (quadrupel%l1)
     case (-1)
@@ -756,7 +756,7 @@ contains
     real(kind=r8_kind),allocatable   :: fit_int(:,:,:,:)
     integer(kind=i4_kind)            :: eq_a,eq_b,n_equal_a,n_equal_b, &
          alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call start_timer(timer_int_prim_2cff(integralpar_i_int_part))
 

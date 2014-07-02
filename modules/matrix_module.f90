@@ -22,26 +22,26 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module matrix_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use matrix_types
   use matrix_check
@@ -54,10 +54,10 @@ module matrix_module
 
   save
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   ! from matrix_types:
   public :: rmatrix     ! real matrix
@@ -65,7 +65,7 @@ module matrix_module
   public :: rdmatrix    ! real diagonal matrix
   public :: chmatrix    ! complex hermitean matrix
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
 
   ! from matrix_types
@@ -102,5 +102,5 @@ module matrix_module
   ! from matrix_linsolve
   public :: linsolve
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module matrix_module

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module punchfile
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Creates  GAMESS-style  punchfiles.   Files  in  this  format  are
   !  understood by CCP1 GUI, which uses VTK for visualizing molecules,
@@ -44,18 +44,18 @@ module punchfile
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module, only: &
        IK=>i4_kind, &
@@ -63,20 +63,20 @@ module punchfile
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
   interface pun_block_header
      module procedure pun_block_header_0
      module procedure pun_block_header_ind
      module procedure pun_block_header_att ! ( io, name, records, att, val )
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: pun_block_header
   public :: pun_title
   public :: pun_coordinates
@@ -87,16 +87,16 @@ module punchfile
   public :: pun_grid_data
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine pun_block_header_0( io, name, records )
@@ -282,5 +282,5 @@ contains
 111 FORMAT(F11.6)
   end subroutine pun_grid_data
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module punchfile

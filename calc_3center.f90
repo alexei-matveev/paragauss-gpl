@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
   subroutine calc_3center(na,la,nb,lb,equalb,equala,IMODE)
   ! Purpose : the calculation of 3-center integrals (nuclear,
   !           coulomb) for [na,la,nb,lb] qadrupel using factorized
@@ -41,9 +41,9 @@
   ! - symmetrize Ang over (c,Mc)
   ! - R_fit%J
   ! - R_fit%J * Ang(Ma,Mb,t)
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 #include "def.h"
     use type_module, only: i4_kind, r8_kind, i8_kind
     use calc_3center_module

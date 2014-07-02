@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module virtual_levels_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Routines for sending and receiving the 
   !           eigenvectors that correspond to virtual levels
@@ -47,11 +47,11 @@ module virtual_levels_module
   !  Author: UB
   !  Date: 7/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: MM
@@ -62,7 +62,7 @@ module virtual_levels_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 #include "def.h"
   use type_module ! type specification parameters
@@ -76,7 +76,7 @@ module virtual_levels_module
   implicit none
   private         ! by default, all names are private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 !------------ Declaration of constants and variables ------------
   public arrmat2, arrmat3
@@ -93,9 +93,9 @@ module virtual_levels_module
   public :: eigvec_vir_dealloc, print_viralloc
   public :: virtual_levels_bcast
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Subroutines ---------------------------------------
 contains

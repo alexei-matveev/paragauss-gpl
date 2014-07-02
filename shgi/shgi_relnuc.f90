@@ -22,29 +22,29 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module shgi_relnuc
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Nuclear attraction and its relativitstic correction terms.
   !
   ! Copyright (c) 2005-2010 Alexei Matveev
   ! Copyright (c) 2011 Alexey Shor
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only:&
        IK=>i4_kind, RK=>r8_kind ! type specification parameters
@@ -53,28 +53,28 @@ module shgi_relnuc
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: shgi_rel_nuc   !(z,x,nu,sr,so,RAD) -- does not need pre-computed ang part
   public :: shgi_rel_gr_nuc!(z,x,nu,sr,   RAD)
   public :: shgi_rel_sd_nuc!(z,x,nu,sr,   RAD)
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! ALL INTEGER CONSTANTS, LIKE GAX,GAY,GAZ ARE NOW IN
   !                     shgi_cntrl.f90
@@ -84,7 +84,7 @@ module shgi_relnuc
   !                     shgi_common.f90
   ! THIS HAS BEEN DONE TO SPLIT THIS FILE INTO PARTS LATER
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine shgi_rel_nuc(z,x,nu,sr,so,RAD)
@@ -818,5 +818,5 @@ contains
   end subroutine shgi_rel_sd_nuc
 #endif
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module shgi_relnuc

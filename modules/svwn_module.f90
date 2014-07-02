@@ -90,7 +90,7 @@ module svwn_module
   public svwn_vwn_calc, svwn_xalpha_calc
 
 !==============================================================================
-! End of public interface of module
+  ! End of public interface of module
 !==============================================================================
 
 !------------ Declaration of constants and variables --------------------------

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module reltrafo
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module implement relativistic SO-DKH trafo, for the
   !  SR counterpart see relgrads.f90
@@ -68,18 +68,18 @@ module reltrafo
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: Sonjoy Majumder
   ! Date:   23/03/03
   ! Description: BSOA
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 # include "def.h"
   use type_module, only:&
@@ -92,25 +92,25 @@ module reltrafo
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface p2_diag
      module procedure p2_diag_plain
      module procedure p2_diag_typed
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: rel_trafo ! only for SPOR
   public :: p2_diag ! called from hfc_module
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   logical,parameter  :: debug=.true.
 !!$  real(RK)           :: speed_of_light = 137.03604_RK
   real(RK),parameter :: au2ev          = 27.211658_RK
@@ -138,8 +138,8 @@ module reltrafo
   type(cmatrix), allocatable ::    V_coul(:) ! (n_irr)
   type(cmatrix), allocatable :: PVYP_coul(:) ! (n_irr)
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -150,7 +150,7 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     logical :: i_am_master
 
@@ -1151,5 +1151,5 @@ contains
 !!$    call disp("IMAGE",V%im)
   end subroutine do_build_F
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module reltrafo

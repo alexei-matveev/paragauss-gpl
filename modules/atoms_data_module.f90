@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module atoms_data_module
 !
 ! Author: AS
@@ -42,7 +42,7 @@ module atoms_data_module
 ! Date:   ...
 ! Description: ...
 !
-!===============================================================
+!=====================================================================
 # include "def.h"
   use type_module ! type specification parameters
   implicit none

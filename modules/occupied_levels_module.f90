@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module occupied_levels_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Routines for sending and receiving the
   !           eigenvectors that correspond to occupied levels
@@ -55,11 +55,11 @@ module occupied_levels_module
   !  Author: MS,FN
   !  Date: 1/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: MS
   ! Date:   3/97
@@ -96,7 +96,7 @@ module occupied_levels_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module ! type specification parameters
@@ -105,7 +105,7 @@ module occupied_levels_module
   implicit none
   private         ! by default, all names are private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 !------------ Declaration of constants and variables ------------
   public arrmat2,arrmat3
@@ -137,9 +137,9 @@ module occupied_levels_module
   public :: sndrcv_eigvec_occ
   public :: update_eigvec_occ!(), to be executed in parallel context
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Subroutines ---------------------------------------
 contains
@@ -158,10 +158,10 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i, m
     integer(i4_kind) :: rank
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     rank = comm_rank()
 
@@ -270,13 +270,13 @@ contains
     integer(kind=i4_kind), intent( in  ) :: n_occo(:,:), n_occo_core(:,:)
     type(sym),             intent( in  ) :: ssym
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: alloc_stat
     integer(kind=i4_kind)                :: n_irrep
     integer(kind=i4_kind), allocatable   :: dim_irrep(:)
     integer(kind=i4_kind)                :: i, n
     integer(kind=i4_kind), allocatable   :: eigvec_occ_dim(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if (options_spin_orbit) then
        !
        ! SPIN ORBIT

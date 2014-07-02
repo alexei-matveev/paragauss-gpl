@@ -23,13 +23,13 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module molmech_msgtag_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
 
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   !nteger(i4_kind), public, parameter :: msgtag_start_molmech     = 2000
   integer(i4_kind), public, parameter :: msgtag_mm_initslaves     = 1000
@@ -40,11 +40,11 @@ module molmech_msgtag_module
   integer(i4_kind), public, parameter :: msgtag_mm_calc_start     = 1005
   integer(i4_kind), public, parameter :: msgtag_mm_collect_gh     = 1006
   integer(i4_kind), public, parameter :: msgtag_mm_shutdown       = 1007
-  !------------ public functions and subroutines ------------------
-  !================================================================
+  !------------ public functions and subroutines ---------------------
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 end module molmech_msgtag_module

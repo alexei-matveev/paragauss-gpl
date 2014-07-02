@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 subroutine ss_calculate_grads(i_ea1,i_ea2,imode)
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: calculate integrals for gradients for 
   !           orbitals with both angular momenta = 0.
@@ -40,21 +40,21 @@ subroutine ss_calculate_grads(i_ea1,i_ea2,imode)
   !  Author: FN
   !  Date: ...
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Author: AH
   ! Date:   4/99
   ! Description: gradients for pseudopotentials has 
   !              been added
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 #include "def.h"
   use type_module ! type specification parameters
   use unique_atom_module, noname=>pseudopot_present
@@ -106,15 +106,15 @@ subroutine ss_calculate_grads(i_ea1,i_ea2,imode)
   implicit none
 
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of formal parameters ------------------
+  !------------ Declaration of formal parameters ---------------------
   integer(kind=i4_kind),intent(in)  :: i_ea1,i_ea2
   integer(kind=i8_kind),intent(in)  :: imode ! for control
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !..............................................................................
   ! << OUTPUT ARRAYS >>
@@ -285,7 +285,7 @@ subroutine ss_calculate_grads(i_ea1,i_ea2,imode)
   real(kind=r8_kind)    :: arg,zc
   real(kind=r8_kind) :: zcc ! core charge
   logical :: check_ab,check_bc,check_ac,do_rotation
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !------------ Executable code -----------------------------------
 
   pseudopot_present = IAND(imode,IPSEU) .ne. 0

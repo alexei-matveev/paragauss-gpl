@@ -22,13 +22,13 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  fit_coeff_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !-------------- Module specification ---------------------------
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains the following data and setup routines
   !           connected with them:
@@ -76,12 +76,12 @@ module  fit_coeff_module
   !  Author: FN
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: TB
@@ -136,9 +136,9 @@ module  fit_coeff_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use constants
@@ -154,7 +154,7 @@ module  fit_coeff_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   ! ----------- Declaration of Types ----------------------------
   type, public :: fit
@@ -251,7 +251,7 @@ module  fit_coeff_module
   ! starting index of the next UAxL block
   public :: fit_coeff_ff_map
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: get_fit
   public :: fit_coeff_n_ch
   public :: fit_coeff_n_s
@@ -284,14 +284,14 @@ module  fit_coeff_module
   public :: fit_coeff_bcast!(), do not confuse with fit_coeff_module_bcast
   public :: fit_coeff_setup!()
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   type(fit)                      :: n_fit
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function ff_charge(L,alpha) result(charge)
@@ -362,7 +362,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     type(fit),intent(out)      :: fit_dummy
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     fit_dummy = n_fit ! copy all fields, FIXME: if ever pointers
   end subroutine get_fit
@@ -655,7 +655,7 @@ contains
     integer(kind=i4_kind) :: alloc_stat, n_spin
     logical               :: exchange_fit, model_density, extended_mda
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin        = options_n_spin()
     exchange_fit  = options_xcmode() == xcmode_exchange_fit
     model_density = options_xcmode() == xcmode_model_density
@@ -756,7 +756,7 @@ contains
     logical  :: reset, spin_required, exchange_fit
     integer  :: status
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_spin = options_n_spin()
     exchange_fit = options_xcmode() == xcmode_exchange_fit
@@ -962,7 +962,7 @@ contains
     ! must correspond to arrays "yes" and "no" from fit_coeff_store:
     real(r8_kind), parameter :: yes = 1.0_r8_kind, no = 0.0_r8_kind
     logical               :: valid_saved_scfstate
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_spin = options_n_spin()
     exchange_fit = options_xcmode() == xcmode_exchange_fit
@@ -1238,12 +1238,12 @@ contains
          orbitalprojection_globcontr_ch, &
          orbitalprojection_globcontr_xc
     use options_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: na,i_l,l_help,start,alloc_stat,i,&
          n_spin,i_spin,counter,i_glob,n_contributing,i_cont
     logical                :: spin_coeff_required
     logical,allocatable    :: mask_ch(:),mask_xc(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin = options_n_spin()
     spin_coeff_required = ( options_xcmode() == xcmode_model_density .or. &
                             options_xcmode() == xcmode_extended_mda  ) &
@@ -2061,7 +2061,7 @@ contains
     integer(kind=i4_kind) :: alloc_stat, n_spin
     logical               :: exchange_fit, model_density, extended_mda
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin        = options_n_spin()
     exchange_fit  = options_xcmode() == xcmode_exchange_fit
     model_density = options_xcmode() == xcmode_model_density
@@ -2167,5 +2167,5 @@ contains
 
   end subroutine fit_coeff_set_ch
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module fit_coeff_module

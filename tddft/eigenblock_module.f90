@@ -22,27 +22,27 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  eigenblock_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Author: SB
   ! Date: 07/2005
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   USE type_module ! type specification parameters
   USE iounitadmin_module 
@@ -53,19 +53,19 @@ MODULE  eigenblock_module
   IMPLICIT NONE
   SAVE            ! save all variables defined in this module
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   PUBLIC eigenblock_mult
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
 
   SUBROUTINE eigenblock_mult(N, K, A, D)
@@ -82,7 +82,7 @@ CONTAINS
     REAL   (KIND=r8_kind),INTENT(in   )  :: A(:)
     REAL   (KIND=r8_kind),INTENT(inout)  :: D(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     REAL   (KIND=r8_kind), ALLOCATABLE :: A_2d_up(:,:), A_2d_dn(:,:)
     REAL   (KIND=r8_kind), ALLOCATABLE :: aD(:,:)
     REAL   (KIND=r8_kind), ALLOCATABLE :: D_2d(:,:), KERN(:,:)
@@ -392,7 +392,7 @@ CONTAINS
     !------------ Declaration of formal parameters ---------------
     INTEGER(KIND=i4_kind),INTENT(INOUT) :: iteration_cycle
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !------------ Executable code -----------------------------------
 
     ! increment number of iterations
@@ -407,5 +407,5 @@ CONTAINS
   END SUBROUTINE eigenblock_showprogress
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE eigenblock_module

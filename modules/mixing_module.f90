@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module mixing_module
 !-------------- Module specification ---------------------------
 !
@@ -126,9 +126,9 @@ module mixing_module
   public :: mixing_beta_xc
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ Default values for input parameters -------------
   real(kind=r8_kind) :: df_chmix = 0.03_r8_kind, &
@@ -762,7 +762,7 @@ contains
     !** End of interface ***************************************
     !------------ Declaration of formal parameters ---------------
     real(kind=r8_kind) :: b
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if (pv_initialized .and. discard_init) then
 !:UB[ added
        coeff_proj = coeff_proj_new
@@ -970,7 +970,7 @@ contains
     type(readwriteblocked_tapehandle), optional, intent(inout) :: th
     integer(kind=i4_kind), optional, intent(in) :: mode
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: iter_ch, iter_xc, n_spin
     real(kind=r8_kind) :: yes(1) = (/1.0_r8_kind/), no(1) = (/0.0_r8_kind/)
     logical :: spin_coeff_also
@@ -982,7 +982,7 @@ contains
     logical  :: reset
     integer  :: status
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin = options_n_spin()
     iter_ch = loop
     iter_xc = loop - 1 ! see call of mixing_xc in build_xcfit
@@ -1256,14 +1256,14 @@ contains
     integer(kind=i4_kind), intent(out) :: loop
     type(readwriteblocked_tapehandle), intent(inout) :: th
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: iter_ch, iter_xc, n_spin, n_xc_stored
     real(kind=r8_kind)    :: dummy(1), nxc(1), zero = 0.0_r8_kind, &
                              dyn_mix(1), spin_sep(1), exch_dyn(1), spin_pol(1)
     logical               :: spin_coeff_also, exchange_fit, dynamic_xc_mixing
     integer               :: status
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin = options_n_spin()
     exchange_fit = options_xcmode() == xcmode_exchange_fit
     spin_coeff_also = n_spin > 1 .and. &

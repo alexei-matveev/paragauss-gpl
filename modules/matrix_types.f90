@@ -22,26 +22,26 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module matrix_types
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module, only:&
        & IK => i4_kind,&
@@ -52,10 +52,10 @@ module matrix_types
 
   save
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
 ! type, public :: rmatrix
 !    real(RK), allocatable :: m(:, :) ! m(n1, n2)
@@ -77,7 +77,7 @@ module matrix_types
      real(RK), allocatable :: im(:) ! im(n*(n+1)/2)
   end type chmatrix
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   !
   ! INTERMEDIATE  REPRESENTATION OF MATRICES:
   !
@@ -92,7 +92,7 @@ module matrix_types
   !                               real diagonal matrix!!!)
   ! complex hermitean matrix  <-> real(2, n*(n+1)/2)
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   ! added sparse matrices:
 
   type, public :: SparseRMatrix
@@ -115,8 +115,8 @@ module matrix_types
 
   public :: init!(verb, deb)
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine init(verb, deb)
@@ -128,5 +128,5 @@ contains
     if(present(deb))  debug   = deb
   end subroutine init
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module matrix_types

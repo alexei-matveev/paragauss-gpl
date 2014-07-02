@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module post_scf_module
   !
   !  Purpose: main module for calculation of the xc-energy
@@ -46,9 +46,9 @@ module post_scf_module
   !  Date: 9/96
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: MS
   ! Date:   3/97
@@ -78,8 +78,8 @@ module post_scf_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 ! define FPP_TIMERS 3
 # include "def.h"
   USE_MPI, only: MPI_WTIME
@@ -135,7 +135,7 @@ module post_scf_module
   real(r8_kind), parameter :: ZERO = 0.0_r8_kind
   real(r8_kind), parameter :: rho_cutoff=1.0E-08_r8_kind
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public ::&
        & post_scf_main, &
        & post_scf_deallocate_grad_xc
@@ -145,9 +145,9 @@ module post_scf_module
 #endif
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 !..............................................................................
 ! << OUTPUT ARRAYS >>

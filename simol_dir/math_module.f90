@@ -22,30 +22,30 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module math_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: module contains subroutines for various 
   !           mathematical tasks
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
   use type_module ! type specification parameters
   implicit none
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public cross_product,abs_value,rotmat,invert_matrix, &
        dot_prod,binomial_coeff,schmidt,round,eigvec_sign_check,&
        print_matrix,equal_vector,ortho2
   !     print_matrix,ortho2
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
   real(kind=r8_kind),parameter,public :: one=1.0_r8_kind,zero=0.0_r8_kind, &
@@ -807,7 +807,7 @@ contains
 
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 subroutine error_handler(message)
   ! Purpose: substitute for the larger, pvm-infected subroutine
   !          'error_handler' used by ParaGAU.

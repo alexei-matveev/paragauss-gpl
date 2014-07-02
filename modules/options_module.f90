@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module options_module
   !-------------- Module specification ---------------------------
   !
@@ -70,11 +70,11 @@ module options_module
   !  Author: FN / TB
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: TB
@@ -145,10 +145,10 @@ module options_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 
 # include "def.h"
   use type_module ! type specification parameters
@@ -158,10 +158,10 @@ module options_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public ::  option!(op) == true/false
   public :: ioption!(op) == integer value
@@ -209,9 +209,9 @@ module options_module
   integer(kind=i4_kind), public ::  update_hessian_iteration, &
                                     df_update_hessian_iteration = 0
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   integer, parameter,    PRIVATE :: wlen=16
   character(wlen),       PRIVATE :: relativistic_keywords = 'false'
@@ -331,7 +331,7 @@ module options_module
        save_scfstate, read_scfstate, save_fitcoeff, read_fitcoeff, &
        save_interval, read_oldlcgto, reset_scfcycle, save_as_fragment, save_densmatrix
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   recursive function option(op) result(val)
@@ -450,13 +450,13 @@ contains
          namelist_tasks_used, operations_task
     use iounitadmin_module, only: write_to_output_units,write_to_trace_unit
     use strings, only: tolower, takeword
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: unit,status
     external error_handler
     logical                :: force_recover
     character(len=wlen)    :: word
     integer(i4_kind)       :: pos
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( input_line_is_namelist("MAIN_OPTIONS") ) then
        call input_read_to_intermediate
@@ -1126,7 +1126,7 @@ contains
     use xpack, only: pck
     integer(kind=i4_kind)   :: info
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call commpack(numeric_exch,info)
     if(info.ne.0) call error_handler &
          ("OPTIONS_DATA_PACK : packing failed")
@@ -1221,7 +1221,7 @@ contains
     use xpack, only: upck
     integer(kind=i4_kind)    :: info
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call communpack(numeric_exch,info)
     if(info.ne.0) call error_handler &
          ("OPTIONS_DATA_UNPACK : unpacking failed")

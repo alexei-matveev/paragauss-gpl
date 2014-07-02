@@ -24,7 +24,7 @@
 !
 module tasks_main_options_module
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use inp_out_module
   use common_data_module
@@ -34,7 +34,7 @@ module tasks_main_options_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   logical, public :: calc_energy, calc_gradients, calc_optimization, &
        calc_hessian, calc_ppc_array, solvent
@@ -59,13 +59,13 @@ module tasks_main_options_module
   real(kind=r8_kind), public :: rc_inc
 
   integer(i4_kind), public :: qmmm
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_topic, write_topic_to_output, read_tasks, &
        write_tasks_to_output,read_main_options,write_options_to_output, &
        send_receive_tasks_and_options
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   logical, parameter :: df_calc_energy = .false.

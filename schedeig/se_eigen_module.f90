@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module se_eigen_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:  Computes  all eigenvalues  and  -vectors  of the  given
   !  matrices from 'ham_tot' according  to the scheduling given in the
@@ -42,18 +42,18 @@ module se_eigen_module
   !  Date: 04/2010
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 1
 # include "def.h"
   use type_module ! type specification parameters
@@ -63,21 +63,21 @@ module se_eigen_module
 
   implicit none
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: se_eigen_compeigs
   public :: se_eigen_close!()
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
   !------------ Declaration of interface blocks --------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind), parameter :: BLOCKSIZE = 64 ! ScaLAPACK block size
 
   ! MPI tags used in this module:
@@ -112,8 +112,8 @@ module se_eigen_module
   !
   type(taskType), allocatable, private :: oldSchedule(:)
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 

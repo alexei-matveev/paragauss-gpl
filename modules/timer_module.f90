@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  timer_module
 !---------------------------------------------------------------
 !
@@ -248,9 +248,9 @@ public timer_setup, timer_print_summary, timer_print_scfcycle, &
 public :: timer_gather_slave_int_timing!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of private constants and variables ----
 type(timer_type), private, dimension(n_int_parts) :: &

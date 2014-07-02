@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  int_data_dipole_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This is the module containing the data used when
   !           calculating the 2 center orbital and three center
@@ -64,19 +64,19 @@ module  int_data_dipole_module
   !  Date: 5/96
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !== Interrupt end of public interface of module =================
+  !-------------------------------------------------------------------
+  !== Interrupt end of public interface of module ====================
   !------------ all modules used are public !! ------------------
 #include <def.h>
 
@@ -90,10 +90,10 @@ module  int_data_dipole_module
   use options_module, only: options_spin_orbit, options_kinematic_factors
   use iounitadmin_module
 
-  !== Interrupt of public interface of module =====================
+  !== Interrupt of public interface of module ========================
   implicit none
   save ! save all variables defined in this module
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of types ----------------------------
 
@@ -182,9 +182,9 @@ module  int_data_dipole_module
   !------------ public functions and subroutines ----------------
   public int_data_dipole_setup, int_data_dipole_shutdown
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Subroutines -------------------------------------
 contains

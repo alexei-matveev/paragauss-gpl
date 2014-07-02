@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module efp_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module efp_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
   use type_module ! type specification parameters
   use efp_data_module
@@ -63,12 +63,12 @@ module efp_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   public efp, no_fixed, qm_fixed, efp_fixed
   integer(i4_kind), public :: n_efp
   logical, public :: print_id, do_pol
@@ -80,9 +80,9 @@ module efp_module
      real(r8_kind) :: coor(3,3)
   end type EFP_atoms
   type(EFP_atoms), public, allocatable :: efp_H2O_atoms(:)
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: efp_read_input
   public :: efp_write_input
   public :: def_efp_arrays
@@ -102,14 +102,14 @@ module efp_module
   public :: read_gx_qm1
 #endif
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind) :: n_efp_uniq
   real(r8_kind), allocatable :: r_uniq(:,:)
 
@@ -199,8 +199,8 @@ module efp_module
        print_grad_contrib,print_efp_centers,print_id_cycles, &
        print_grad_centers,print_efp_grad,print_as_in_input,print_energy_contrib
   namelist/efp_water/ name1,coor1,name2,coor2,name3,coor3
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -217,9 +217,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i, j, unit, status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     dftwater_efp=.false.
     angs=.false.
@@ -355,9 +355,9 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(in) :: iounit
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i,j,k
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call start("EFP_DATA","EFP_WRITE_INPUT",iounit,operations_echo_input_level)
     call intg("N_EFP            ",n_efp            ,df_n_efp      )
@@ -405,7 +405,7 @@ contains
     use comm,                only: comm_bcast                                  &
                                  , comm_rank
     use operations_module,   only: operations_solvation_effect
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind)   :: status
     !------------ Executable code ----------------------------------------------
     !
@@ -435,10 +435,10 @@ contains
     !------------ Modules used ------------------- ---------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: n_mp,n_lmo,n_rp_q,n_rp_f
     integer(i4_kind) :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(dftwater_efp) then
        n_mp=(n_nuc+n_emp)*n_efp
@@ -502,9 +502,9 @@ contains
     !------------ Modules used ------------------- ---------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     deallocate(num,stat=status)
     ASSERT(status==0)
@@ -555,12 +555,12 @@ contains
     !------------ Modules used -----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: OH,HOH
     real(r8_kind) :: r(3,3),r12(3),r13(3),d12,d13,cos_a,angle
     real(r8_kind) :: rm(3,3),zmat(3),rq(3),r1q(3),d1q
     integer(i4_kind) :: i,j,k
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     OH=get_dft_OH(); HOH=get_dft_HOH()
 
@@ -623,9 +623,9 @@ contains
     !------------ Declaration of formal parameters ---------------
     real(r8_kind) :: length
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: r1(3),r2(3),r3(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     r1=dft_water_nuc(1)%coor
     r2=dft_water_nuc(2)%coor
@@ -643,9 +643,9 @@ contains
     !------------ Declaration of formal parameters ---------------
     real(r8_kind) :: angle
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: r1(3),r2(3),r3(3),d12,d13,cos_a
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     r1=dft_water_nuc(1)%coor
     r2=dft_water_nuc(2)%coor
@@ -665,12 +665,12 @@ contains
     !------------ Modules used -----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: d16,d171,d172,d191,d192,d1n,dnm,d1l
     real(r8_kind) :: r1(3),r2(3),r3(3)
     real(r8_kind) :: p1(3),p2(3),p3(3),p4(3),p5(3)
     real(r8_kind) :: r1n(3),rnm(3),r1l(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     r1=dft_water_nuc(1)%coor
     r2=dft_water_nuc(2)%coor
@@ -708,11 +708,11 @@ contains
     real(r8_kind) :: ra(3),rb(3,3)
     real(r8_kind) :: internals(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: bond,angle,dihedral
     real(r8_kind) :: cos_a,sin_a,cos_d,sin_d
     real(r8_kind) :: r21(3),d21,r32(3),d32,r1(3),d1,r2(3),d2,r3(3),r4(3),d4
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     bond=internals(1)
     angle=internals(2)
@@ -753,8 +753,8 @@ contains
     real(r8_kind) :: vector_product(3)
     real(r8_kind) :: v1(3),v2(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     vector_product(1)=v1(2)*v2(3)-v1(3)*v2(2)
     vector_product(2)=v1(3)*v2(1)-v1(1)*v2(3)
@@ -769,13 +769,13 @@ contains
     use operations_module, only: operations_geo_opt, operations_read_gx
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,k,l,m,status,n_points
     real(r8_kind) :: r(3,3),rmat1(3,3),rmat2(3,3),rmat3(3,3),rmat_3(3,3),rbuf(3)
     real(r8_kind), allocatable :: rpf(:,:), rcf(:,:)
     real(r8_kind) :: dip(3,n_emp),quad(3,3,n_emp),oct(3,3,3,n_emp),pol(3,3,n_pol)
     real(r8_kind) :: qa(3,3),oc(3,3,3),summ(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     water: if(dftwater_efp) then
        call struct_H2O_param()
@@ -950,13 +950,13 @@ contains
     use operations_module, only: operations_geo_opt, operations_read_gx
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,k,l,m,status,n_points
     real(r8_kind) :: r(3,3),rmat1(3,3),rmat2(3,3),rmat3(3,3),rmat_3(3,3),rbuf(3)
     real(r8_kind), allocatable :: rpf(:,:), rcf(:,:)
     real(r8_kind) :: dip(3,n_emp),quad(3,3,n_emp),oct(3,3,3,n_emp),pol(3,3,n_pol)
     real(r8_kind) :: qa(3,3),oc(3,3,3),summ(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     water: if(dftwater_efp) then
        call struct_H2O_param()
@@ -1132,9 +1132,9 @@ contains
     use iounitadmin_module, only: output_unit
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,n,k
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     write(output_unit,'(a50)') '=========== EFFECTIVE FRAGMENTS (AU) ============'
     write(output_unit,'(a1)') ''
@@ -1178,12 +1178,12 @@ contains
     use operations_module, only: operations_geo_opt, operations_read_gx
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: iuniq
     real(r8_kind) :: at_num,coor(3)
     character(len=5) ::  gx_buff
     integer(i4_kind) :: i,counter_equal
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     inquire(file=inpfile('gxfile'), exist=ex_gx)
     if((operations_geo_opt .or. operations_read_gx) .and. ex_gx) then
@@ -1234,12 +1234,12 @@ contains
     use operations_module, only: operations_geo_opt, operations_read_gx
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: iuniq
     real(r8_kind) :: at_num,coor(3)
     character(len=5) ::  gx_buff
     integer(i4_kind) :: i,counter_equal
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     inquire(file=inpfile('gxfile1'), exist=ex_gx)
     if((operations_geo_opt .or. operations_read_gx) .and. ex_gx) then
@@ -1287,12 +1287,12 @@ contains
     use iounitadmin_module, only: returnclose_iounit
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: iuniq
     real(r8_kind) :: at_num,coor(3)
     character(len=5) ::  gx_buff
     integer(i4_kind) :: i,j,k,l,m
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(ex_gx) then
     do i=1,n_efp
@@ -1338,12 +1338,12 @@ contains
     use iounitadmin_module, only: returnclose_iounit
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: iuniq
     real(r8_kind) :: at_num,coor(3)
     character(len=5) ::  gx_buff
     integer(i4_kind) :: i,j,k,l,m
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(ex_gx) then
     do i=1,n_efp
@@ -1390,10 +1390,10 @@ contains
     real(r8_kind), intent(in)  :: r(3,3)
     real(r8_kind), intent(out) :: rotm(3,3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: r12(3),r13(3),d12,d13
     real(r8_kind) :: e1(3),e2(3),e3(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     r12=r(:,2)-r(:,1); r13=r(:,3)-r(:,1)
     d12=sqrt(dot_product(r12,r12)); d13=sqrt(dot_product(r13,r13))
@@ -1417,10 +1417,10 @@ contains
     real(r8_kind), intent(in) :: coor(:,:),dp(:,:),qp(:,:,:),op(:,:,:,:),pt(:,:,:)
     integer(i4_kind), intent(in) :: i_efp
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,k,n
     real(r8_kind) :: rmass(3),frag_mass
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !!$print*,'FRAGMENT :',i_efp
     j=0
@@ -1543,11 +1543,11 @@ contains
     use unique_atom_module, only: N_unique_atoms
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: n_points,i,i1,i2,status,k1,k2
     integer(i4_kind), allocatable :: frag_group(:),rc_type(:)
     integer(i4_kind), allocatable :: i_group(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(i_group(n_efp*10),stat=status)
     ASSERT(status==0)
@@ -1703,8 +1703,8 @@ contains
     use induced_dipoles_module, only: N_ipd
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call fill_surf_points(lmo,N_ipd)
     call surf_points_grad_information()
@@ -1719,8 +1719,8 @@ contains
     use induced_dipoles_module, only: N_ipd
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call fill_surf_points(lmo,N_ipd)
 
@@ -1744,12 +1744,12 @@ contains
     use efp_solv_grad_module, only: gradient_mpole_solv_cartesian,torque_mpole_solv_cartesian
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,k,n,n1,n2,n3,n4,n5,status,n_points_total,n_points
     type(arrmat2),allocatable :: grad_efp_center_cart(:)
     type(arrmat2),allocatable :: torque_efp_center(:)
     real(r8_kind) :: vect(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(n_efp > 0) then
        allocate(grad_efp_cart_total(n_efp,3),torque_efp_cart_total(n_efp,3),stat=status)
@@ -2032,13 +2032,13 @@ contains
     integer(i4_kind), intent(in) :: i,j,i_efp
     real(r8_kind) :: deriv(3,3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: k,n
     real(r8_kind), parameter :: e1(3)=(/one,zero,zero/) 
     real(r8_kind), parameter :: e2(3)=(/zero,one,zero/) 
     real(r8_kind), parameter :: e3(3)=(/zero,zero,one/)
     real(r8_kind) :: r1(3),r2(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(j<=3)
     ASSERT(i<=n_water_centers)
@@ -2196,9 +2196,9 @@ contains
     !------------ Declaration of formal parameters ---------------
     real(r8_kind) :: max_grad
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
    max_grad =zero
 
@@ -2218,9 +2218,9 @@ contains
     use iounitadmin_module, only: output_unit
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,k,n,n5
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(print_efp_grad) then
        write(output_unit,'(/A)') 'EFP Cartesian gradients'
@@ -2268,14 +2268,14 @@ contains
     real(r8_kind), intent(in) :: energy
     type(arrmat2), optional, intent(in) :: grad_cart(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,k,l,status,n1,natoms,n_particls,l1
     real(r8_kind), allocatable :: at_num(:),coor(:,:)
     integer(i4_kind), allocatable :: iuniq(:),inum(:),zmat(:,:),numx(:,:)
     character(len=5) ::  gx_buff
 !!$    real(r8_kind) :: energy
     real(r8_kind) :: grad(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(at_num(gx_line-1),coor(3,gx_line-1),iuniq(gx_line-1),inum(gx_line-1), &
          zmat(3,gx_line-1),numx(3,gx_line-1),stat=status)
@@ -2457,10 +2457,10 @@ contains
                                                    ! Include translations and rotations
                                                    ! Size == 6*n_efp
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,l,k,m
     real(r8_kind) :: rotmat(3,3),r_tmp(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(size(x)==3*n_efp)
     ASSERT(size(ds)==6*n_efp)

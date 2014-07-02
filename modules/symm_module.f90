@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  symm_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: runs the symmetry part 
   !           on top of the modules group and efm, where
@@ -41,11 +41,11 @@ module  symm_module
   !  Date: 11/96
   !
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification 
   ! Author: AM
@@ -53,14 +53,14 @@ module  symm_module
   ! Description: symm_proj_symmadapt has been divided into several
   !              subs. Generator large_to_small has been added.
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only: &
@@ -102,9 +102,9 @@ module  symm_module
   !*********************************
 
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: &
        & symm_trafo_alloc,&
        & symm_proj_trafo_alloc,&
@@ -117,9 +117,9 @@ module  symm_module
        & symm_adapt_centers
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   interface load_salcs
      module procedure load_vsalcs_to_uatom
@@ -131,7 +131,7 @@ module  symm_module
      module procedure show_fine_c
   end interface
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   logical                          :: initialized = .false.
 
@@ -140,10 +140,10 @@ module  symm_module
 
   integer(IK)                      :: LMAX_ALL=0
   
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   real(RK),parameter :: epsln   = 1.0E-10_rk
   logical, parameter :: verbose = .false.
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine symm_init(spin_orbit)
@@ -249,7 +249,7 @@ contains
     use iounitadmin_module
     use group_module
     use efm_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                      :: l
     ! counter
     integer(IK)                      :: l_max
@@ -259,7 +259,7 @@ contains
     integer(IK)                      :: status
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     l_max = max(9,LMAX_ALL)
 
@@ -291,7 +291,7 @@ contains
     use iounitadmin_module
     use group_module
     use efm_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                      :: l,s
     ! counter
     integer(IK)                      :: l_max
@@ -301,7 +301,7 @@ contains
     integer(IK)                      :: status
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! we need at least an angular momentum of 9 because we employ
     ! the angular momenta also for irrep labeling
@@ -343,7 +343,7 @@ contains
     use group_module
     use efm_decl
     use efm_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                      :: l,s
     ! angular momentum counter
 
@@ -573,7 +573,7 @@ contains
     !------------ Declaration of local constants  ----------------
     real(RK),parameter :: small = 1.e-10 
     ! very small value
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                            ::&
          & i,j,k,&
          & i_m,j_m,k_m,&
@@ -607,7 +607,7 @@ contains
     !------------ Declaration of subroutines used ----------------
     external error_handler
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     DPRINT 'sm/symm_symmadapt_alt: entered'
 
@@ -1712,7 +1712,7 @@ contains
     logical :: io
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! Slaves do not always have output_unit open:
     io = output_unit > 0 .and. .not. no_output_unit_output

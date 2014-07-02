@@ -176,7 +176,7 @@ type(arrmat2),pointer,public :: cpks_grad_xc(:)
  public cpks_matrices,cpksalloc_stat,cpks3c_type,print_cpksalloc
  type (cpks_matrices), public, allocatable :: cpks(:,:,:) ! (n_gr,n_irr,n_spin)
                        ! given for each grad proj and irr
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
  contains
 
    subroutine cpksalloc_stat()

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module vwnc
 !---------------------------------------------------------------
 !
@@ -108,9 +108,9 @@ public vwn_calc, vwn_resp_calc, xalpha_calc, xalpha_resp_calc,vwn_calcMDA,xalpha
 
 public :: vwn_ldac!(nv, ispin, n, Fc, dFdn, dFdndn)
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of constants and variables ----
   integer(kind=i4_kind),private :: vec_length

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  linalg_module
 !---------------------------------------------------------------
 !
@@ -83,15 +83,15 @@ MODULE  linalg_module
   IMPLICIT NONE
   SAVE            ! save all variables defined in this module
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
 !------------ public functions and subroutines ------------------
   PUBLIC invert_sym_matrix, matmatmul, matvecmul
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !----------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
@@ -115,7 +115,7 @@ CONTAINS
     !------------ Declaration of formal parameters ---------------
     REAL(KIND=r8_kind),INTENT(inout) :: A_matrix(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     ! -- Variables used as arguments for LAPACK subroutine
     CHARACTER                         :: uplo
     INTEGER(KIND=i4_kind)             :: info,ldA,lwork,N
@@ -212,7 +212,7 @@ CONTAINS
     CHARACTER(LEN=1),  INTENT(in   ),OPTIONAL :: trans_A, trans_B
     REAL(KIND=r8_kind),INTENT(in   ),OPTIONAL :: alpha,beta
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     ! -- Variables used as arguments for BLAS subroutine
     CHARACTER(LEN=1)                  :: transa, transb
     REAL(KIND=r8_kind)                :: alpha_in, beta_in
@@ -313,7 +313,7 @@ CONTAINS
     CHARACTER(LEN=1),  INTENT(in   ),OPTIONAL :: trans
     REAL(KIND=r8_kind),INTENT(in   ),OPTIONAL :: alpha,beta
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     ! -- Variables used as arguments for BLAS subroutine
     CHARACTER(LEN=1)                 :: trans_in
     REAL(KIND=r8_kind)               :: alpha_in, beta_in

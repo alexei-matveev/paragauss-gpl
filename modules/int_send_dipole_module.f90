@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  int_send_dipole_module
 !---------------------------------------------------------------
 !
@@ -104,9 +104,9 @@ private         ! by default, all names are private
 !------------ public functions and subroutines ------------------
 public int_send_dipole_setup, int_send_dipole_shutdown, &
        int_send_dipole_send, int_send_dipole_receive
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of private types ----
 
@@ -171,7 +171,7 @@ contains
     !** End of interface *****************************************
     implicit none
     integer(kind=i4_kind) :: n_quads
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: status, i_ua1, i_ua2, &
          i_l1, n_l2, i_meta, i_ir, i_ind1, i_exp1, i_l2, &
          n_ind2,i_ind2, n_exp2, n_records
@@ -183,7 +183,7 @@ contains
     integer,                            pointer :: metaindex(:)
     integer,                            pointer :: metaindex_p(:)
     logical           :: diagonal,diagonal_unique
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     DPRINT '###int_send_dipole_setup:ENTERED'
     ! fetch my hostindex from comm_module
     my_hostindex = comm_myindex()
@@ -518,7 +518,7 @@ contains
     type(unique_atom_partner_type),     pointer :: uap1
     type(index_ind1_exp1_ua2_type),     pointer :: ind1_exp1_ua2(:,:,:)
     type(index_ind1_exp1_ua2_type_p),   pointer :: ind1_exp1_ua2_p(:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! waiting for missing integrals
 
@@ -669,9 +669,9 @@ contains
     !------------ Modules used ----------------------------------
     use operations_module, only: operations_gtensor, operations_dipole, operations_hfc
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: info
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     DPRINT 'entered int_send_dipole_send ...'
     call start_timer(timer_int_send_2cob3c(integralpar_i_int_part))
    master: if ( comm_i_am_master() ) then
@@ -1707,12 +1707,12 @@ contains
     !** End of interface *****************************************
     use operations_module, only: operations_gtensor, operations_dipole, operations_hfc
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical :: diagonal, restart_timer
     integer(kind=i4_kind) :: n_c1, n_c2,n_exp1,n_exp2, info
     type(quadrupel_type) :: quadrupel
     type(unique_atom_type), pointer :: ua1, ua2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     DPRINT 'int_send_dipole_receive: ENTERED'
     if ( timer_int_idle_2cob3c(integralpar_i_int_part)%running ) then
        call stop_timer(timer_int_idle_2cob3c(integralpar_i_int_part))

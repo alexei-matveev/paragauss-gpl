@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module n_body_lists_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use inp_out_module
@@ -36,7 +36,7 @@ module n_body_lists_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   logical, public :: nb_lists_from_input
   integer(kind=i4_kind), public, allocatable :: N_total(:) !define the total possible 
@@ -76,13 +76,13 @@ module n_body_lists_module
   logical, public :: exclude_1_3
   logical, public :: exclude_1_4
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_nb_options, read_Nb_lists, resorting_Nb_lists, autobuilding_nb_lists, &
        build_2b_nonbonded_lists, shutdown_interacting_lists, write_nb_options, &
        send_receive_n_total
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   logical :: df_automatic_nb_lists=.false.

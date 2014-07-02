@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module operations_module
 !---------------------------------------------------------------
 !
@@ -122,9 +122,9 @@ public :: operations_read, operations_write
 public :: operations_bcast!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------- Definition of private default input values -------
 logical, private :: df_operations_symm              = .true. , &
@@ -272,13 +272,13 @@ contains
     use input_module
     use echo_input_module, only: echo_level_full, echo_level_short, &
          echo_level_default
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: status, unit
     character(len=32) :: namelist_name
     logical           :: ok
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! read input
     operations_qm_epe            = df_operations_qm_epe !!!!!!!!!!!!!!!!!AS
     operations_potential         = df_operations_potential !!!!!!!!!!!!!!!!AS
@@ -1145,11 +1145,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: commpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call commpack(operations_scf,info)
     if (info .ne. 0) call error_handler( &
          "operations_pack: operations_scf")
@@ -1268,11 +1268,11 @@ contains
     !------------ Modules used -----------------------------------
     use comm_module, only: communpack
     use echo_input_module, only : echo_level_full, echo_level_short
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call communpack(operations_scf,info)
     if (info .ne. 0) call error_handler( &
          "operations_unpack: operations_scf")

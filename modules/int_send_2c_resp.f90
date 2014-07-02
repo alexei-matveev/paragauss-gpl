@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  int_send_2c_resp
 !---------------------------------------------------------------
 ! 
@@ -71,9 +71,9 @@ private         ! by default, all names are private
 !------------ public functions and subroutines ------------------
 public int_send_2c_resp_save, int_send_2c_resp_rewrite
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Subroutines ---------------------------------------
 contains
@@ -88,13 +88,13 @@ contains
     integer(kind=i4_kind), intent(in) :: ua1, ua2, l1, l2
     real(kind=r8_kind),    intent(in) :: sa_2co_resp(:,:,:,:)
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle)          :: th_2c_resp
     integer(kind=i4_kind)  :: i_ir, ia, ib
     integer(kind=i4_kind)  :: n_ifa, n_ifb, count, ifa, ifb, n_ir
     integer(kind=i4_kind)  :: nia, nib, dim, status
     real(kind=r8_kind), allocatable            :: tmp_matrix(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     !! FIXME: if slave send to master, if not send to tape
 
@@ -342,7 +342,7 @@ contains
     character(len=4) :: ua1_char,ua2_char
     character(len=4) :: l1_char,l2_char
     character(len=4) :: ir_char
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     write (ua1_char,'(i4)') ua1
     write (ua2_char,'(i4)') ua2
@@ -374,5 +374,5 @@ contains
 
   end function fname
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module int_send_2c_resp

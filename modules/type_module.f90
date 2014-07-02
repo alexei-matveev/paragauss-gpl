@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module type_module
 !
 !  Purpose: Spezification of machine independent type parameters
@@ -88,8 +88,8 @@ integer, parameter :: i2_kind = selected_int_kind(4)
 ! integer with 1 byte, range 2 decimal digits
 integer, parameter :: i1_kind = selected_int_kind(2)
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 end module type_module

@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module machineparameters_module
 !---------------------------------------------------------------
 !
@@ -98,9 +98,9 @@ public :: machineparameters_read, machineparameters_write
 public :: machineparameters_bcast!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of constants and variables ----
 
@@ -124,11 +124,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use input_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: status, unit
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! read input
     machineparameters_veclen     = df_machineparameters_veclen
     machineparameters_ph_veclen  = -1
@@ -223,11 +223,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: commpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call commpack(machineparameters_veclen,info)
     if (info .ne. 0) call error_handler( &
          "machineparameters_pack: machineparameters_veclen")
@@ -253,11 +253,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: communpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call communpack(machineparameters_veclen,info)
     if (info .ne. 0) call error_handler( &
          "machineparameters_unpack: machineparameters_veclen")

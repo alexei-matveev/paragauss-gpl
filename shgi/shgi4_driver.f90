@@ -22,28 +22,28 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module shgi4_driver
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Driver for two-electron integrals. Unfinished, unused.
   !
   ! Copyright (c) 2010 Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 1
 # include "def.h"
   use type_module, only:&
@@ -51,10 +51,10 @@ module shgi4_driver
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   type :: array1 ! isomorph to arrmat in datatype.f90
     real(RK), allocatable :: m(:)
@@ -66,22 +66,22 @@ module shgi4_driver
 
   public :: array1, array2 ! for callers to prepare input
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: shgi4_direct
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! *** KEEP GLOBALS TO MINUMUM!
   ! *** USE PRIVATE SUBROUTINE VARIABLES WHERE POSSIBLE!
@@ -89,8 +89,8 @@ module shgi4_driver
   FPP_TIMER_DECL(tot)
   FPP_TIMER_DECL(erd)
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine shgi4_direct(ibasis, iposition, lvalues, exponents, contractions, positions)
@@ -500,5 +500,5 @@ contains
   end subroutine DIVMOD
 #endif
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module shgi4_driver

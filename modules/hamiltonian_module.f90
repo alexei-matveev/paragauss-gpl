@@ -22,13 +22,13 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module hamiltonian_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !-------------- Module specification ---------------------------
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Contains the 'three-center' parts of the
   !           hamiltonian : HAM_XC,EN_XC
@@ -57,10 +57,10 @@ module hamiltonian_module
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: TG
   ! Date:   10/96
@@ -90,8 +90,8 @@ module hamiltonian_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype, only: arrmat2, arrmat3 ! user defined types
@@ -104,7 +104,7 @@ module hamiltonian_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public constants and variables -----
   public :: arrmat3,arrmat2
@@ -120,7 +120,7 @@ module hamiltonian_module
   integer(kind=i4_kind),public :: lsft_allocstat(3)=0,diis_allocstat(3)=0
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: hamiltonian_setup!(ssym), allocate hamtiltonian
   public :: hamiltonian_shutdown!(), clean up the module
   public :: reset_ham, print_hamiltonian, &
@@ -128,13 +128,13 @@ module hamiltonian_module
   ! function read_ham_kin_nuc had to be moved to ham_calc_module
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   public :: sym
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine hamiltonian_setup(ssym)
@@ -325,7 +325,7 @@ contains
     integer :: i,alloc_stat
     !** End of interface *****************************************
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     select case (char)
     case("tot")
@@ -537,7 +537,7 @@ contains
     logical                  :: quadratic
     data count_loop / 0 /
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     quadratic = .true. ! was /= etotmode_direct
     count_loop = count_loop + 1
@@ -673,7 +673,7 @@ contains
     real(kind=r8_kind), allocatable :: ham_num_xc(:,:),ham_num_xc_real(:,:),ham_num_xc_imag(:,:)
     logical :: use_ham_num_xc
     character(len=64) :: frmt
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (char == 'full') then
        quadratic = .true.

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 Module dipole_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: database to hold dipole matrix elements
   !           as well as calculated dipole moments.
@@ -44,22 +44,22 @@ Module dipole_module
   !  Date: 7/97
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
   !
   !   Some important troutines:
   !         dipoleg_allocate  dipoleg_free
   !         dipoleg_calculate L973
   !         dipole_transitionmoment_f L1474
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Author: HH
   ! Date:   10/97
   ! Description: Add subroutine "dipol_trans_response".
   !              This subroutine writes all transition dip.mom.
   !              in an temporary, unformatted file in tmp_dir.
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !
   ! Modification (Please copy before editing)
@@ -67,7 +67,7 @@ Module dipole_module
   ! Date:   10/99
   ! Description: Adaption to spin-orbit
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !
   ! Modification (Please copy before editing)
@@ -75,7 +75,7 @@ Module dipole_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   Use type_module ! type specification parameters
   Use symmetry_data_module
@@ -85,7 +85,7 @@ Module dipole_module
   Implicit None
   Save                     ! save all variables defined in this module
   Private                       ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !
   !------------ Declaration of constants --------------------------
   Integer, Parameter, Public :: &
@@ -94,7 +94,7 @@ Module dipole_module
        DIPOLE_OFFDIAGONAL = 2
   ! parameters used within dipole_type
   !
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   type, public :: dipole_integral_type
      integer :: use = DIPOLE_UNUSED
@@ -160,7 +160,7 @@ Module dipole_module
   real (r8_kind), allocatable, public, protected :: &
        dipole_total_irrep (:, :) ! (i_xyz ,i_ir)
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   Public dipole_allocate, dipole_free, dipole_calculate, &
        & dipole_print, dipole_transitionmoment_f, &
        & dipole_transitionmoment_uf, dipole_read, dipole_write, &
@@ -170,9 +170,9 @@ Module dipole_module
   public :: dipole_nuclear_calculate !() -> real(3)
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of input variables -------------------
 
@@ -229,7 +229,7 @@ Module dipole_module
   ! file:
   real (r8_kind), private :: x_vec (3) ! store x,y,z; see below
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 Contains
 !
   !*************************************************************
@@ -239,11 +239,11 @@ Contains
     ! routine called by: read_input
     !** End of interface *****************************************
          Use input_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
          Integer (Kind=i4_kind) :: unit, status
          Real (Kind=r8_kind) :: norm
          External error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 !
          show_valence_excitations = df_show_valence_excitations
          show_core_excitations = df_show_core_excitations
@@ -995,7 +995,7 @@ Contains
     !------------ Declaration of formal parameters ---------------
          Integer (Kind=i4_kind), Intent (In) :: iounit
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
          Integer (Kind=i4_kind) :: n_ir, i_ir1, i_pa1, i_ip1, i_ir2, &
         & i_pa2, i_ip2, min_orb2, i_spin, n_spin, i_orb1, n_orb1, &
         & i_orb2, n_orb2, iostat, n_out, i
@@ -1010,7 +1010,7 @@ Contains
          Integer (Kind=i4_kind), Allocatable :: n_partners (:), &
         & dim_irrep (:)
          Character(len=12), Allocatable :: irrepname (:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 !
          n_spin = symmetry_data_n_spin ()
          If (options_spin_orbit) Then
@@ -1560,7 +1560,7 @@ Contains
     !------------ Declaration of formal parameters ---------------
          Integer (Kind=i4_kind), Intent (In) :: iounit
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
          Integer (Kind=i4_kind) :: n_ir, i_ir1, i_pa1, i_ip1, i_ir2, &
         & i_pa2, n_pa2, i_ip2, i_spin, n_spin, i_orb1, n_orb1, i_orb2, &
         & n_orb2, iostat
@@ -1568,7 +1568,7 @@ Contains
          Real (Kind=r8_kind), Pointer :: eigenvector1 (:), eigenvector2 &
         & (:)
          Real (Kind=r8_kind) :: e1, e2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 !
          n_spin = symmetry_data_n_spin ()
          open_shell = n_spin .Eq. 2
@@ -1700,7 +1700,7 @@ Contains
     !------------ Declaration of formal parameters ---------------
          Integer :: iounit
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
          Integer (Kind=i4_kind) :: n_ir, i_ir1, i_pa1, i_ip1, i_ir2, &
         & i_pa2, i_ip2, i_spin, n_spin, n_orb1, n_orb2, alloc_stat, ij, &
         & ij_2, i_xyz, i_bas1, i_bas2
@@ -1709,7 +1709,7 @@ Contains
          Real (Kind=r8_kind) :: tm, eig_dif, intensity
          Real (Kind=r8_kind), Allocatable :: help_vec (:)
          Type (dipole_integral_type), Pointer :: di
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 !
          n_spin = symmetry_data_n_spin ()
 !

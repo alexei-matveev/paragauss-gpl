@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
   module calc_3center_module
   ! Purpose : the calculation of 3-center integrals (nuclear,
   !           coulomb) for [na,la,nb,lb] qadrupel using factorized
@@ -41,9 +41,9 @@
   ! - symmetrize Ang over (c,Mc)
   ! - R_fit%J
   ! - R_fit%J * Ang(Ma,Mb,t)
-!================================================================
+  !===================================================================
 ! End of public interface of module -- dont believe that, it`s a bad joke!
-!================================================================
+  !===================================================================
 #include "def.h"
     use type_module
     use datatype, only: arrmat5

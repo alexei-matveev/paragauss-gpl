@@ -27,7 +27,7 @@
 !==================================================================
 module inp_out_module
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use iounitadmin_module
   use filename_module
@@ -36,20 +36,20 @@ module inp_out_module
   private         ! by default, all names are private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public constants and variables -----
   integer(kind=i4_kind), public :: input_device, output_device
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public get_input_device, get_output_device, close_input_device, &
        close_output_device, upcase, check_string, go_to_first_input_line, &
        name_without_cs, input_nm_error,repeated_definition,find_word,find_namelist, &
        get_file_device, close_file_device
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   integer(i4_kind) :: num

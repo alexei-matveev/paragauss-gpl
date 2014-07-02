@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module unique_atom_module
   !
   !  SEE UNIQUE_ATOM_METHODS ...
@@ -42,11 +42,11 @@ module unique_atom_module
   !  Author: TB
   !  Date: 18.07.95
   !
-  !== Interrupt of public interface of module =====================
+  !== Interrupt of public interface of module ========================
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: TB
@@ -85,7 +85,7 @@ module unique_atom_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! Author: AH
 ! Date:   11/98
 ! Description: add pseudopotential basis set
@@ -372,9 +372,9 @@ public :: unique_atom_make_basis!(L, exponents, contractions)
 public :: unique_atom_basis_norm_ob!(L, alpha)
 public :: unique_atom_basis_norm_ch!(L, alpha)
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 contains
 

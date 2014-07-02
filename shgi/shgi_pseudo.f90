@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module shgi_pseudo
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! One-electron  integrals for  local and  non-local pseudo-potential
   ! terms.
@@ -34,18 +34,18 @@ module shgi_pseudo
   ! Copyright (c) 2005-2013 Alexei Matveev
   ! Copyright (c) 2006 Vladimir Nasluzov
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! use CPU_TIME for timers:
 ! define FPP_TIMERS 2
 # include "def.h"
@@ -56,16 +56,16 @@ module shgi_pseudo
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: shgi_pseu_set_ab
   public :: shgi_pseu_set_abc
@@ -76,14 +76,14 @@ module shgi_pseudo
 
 ! public :: AEXP, BEXP, XA, XB
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! ALL INTEGER CONSTANTS, LIKE GAX,GAY,GAZ ARE NOW IN
   !                     shgi_cntrl.f90
@@ -104,7 +104,7 @@ module shgi_pseudo
   real(RK), allocatable :: G2P(:,:,:,:,:,:)            ! (    2*LA+1,2*LB+1,2+LA,2+LB,1+LP,9)
   real(RK), allocatable :: D2P(:,:,:,:,:,:,:)          ! (    2*LA+1,2*LB+1,3+LA,3+LB,1+LP,9,9)
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine shgi_pseu_set_ab()
@@ -1057,6 +1057,6 @@ contains
     FPP_TIMER_STOP(tra2)
   end subroutine doRadAng2
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module shgi_pseudo
 

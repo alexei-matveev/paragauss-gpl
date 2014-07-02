@@ -24,7 +24,7 @@
 !
 
 module coulomb_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use inp_out_module
@@ -39,7 +39,7 @@ module coulomb_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   character(len=13), public :: Coulomb_type
 
@@ -50,13 +50,13 @@ module coulomb_module
   type(dipole_pair), public, allocatable :: dip_pair(:)
   integer(kind=i4_kind), public :: N_dm_pair
   integer(kind=i4_kind), public, allocatable :: N_interact(:)
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_coulomb_options, write_coulomb_to_output, read_dipoles, dip_atom_pairs, & 
        direct_coulomb_E_and_F, dipol_dipol_E_and_F, write_dipoles_to_output, &
        shutdown_electrostatic
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   type dipole
@@ -83,7 +83,7 @@ module coulomb_module
      type (inp_data), pointer :: next_data
   end type inp_data
 #endif
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   function read_coulomb_options()

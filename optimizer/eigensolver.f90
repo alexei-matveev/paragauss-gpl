@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine eigensolver(matrix,dimen,eigval,eigvec)
   ! Purpose: wrapper for 'evvrsp'-Routine from EISPACK.
   !          This routine is used for compatibilty with
@@ -38,9 +38,9 @@ subroutine eigensolver(matrix,dimen,eigval,eigvec)
   real(kind=r8_kind),intent(inout)   :: matrix(dimen,dimen)
   real(kind=r8_kind),intent(inout)   :: eigval(dimen)
   real(kind=r8_kind),intent(inout)   :: eigvec(dimen,dimen)
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   ! -----------------------------------------------------------
   real(kind=r8_kind)             :: b(dimen,9)
   real(kind=r8_kind),allocatable :: help_mat(:,:)

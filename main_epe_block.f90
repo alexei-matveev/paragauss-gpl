@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine main_epe_block()
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: subroutine starts EPE calculations:
   !           - call epe_draver
@@ -43,20 +43,20 @@ subroutine main_epe_block()
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 #include "def.h"
   use type_module ! type specification parameters
   use filename_module, only: data_dir
@@ -102,11 +102,11 @@ subroutine main_epe_block()
   use energy_calc_module, only: get_energy
   implicit none
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of subroutines ------------------------
   !------------ Declaration of local constants --------------------
@@ -116,7 +116,7 @@ subroutine main_epe_block()
   integer(kind=i4_kind) :: n_proc
   logical               :: model_density, conv_achived
   integer(kind=i4_kind) :: IFIT
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   !------------ Executable code -----------------------------------
   call write_to_trace_unit("main_epe_block: start of epe relaxation")

@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine gengrp(group,igroup,iorder,elem,namele,ncsco,fcsco)
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !     identifies the group by number in the canonical ordering used in
@@ -37,22 +37,22 @@ subroutine gengrp(group,igroup,iorder,elem,namele,ncsco,fcsco)
   !  version:   07.05.95
   !
 !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module, only: i4_kind,r8_kind
   implicit none
 !== Interrupt end of public interface of module =================
-  !------------ Declaration of formal parameters ------------------
+  !------------ Declaration of formal parameters ---------------------
   character(len=4), intent(in)           :: group
   !       group   name of the group
   integer(kind=i4_kind),intent(in)  :: iorder,igroup
@@ -69,9 +69,9 @@ subroutine gengrp(group,igroup,iorder,elem,namele,ncsco,fcsco)
   !                 separate operators
   !       fcsco   coefficient for the linear combination of class
   !                 operators
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ Declaration of local constants --------------------
   integer(kind=i4_kind), parameter ::  modnum=1, nptgrp=75, ngrpar=304

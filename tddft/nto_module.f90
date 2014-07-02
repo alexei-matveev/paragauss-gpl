@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE nto_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Calculate the NTO expansion and output it into files 
   !           
@@ -36,18 +36,18 @@ MODULE nto_module
   !  Date: 08/2007
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
   USE type_module          ! type specification parameters
   USE iounitadmin_module   ! routines for I/O
@@ -55,23 +55,23 @@ MODULE nto_module
   implicit none            ! by default, all the variables have to be specifically declared
   save                     ! save all variables defined in this module
   private                  ! by default, all names are private
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ------------
-  !------------ Interface statements ------------------------------
-  !------------ public functions and subroutines ------------------
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
+  !------------ Interface statements ---------------------------------
+  !------------ public functions and subroutines ---------------------
   public nto_module_main                      !Subroutine called by tddft_diag
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
-  !------------ Declaration of types ------------------------------
+  !===================================================================
+  !------------ Declaration of types ---------------------------------
    type ntoinfo
             real(r8_kind),allocatable      ::   subT(:,:),subU(:,:),subVT(:,:),subTDIAG(:)
             real(r8_kind),allocatable      ::   as_val(:)
             integer(i4_kind),allocatable   ::   occ(:),unocc(:)
             integer(i4_kind),allocatable   ::   pairs(:)
    end type ntoinfo
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
   !*************************************************************
   SUBROUTINE nto_module_main()
@@ -109,7 +109,7 @@ CONTAINS
     IMPLICIT NONE
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind)                :: io_f, &             !Formatted file with nto output
                                             io_unf, &           !Unformatted file with nto information for plotting
                                             nto_info            !Temporal file with the information necessary for nto
@@ -143,7 +143,7 @@ CONTAINS
     CHARACTER(100)                       :: label                    !Name of the file
     CHARACTER(3), ALLOCATABLE            :: symmetries(:)
     !------------ Declaration of external procedures ----------------
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 !
     !Get the eigenvalues and the irrep we are working on
     allocate(symmetries(ssym%n_irrep))
@@ -627,7 +627,7 @@ CONTAINS
     INTEGER(KIND=i4_kind),INTENT(in)  :: nto_info      !File unit where the information is
     INTEGER(KIND=i4_kind),INTENT(in)  :: n_values      !Number of values that are present in the file
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     INTEGER(KIND=i4_kind)                        :: idx,jdx    !Variables for the loops
     INTEGER(KIND=i4_kind)                        :: go_back    !Number of positions to rewind the file
     INTEGER(KIND=i4_kind)                        :: irr1,idx1,irr2,idx2,n_idx
@@ -636,7 +636,7 @@ CONTAINS
                                                     osc_value 
     REAL(KIND=r8_kind), ALLOCATABLE              :: exc_amplitude(:)
     !------------ Declaration of subroutines used ----------------
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     num_nto=0
     go_back=0
     do idx=1,n_values

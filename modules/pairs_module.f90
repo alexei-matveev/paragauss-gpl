@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module pairs_module
 !-------------- Module specification ---------------------------
 !
@@ -99,9 +99,9 @@ public :: ptpairs!()
 public :: deallocate_pairs!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !----------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
@@ -119,7 +119,7 @@ contains
     ! dimensions
     integer(kind=i4_kind)             :: n_irrep,n_spin
     integer(kind=i4_kind),allocatable :: dim_irrep(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! set appropriate dimensions of irreps
     n_spin = ssym%n_spin
@@ -230,7 +230,7 @@ contains
     ! dimensions
     integer(kind=i4_kind)             :: n_irrep,n_spin
     integer(kind=i4_kind),allocatable :: dim_irrep(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     !
     ! Load eigvec_vir and eigval_vir on each slave.

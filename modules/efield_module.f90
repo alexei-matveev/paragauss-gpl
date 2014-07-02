@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  efield_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module calculates integrals of
   !           constant external electric field
@@ -62,38 +62,38 @@ module  efield_module
   !  Date:   11/97
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module ! type specification parameters
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public efield_read, efield_write, efield_calculate_integrals, &
        efield_applied, efield_field, efield_print, &
        efield_reverse_for_spins, efield_gradient, efield_intensity, &
        efield_change, efield_der, efield_gradient_store
   public :: efield_send_recv
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   real(kind=r8_kind), dimension(3) :: field = 0.0_r8_kind
   logical, parameter :: &
        df_apply = .false., &
@@ -104,8 +104,8 @@ module  efield_module
   namelist /efield/ apply, reverse_for_spins, intensity
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -118,9 +118,9 @@ contains
     use operations_module, only: operations_dipole
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: status, unit, i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     apply = df_apply
     reverse_for_spins = df_reverse_for_spins
     intensity = df_intensity
@@ -189,10 +189,10 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer, intent(in) :: iounit
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind), parameter :: au2Vm = 5.14224382e+11
     integer :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     write (iounit,err=999,fmt=*)
     if (apply) then
        write (iounit,iostat=status, &
@@ -253,8 +253,8 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
     if (efield_intensity()) then
       update_hessian_iteration = 1
     endif
@@ -271,9 +271,9 @@ contains
     integer(kind=i4_kind), intent(in)      :: a
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)  :: mag
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mag =  sqrt(dot_product(field,field))
     ! magnitude of field strength
 
@@ -530,10 +530,10 @@ contains
     type(arrmat2), intent(inout)      :: grad_final(:)
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)            :: i_unique,i_equal
     real(kind=r8_kind)               :: nuc_efield(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do i_unique = 1, N_unique_atoms
       nuc_efield(:) = - efield_field() * unique_atoms (i_unique)%z
     !
@@ -571,10 +571,10 @@ contains
     type(arrmat2), intent(in)      :: grad_final(:)
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)            :: io_grad
     integer(kind=i4_kind)            :: i_unique,i_equal
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     io_grad=openget_iounit(status='unknown',form='formatted',position='append',&
        file="gradient.dat")
     do i_unique = 1, N_unique_atoms
@@ -597,8 +597,8 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
    
     if ( comm_i_am_master() ) then
       call comm_init_send(comm_all_other_hosts, msgtag_packed_message)
@@ -613,5 +613,5 @@ contains
   end subroutine efield_send_recv
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module efield_module

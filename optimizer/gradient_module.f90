@@ -22,11 +22,11 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  gradient_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: contains gradient  in cartesian and internal
   !           coordinates plus routines to transform, print
   !           out, allocate and deallocate etc. blablah
@@ -37,16 +37,16 @@ module  gradient_module
   !
   !  Author: FN
   !  Date: 2/98
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
   use type_module ! type specification parameters
    use opt_data_module
@@ -57,12 +57,12 @@ module  gradient_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   real(kind=r8_kind),allocatable,public,target    :: grad_cartes(:,:)
   real(kind=r8_kind),allocatable,public,target    :: dervs_cartes(:,:,:,:)
   real (r8_kind), allocatable, public, target :: grad_intern(:)
@@ -71,19 +71,19 @@ module  gradient_module
        grad_mean_square,grad_max_comp
   real(kind=r8_kind),public:: grad_max_sphere,grad_mean_sphere,dEdR_sphere
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public gradient_read,grad_cart_to_internal,grad_cart_for_opt
   public dealloc_grad_cart_to_internal
   public sphere_grads,eg_rpmix,rp_grads
   public cart_step_g
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   integer(i4_kind)                  :: n_cart_grads
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine cart_step_g(geo_loop,converged)
@@ -279,8 +279,8 @@ contains
     logical,optional:: allocate_dervs
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     if (.not.allocated(grad_cartes)) then
        allocate(grad_cartes(n_cart_grads,3),STAT=allocopt_stat(3))
@@ -621,5 +621,5 @@ contains
   end subroutine grad_cart_for_opt
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module gradient_module

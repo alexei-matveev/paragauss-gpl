@@ -22,9 +22,9 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  prescf_module
   !-------------- Module specification ---------------------------
   !
@@ -59,9 +59,9 @@ module  prescf_module
   !                                    from file or arbitrary values. This is hard-
   !                                    coded in this routine. No decision in DOIT
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: AS
@@ -78,9 +78,9 @@ module  prescf_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
 
@@ -88,16 +88,16 @@ module  prescf_module
   private
   save
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: prescf_init!(), is called by all workers
   public :: prescf_finalize!(), is called by all workers
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -123,10 +123,10 @@ contains
     use filename_module, only: outfile
     use iounitadmin_module
     use output_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: io_u
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (output_reoccup .or. output_eigendata) then
        io_u = get_iounit()
@@ -441,5 +441,5 @@ contains
     if(output_main_scf .and. comm_rank() == 0) &
       call write_to_output_units(msg)
   end subroutine trace
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module prescf_module

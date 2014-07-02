@@ -22,39 +22,39 @@
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module xc_cntrl
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   ! Copyright (c) Thomas Soini
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only: IK=>i4_kind, RK=>r8_kind ! type specification parameters
   use strings,     only: strlen=>stringlength_string, rtoa
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   ! There are no other enums, only  bind (c). Also there seem to be no
   ! way to make them all public. FIXME: this was a bad idea, still ...
@@ -219,9 +219,9 @@ module xc_cntrl
        'new             ' , '[      ]        '], &
        [2, xc_NXC])
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: xc_read_input
   public :: xc_write_input
   public :: xc_input_bcast
@@ -230,14 +230,14 @@ module xc_cntrl
   public :: xc_cntrl_give       ! MUSTDIE!
   public :: xc_cntrl_frac
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   ! ----------- XC control parameters ---------------------------
 
@@ -246,8 +246,8 @@ module xc_cntrl
 
   real(RK), parameter, private :: zero = 0.0_rk
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function get_contrib(s, t) result(ROp)
@@ -1425,5 +1425,5 @@ contains
     lnrecmv92      = is_on(xc_nrecmv92)
   end subroutine xc_cntrl_give
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module xc_cntrl

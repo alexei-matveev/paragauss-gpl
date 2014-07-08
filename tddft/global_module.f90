@@ -116,7 +116,7 @@ MODULE  global_module
 
 
   !------------ public functions and subroutines ---------------------
-  PUBLIC global_alloc,global_alloc_M,global_dealloc_M,global_dealloc
+  PUBLIC :: global_alloc, global_alloc_M, global_dealloc_M, global_dealloc
 
 
   !===================================================================
@@ -331,13 +331,6 @@ CONTAINS
     !------------ Declaration of subroutines used ----------------
 
     n_spin = gl_N_spin
-
-#if 0
-    if(comm_i_am_master() .and. comm_parallel()) then
-       call comm_init_send(comm_master_host,msgtag_tddft_dealloM)
-       call comm_send()
-    end if
-#endif
 
     if (allocated(gl_L)) then
        do i = 1,n_spin

@@ -753,173 +753,168 @@ contains
 
     call response_setup()
 
-    if (.true.) then
+    call write_to_trace_unit("Entering response part")
 
-       call write_to_trace_unit("Entering response part")
+    call start_timer(timer_resp)
 
-       call start_timer(timer_resp)
+    ! *** Setup and Preparations ***
+    call start_timer(timer_resp_preparations)
 
-       ! *** Setup and Preparations ***
-       call start_timer(timer_resp_preparations)
+    call stop_timer(timer_resp_preparations)
 
-       call stop_timer(timer_resp_preparations)
-
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       !%%% do calculate the integrals for LINEAR response only if %%%
-       !%%% NO hyperpolarizability calculation is requested        %%%
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    !%%% do calculate the integrals for LINEAR response only if %%%
+    !%%% NO hyperpolarizability calculation is requested        %%%
+    !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !!$       if(.NOT. (beta_A2 .or. beta_C) ) then
 
-       ! write header-interface-file with information for response program
-       call write_to_output_units("response_main: response_write_header")
-       call start_timer(timer_resp_preparations)
-       call start_timer(timer_resp_header)
+    ! write header-interface-file with information for response program
+    call write_to_output_units("response_main: response_write_header")
+    call start_timer(timer_resp_preparations)
+    call start_timer(timer_resp_header)
+    if (comm_rank() == 0) then
+       call response_write_header()
+    endif
+    call stop_timer(timer_resp_header)
+
+    ! write MO eigenvalues and occupation numbers to a tape
+    call write_to_output_units("response_main: response_write_eigenval_occupation")
+    if (comm_rank() == 0) then
+       call response_write_eigenval_occ()
+    endif
+    call stop_timer(timer_resp_preparations)
+
+    FPP_TIMER_STOP (RESPONSE_SETUP)
+    FPP_TIMER_START(RESPONSE_DIPOL)
+
+    ! *** Dipoles ***
+    ! do we have to produce the tape with transition dipole moments ?
+    if (calc_osc_strength) then
+       call write_to_trace_unit  ("Rewrite tapes with transition dipole moments")
+       call write_to_output_units("response_main: response_rewrite_dipoletape")
+       call start_timer(timer_resp_dipole)
        if (comm_rank() == 0) then
-          call response_write_header()
+          call resp_dipole_rewrite() ! serial
        endif
-       call stop_timer(timer_resp_header)
+       call stop_timer(timer_resp_dipole)
+    end if
 
-       ! write MO eigenvalues and occupation numbers to a tape
-       call write_to_output_units("response_main: response_write_eigenval_occupation")
-       if (comm_rank() == 0) then
-          call response_write_eigenval_occ()
-       endif
-       call stop_timer(timer_resp_preparations)
+    FPP_TIMER_STOP(RESPONSE_DIPOL)
 
-       FPP_TIMER_STOP (RESPONSE_SETUP)
-       FPP_TIMER_START(RESPONSE_DIPOL)
+    ! *** numerical 2-index-integrals ***
+    ! user input: do we have to calculate the numerical 2 index integrals ?
 
-       ! *** Dipoles ***
-       ! do we have to produce the tape with transition dipole moments ?
-       if (calc_osc_strength) then
-          call write_to_trace_unit  ("Rewrite tapes with transition dipole moments")
-          call write_to_output_units("response_main: response_rewrite_dipoletape")
-          call start_timer(timer_resp_dipole)
-          if (comm_rank() == 0) then
-             call resp_dipole_rewrite() ! serial
-          endif
-          call stop_timer(timer_resp_dipole)
-       end if
+    FPP_TIMER_START(RESPONSE_SETUP)
 
-       FPP_TIMER_STOP(RESPONSE_DIPOL)
+    call write_to_trace_unit("Calculate numerical 2 index integrals")
+    call start_timer(timer_resp_2index)
 
-       ! *** numerical 2-index-integrals ***
-       ! user input: do we have to calculate the numerical 2 index integrals ?
+    ! setup the grid and divide into parts and send those to slaves
+    call write_to_output_units("response_main: grid_main")
+    call grid_main (post_scf=.true.)
 
-       FPP_TIMER_START(RESPONSE_SETUP)
+    FPP_TIMER_STOP (RESPONSE_SETUP)
+    FPP_TIMER_START(COULOMB_2C)
 
-       call write_to_trace_unit("Calculate numerical 2 index integrals")
-       call start_timer(timer_resp_2index)
+    ! read <f_k|1/(r-r')|f_l> chargefit overlap integrals,
+    ! and rewrite them to response interface file
+    if (.not. saved_2c_Q) then
+       call write_to_output_units("response_main: int_send_2c_resp_rewrite")
+       call int_send_2c_resp_rewrite()
+    end if
 
-       ! setup the grid and divide into parts and send those to slaves
-       call write_to_output_units("response_main: grid_main")
-       call grid_main (post_scf=.true.)
+    FPP_TIMER_STOP (COULOMB_2C)
+    FPP_TIMER_START(XC_2C)
 
-       FPP_TIMER_STOP (RESPONSE_SETUP)
-       FPP_TIMER_START(COULOMB_2C)
+    if (.not. saved_XC) then !! .and. (.not. noRI)) then
+       call write_to_output_units("response_main: response_calc_2index_int_v2")
+       call response_calc_2index_int_v2()
+       !!          call noRI_2c(X_KIND,C_KIND)
+    end if
 
-       ! read <f_k|1/(r-r')|f_l> chargefit overlap integrals,
-       ! and rewrite them to response interface file
-       if (.not. saved_2c_Q) then
-          call write_to_output_units("response_main: int_send_2c_resp_rewrite")
-          call int_send_2c_resp_rewrite()
-       end if
+    call stop_timer(timer_resp_2index)
 
-       FPP_TIMER_STOP (COULOMB_2C)
-       FPP_TIMER_START(XC_2C)
+    ! Clean up stuff that was needed for numerical 2/3-index integrals
+    call write_to_output_units("response_main: shutdown orbital_module")
+    ! shutdown orbital_module
+    call orbital_free(orbs_ob)
+    call orbital_shutdown()
 
-       if (.not. saved_XC) then !! .and. (.not. noRI)) then
-          call write_to_output_units("response_main: response_calc_2index_int_v2")
-          call response_calc_2index_int_v2()
-!!          call noRI_2c(X_KIND,C_KIND)
-       end if
+    FPP_TIMER_STOP (XC_2C)
+    FPP_TIMER_START(COULOMB_3C)
 
-       call stop_timer(timer_resp_2index)
+    ! *** Transformation of Coulomb integrals ***
+    ! user input: do we have to calculate the analytical 3-index integrals
+    !             <phi_i phi_s|V_Clb|f_k> ?
+    if (.not. saved_3c_Q) then
+       call write_to_trace_unit("Transform 3 index Coulomb integrals")
+       call start_timer(timer_resp_Coulomb)
 
-       ! Clean up stuff that was needed for numerical 2/3-index integrals
-       call write_to_output_units("response_main: shutdown orbital_module")
-       ! shutdown orbital_module
-       call orbital_free(orbs_ob)
-       call orbital_shutdown()
+       call write_to_output_units("response_main: int_resp_Clb_3c")
 
-       FPP_TIMER_STOP (XC_2C)
-       FPP_TIMER_START(COULOMB_3C)
+       call int_resp_Clb_3c()
+       call stop_timer(timer_resp_Coulomb)
+    end if
+    
+    ! SB: THE MAIN CALCULATION IS HERE
+    call write_to_output_units("response_main: main response calculations (START)")
 
-       ! *** Transformation of Coulomb integrals ***
-       ! user input: do we have to calculate the analytical 3-index integrals
-       !             <phi_i phi_s|V_Clb|f_k> ?
-       if (.not. saved_3c_Q) then
-          call write_to_trace_unit("Transform 3 index Coulomb integrals")
-          call start_timer(timer_resp_Coulomb)
+    FPP_TIMER_STOP (COULOMB_3C)
+    FPP_TIMER_START(DIAG_PLUS_DVDSON)
 
-          call write_to_output_units("response_main: int_resp_Clb_3c")
+    call init_tddft_start()
 
-          call int_resp_Clb_3c()
-          call stop_timer(timer_resp_Coulomb)
-       end if
+    call diag_init()
 
-       ! SB: THE MAIN CALCULATION IS HERE
-       call write_to_output_units("response_main: main response calculations (START)")
-
-       FPP_TIMER_STOP (COULOMB_3C)
-       FPP_TIMER_START(DIAG_PLUS_DVDSON)
-
-       call init_tddft_start()
-
-       call diag_init()
-
-       call write_to_output_units &
-            ("response_main: main response calculations (FINISH)")
+    call write_to_output_units &
+         ("response_main: main response calculations (FINISH)")
 
 
-       FPP_TIMER_STOP (DIAG_PLUS_DVDSON)
-       FPP_TIMER_START(RESPONSE_CLOSE)
+    FPP_TIMER_STOP (DIAG_PLUS_DVDSON)
+    FPP_TIMER_START(RESPONSE_CLOSE)
 
-       ! clean up: deallocate leftovers (module private objects etc...)
-       call write_to_output_units("response_main: shutdown response_module")
-       call response_shutdown()
+    ! clean up: deallocate leftovers (module private objects etc...)
+    call write_to_output_units("response_main: shutdown response_module")
+    call response_shutdown()
 
-       ! do the timing (we always do timing since the response part will
-       ! be the most time consuming part of the whole calculation)
-       call write_to_output_units("response_main: call timer_print_response")
-       call stop_timer(timer_resp)
+    ! do the timing (we always do timing since the response part will
+    ! be the most time consuming part of the whole calculation)
+    call write_to_output_units("response_main: call timer_print_response")
+    call stop_timer(timer_resp)
 
-       ! Shutdown the grid which was distributed among processors
-       call write_to_output_units("response_main: grid_close")
-       call grid_close (.false.)
+    ! Shutdown the grid which was distributed among processors
+    call write_to_output_units("response_main: grid_close")
+    call grid_close (.false.)
 
-       ! now we are finished
-       call write_to_trace_unit  ("Exit response part")
-       call write_to_output_units("response_main: done")
-       FPP_TIMER_STOP(RESPONSE_CLOSE)
-       FPP_TIMER_STOP(RESPONSE_ALL)
+    ! now we are finished
+    call write_to_trace_unit  ("Exit response part")
+    call write_to_output_units("response_main: done")
+    FPP_TIMER_STOP(RESPONSE_CLOSE)
+    FPP_TIMER_STOP(RESPONSE_ALL)
 
 #ifdef FPP_TIMERS
-       ! TIMER OUTPUT
-       block
-          real (r8_kind) :: tt
-          tt = FPP_TIMER_VALUE(RESPONSE_SETUP)
-          WRITE (*,*) "[m] RESPONSE TIMER "
-          WRITE (*,*) "   * SETUP      ", tt
-          tt = FPP_TIMER_VALUE(RESPONSE_DIPOL)
-          WRITE (*,*) "   * DIPOLE     ", tt
-          tt = FPP_TIMER_VALUE(COULOMB_2C)
-          WRITE (*,*) "   * COULOMB 2C ", tt
-          tt = FPP_TIMER_VALUE(XC_2C)
-          WRITE (*,*) "   * XC 2C      ", tt
-          tt = FPP_TIMER_VALUE(COULOMB_3C)
-          WRITE (*,*) "   * COULOMB 3C ", tt
-          tt = FPP_TIMER_VALUE(DIAG_PLUS_DVDSON)
-          WRITE (*,*) "   * DIAG/DVDS  ", tt
-          tt = FPP_TIMER_VALUE(RESPONSE_CLOSE)
-          WRITE (*,*) "   * CLOSE      ", tt
-          tt = FPP_TIMER_VALUE(RESPONSE_ALL)
-          WRITE (*,*) "   * SUMMARY    ", tt
-       end block
+    ! TIMER OUTPUT
+    block
+       real (r8_kind) :: tt
+       tt = FPP_TIMER_VALUE(RESPONSE_SETUP)
+       WRITE (*,*) "[m] RESPONSE TIMER "
+       WRITE (*,*) "   * SETUP      ", tt
+       tt = FPP_TIMER_VALUE(RESPONSE_DIPOL)
+       WRITE (*,*) "   * DIPOLE     ", tt
+       tt = FPP_TIMER_VALUE(COULOMB_2C)
+       WRITE (*,*) "   * COULOMB 2C ", tt
+       tt = FPP_TIMER_VALUE(XC_2C)
+       WRITE (*,*) "   * XC 2C      ", tt
+       tt = FPP_TIMER_VALUE(COULOMB_3C)
+       WRITE (*,*) "   * COULOMB 3C ", tt
+       tt = FPP_TIMER_VALUE(DIAG_PLUS_DVDSON)
+       WRITE (*,*) "   * DIAG/DVDS  ", tt
+       tt = FPP_TIMER_VALUE(RESPONSE_CLOSE)
+       WRITE (*,*) "   * CLOSE      ", tt
+       tt = FPP_TIMER_VALUE(RESPONSE_ALL)
+       WRITE (*,*) "   * SUMMARY    ", tt
+    end block
 #endif
-
-    end if !!i_am_master_
-
   end subroutine response_main
   !*************************************************************
 

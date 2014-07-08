@@ -733,7 +733,7 @@ contains
     USE int_resp_module, only: int_resp_Clb_3c
     USE resp_dipole_module, only: resp_dipole_rewrite
     USE noRI_module, only: noRI_2c
-    use comm, only: comm_rank
+    use comm, only: comm_rank, comm_barrier, comm_same
     implicit none
     !** End of interface *****************************************
 
@@ -765,22 +765,27 @@ contains
     !%%% do calculate the integrals for LINEAR response only if %%%
     !%%% NO hyperpolarizability calculation is requested        %%%
     !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!!$       if(.NOT. (beta_A2 .or. beta_C) ) then
 
     ! write header-interface-file with information for response program
     call write_to_output_units("response_main: response_write_header")
     call start_timer(timer_resp_preparations)
     call start_timer(timer_resp_header)
+
+    ! This writes  a file  to the temp  directory that will  be parsed
+    ! later in the  same run. FIXME: pass info  on a more conventional
+    ! way.
     if (comm_rank() == 0) then
        call response_write_header()
     endif
+    call comm_barrier()         ! slaves should probably wait
     call stop_timer(timer_resp_header)
 
-    ! write MO eigenvalues and occupation numbers to a tape
+    ! Write MO eigenvalues and occupation numbers to "eg_oc" tapes:
     call write_to_output_units("response_main: response_write_eigenval_occupation")
     if (comm_rank() == 0) then
        call response_write_eigenval_occ()
     endif
+    call comm_barrier()         ! slaves should probably wait
     call stop_timer(timer_resp_preparations)
 
     FPP_TIMER_STOP (RESPONSE_SETUP)
@@ -788,6 +793,7 @@ contains
 
     ! *** Dipoles ***
     ! do we have to produce the tape with transition dipole moments ?
+    ASSERT(comm_same(calc_osc_strength))
     if (calc_osc_strength) then
        call write_to_trace_unit  ("Rewrite tapes with transition dipole moments")
        call write_to_output_units("response_main: response_rewrite_dipoletape")
@@ -795,6 +801,7 @@ contains
        if (comm_rank() == 0) then
           call resp_dipole_rewrite() ! serial
        endif
+       call comm_barrier()      ! slaves should probably wait
        call stop_timer(timer_resp_dipole)
     end if
 
@@ -817,6 +824,7 @@ contains
 
     ! read <f_k|1/(r-r')|f_l> chargefit overlap integrals,
     ! and rewrite them to response interface file
+    ASSERT(comm_same(saved_2c_Q))
     if (.not. saved_2c_Q) then
        call write_to_output_units("response_main: int_send_2c_resp_rewrite")
        call int_send_2c_resp_rewrite()
@@ -825,6 +833,7 @@ contains
     FPP_TIMER_STOP (COULOMB_2C)
     FPP_TIMER_START(XC_2C)
 
+    ASSERT(comm_same(saved_XC))
     if (.not. saved_XC) then !! .and. (.not. noRI)) then
        call write_to_output_units("response_main: response_calc_2index_int_v2")
        call response_calc_2index_int_v2()
@@ -845,6 +854,7 @@ contains
     ! *** Transformation of Coulomb integrals ***
     ! user input: do we have to calculate the analytical 3-index integrals
     !             <phi_i phi_s|V_Clb|f_k> ?
+    ASSERT(comm_same(saved_3c_Q))
     if (.not. saved_3c_Q) then
        call write_to_trace_unit("Transform 3 index Coulomb integrals")
        call start_timer(timer_resp_Coulomb)

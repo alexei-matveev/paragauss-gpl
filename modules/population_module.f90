@@ -138,7 +138,7 @@ module  population_module
   namelist /population/ population_level, n_columns, dos_plot, irrep, spin, &
                         occupation, eig_min, eig_max
   namelist /popcolumn/ n_contrib
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
   real(r8_kind), parameter :: zero = 0.0_r8_kind
 !------------ Subroutines ---------------------------------------

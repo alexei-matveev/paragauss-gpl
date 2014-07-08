@@ -75,9 +75,9 @@ module readwriteblocked_module
 ! Author: Folke Noertemann, translated from f77 to f90
 ! Date  : 8/95
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: TB
@@ -99,7 +99,7 @@ module readwriteblocked_module
 !              open / close the files and allocate / free the
 !              internal buffer associated with th.
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
 !
 ! Modification (Please copy before editing)
@@ -169,7 +169,7 @@ public readwriteblocked_read, &
 FPP_TIMER_DECL(rea)
 FPP_TIMER_DECL(wrt)
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 

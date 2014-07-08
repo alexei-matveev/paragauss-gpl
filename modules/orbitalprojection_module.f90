@@ -67,11 +67,11 @@ module orbitalprojection_module
 !              this is simply old lcgto)
 !  Date: 11/95
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 !
 ! Modification
@@ -88,7 +88,7 @@ module orbitalprojection_module
 !(where uncontracted dimensions are stored)
 !ToDo: for the case of uncontructed dimensions put the switch if (options_kinematic_factors)
 !into orbitalprojection_module.f90 and rid off the _k index everyware
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 #include "def.h"
 use type_module ! type specification parameters
@@ -135,7 +135,7 @@ integer, private :: N_max_l_ob, N_max_l_ch, N_max_l_xc
 
 
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 

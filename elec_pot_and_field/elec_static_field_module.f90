@@ -33,9 +33,9 @@ module elec_static_field_module
 !  Date: 03/00
 !
 !== Interrupt of public interface of module ====
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: MF
@@ -47,7 +47,7 @@ module elec_static_field_module
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 # include "def.h"
   use type_module          ! contains standard data types

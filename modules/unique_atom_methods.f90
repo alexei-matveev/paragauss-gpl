@@ -217,7 +217,7 @@ integer           , private, parameter :: df_N_exponents_core    =  0
 logical           , private, parameter :: df_core_density_setup  = .false.
 logical           , private, parameter :: df_core_density_use    = .false.
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 

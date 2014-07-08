@@ -33,9 +33,9 @@ module atoms_data_module
 ! This module collect set of atomic data which are used 
 ! at the moment in solvation_module, disp_rep_module and
 ! potential_calc_module 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: ...

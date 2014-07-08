@@ -60,9 +60,9 @@ module  int_send_2cob3c_spor_module
 !  Author: TB
 !  Date: 7/95
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: TB
@@ -72,7 +72,7 @@ module  int_send_2cob3c_spor_module
 !              files for each IRREP and quadrupel that are
 !              handled by readwriteblocked-module.
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
 !
 ! Modification (Please copy before editing)
@@ -80,8 +80,8 @@ module  int_send_2cob3c_spor_module
 ! Date:   20/01/2004
 ! Description: ...
 !
-!----------------------------------------------------------------
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
 !
 ! Modification (Please copy before editing)
@@ -89,7 +89,7 @@ module  int_send_2cob3c_spor_module
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 #include "def.h"
 use type_module ! type specification parameters
@@ -231,7 +231,7 @@ type(tapehandle_arr),allocatable :: th_arr(:)
      ! th_arr(n_irrep): only used for rel. gradients; see tapehandle_arr
 
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 

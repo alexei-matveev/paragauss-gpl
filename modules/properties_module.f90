@@ -98,7 +98,7 @@ module  properties_module
              dipole               ! do dipole moment integrals
 
   namelist /properties/ mulliken, frag_orb_analysis, plot_orbitals, dipole
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 

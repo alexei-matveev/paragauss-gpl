@@ -34,11 +34,11 @@ module machineparameters_module
 !  Date: 10/95
 !
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 !
 ! Modification (Please copy before editing)
@@ -46,7 +46,7 @@ module machineparameters_module
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 !
 ! Modification (Please copy before editing)
@@ -54,7 +54,7 @@ module machineparameters_module
 ! Date:   01
 ! Description: Variable size Read/Write buffers introduced
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 #include "def.h"
 use type_module ! type specification parameters
@@ -113,7 +113,7 @@ namelist /machineparameters/ machineparameters_veclen    , &
                              machineparameters_checkpreci, &
                              machineparameters_rw_buffer
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 

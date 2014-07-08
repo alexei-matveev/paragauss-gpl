@@ -55,9 +55,9 @@ module  int_send_2cob3c_module
 !  Author: TB
 !  Date: 7/95
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: TB
@@ -74,7 +74,7 @@ module  int_send_2cob3c_module
 !              Split_Gradients concept introduced
 !              Gradients for Model_Density_Approach introduced
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
 !
 ! Modification (Please copy before editing)
@@ -99,7 +99,7 @@ module  int_send_2cob3c_module
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !define FPP_NO_CHECKSUM
 #include "def.h"
 use type_module ! type specification parameters
@@ -228,7 +228,7 @@ type(readwriteblocked_tapehandle),target :: th_da
 !type(readwriteblocked_tapehandle),pointer :: th_da
 type(readwriteblocked_tapehandle),pointer :: thdaf_pointer
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 

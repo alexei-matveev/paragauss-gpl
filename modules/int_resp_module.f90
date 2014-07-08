@@ -36,7 +36,7 @@ module int_resp_module
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: ...
   !  Date: ...
@@ -56,7 +56,7 @@ module int_resp_module
   !-------------------------------------------------------------------
 
   use type_module ! type specification parameters
-  use comm_module  
+  use comm_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
@@ -97,7 +97,7 @@ contains
     integer(kind=i4_kind)              :: n_ir, i_ir_c, i_ir_a, i_ir_b, na, nb, nc
     integer(kind=i4_kind)              :: i_spin
     integer(kind=i4_kind)              :: is_counter
-    integer(kind=i4_kind)              :: n_procs!, io_unit 
+    integer(kind=i4_kind)              :: n_procs!, io_unit
     integer(kind=i4_kind)              :: k_index
     integer(kind=i4_kind)              :: occ_times_unocc_dim, status
     real(kind=r8_kind),    allocatable :: coulomb_3c_matrix(:,:,:)
@@ -128,7 +128,7 @@ contains
           NS = 0
           NF = 0
 
-          call resp_util_calc_ou(i_ir_c,i_spin,DM1)          
+          call resp_util_calc_ou(i_ir_c,i_spin,DM1)
 
           dim_sl = INT(dimension_of_fit_ch(i_ir_c)/n_procs)
           dim_ma = dimension_of_fit_ch(i_ir_c) &
@@ -158,7 +158,7 @@ contains
                 call resp_util_calc_transitions_v2(i_ir_a, i_ir_b, i_ir_c, &
                      i_spin, occ_times_unocc_dim)
 
-                if (occ_times_unocc_dim == 0) cycle 
+                if (occ_times_unocc_dim == 0) cycle
 
                 allocate(coulomb_3c_matrix(nc,nb,na), STAT = status)
                 ASSERT(status==0)
@@ -169,7 +169,7 @@ contains
                 ASSERT(status==0)
 
                 mult_irr = cg(i_ir_c,i_ir_a,i_ir_b)%mult
-                
+
                 imult_: do imult = 1, mult_irr
 
                    call int_send_3c_resp_read(i_ir_c, i_ir_a, i_ir_b, imult, coulomb_3c_matrix, nff)
@@ -203,7 +203,7 @@ contains
                       call octave("RM",RM(NS:NF,:))
 #endif
 
-                   else                         
+                   else
                       call comm_init_send (comm_master_host, msgtag_response_3Clb_send)
                       call pck(final_coulomb)
                       call comm_send()
@@ -250,11 +250,11 @@ contains
          i_spin, na, nb, coulomb_3c, coulomb_matrix)
       use constants,         only: zero
       use resp_util_module,  only: min_diff
-      
+
       use linalg_module,     only: matmatmul
       implicit none
 
-      integer(kind=i4_kind), intent(in)    :: i_ir_a, i_ir_b, i_spin 
+      integer(kind=i4_kind), intent(in)    :: i_ir_a, i_ir_b, i_spin
       integer(kind=i4_kind), intent(in)    :: na, nb
       real(kind=r8_kind),    intent(inout) :: coulomb_3c(:,:)
       real(kind=r8_kind),    intent(inout) :: coulomb_matrix(:)
@@ -271,9 +271,9 @@ contains
       ASSERT(status==0)
 
       aux_matrix = 0.0_r8_kind
-      
+
       is_counter = 0   ! combined metaindex a->b
-      
+
       i_occ_: do i_occ = occs, occe
          trafo=>eigvec(i_ir_a)%m(:,i_occ,i_spin)
          aux_matrix = matmul(coulomb_3c,trafo)
@@ -283,7 +283,7 @@ contains
             coulomb_matrix(is_counter) = dot_product(trafo, aux_matrix)
          end do i_unocc_
       end do i_occ_
-      
+
       ! deallocate matrices for intermediate results
       deallocate(aux_matrix,  stat=status)
       ASSERT(status==0)

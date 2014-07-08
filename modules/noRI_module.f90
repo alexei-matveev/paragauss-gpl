@@ -35,7 +35,7 @@ module noRI_module
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: ...
   !  Date: ...
@@ -138,7 +138,7 @@ module noRI_module
   type(orbital_type),pointer             :: fcts_orbs_ch(:)
   type(orbital_gradient_type),pointer    :: grads_ch(:)
 
-  type(orbital_type),pointer             :: orbs_ob(:) 
+  type(orbital_type),pointer             :: orbs_ob(:)
   type(orbital_gradient_type),pointer    :: orbs_grads(:)
 
   type(arrmat4),     allocatable, target :: phi (:)
@@ -212,7 +212,7 @@ contains
        n_dim = dimension_of_fit_ch(i_ir)
        if (n_dim==0) cycle
 
-       do i = 1, 2*n_spin 
+       do i = 1, 2*n_spin
           ALLOCATE(RM(i)%m(n_dim,n_dim),STAT=status)
           ASSERT(status==0)
           RM(i)%m = ZERO
@@ -406,7 +406,7 @@ contains
        ABORT('DEAD BRANCH')
     end if
 
-    counter = 1  
+    counter = 1
     DO j=1,K
        RES(counter:counter+N-1) = RES(counter:counter+N-1) + D(:,j)
        counter = counter + N
@@ -518,7 +518,7 @@ contains
     n_spin = symmetry_data_n_spin()          !! SPIN
     npc    = symmetry_data_n_partners(i_ir)  !! PARTNER
     n_irr  = symmetry_data_n_irreps()        !! IRREP
-    nk     = size(DSP(1)%m,2)                !! 
+    nk     = size(DSP(1)%m,2)                !!
 
     select case (X_KIND)
     case (X_NONE)
@@ -540,7 +540,7 @@ contains
        CLDA = .false.
     end select
 
-    if (XLDA .and. CLDA) then 
+    if (XLDA .and. CLDA) then
        LDAON = .true.
     else
        LDAON = .false.
@@ -835,7 +835,7 @@ contains
     end if
 
 #if 0
-    if (comm_i_am_master()) then 
+    if (comm_i_am_master()) then
        call show("M4i(AA)",M4i(AA)%m)
        call show("M4i(AB)",M4i(AB)%m)
        if (n_spin==2) then
@@ -880,7 +880,7 @@ contains
        end do
 
        deallocate(gphi, STAT=status)
-       ASSERT(status==0) 
+       ASSERT(status==0)
     end if
 
   end subroutine noRI_XC
@@ -1100,11 +1100,11 @@ contains
                 as = as_tmp
                 call symGridInt2a(vla,na,ns,pcg,&
                      gphi_a(:,:,:,:),occs - 1,phi_s,unoccs - 1,deltaVg(:,:,:),as,res_mat)
-                
+
                 as = as_tmp
                 call symGridInt2s(vla,na,ns,pcg,&
                      phi_a,occs - 1,gphi_s(:,:,:,:),unoccs - 1,deltaVg(:,:,:),as,res_mat)
-                
+
              end if
 
           end do i_mlt_
@@ -1122,7 +1122,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(IN   ) :: vla,na,ns
     real(kind=r8_kind),    intent(IN   ) :: pcg(:,:,:)
-    real(kind=r8_kind),    intent(IN   ) :: phia(:,:,:), phis(:,:,:) 
+    real(kind=r8_kind),    intent(IN   ) :: phia(:,:,:), phis(:,:,:)
     real(kind=r8_kind),    intent(IN   ) :: Uin(:,:)
     integer(kind=i4_kind), intent(IN   ) :: oa, os
     integer(kind=i4_kind), intent(INOUT) :: as
@@ -1152,7 +1152,7 @@ contains
              i_pa_c_: do i_pa_c = 1, npc
                 FPP_TIMER_START(XC_int_NB)
                 coeff = pcg(i_pa_c,i_pa_a,i_pa_s)
-                if( abs(coeff) < 1e-7 ) CYCLE 
+                if( abs(coeff) < 1e-7 ) CYCLE
 
                 do i = 1, na
                    phiv(:vla,i) = phiv(:vla,i) &
@@ -1184,7 +1184,7 @@ contains
              do i_pa_c = 1, npc
                 FPP_TIMER_START(XC_int_NB)
                 coeff = pcg(i_pa_c,i_pa_a,i_pa_s)
-                if( abs(coeff) < 1e-7 ) CYCLE 
+                if( abs(coeff) < 1e-7 ) CYCLE
 
                 do i = 1, ns
                    phiv(:vla,i) = phiv(:vla,i) &
@@ -1229,7 +1229,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(IN   ) :: vla,na,ns
     real(kind=r8_kind),    intent(IN   ) :: pcg(:,:,:)
-    real(kind=r8_kind),    intent(IN   ) :: gphia(:,:,:,:), phis(:,:,:) 
+    real(kind=r8_kind),    intent(IN   ) :: gphia(:,:,:,:), phis(:,:,:)
     real(kind=r8_kind),    intent(IN   ) :: Uin(:,:,:)
     integer(kind=i4_kind), intent(IN   ) :: oa, os
     integer(kind=i4_kind), intent(INOUT) :: as
@@ -1258,7 +1258,7 @@ contains
           i_pa_c_: do i_pa_c = 1, npc
              FPP_TIMER_START(XC_int_NB)
              coeff = pcg(i_pa_c,i_pa_a,i_pa_s)
-             if( abs(coeff) < 1e-7 ) CYCLE 
+             if( abs(coeff) < 1e-7 ) CYCLE
 
              do i = 1, na
                 do r = 1,3
@@ -1333,7 +1333,7 @@ contains
           do i_pa_c = 1, npc
              FPP_TIMER_START(XC_int_NB)
              coeff = pcg(i_pa_c,i_pa_a,i_pa_s)
-             if( abs(coeff) < 1e-7 ) CYCLE 
+             if( abs(coeff) < 1e-7 ) CYCLE
 
              do i = 1, ns
                 do r = 1,3
@@ -1375,7 +1375,7 @@ contains
   subroutine noRI_receive(n_spin,M4i)
     !  Purpose: receive the results from the slaves
     !  Values of 2-index-integrals on the grid portion of
-    !  accessable to each slave are collected from the slaves    
+    !  accessable to each slave are collected from the slaves
     !  and added up to yield the final matrix
     !------------ Modules used ------------------- ---------------
     use xpack,       only: upck
@@ -1415,7 +1415,7 @@ contains
              M4i(idx)%m = M4i(idx)%m + help_mat
 
              deallocate(help_mat,STAT=status)
-             ASSERT(status==0)  
+             ASSERT(status==0)
           end do
        end do
     end do
@@ -1427,7 +1427,7 @@ contains
   subroutine noRI_tomaster(n_spin,M4i)
     !  Purpose: send results from the slave to the master
     !  Values of 2-index-integrals on the grid portion of
-    !  accessable to each slave are send to the master        
+    !  accessable to each slave are send to the master
     !------------ Modules used ------------------- ---------------
     use xpack, only: pck
     use comm_module
@@ -1456,7 +1456,7 @@ contains
 
   !*************************************************************
   subroutine noRI_totape(X,i_ir,n_spin,M4i)
-    !  Purpose: 
+    !  Purpose:
     !  Write 2index matrix row by row to a linear tape.
     !------------ Modules used ------------------- ---------------
     !!    use readwriteblocked_module
@@ -1555,7 +1555,7 @@ contains
     dFxdgdg   = zero
 
     select case(X_KIND)
-    case ( X_XALPHA )  
+    case ( X_XALPHA )
        call exchange_lda(X_XALPHA,vla,2,rho,Fx,dFxdn,dFxdndn)
     case ( X_BECKE88 )
        call exchange_lda(X_XALPHA ,vla,2,rho,Fx,dFxdn,dFxdndn)
@@ -1574,7 +1574,7 @@ contains
        call exchange_gga(X_REVPBE,vla,2,rho,gamma,Fx,dFxdn,dFxdg,dFxdndn,dFxdndg,dFxdgdg)
     end select
 
-    !! CORRELATION PART        
+    !! CORRELATION PART
     Flda      = zero
     dFldadn   = zero
     dFldadndn = zero
@@ -1587,7 +1587,7 @@ contains
     dFcdgdg   = zero
 
     select case (C_KIND)
-    case ( C_VWN )  
+    case ( C_VWN )
        eps(1:vla) = 1.0E-16_r8_kind
        call vwn_calcMDA(  rho,dFcdn,2,Fc,vla,eps,dFcdndn)
     case ( C_PWlda )
@@ -1619,7 +1619,7 @@ contains
             dFcdndn,dFcdndg,dFcdgdg,dFldadndn)
        Fc      = Fc      + Flda
        dFcdn   = dFcdn   + dFldadn
-       dFcdndn = dFcdndn + dFldadndn  
+       dFcdndn = dFcdndn + dFldadndn
     end select
 
     if (n_spin == 1) then
@@ -1648,24 +1648,24 @@ contains
 
        dFdndn(1:vla,AA) = gw(1:vla) * dFxdndn(1:vla,XCAA)
        dFdndn(1:vla,AB) = gw(1:vla) * dFxdndn(1:vla,XCAB)
-    case (2) 
-       dFdg  (1:vla,AA) = gw(1:vla) * dFxdg(1:vla,XCAA)   
+    case (2)
+       dFdg  (1:vla,AA) = gw(1:vla) * dFxdg(1:vla,XCAA)
        dFdg  (1:vla,AB) = gw(1:vla) * dFxdg(1:vla,XCAB) / TWO !! will be x2 later
-       dFdg  (1:vla,BB) = gw(1:vla) * dFxdg(1:vla,XCBB)   
+       dFdg  (1:vla,BB) = gw(1:vla) * dFxdg(1:vla,XCBB)
        dFdg  (1:vla,BA) = gw(1:vla) * dFxdg(1:vla,XCAB) / TWO !! will be x2 later
 
        dFdndn(1:vla,AA) = gw(1:vla) * dFxdndn(1:vla,XCAA)
        dFdndn(1:vla,AB) = gw(1:vla) * dFxdndn(1:vla,XCAB)
        dFdndn(1:vla,BB) = gw(1:vla) * dFxdndn(1:vla,XCBB)
-       dFdndn(1:vla,BA) = gw(1:vla) * dFxdndn(1:vla,XCAB) 
+       dFdndn(1:vla,BA) = gw(1:vla) * dFxdndn(1:vla,XCAB)
     end select
 
     dFdndg = zero
     dFdgdg = zero
 
     do i = 1,size(dFdndg,2)
-       dFdndg(1:vla,i)  = gw(1:vla) * dFxdndg(1:vla,i) 
-       dFdgdg(1:vla,i)  = gw(1:vla) * dFxdgdg(1:vla,i) 
+       dFdndg(1:vla,i)  = gw(1:vla) * dFxdndg(1:vla,i)
+       dFdgdg(1:vla,i)  = gw(1:vla) * dFxdgdg(1:vla,i)
     end do
 
   end subroutine noRI_XC_calc
@@ -1675,7 +1675,7 @@ contains
   subroutine noRI_phicalc(vla, n_irr, n_spin, orbs, phi, gorbs, gphi)
     !  Purpose: ..
     !------------ Modules used ------------------- ---------------
-    use eigen_data_module,      only: eigvec 
+    use eigen_data_module,      only: eigvec
     use constants,              only: ZERO,ONE
     implicit none
     !------------ Declaration of formal parameters ---------------
@@ -1738,7 +1738,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: j, counter, ias, ias_dn
-    !------------ Executable code -------------------------------- 
+    !------------ Executable code --------------------------------
 
     counter = 1
 
@@ -1749,7 +1749,7 @@ contains
        do ias = 1, N
           if (ias <= NSP(UP)) then
              DSP(UP)%m(ias   ,j) = D(counter+ias-1) * EPSETA(UP)%m(ias)
-          else              
+          else
              ias_dn =ias - NSP(UP)
              DSP(DN)%m(ias_dn,j) = D(counter+ias-1) * EPSETA(DN)%m(ias_dn)
           end if
@@ -1764,7 +1764,7 @@ contains
 !!$  subroutine noRI_
 !!$    !  Purpose: ..
 !!$    !------------ Modules used ------------------- ---------------
-!!$    use 
+!!$    use
 !!$    implicit none
 !!$    !------------ Declaration of formal parameters ---------------
 !!$    integer(kind=i4_kind), intent(     ) ::
@@ -1774,7 +1774,7 @@ contains
 !!$    !** End of interface *****************************************
 !!$    !------------ Declaration of local variables -----------------
 !!$    integer(kind=i4_kind)                ::
-!!$    real(kind=r8_kind)                   ::     
+!!$    real(kind=r8_kind)                   ::
 !!$    logical                              ::
 !!$    character                            ::
 !!$    !------------ Executable code --------------------------------

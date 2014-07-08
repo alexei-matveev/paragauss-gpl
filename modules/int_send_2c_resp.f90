@@ -27,12 +27,12 @@
 !=====================================================================
 module  int_send_2c_resp
 !---------------------------------------------------------------
-! 
-!  Purpose: Sending, receiving and storing of 
+!
+!  Purpose: Sending, receiving and storing of
 !           2 center coulomb integrals.
 !
-!  Module called by: integral_main_2cff, 
-! 
+!  Module called by: integral_main_2cff,
+!
 !  Based on: int_send_3c_resp
 !
 !  Author: SB
@@ -105,9 +105,9 @@ contains
     nib   = size(sa_2co_resp,1)
     nia   = size(sa_2co_resp,2)
     dim = (n_ifa * nia) * (n_ifb * nib)
-    
+
     if (dim==0) return
-    
+
     call readwriteblocked_startwrite(trim(tmpfile(fname(ua1,ua2,l1,l2,i_ir))), th_2c_resp)
 
     count = 0
@@ -123,15 +123,15 @@ contains
                 tmp_matrix(count) = sa_2co_resp(ib,ia,ifb,ifa)
              end do ifa_
           end do ia_
-          
+
        end do ifb_
     end do ib_
     call readwriteblocked_write(tmp_matrix,th_2c_resp)
     deallocate(tmp_matrix,STAT = status)
     ASSERT(status==0)
-    
-    call readwriteblocked_stopwrite(th_2c_resp) 
-    
+
+    call readwriteblocked_stopwrite(th_2c_resp)
+
    end subroutine int_send_2c_resp_save
   !*************************************************************
 
@@ -139,8 +139,8 @@ contains
   !*************************************************************
    subroutine int_send_2c_resp_rewrite()
      !
-     ! Main purpose: When scf finished, 
-     !   int_send_2c_resp_rewrite called from response_module 
+     ! Main purpose: When scf finished,
+     !   int_send_2c_resp_rewrite called from response_module
      !   to rewrite 2c coulomb in the correct way for RESTDD
      !
      !
@@ -159,7 +159,7 @@ contains
      integer(kind=i4_kind) :: counter, i_ir
      integer(kind=i4_kind) :: ua1, ua2
      integer(kind=i4_kind) :: l1, l2
-     integer(kind=i4_kind) :: ia, ib 
+     integer(kind=i4_kind) :: ia, ib
      integer(kind=i4_kind) :: dim_ch
      integer(kind=i4_kind) :: n_if_a, n_contr_a, n_uncontr_a, dim_ch_a
      integer(kind=i4_kind) :: n_if_b, n_contr_b, n_uncontr_b, dim_ch_b
@@ -172,10 +172,10 @@ contains
 !    integer(kind=i4_kind) :: io_unit
      !------------ Executable code --------------------------------
 
-     n_ir = symmetry_data_n_irreps() 
+     n_ir = symmetry_data_n_irreps()
      n_ua = n_unique_atoms
 
-     i_ir_: do i_ir = 1, n_ir  
+     i_ir_: do i_ir = 1, n_ir
 
         dim_ch      =  dimension_of_fit_ch(i_ir)
 
@@ -197,16 +197,16 @@ contains
                     n_uncontr_a = unique_atoms(ua1)%r2_ch%N_uncontracted_fcts
                  else
                     n_contr_a   = unique_atoms(ua1)%l_ch(l1)%N_contracted_fcts
-                    n_uncontr_a = unique_atoms(ua1)%l_ch(l1)%N_uncontracted_fcts                 
+                    n_uncontr_a = unique_atoms(ua1)%l_ch(l1)%N_uncontracted_fcts
                  end if
 
                  dim_ch_a = n_contr_a+n_uncontr_a
-                 
+
                  if (dim_ch_a==0) cycle
 
                  l2_: do l2 = -1, unique_atoms(ua2)%lmax_ch
 
-                    
+
                     inquire (file = trim(tmpfile(fname(ua1,ua2,l1,l2,i_ir))), exist=check_exist)
 
 !                    if (check_exist == .false.) then
@@ -289,7 +289,7 @@ contains
            !! 2) received on the master
            !! 3) added to the main one on the master
            !! NOTE: only master coulomb will be complete, other not!!!
-           n_procs = comm_get_n_processors() 
+           n_procs = comm_get_n_processors()
            if (comm_i_am_master()) then
               ALLOCATE(receive_coulomb(dim_diag_ch),STAT=status)
               ASSERT(status==0)
@@ -300,13 +300,13 @@ contains
               end do
               DEALLOCATE(receive_coulomb,STAT=status)
               ASSERT(status==0)
-           else                         
+           else
               call comm_init_send (comm_master_host, msgtag_send_2c_Colmb)
               call pck(tmp_matrix)
               call comm_send()
            end if
-           !! end: send-receive block 
-           
+           !! end: send-receive block
+
            write (ir_char, '(i4)') i_ir
            ir_char = adjustl(ir_char)
 

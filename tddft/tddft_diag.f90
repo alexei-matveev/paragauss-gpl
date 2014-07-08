@@ -32,15 +32,15 @@ MODULE  tddft_diag
   !
   !  Detalization:
   !  --------------
-  !  
-  !  Module called by: main_master 
+  !
+  !  Module called by: main_master
   !
   !
   !  References: ...
   !  Remarks   : As usual NOTHING is stored within this module.
   !              Any important information of needed by other parts
   !              parts of the program will be stored in the
-  !              "global_data_module.f90" 
+  !              "global_data_module.f90"
   !
   !  Author: SB
   !  Date:   01/06
@@ -91,7 +91,7 @@ MODULE  tddft_diag
 CONTAINS
   !*************************************************************
   SUBROUTINE diag_init()
-    !  Purpose: 
+    !  Purpose:
     ! MASTER AND SLAVE SHOULD COME HERE
     !------------ Modules used ----------------------------------
   USE filename_module,   ONLY: outfile
@@ -137,15 +137,15 @@ CONTAINS
 
    !if(gl_NTO.and.comm_i_am_master()) then
    !    inquire(file=TRIM(outfile("nto.tmp")), exist=it_exists)
-   !    ! Skip TDDFT calculation because the results are on file nto.tmp      
+   !    ! Skip TDDFT calculation because the results are on file nto.tmp
    !    if(it_exists) then
    !        print *, MyID, "diag_init: master found nto.tmp file, skipping TDDFT calculation"
    !        call nto_module_main()
    !        print *, MyID, "diag_init: nto done"
    !        ! *** DO NO MORE! ***
    !        RETURN
-   !    end if    
-   !end if       
+   !    end if
+   !end if
 
     FPP_TIMER_START(dvdDiag_all)
 
@@ -217,7 +217,7 @@ CONTAINS
           !! BE INCLUDED INTO CALCULATIONS FOR noRI CASE
           !! IT MEANS, THAT THE DIAGONAL FOR NORI WILL BE BASED
           !! ONLY ON COULOMB INTERCHANGE INTEGRALS
-          !! THIS CASE IS HERE BECAUSE OF THE TEST OF THE 
+          !! THIS CASE IS HERE BECAUSE OF THE TEST OF THE
           !! NUMERICAL INSTABILITY DUE TO THE XC INTEGRALS
 
           if (gl_noRI .or. gl_S_App) then
@@ -304,7 +304,7 @@ CONTAINS
             STAT = status)
        ASSERT(status==0)
 
-       NS = 1 
+       NS = 1
        NF = DIMUP
        do i = 1, n_sp
           call resp_util_buildr(DIMMS(i),DIMSL(i),&
@@ -324,7 +324,7 @@ CONTAINS
           NS = NF + 1
           NF = DIMAL
        end do
-       
+
        if (comm_i_am_master()) then
            if(gl_SS) call result_main(i_ir,DIMAL,eps,eta,MO_ALL,IRR)
        end if
@@ -379,7 +379,7 @@ CONTAINS
           if (tSS) gl_SS = .true.
        end if gl_ST_
 
-       !! Successive Approximations       
+       !! Successive Approximations
        if (gl_S_App) then
 
           if(gl_ST) call write_to_output_units("WARNING!!! SA for S->T")
@@ -433,7 +433,7 @@ CONTAINS
                call result_main(i_ir,DIMAL,eps,eta,MO_ALL,IRR)
           end if
        end if
-      
+
        FPP_TIMER_START(output_timer)
        deallocate(diag,eps,eta,MO_ALL,IRR,STAT=status)
        ASSERT(status==0)
@@ -445,7 +445,7 @@ CONTAINS
     FPP_TIMER_START(output_timer)
     call global_dealloc
 
-    if (comm_i_am_master()) call missing_irreps    
+    if (comm_i_am_master()) call missing_irreps
     FPP_TIMER_STOP (output_timer)
 
     FPP_TIMER_STOP(dvdDiag_all)
@@ -472,10 +472,10 @@ CONTAINS
     print *, MyID, "diag_init: about to start NTO"
     ! MH: entry point for nto_module
     if(gl_NTO.and.comm_i_am_master()) then
-        print *, MyID, "diag_init: master calling NTO" 
+        print *, MyID, "diag_init: master calling NTO"
         call nto_module_main()
         print *, MyID, "diag_init: master finished NTO"
-    end if      
+    end if
     print *, MyID, "diag_init: continue after NTO"
 
     print *, MyID, "diag_init: entering the barrier AFTER"
@@ -509,7 +509,7 @@ CONTAINS
     !------------ Declaration of formal parameters ---------------
     REAL   (KIND=r8_kind),INTENT(INOUT) :: DIAG_AUX(:)
     REAL   (KIND=r8_kind),INTENT(IN)    :: KERN(:,:), AX(:,:)
-    INTEGER(KIND=i4_kind),INTENT(IN)    :: NM, NS, NK 
+    INTEGER(KIND=i4_kind),INTENT(IN)    :: NM, NS, NK
     REAL   (KIND=r8_kind),INTENT(INOUT) :: DIAG(:)
     !** End of interface *****************************************
     !------------ Declaration of local variables ---------------------
@@ -528,7 +528,7 @@ CONTAINS
        do i = 1, NK
           do j = 1, NK
              DIAG_AUX(ias) = AX  (ias,i) &
-                  &        * KERN(i,j) & 
+                  &        * KERN(i,j) &
                   &        * AX  (ias,j) &
                   &        + DIAG_AUX(ias)
           end do
@@ -565,8 +565,8 @@ CONTAINS
 
   !*************************************************************
   subroutine Q_calc(ir,Qm,Qdm1)
-    !  Purpose: 
-    !  
+    !  Purpose:
+    !
     !  Output: Qm   =  Nsp * gl_Q^(-1)xgl_Qx(gl_Q^(-1))^T = Nsp * gl_Q^(-1)
     !          Qdm1 =  gl_Q^(-1)
     !------------ Modules used ----------------------------------
@@ -582,7 +582,7 @@ CONTAINS
 !!    integer(i4_kind) :: NSP
 !!    real   (r8_kind) :: AP(size(Qm,1),size(Qm,1))
     !------------ Executable code ------------------------------------
-    
+
     CALL read_Q(ir,Qm) ! read from file Qm:=gl_Q
 
     CALL invert_sym_matrix(Qm) ! Qdm1:=Qm^-1
@@ -591,11 +591,11 @@ CONTAINS
 
 #if 0
     ! AP = Qdm1xQm
-   
-#if 0   
+
+#if 0
     call matmatmul(Qdm1,Qm,AP)
     call matmatmul(AP,Qdm1,Qm,'N','T')
-#endif  
+#endif
 
     !!FIXME: Workaround baceause of strange bug in DGEMM
     !!FIXME: QM = NSP * Qdm1 should be enough
@@ -684,7 +684,7 @@ CONTAINS
 !!$  subroutine tddft_
 !!$  !  Purpose: ..
 !!$  !------------ Modules used ----------------------------------
-!!$    use 
+!!$    use
 !!$    implicit none
 !!$    !------------ Declaration of formal parameters ---------------
 !!$    integer(kind=i4_kind), intent(     ) ::
@@ -694,11 +694,11 @@ CONTAINS
 !!$    !** End of interface *****************************************
 !!$    !------------ Declaration of local variables -----------------
 !!$    integer(kind=i4_kind)                ::
-!!$    real(kind=r8_kind)                   ::     
+!!$    real(kind=r8_kind)                   ::
 !!$    logical                              ::
 !!$    character                            ::
 !!$    !------------ Executable code --------------------------------
-!!$      
+!!$
 !!$
 !!$  end subroutine tddft_
 !!$  !***********************************************************

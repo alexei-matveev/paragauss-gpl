@@ -855,7 +855,7 @@ contains
        call int_resp_Clb_3c()
        call stop_timer(timer_resp_Coulomb)
     end if
-    
+
     ! SB: THE MAIN CALCULATION IS HERE
     call write_to_output_units("response_main: main response calculations (START)")
 

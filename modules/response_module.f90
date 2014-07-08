@@ -127,7 +127,6 @@ module response_module
   USE init_tddft_module, only: init_tddft_start
   USE tddft_diag, only: diag_init
   USE phys_param_module
-  use resp_util_module
   use exchange
   use debug
 
@@ -732,7 +731,7 @@ contains
     !
     USE int_send_2c_resp, only: int_send_2c_resp_rewrite
     USE int_resp_module, only: int_resp_Clb_3c
-    USE resp_dipole_module
+    USE resp_dipole_module, only: resp_dipole_rewrite
     USE noRI_module, only: noRI_2c
     use comm, only: comm_rank
     implicit none
@@ -967,6 +966,8 @@ contains
     ! needed in several subroutines.
     !
     use ch_response_module, only: dimension_of_fit_ch
+    use resp_util_module, only: resp_util_set_level_index, &
+         resp_util_upck_level_index
     implicit none
     !** End of interface *****************************************
 
@@ -1065,9 +1066,10 @@ contains
     ! program.  Called by master through response_main().
     !
     use echo_input_module
-    use ch_response_module,   only: dimension_of_fit_ch
+    use ch_response_module, only: dimension_of_fit_ch
     use symmetry_data_module, only: symmetry_data_n_irreps
-    use clebsch_gordan,       only: cg=>cg_eliminated, prod_bas
+    use clebsch_gordan, only: cg => cg_eliminated, prod_bas
+    use resp_util_module, only: resp_util_calc_transitions_v2
     implicit none
     !** End of interface *****************************************
 
@@ -1280,11 +1282,11 @@ contains
 
   !*************************************************************
   subroutine response_write_2index_totape_v2(n_irrep,n_spin,dim_factor)
-    !  Purpose:
-    !  Write 2index matrix row by row to a linear tape.
-    !------------ Modules used ------------------- ---------------
-!   use iounitadmin_module,   only: openget_iounit,returnclose_iounit
+    !
+    ! Write 2index matrix row by row to a linear tape.
+    !
     use io, only: write_buffer
+    use resp_util_module, only: resp_util_fname
     implicit none
     integer(kind=i4_kind), intent(in) :: n_irrep,n_spin,dim_factor
     !** End of interface *****************************************
@@ -1297,8 +1299,6 @@ contains
        do i_spin=1, n_spin
           do i_dim=1, dim_factor
              idx = (i_spin-1)*dim_factor+i_dim
-!            io_unit = openget_iounit(trim(resp_dir)//'/'&
-!                 //resp_util_fname('xc_2c',i_ir,idx),form='unformatted',status='unknown')
              call write_buffer( trim(resp_dir)//'/'//resp_util_fname('xc_2c',i_ir,idx) &
                               , r2_index_matrix_v2(i_ir)%o(:,idx)                      &
                               )
@@ -1312,32 +1312,30 @@ contains
 
   !*************************************************************
   subroutine response_write_eigenval_occ()
-    use symmetry_data_module, only: symmetry_data_n_spin, symmetry_data_n_irreps
-    use clebsch_gordan, only: cg=>cg_eliminated
-    use resp_util_module
-    ! Purpose:
-    ! Write occupation numbers and eigenvalues to an interface
-    ! tape for the response program.
-    ! Note that in the response program only DIFFERENCES
-    !    "(epsilon_i - epsilon_s)"  and  "(f_i - f_s)"
-    ! of eigenvalues "epsilon_i,s" and (possibly fractional)
-    ! occupation numbers "f_i,s" between occupied (index "i")
-    ! and unoccupied (index "s") levels are needed,
-    ! like e.g. in the
+    !
+    ! Write occupation  numbers and  eigenvalues to an  interface tape
+    ! for  the response program.   Note that  in the  response program
+    ! only DIFFERENCES "(epsilon_i -  epsilon_s)" and "(f_i - f_s)" of
+    ! eigenvalues  "epsilon_i,s" and (possibly  fractional) occupation
+    ! numbers  "f_i,s"  between occupied  (index  "i") and  unoccupied
+    ! (index "s") levels are needed, like e.g. in the
     !
     !                     2*(epsilon_i - epsilon_s)*(f_i - f_s)
     ! lambda(is;omega) = ---------------------------------------
     !                      (epsilon_i - epsilon_s)^2 - omega^2
     !
-    ! quantity, where "omega" is the frequency.
-    ! However, the ordering of the difference-meta-index "is"
-    ! is crucial: it has to be the same as for the numerical
-    ! and analytical 3 index integrals calculated elsewhere in
-    ! this module !
-    !------------ Modules used ------------------- ---------------
+    ! quantity, where "omega" is the frequency.  However, the ordering
+    ! of the difference-meta-index  "is" is crucial: it has  to be the
+    ! same  as for  the  numerical and  analytical  3 index  integrals
+    ! calculated elsewhere in this module !
+    !
+    use symmetry_data_module, only: symmetry_data_n_spin, symmetry_data_n_irreps
+    use clebsch_gordan, only: cg => cg_eliminated
+    use resp_util_module, only: min_diff, resp_util_fname, &
+         resp_util_calc_transitions_v2, resp_util_borders
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables ---------------------
+
     integer(kind=i4_kind)   :: io_unit, io_stat
     integer(kind=i4_kind)   :: i_ir_a, i_ir_b, i_spin, i_occ, i_unocc, i_ir_c
     integer(kind=i4_kind)   :: is_counter
@@ -1408,6 +1406,7 @@ contains
   !*************************************************************
   subroutine response_shutdown
     !  Purpose: Clean up (deallocate private objects etc.)
+    use resp_util_module, only: MO_status, begin_index, end_index
     implicit none
     !** End of interface *****************************************
     !------------ Declaration of local variables ---------------------

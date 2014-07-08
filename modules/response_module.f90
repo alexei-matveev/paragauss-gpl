@@ -753,7 +753,7 @@ contains
 
     call response_setup()
 
-    if(comm_i_am_master()) then
+    if (.true.) then
 
        call write_to_trace_unit("Entering response part")
 
@@ -774,12 +774,16 @@ contains
        call write_to_output_units("response_main: response_write_header")
        call start_timer(timer_resp_preparations)
        call start_timer(timer_resp_header)
-       call response_write_header()
+       if (comm_rank() == 0) then
+          call response_write_header()
+       endif
        call stop_timer(timer_resp_header)
 
        ! write MO eigenvalues and occupation numbers to a tape
        call write_to_output_units("response_main: response_write_eigenval_occupation")
-       call response_write_eigenval_occ()
+       if (comm_rank() == 0) then
+          call response_write_eigenval_occ()
+       endif
        call stop_timer(timer_resp_preparations)
 
        FPP_TIMER_STOP (RESPONSE_SETUP)
@@ -854,10 +858,8 @@ contains
           call stop_timer(timer_resp_Coulomb)
        end if
 
-       !! SB: THE MAIN CALCULATION IS HERE
-       if (comm_i_am_master()) then
-          call write_to_output_units("response_main: main response calculations (START)")
-       end if
+       ! SB: THE MAIN CALCULATION IS HERE
+       call write_to_output_units("response_main: main response calculations (START)")
 
        FPP_TIMER_STOP (COULOMB_3C)
        FPP_TIMER_START(DIAG_PLUS_DVDSON)
@@ -866,9 +868,9 @@ contains
 
        call diag_init()
 
-       if (comm_i_am_master()) then
-          call write_to_output_units("response_main: main response calculations (FINISH)")
-       end if
+       call write_to_output_units &
+            ("response_main: main response calculations (FINISH)")
+
 
        FPP_TIMER_STOP (DIAG_PLUS_DVDSON)
        FPP_TIMER_START(RESPONSE_CLOSE)
@@ -972,16 +974,11 @@ contains
     use ch_response_module, only: dimension_of_fit_ch
     implicit none
     !** End of interface *****************************************
-    integer(kind=i4_kind)  :: i_ir, status
-    !------------ Executable code ------------------------------------
 
-    if(comm_i_am_master() .and. comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_response_setup)
-       call comm_send()
-    end if
+    integer (i4_kind) :: i_ir, status
 
-    ! get suitable vectorlength for this machine
-    vec_length=machineparameters_veclen
+    ! Get suitable vectorlength for this machine
+    vec_length = machineparameters_veclen
 
     ! get symmetry information (from symmetry_data_module)
     n_spin  = ssym%n_spin      ! number of spins
@@ -1063,7 +1060,6 @@ contains
     else
        call resp_util_upck_level_index()
     end if
-
   end subroutine response_setup
   !*************************************************************
 
@@ -1555,16 +1551,6 @@ contains
 
     print *,"WARNING: NO BLAS"
     print *," rho_cutoff = ",rho_cutoff
-
-    ! start calculation on the slaves:
-    ! main_slave() will call this subroutine
-    !(response_calc_2index_integrals) on slaves
-    if(comm_i_am_master()) then
-       if(comm_parallel()) then  ! is this a parallel run ?
-          call comm_init_send(comm_all_other_hosts,msgtag_response_2index)
-          call comm_send()
-       end if
-    end if
 
     n_ir = ssym%n_irrep
 
@@ -2371,16 +2357,6 @@ contains
     if (  xalpha_resp ) lda_case = .true.
     if (     vwn_resp ) lda_case = .true.
     if ( pw_ldac_resp ) lda_case = .true.
-
-    ! start calculation on the slaves:
-    ! main_slave() will call this subroutine
-    !(response_calc_2index_integrals) on slaves
-    if(comm_i_am_master()) then
-       if(comm_parallel()) then  ! is this a parallel run ?
-          call comm_init_send(comm_all_other_hosts,msgtag_response_2index)
-          call comm_send()
-       end if
-    end if
 
     FPP_TIMER_START(all)
 

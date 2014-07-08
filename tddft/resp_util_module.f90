@@ -163,8 +163,8 @@ contains
     !            All MO`s with a charge less or equal than
     !               "unoccupied_level_criterion"
     !
-    !  NOTE: This subroutine is called by MASTER        
-    !------------ Modules used ------------------- ---------------
+    ! NOTE: This subroutine is called by MASTER
+    !
     use msgtag_module, only: msgtag_response_level_send
     implicit none
     real(kind=r8_kind),intent(in) :: &
@@ -384,7 +384,7 @@ contains
     end if
 
     if (comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_response_level_send)
+       call comm_init_send (comm_all_other_hosts, msgtag_response_level_send)
        call pck(MO_status)
        call pck(begin_index)
        call pck(end_index)
@@ -411,18 +411,17 @@ contains
 
   !*************************************************************
   subroutine resp_util_upck_level_index()
-    !  Purpose: 
-    !  Receive the indices of the highest FULLY occupied level
-    !  and of the lowest EMPTY level to all slaves.
-    !  NOTE: This subroutine is called by "main_slave()" only !         
-    !------------ Modules used ------------------- ---------------
+    !
+    ! Receive the indices  of the highest FULLY occupied  level and of
+    ! the lowest EMPTY level to  all slaves.  NOTE: This subroutine is
+    ! called on slaves only!
+    !
     use constants, only: zero
     use msgtag_module, only: msgtag_response_level_send
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables ---------------------
-    integer(i4_kind) :: max_dim, n_spin, n_irrep, alloc_stat
-    !------------ Executable code ------------------------------------
+
+    integer (i4_kind) :: max_dim, n_spin, n_irrep, alloc_stat
 
     !## then allocate memory for the array MO_status
 
@@ -444,7 +443,7 @@ contains
     n_partial   = 0
     n_empty     = 0
 
-    call comm_save_recv(comm_master_host,msgtag_response_level_send)
+    call comm_save_recv (comm_master_host, msgtag_response_level_send)
     call upck(MO_status)
     call upck(begin_index)
     call upck(end_index)

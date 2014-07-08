@@ -148,7 +148,7 @@ contains
      use unique_atom_module, only: n_unique_atoms
      use symmetry_data_module, only: symmetry_data_n_partners
      use debug, only: show
-     use msgtag_module, only: msgtag_send_2c_Colmb, msgtag_send_2c_start
+     use msgtag_module, only: msgtag_send_2c_Colmb
 !    use iounitadmin_module,   only: openget_iounit,returnclose_iounit
      use ch_response_module,   only: fit_position
      use comm_module
@@ -171,13 +171,6 @@ contains
      integer(kind=i4_kind) :: imeta_a, imeta_b, n_ua, dim_diag_ch
 !    integer(kind=i4_kind) :: io_unit
      !------------ Executable code --------------------------------
-
-     if(comm_i_am_master()) then
-       if(comm_parallel()) then 
-          call comm_init_send(comm_all_other_hosts,msgtag_send_2c_start)
-          call comm_send()
-       end if
-    end if
 
      n_ir = symmetry_data_n_irreps() 
      n_ua = n_unique_atoms
@@ -297,18 +290,18 @@ contains
            !! 3) added to the main one on the master
            !! NOTE: only master coulomb will be complete, other not!!!
            n_procs = comm_get_n_processors() 
-           if(comm_i_am_master()) then
+           if (comm_i_am_master()) then
               ALLOCATE(receive_coulomb(dim_diag_ch),STAT=status)
               ASSERT(status==0)
               do i_proc=2,n_procs
-                 call comm_save_recv(i_proc,msgtag_send_2c_Colmb)
+                 call comm_save_recv (i_proc, msgtag_send_2c_Colmb)
                  call upck(receive_coulomb)
                  tmp_matrix = tmp_matrix + receive_coulomb
               end do
               DEALLOCATE(receive_coulomb,STAT=status)
               ASSERT(status==0)
            else                         
-              call comm_init_send(comm_master_host,msgtag_send_2c_Colmb)
+              call comm_init_send (comm_master_host, msgtag_send_2c_Colmb)
               call pck(tmp_matrix)
               call comm_send()
            end if

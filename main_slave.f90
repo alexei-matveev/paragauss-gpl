@@ -67,17 +67,6 @@ use pointcharge_module
 use induced_dipoles_module, only: send_receive_id
 use calc_id_module, only: calc_Pol_ham
 use fit_coeff_module, only: fit_coeff_receive
-#ifdef WITH_RESPONSE
-  use response_module, only: response_setup, &
-       & response_calc_2index_int_v2
-  use int_resp_module, only: int_resp_Clb_3c
-  use init_tddft_module, only: init_tddft_start
-  use tddft_diag, only: diag_init
-  use global_module, only: global_dealloc_M
-  use int_send_2c_resp, only: int_send_2c_resp_rewrite
-  use noRI_module, only: noRI_2c
-#endif
-
 #ifdef WITH_EPE
 use epe_module
 use main_epe_module, only : main_epe,                      &
@@ -113,33 +102,6 @@ do ! while comm_msgtag() /= msgtag_finito, then RETURN
       !
       call say("fit_coeff_receive")
       call fit_coeff_receive()
-#ifdef WITH_RESPONSE
-     case(msgtag_response_setup)
-        call say("response_setup")
-        call response_setup()
-     case(msgtag_response_2index)
-        call say("response_calc_2index_int_v2")
-        call response_calc_2index_int_v2()
-     case(msgtag_response_3Clb_start)
-        call say("int_resp_Clb_3c")
-        call int_resp_Clb_3c()
-     case(msgtag_tddft_eps_eta)
-        call say("init_tddft_eps_eta")
-        call init_tddft_start()
-     case(msgtag_tddft_clshell)
-        call say("closed_shell_init")
-        call diag_init()
-     case(msgtag_tddft_dealloM)
-        call say("global_dealloc_M")
-        call global_dealloc_M()
-     case(msgtag_send_2c_start)
-        call say("int_send_2c_resp_rewrite")
-        call int_send_2c_resp_rewrite()
-
-     case(msgtag_nori_2c_send)
-        call say("noRI_2c start")
-        call noRI_2c()
-#endif
 
 #ifdef WITH_EPE
 !AG ============================ EPE-distribution =========================

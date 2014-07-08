@@ -93,10 +93,10 @@ INTEGER_T :: msgtag_build_xcmda=           82
 INTEGER_T :: msgtag_vir_levels=            85
 INTEGER_T :: msgtag_rot_levels=            87
 INTEGER_T :: msgtag_int_dipole_result=     93
-INTEGER_T :: msgtag_response_setup=        95
+!NTEGER_T :: msgtag_response_setup=        95
 INTEGER_T :: msgtag_response_level_send=   96
 !NTEGER_T :: msgtag_response_chmat=        97
-INTEGER_T :: msgtag_response_2index=       98
+!NTEGER_T :: msgtag_response_2index=       98
 !NTEGER_T :: msgtag_resp_2in_sl_start=     99
 INTEGER_T :: msgtag_response_2in_send=    100
 !NTEGER_T :: msgtag_response_2in_send2=   101
@@ -104,7 +104,7 @@ INTEGER_T :: msgtag_response_2in_send=    100
 !NTEGER_T :: msgtag_resp_sl_start_3ind=   103
 !NTEGER_T :: msgtag_resp_3ind_fitdim=     104
 !NTEGER_T :: msgtag_response_3ind_send=   105
-INTEGER_T :: msgtag_response_3Clb_start=  106
+!NTEGER_T :: msgtag_response_3Clb_start=  106
 !NTEGER_T :: msgtag_resp_sl_start_3Clb=   107
 INTEGER_T :: msgtag_response_3Clb_send=   108
 !NTEGER_T :: msgtag_send_all_levels=      111
@@ -165,8 +165,8 @@ INTEGER_T :: msgtag_cpks_solv3        =   191
 INTEGER_T :: msgtag_cpks_solv4        =   192
 INTEGER_T :: msgtag_resp_2center=         189
 !NTEGER_T :: msgtag_resp_3center_co=      190
-INTEGER_T :: msgtag_tddft_eps_eta=        191
-INTEGER_T :: msgtag_tddft_clshell=        192
+!NTEGER_T :: msgtag_tddft_eps_eta=        191
+!NTEGER_T :: msgtag_tddft_clshell=        192
 !NTEGER_T :: msgtag_tddft_opshell=        193
 INTEGER_T :: msgtag_tddft_diagonl=        194
 !NTEGER_T :: msgtag_tddft_diagnup=        195
@@ -177,12 +177,12 @@ INTEGER_T :: msgtag_tddft_parmlt3=        199
 INTEGER_T :: msgtag_tddft_dipolem=        201
 !NTEGER_T :: msgtag_tddft_diagsnd=        202
 INTEGER_T :: msgtag_tddft_sendeig=        203
-INTEGER_T :: msgtag_tddft_dealloM=        204
+!NTEGER_T :: msgtag_tddft_dealloM=        204
 INTEGER_T :: msgtag_send_2c_Colmb=        205
 !NTEGER_T :: msgtag_send_3c_Colmb=        206
-INTEGER_T :: msgtag_send_2c_start=        207
+!NTEGER_T :: msgtag_send_2c_start=        207
 INTEGER_T :: msgtag_tmp_3co_send =        208
-INTEGER_T :: msgtag_nori_2c_send =        209
+!NTEGER_T :: msgtag_nori_2c_send =        209
 INTEGER_T :: msgtag_ind_dipmom   =        210
 INTEGER_T :: msgtag_Pol_ham      =        211
 INTEGER_T :: msgtag_back_Pol_ham =        212
@@ -244,10 +244,10 @@ contains
     CMP(msgtag_vir_levels)
     CMP(msgtag_rot_levels)
     CMP(msgtag_int_dipole_result)
-    CMP(msgtag_response_setup)
+    !MP(msgtag_response_setup)
     CMP(msgtag_response_level_send)
     !MP(msgtag_response_chmat)
-    CMP(msgtag_response_2index)
+    !MP(msgtag_response_2index)
     !MP(msgtag_resp_2in_sl_start)
     CMP(msgtag_response_2in_send)
     !MP(msgtag_response_2in_send2)
@@ -255,7 +255,7 @@ contains
     !MP(msgtag_resp_sl_start_3ind)
     !MP(msgtag_resp_3ind_fitdim)
     !MP(msgtag_response_3ind_send)
-    CMP(msgtag_response_3Clb_start)
+    !MP(msgtag_response_3Clb_start)
     !MP(msgtag_resp_sl_start_3Clb)
     CMP(msgtag_response_3Clb_send)
     !MP(msgtag_send_all_levels)
@@ -315,8 +315,8 @@ contains
     CMP(msgtag_cpks_solv4)
     CMP(msgtag_resp_2center)
     !MP(msgtag_resp_3center_co)
-    CMP(msgtag_tddft_eps_eta)
-    CMP(msgtag_tddft_clshell)
+    !MP(msgtag_tddft_eps_eta)
+    !MP(msgtag_tddft_clshell)
     !MP(msgtag_tddft_opshell)
     CMP(msgtag_tddft_diagonl)
     !MP(msgtag_tddft_diagnup)
@@ -327,12 +327,12 @@ contains
     CMP(msgtag_tddft_dipolem)
     !MP(msgtag_tddft_diagsnd)
     CMP(msgtag_tddft_sendeig)
-    CMP(msgtag_tddft_dealloM)
+    !MP(msgtag_tddft_dealloM)
     CMP(msgtag_send_2c_Colmb)
     !MP(msgtag_send_3c_Colmb)
-    CMP(msgtag_send_2c_start)
+    !MP(msgtag_send_2c_start)
     CMP(msgtag_tmp_3co_send)
-    CMP(msgtag_nori_2c_send)
+    !MP(msgtag_nori_2c_send)
     CMP(msgtag_ind_dipmom)
     CMP(msgtag_Pol_ham)
     CMP(msgtag_back_Pol_ham)

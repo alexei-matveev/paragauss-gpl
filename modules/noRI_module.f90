@@ -80,7 +80,7 @@ module noRI_module
 
 
   !------------ public functions and subroutines ---------------------
-  public noRI_2c, noRI_4c
+  public :: noRI_2c, noRI_4c
 
   !===================================================================
   ! End of public interface of module
@@ -184,15 +184,8 @@ contains
 !!$    FPP_TIMER_ZERO(output)
 !!$    FPP_TIMER_ZERO(all)
 
-    if (comm_i_am_master()) then
-       X_KIND = X
-       C_KIND = C
-       if(comm_parallel()) then  ! is this a parallel run ?
-          call comm_init_send(comm_all_other_hosts,msgtag_nori_2c_send)
-          call comm_send()
-       end if
-    end if
-
+    X_KIND = X
+    C_KIND = C
     call comm_bcast(X_KIND)
     call comm_bcast(C_KIND)
 

@@ -38,7 +38,6 @@ MODULE  init_tddft_module
   USE type_module          ! contains standard data types
   USE iounitadmin_module   ! to open output units
   USE debug
-  USE msgtag_module, ONLY: msgtag_tddft_eps_eta
   USE xpack
 
   IMPLICIT NONE
@@ -46,7 +45,7 @@ MODULE  init_tddft_module
   !== Interrupt end of public interface of module ====================
 
   !------------ public functions and subroutines ---------------------
-  PUBLIC init_tddft_start
+  public :: init_tddft_start
 
   !===================================================================
   ! End of public interface of module
@@ -76,30 +75,17 @@ CONTAINS
     EXTERNAL error_handler
     !------------ Executable code ------------------------------------
 
-    if(comm_i_am_master()) then
-       if(comm_parallel()) then
-          call comm_init_send(comm_all_other_hosts,msgtag_tddft_eps_eta)
-          call comm_send()
-       end if
-    end if
+    CALL write_to_output_units('  init_start: call df_data_read_header()')
 
-    if (comm_i_am_master()) &
-         CALL write_to_output_units(&
-         & '  init_start: call df_data_read_header()')
     CALL init_send_eigenparam()
 
-    if (comm_i_am_master()) then
-       CALL write_to_output_units('  init_start: call df_data_read_header()')
-    end if
+    CALL write_to_output_units('  init_start: call df_data_read_header()')
 
     CALL init_read_header()
 
-    if (comm_i_am_master()) then
-       CALL write_to_output_units('  init_start: call df_data_read_eps_eta()')
-    end if
+    CALL write_to_output_units('  init_start: call df_data_read_eps_eta()')
 
     CALL init_read_eps_eta()
-
   END SUBROUTINE init_tddft_start
   !*************************************************************
 
@@ -121,12 +107,12 @@ CONTAINS
 !!#if 0
     if (comm_i_am_master()) then
        do i_proc = 2, comm_get_n_processors()
-          call comm_init_send(i_proc,msgtag_tddft_sendeig)
+          call comm_init_send (i_proc, msgtag_tddft_sendeig)
           call pck(gl_eig_crite)
           call comm_send()
        end do
     else
-       call comm_save_recv(comm_master_host,msgtag_tddft_sendeig)
+       call comm_save_recv (comm_master_host, msgtag_tddft_sendeig)
        call upck(gl_eig_crite)
     end if
 !!#endif

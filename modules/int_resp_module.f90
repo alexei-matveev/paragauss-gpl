@@ -63,7 +63,7 @@ module int_resp_module
   !== Interrupt end of public interface of module ====================
 
   !------------ public functions and subroutines ---------------------
-  public int_resp_Clb_3c
+  public :: int_resp_Clb_3c
 
   !===================================================================
   ! End of public interface of module
@@ -75,7 +75,7 @@ contains
 
 
   !*************************************************************
-  subroutine int_resp_Clb_3c
+  subroutine int_resp_Clb_3c()
     !  Purpose: ..
     !------------ Modules used ------------------- ---------------
     use ch_response_module,   only: dimension_of_fit_ch
@@ -111,14 +111,6 @@ contains
     real(kind=r8_kind),    allocatable :: RM(:,:)
 
     integer(kind=i4_kind)              :: n_spin, dim_factor
-    
-    !------------ Executable code ------------------------------------
-    if(comm_i_am_master()) then
-       if(comm_parallel()) then 
-          call comm_init_send(comm_all_other_hosts,msgtag_response_3Clb_start)
-          call comm_send()
-       end if
-    end if
 
     n_ir       = ssym%n_irrep
     n_spin     = ssym%n_spin
@@ -192,13 +184,13 @@ contains
                    ! ******
                    ! collect results on master and save them to tape
                    ! ******
-                   if(comm_i_am_master()) then
+                   if (comm_i_am_master()) then
                       NS = NF + 1
                       NF = NF + size(final_coulomb,1)
                       RM(NS:NF,1:nc) = final_coulomb(:,1:nc)
                       iac = 1
                       do i_proc=2,n_procs
-                         call comm_save_recv(i_proc,msgtag_response_3Clb_send)
+                         call comm_save_recv (i_proc, msgtag_response_3Clb_send)
 !!$                         call upck(final_coulomb(:,1:nff(i_proc)))
                          call upck(final_coulomb)
                          iac = iac + nff(i_proc-1)
@@ -212,7 +204,7 @@ contains
 #endif
 
                    else                         
-                      call comm_init_send(comm_master_host,msgtag_response_3Clb_send)
+                      call comm_init_send (comm_master_host, msgtag_response_3Clb_send)
                       call pck(final_coulomb)
                       call comm_send()
                    end if

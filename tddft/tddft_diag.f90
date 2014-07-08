@@ -72,7 +72,7 @@ MODULE  tddft_diag
   !== Interrupt end of public interface of module ====================
 
   !------------ public functions and subroutines ---------------------
-  PUBLIC diag_init
+  public :: diag_init
 
   INTEGER(KIND=i4_kind), PUBLIC, PARAMETER :: UP = 1, DN = 2
   !===================================================================
@@ -153,12 +153,6 @@ CONTAINS
     n_ir = gl_N_irr
 
     gl_S_APP_XC = .false.
-
-    ! Tell the slaves to enter this subroutine (diag_init)
-    if(comm_i_am_master() .and. comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_tddft_clshell)
-       call comm_send()
-    end if
 
     i_ir_: do i_ir = 1, n_ir
 

@@ -30,9 +30,9 @@ module atoms_data_module
 ! Author: AS
 ! Date: 03 2002
 !
-! This module collect set of atomic data which are used 
+! This module collect set of atomic data which are used
 ! at the moment in solvation_module, disp_rep_module and
-! potential_calc_module 
+! potential_calc_module
 !---------------------------------------------------------------------
 ! Modifications
 !---------------------------------------------------------------------
@@ -57,7 +57,7 @@ module atoms_data_module
   character(len=2),parameter,public :: &
 # else
   character(len=2),public :: &
-#endif   
+#endif
        atom_name(98)= (/"H ","He","Li","Be","B ","C ","N ","O ","F ","Ne", &
                         "Na","Mg","Al","Si","P ","S ","Cl","Ar","K ","Ca", &
                         "Sc","Ti","V ","Cr","Mn","Fe","Co","Ni","Cu","Zn", &
@@ -69,7 +69,7 @@ module atoms_data_module
                         "Tl","Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th", &
                         "Pa","U ","Np","Pu","Am","Cm","Bk","Cf"/)
 
-  ! default van der Waals radii used in solvation_module to build a solvent 
+  ! default van der Waals radii used in solvation_module to build a solvent
   ! excluding molecular surfaces (A.Bondi, J.Phys.Chem., V.68, N.3, P.441, 1964)
 !!!  real(kind=r8_kind),parameter,public :: &
 #ifdef _LINUX
@@ -78,7 +78,7 @@ module atoms_data_module
   real(kind=r8_kind),public :: &
 #endif
        vdW_radius(98)=(/1.20,1.40,1.82,0.00,0.00,1.70,1.55,1.52,1.47,1.54, &
-                        ! H    He   Li   Be   B    C    N    O    F    Ne 
+                        ! H    He   Li   Be   B    C    N    O    F    Ne
                         2.27,1.73,0.00,2.10,1.80,1.80,1.75,1.88,2.75,0.00, &
                         ! Na   Mg   Al   Si   P    S    Cl   Ar   K    Ca
                         0.00,0.00,0.00,0.00,0.00,0.00,0.00,1.63,1.40,1.39, &
@@ -98,7 +98,7 @@ module atoms_data_module
                         0.00,1.86,0.00,0.00,0.00,0.00,0.00,0.00/)
                         ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-  ! default van der Waals radii and K parameters used in disp_rep_module 
+  ! default van der Waals radii and K parameters used in disp_rep_module
   ! to calculate the short range contribution to the free solvation energy
   ! (J.Caillet, P.Claverie, B.Pullman, Acta Cryst. B, V.32, P.2740, 1976
   !  J.Caillet, P.Claverie, Acta Cryst. A, V.31, P.448, 1975
@@ -111,7 +111,7 @@ module atoms_data_module
   real(kind=r8_kind),public :: &
 #endif
        R0_def(98)=(/1.20,0.00,0.00,0.00,0.00,1.70,1.60,1.50,1.45,0.00, &
-                    ! H    He   Li   Be   B    C    N    O    F    Ne 
+                    ! H    He   Li   Be   B    C    N    O    F    Ne
                     1.20,0.00,0.00,0.00,1.85,1.80,1.76,0.00,1.46,0.00, &
                     ! Na   Mg   Al   Si   P    S    Cl   Ar   K    Ca
                     0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00, &
@@ -131,14 +131,14 @@ module atoms_data_module
                     0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00/)
                     ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-!!!  real(kind=r8_kind),parameter,public :: & 
+!!!  real(kind=r8_kind),parameter,public :: &
 #ifdef _LINUX
   real(kind=r8_kind),parameter,public :: &
 # else
   real(kind=r8_kind),public :: &
 #endif
        K_def(98)=(/1.00,0.00,0.00,0.00,0.00,1.00,1.18,1.36,1.50,0.00, &
-                   ! H    He   Li   Be   B    C    N    O    F    Ne 
+                   ! H    He   Li   Be   B    C    N    O    F    Ne
                    1.40,0.00,0.00,0.00,2.10,2.40,2.10,0.00,2.90,0.00, &
                    ! Na   Mg   Al   Si   P    S    Cl   Ar   K    Ca
                    0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00, &
@@ -158,7 +158,7 @@ module atoms_data_module
                    0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00/)
                    ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-  ! (A.K.Rappe, C.C. Casewit, K.S. Colwell, W.A.Goddard, W.M.Skiff, 
+  ! (A.K.Rappe, C.C. Casewit, K.S. Colwell, W.A.Goddard, W.M.Skiff,
   ! J.Am.Chem.Soc., V.114, P.10024, 1992)
 !!!  real(kind=r8_kind),parameter,public :: &
 #ifdef _LINUX

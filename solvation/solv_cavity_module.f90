@@ -67,7 +67,6 @@ module solv_cavity_module
        returnclose_iounit
   use group_module ,only: symm_transformation_int
   use output_module ,only: output_cavity_data, output_cavity_long
-  use atoms_data_module
   use integralpar_module, only: integralpar_2dervs
   use polyhedron_module
 #ifdef FPP_AIX_XLF
@@ -332,7 +331,7 @@ module solv_cavity_module
   real(r8_kind),parameter :: d=0.15_r8_kind
   integer(i4_kind) :: Nd
   real(r8_kind) :: a(7)
-  !parameters defining behavior FIXPVA
+  ! Parameters defining behavior FIXPVA, in Angsrom:
   real(r8_kind), parameter :: mm11=0.02_r8_kind
   real(r8_kind), parameter :: mm12=0.55_r8_kind
   real(r8_kind), parameter :: nn11=1.0_r8_kind
@@ -1073,8 +1072,12 @@ contains ! of module
     !------------------------------------------------------------
     ! Public interface of module
     subroutine calc_cavity_1
-      !private subroutine
-      !solvent accessible surface (only for dispersion-repulsion and cavitation terms)
+      !
+      ! Private  subroutine.   Solvent  accessible surface  (only  for
+      ! dispersion-repulsion and cavitation terms)
+      !
+      use atoms_data_module, only: vdW_radius, atom_name, R_def_rap
+      implicit none
       ! End of public interface of module
 
       real(kind=r8_kind) :: v_d_w_r
@@ -1208,7 +1211,11 @@ contains ! of module
 
     !------------------------------------------------------------
     subroutine calc_cavity
-      ! the solvent excluding surface
+      !
+      ! The solvent excluding surface
+      !
+      use atoms_data_module, only: atom_name, vdW_radius, R_def_rap
+      implicit none
       !** End of interface *****************************************
 
       real(kind=r8_kind) :: r_mini, r_new
@@ -1720,8 +1727,13 @@ contains ! of module
 
     !------------------------------------------------------------
     subroutine calc_cavity_93
-      !Solvent excluding surface (Gepol93 algorithm)
+      !
+      ! Solvent excluding surface (Gepol93 algorithm)
+      !
+      use atoms_data_module, only: atom_name, vdW_radius, R_def_rap
+      implicit none
       !** End of interface *****************************************
+
       real(r8_kind), allocatable :: r_sphere_buf(:)
       real(r8_kind), allocatable :: xyz_sphere_buf(:,:)
       integer(i4_kind), allocatable :: parents_buf(:,:)

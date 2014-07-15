@@ -53,11 +53,7 @@ module atoms_data_module
 !
 !-- Public variables --------------------------------------------
 
-#ifdef _LINUX
-  character(len=2),parameter,public :: &
-# else
-  character(len=2),public :: &
-#endif
+  character (len=2), parameter, public :: &
        atom_name(98)= (/"H ","He","Li","Be","B ","C ","N ","O ","F ","Ne", &
                         "Na","Mg","Al","Si","P ","S ","Cl","Ar","K ","Ca", &
                         "Sc","Ti","V ","Cr","Mn","Fe","Co","Ni","Cu","Zn", &
@@ -72,11 +68,7 @@ module atoms_data_module
   ! Default van  der Waals radii  used in solvation_module to  build a
   ! solvent excluding molecular surfaces (A.Bondi, J.Phys.Chem., V.68,
   ! N.3, P.441, 1964)
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        vdW_radius(98)=(/1.20,1.40,1.82,0.00,0.00,1.70,1.55,1.52,1.47,1.54, &
                         ! H    He   Li   Be   B    C    N    O    F    Ne
                         2.27,1.73,0.00,2.10,1.80,1.80,1.75,1.88,2.75,0.00, &
@@ -106,11 +98,7 @@ module atoms_data_module
   !  J.Caillet, P.Claverie, Acta Cryst. A, V.31, P.448, 1975
   !  F.Vigné-Maeder, P.Claverie, J.Am.Chem.Soc., V.109, P.24, 1987
   !  J.Caillet, P.Claverie, B.Pullman, Acta Cryst. B, V.36, P.3266, 1978)
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        R0_def(98)=(/1.20,0.00,0.00,0.00,0.00,1.70,1.60,1.50,1.45,0.00, &
                     ! H    He   Li   Be   B    C    N    O    F    Ne
                     1.20,0.00,0.00,0.00,1.85,1.80,1.76,0.00,1.46,0.00, &
@@ -132,11 +120,7 @@ module atoms_data_module
                     0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00/)
                     ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        K_def(98)=(/1.00,0.00,0.00,0.00,0.00,1.00,1.18,1.36,1.50,0.00, &
                    ! H    He   Li   Be   B    C    N    O    F    Ne
                    1.40,0.00,0.00,0.00,2.10,2.40,2.10,0.00,2.90,0.00, &
@@ -160,11 +144,7 @@ module atoms_data_module
 
   ! (A.K.Rappe,  C.C. Casewit,  K.S. Colwell,  W.A.Goddard, W.M.Skiff,
   ! J.Am.Chem.Soc., V.114, P.10024, 1992)
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        R_def_rap(103)=(/2.886,2.362,2.451,2.745,4.083,3.851,3.660,3.500, &
                         !  H     He    Li    Be    B     C     N     O
                         3.364,3.243,2.983,3.021,4.499,4.295,4.147,4.035, &
@@ -192,11 +172,7 @@ module atoms_data_module
                         3.339,3.313,3.299,3.286,3.274,3.248,3.236/)
                         !  Bk    Cf    Es    Fm    Md    No    Lw
 
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        D_def_rap(103)=(/0.044,0.056,0.025,0.085,0.180,0.105,0.069,0.060, &
                         !  H     He    Li    Be    B     C     N     O
                         0.050,0.042,0.030,0.111,0.505,0.402,0.305,0.274, &
@@ -225,11 +201,7 @@ module atoms_data_module
                         !  Bk    Cf    Es    Fm    Md    No    Lw
 
 
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        zeta_def_rap(103)=(/12.00 ,15.24 ,12.00 ,12.00 ,12.052,12.73 ,13.407,14.085, &
                            !  H      He     Li     Be     B      C      N      O
                            14.762,15.440,12.0  ,12.0  ,11.278,12.175,13.072,13.969, &

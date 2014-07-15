@@ -52,7 +52,7 @@ module atoms_data_module
 !== Interrupt end of public interface of module =================
 !
 !-- Public variables --------------------------------------------
-!!!  character(len=2),parameter,public :: &
+
 #ifdef _LINUX
   character(len=2),parameter,public :: &
 # else
@@ -69,9 +69,9 @@ module atoms_data_module
                         "Tl","Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th", &
                         "Pa","U ","Np","Pu","Am","Cm","Bk","Cf"/)
 
-  ! default van der Waals radii used in solvation_module to build a solvent
-  ! excluding molecular surfaces (A.Bondi, J.Phys.Chem., V.68, N.3, P.441, 1964)
-!!!  real(kind=r8_kind),parameter,public :: &
+  ! Default van  der Waals radii  used in solvation_module to  build a
+  ! solvent excluding molecular surfaces (A.Bondi, J.Phys.Chem., V.68,
+  ! N.3, P.441, 1964)
 #ifdef _LINUX
   real(kind=r8_kind),parameter,public :: &
 # else
@@ -98,13 +98,14 @@ module atoms_data_module
                         0.00,1.86,0.00,0.00,0.00,0.00,0.00,0.00/)
                         ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-  ! default van der Waals radii and K parameters used in disp_rep_module
-  ! to calculate the short range contribution to the free solvation energy
+  ! Default   van  der   Waals  radii   and  K   parameters   used  in
+  ! disp_rep_module to  calculate the short range  contribution to the
+  ! free solvation energy
+  !
   ! (J.Caillet, P.Claverie, B.Pullman, Acta Cryst. B, V.32, P.2740, 1976
   !  J.Caillet, P.Claverie, Acta Cryst. A, V.31, P.448, 1975
   !  F.Vigné-Maeder, P.Claverie, J.Am.Chem.Soc., V.109, P.24, 1987
   !  J.Caillet, P.Claverie, B.Pullman, Acta Cryst. B, V.36, P.3266, 1978)
-!!!  real(kind=r8_kind),parameter,public :: &
 #ifdef _LINUX
   real(kind=r8_kind),parameter,public :: &
 # else
@@ -131,7 +132,6 @@ module atoms_data_module
                     0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00/)
                     ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-!!!  real(kind=r8_kind),parameter,public :: &
 #ifdef _LINUX
   real(kind=r8_kind),parameter,public :: &
 # else
@@ -158,9 +158,8 @@ module atoms_data_module
                    0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00/)
                    ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-  ! (A.K.Rappe, C.C. Casewit, K.S. Colwell, W.A.Goddard, W.M.Skiff,
+  ! (A.K.Rappe,  C.C. Casewit,  K.S. Colwell,  W.A.Goddard, W.M.Skiff,
   ! J.Am.Chem.Soc., V.114, P.10024, 1992)
-!!!  real(kind=r8_kind),parameter,public :: &
 #ifdef _LINUX
   real(kind=r8_kind),parameter,public :: &
 # else
@@ -192,7 +191,7 @@ module atoms_data_module
                         !  Ac    Th    Pa    U     Np    Pu    Am    Cm
                         3.339,3.313,3.299,3.286,3.274,3.248,3.236/)
                         !  Bk    Cf    Es    Fm    Md    No    Lw
-  !!!real(kind=r8_kind),parameter,public :: &
+
 #ifdef _LINUX
   real(kind=r8_kind),parameter,public :: &
 # else
@@ -225,7 +224,7 @@ module atoms_data_module
                         0.013,0.013,0.012,0.012,0.011,0.011,0.011/)
                         !  Bk    Cf    Es    Fm    Md    No    Lw
 
-!!!  real(kind=r8_kind),parameter,public :: &
+
 #ifdef _LINUX
   real(kind=r8_kind),parameter,public :: &
 # else

@@ -269,7 +269,7 @@ contains
     !          default values to the input.out
     !          file.
     use echo_input_module, only: start, real, flag, intg, strng, stop, &
-         echo_level_full, word_format
+         echo_level_full
     use operations_module, only: operations_echo_input_level
     implicit none
     integer, intent(in) :: iounit
@@ -1205,8 +1205,7 @@ contains
     !------------ Modules ----------------------------------------
     use options_module
     use iounitadmin_module, only: write_to_output_units, output_unit
-    use output_module, only: output_timing_scfloops, output_scfloops, &
-                             output_main_scf, output_data_read
+    use output_module, only: output_main_scf, output_data_read
     use readwriteblocked_module
     !------------ Declaration of formal paramaters ---------------
     integer(kind=i4_kind), intent(out) :: loop

@@ -27,24 +27,18 @@
 !=====================================================================
 module ham_calc_module
   !
-  !  Purpose: Contains routines for calculating the
-  !           'three-center'-parts of the hamiltonian
-  !           as well as routines to add already existing
-  !           integrals to the hamiltonian. Also the corresponding
-  !           energies are calculated by different calls
-  !           The Exchange part of the hamiltonian can
-  !           either be done via the Fitfunctions or
-  !           numerically. Only in the former case
-  !           the contribution to and the energy are calculated here.
-  !           The numerical calculation of the XC part takes place in
-  !           'xc_hamiltonian'.
-  !           In this module are routines for the master
-  !           as well as for the slave. Each routine includes
-  !           two lines to check they are called in the right
-  !           way.
+  !  Contains routines for calculating the 'three-center'-parts of the
+  !  hamiltonian as well as routines to add already existing integrals
+  !  to  the   hamiltonian.   Also  the   corresponding  energies  are
+  !  calculated  by   different  calls   The  Exchange  part   of  the
+  !  hamiltonian  can  either  be   done  via  the  Fit  functions  or
+  !  numerically. Only in the former  case the contribution to and the
+  !  energy are calculated here.   The numerical calculation of the XC
+  !  part  takes  place  in  'xc_hamiltonian'.   In  this  module  are
+  !  routines for the master as well as for the slave.
   !
   !
-  !  Module called by: mainscf
+  !  Module called by: main_scf()
   !
   !  References: still none
   !

@@ -104,7 +104,7 @@ FFLAGS      += $(if $(altflags), $(F90ALTFLAGS), $(F90FLAGS)) $(extraflags)
 ## CPP/FPP preprocessor:
 CPP = /usr/bin/cpp
 CPPUNDEF = -undef
-CPPOPTIONS = $(CPPUNDEF) -traditional -P -C -I$(BASEDIR)/include
+CPPOPTIONS = $(CPPUNDEF) -traditional -P -I$(BASEDIR)/include
 
 FPP = $(CPP)
 FPPOPTIONS += $(CPPOPTIONS) -D_$(MACH) 

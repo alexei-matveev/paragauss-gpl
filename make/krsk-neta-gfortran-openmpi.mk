@@ -59,7 +59,7 @@ GCCDIR = /usr/bin
 ifeq ($(serial),1)
   FC = $(GCCDIR)/gfortran
 else
-  FC = /usr/local/openmpi-1.4.2/bin/mpif90
+  FC = /usr/lib/mpi/gcc/openmpi/bin/mpif90
 endif
 F77 = $(FC)
 

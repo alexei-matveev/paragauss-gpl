@@ -34,7 +34,7 @@ module bgy3d
   !-------------------------------------------------------------------
 
 # include "def.h"
-  use type_module, only: r8_kind ! type specification parameters
+  use type_module, only: i4_kind, r8_kind ! type specification parameters
 #ifdef WITH_GUILE
   use scm, only: scm_t
 #endif

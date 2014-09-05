@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -358,6 +358,15 @@ interface
      type (c_funptr), intent (in), value :: fcn
      type (scm_t) :: proc
    end function scm_c_define_gsubr
+
+   subroutine scm_c_export_1 (name) bind (c)
+     !
+     ! void scm_c_export_1 (const char *name)
+     !
+     import
+     implicit none
+     character (kind=c_char), intent (in) :: name(*) ! null-terminated, of course
+   end subroutine scm_c_export_1
 
    function scm_fluid_p (obj) result (yes) bind (c)
      !
@@ -727,6 +736,7 @@ public :: scm_variable_ref      ! SCM variable -> SCM value
 public :: scm_fluid_ref         ! SCM fluid -> SCM value or #f
 public :: scm_undefined         ! () -> SCM_UNDEFINED
 public :: scm_define_gsubr      ! (character, integer, integer, integer, c_funptr) -> SCM proc
+public :: scm_export            ! (character)
 public :: scm_resolve_module ! SCM name -> SCM module or string -> SCM module
 
 contains
@@ -860,21 +870,34 @@ contains
     buf(length+1:max_len) = " "
   end subroutine scm_to_stringbuf
 
-   function scm_define_gsubr (name, req, opt, rst, fcn) result (proc)
-     !
-     ! Fortranish wrapper (appends C_NULL_CHAR to name) for
-     !
-     ! SCM scm_c_define_gsubr (const char *name, int req, int opt, int rst, fcn)
-     !
-     implicit none
-     character (len=*) :: name
-     integer (c_int), intent (in) :: req, opt, rst
-     type (c_funptr), intent (in) :: fcn
-     type (scm_t) :: proc
-     ! *** end of interface ***
+  function scm_define_gsubr (name, req, opt, rst, fcn) result (proc)
+    !
+    ! Fortranish wrapper (appends C_NULL_CHAR to name) for
+    !
+    ! SCM scm_c_define_gsubr (const char *name, int req, int opt, int rst, fcn)
+    !
+    implicit none
+    character (len=*) :: name
+    integer (c_int), intent (in) :: req, opt, rst
+    type (c_funptr), intent (in) :: fcn
+    type (scm_t) :: proc
+    ! *** end of interface ***
 
-     proc = scm_c_define_gsubr (name // C_NULL_CHAR, req, opt, rst, fcn)
-   end function scm_define_gsubr
+    proc = scm_c_define_gsubr (name // C_NULL_CHAR, req, opt, rst, fcn)
+  end function scm_define_gsubr
+
+  subroutine scm_export (name)
+    !
+    ! Fortranish wrapper (appends C_NULL_CHAR to name) for
+    !
+    ! void scm_c_export_1 (const char *name)
+    !
+    implicit none
+    character (len=*) :: name
+    ! *** end of interface ***
+
+    call scm_c_export_1 (name // C_NULL_CHAR)
+  end subroutine scm_export
 
   function define (key, val) result (var)
     implicit none

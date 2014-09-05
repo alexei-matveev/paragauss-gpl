@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,7 +24,7 @@
 !
 module tasks_main_options_module
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use inp_out_module
   use common_data_module
@@ -34,7 +34,7 @@ module tasks_main_options_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   logical, public :: calc_energy, calc_gradients, calc_optimization, &
        calc_hessian, calc_ppc_array, solvent
@@ -59,13 +59,13 @@ module tasks_main_options_module
   real(kind=r8_kind), public :: rc_inc
 
   integer(i4_kind), public :: qmmm
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_topic, write_topic_to_output, read_tasks, &
        write_tasks_to_output,read_main_options,write_options_to_output, &
        send_receive_tasks_and_options
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   logical, parameter :: df_calc_energy = .false.

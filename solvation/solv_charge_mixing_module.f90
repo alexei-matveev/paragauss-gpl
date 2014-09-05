@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module solv_charge_mixing_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Perform mixing of solvation surface charges
   !           during SCF procedure to improve convergence (?)
@@ -42,44 +42,44 @@ module solv_charge_mixing_module
   !  Date: 03.04.2007
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
   use type_module ! type specification parameters
   use datatype
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   real(r8_kind),public :: Qs_mix=0.0_r8_kind
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_solv_mix,write_solv_mix,solv_charge_mix,mix_charges,Q_dealloc
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   real(r8_kind),allocatable :: Q_in(:),Q_out(:)
   real(r8_kind)             :: beta_old
 
@@ -93,8 +93,8 @@ module solv_charge_mixing_module
 
   namelist /solv_charge_mixing/ do_mixing,mixing,dynamic_mix
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -107,9 +107,9 @@ contains
     !------------ Declaration of formal parameters ---------------
 
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: unit,status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do_mixing=df_do_mixing
     mixing=df_mixing
@@ -161,12 +161,12 @@ contains
     integer(i4_kind), intent(in)    :: n_ch,iter,iter_start
     real(r8_kind),    intent(inout) :: charges(n_ch),charges_old(n_ch)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind)              :: charges_buf(n_ch)
     real(r8_kind)              :: beta,d_mixing
     integer(i4_kind),parameter :: ndyn=1
     integer(i4_kind)           :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     if(.not.dynamic_mix) then
@@ -220,36 +220,30 @@ contains
   !*************************************************************
 
   !*************************************************************
-  subroutine Q_dealloc
-    !------------ Modules used -----------------------------------
+  subroutine Q_dealloc()
+    !
+    ! Does no communication, idempotent.
+    !
     implicit none
-    !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    integer(i4_kind)           :: status
-    !------------ Executable code --------------------------------
 
-    if(allocated(Q_in)) then
-       deallocate(Q_in,Q_out,stat=status)
+    integer (i4_kind) :: status
+
+    if (allocated (Q_in)) then
+       deallocate (Q_in, Q_out, stat=status)
        ASSERT(status==0)
     end if
-
   end subroutine Q_dealloc
   !*************************************************************
 
   !*************************************************************
   function mix_charges()
-    !  Purpose: pass information on mixing out of module
-    !------------ Modules used -----------------------------------
+    ! Pass information on mixing out of module
     implicit none
     logical :: mix_charges
-    !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
 
-    mix_charges=do_mixing
-
+    mix_charges = do_mixing
   end function mix_charges
   !*************************************************************
 
@@ -300,5 +294,5 @@ contains
     endif
 
   end function DYNDAMP
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module solv_charge_mixing_module

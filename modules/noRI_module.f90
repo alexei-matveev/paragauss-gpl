@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module noRI_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -35,24 +35,24 @@ module noRI_module
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: ...
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 #include "def.h"
   use iounitadmin_module, only: write_to_output_units,output_unit
@@ -76,15 +76,15 @@ module noRI_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
-  public noRI_2c, noRI_4c
+  !------------ public functions and subroutines ---------------------
+  public :: noRI_2c, noRI_4c
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   integer(i4_kind), parameter :: UP = 1, DN = 2
   integer(i4_kind), parameter :: C2 = 1, C4 = 2 !!TWO CENTER / FOUR CENTER
   integer(i4_kind), parameter :: & !! VERY IMPORTANT
@@ -134,16 +134,16 @@ module noRI_module
        & BBAB = 5, &
        & ABAB = 6
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   type(orbital_type),pointer             :: fcts_orbs_ch(:)
   type(orbital_gradient_type),pointer    :: grads_ch(:)
 
-  type(orbital_type),pointer             :: orbs_ob(:) 
+  type(orbital_type),pointer             :: orbs_ob(:)
   type(orbital_gradient_type),pointer    :: orbs_grads(:)
 
   type(arrmat4),     allocatable, target :: phi (:)
   type(arrmat5),     allocatable, target :: gphi(:)
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 
   FPP_TIMER_DECL(XC_all)
   FPP_TIMER_DECL(XC_input)
@@ -174,7 +174,6 @@ contains
     integer(i4_kind)             :: n_spin, n_ir, i_ir, n_dim, i, X_KIND, C_KIND
     type(arrmat2), allocatable   :: RM(:)
     integer(i4_kind)             :: status
-    real   (r8_kind)             :: tt
 !!$
 !!$    FPP_TIMER_ZERO(input)
 !!$    FPP_TIMER_ZERO(OB_calc)
@@ -185,15 +184,8 @@ contains
 !!$    FPP_TIMER_ZERO(output)
 !!$    FPP_TIMER_ZERO(all)
 
-    if (comm_i_am_master()) then
-       X_KIND = X
-       C_KIND = C
-       if(comm_parallel()) then  ! is this a parallel run ?
-          call comm_init_send(comm_all_other_hosts,msgtag_nori_2c_send)
-          call comm_send()
-       end if
-    end if
-
+    X_KIND = X
+    C_KIND = C
     call comm_bcast(X_KIND)
     call comm_bcast(C_KIND)
 
@@ -220,7 +212,7 @@ contains
        n_dim = dimension_of_fit_ch(i_ir)
        if (n_dim==0) cycle
 
-       do i = 1, 2*n_spin 
+       do i = 1, 2*n_spin
           ALLOCATE(RM(i)%m(n_dim,n_dim),STAT=status)
           ASSERT(status==0)
           RM(i)%m = ZERO
@@ -248,32 +240,36 @@ contains
     FPP_TIMER_STOP(XC_output)
     FPP_TIMER_STOP(XC_all)
 
-    WRITE (*,*) MyID, "noRI TIMER      "
-    tt = FPP_TIMER_VALUE(XC_all)
-    WRITE (*,*) "   SUMMARY            ", tt
-    tt = FPP_TIMER_VALUE(XC_input)
-    WRITE (*,*) "   |- PREPARATION     ", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym)
-    WRITE (*,*) "   |- XC  PROD. BAS.SYM. ", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_OC)
-    WRITE (*,*) "      |- XC  PROD. BAS.SYM. ORB.  CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_PC)
-    WRITE (*,*) "      |- XC  PROD. BAS.SYM. PHI.  CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_dRC)
-    WRITE (*,*) "      \- XC  PROD. BAS.SYM. dRHO. CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_functional)
-    WRITE (*,*) "   |- XC  FUNCTIONAL  ", tt
-    tt = FPP_TIMER_VALUE(XC_output)
-    WRITE (*,*) "   |- OUTPUT          ", tt
-    tt = FPP_TIMER_VALUE(XC_int)
-    WRITE (*,*) "   \- XC  INTEGRATION ", tt
-    tt = FPP_TIMER_VALUE(XC_int_dV)
-    WRITE (*,*) "      |-  XC deltaV PART ", tt
-    tt = FPP_TIMER_VALUE(XC_int_NB)
-    WRITE (*,*) "      |-  XC NOBLAS PART ", tt
-    tt = FPP_TIMER_VALUE(XC_int_B)
-    WRITE (*,*) "      \-  XC   BLAS PART ", tt
-
+#ifdef FPP_TIMERS
+    block
+       real (r8_kind) :: tt
+       WRITE (*,*) MyID, "noRI TIMER      "
+       tt = FPP_TIMER_VALUE(XC_all)
+       WRITE (*,*) "   SUMMARY            ", tt
+       tt = FPP_TIMER_VALUE(XC_input)
+       WRITE (*,*) "   |- PREPARATION     ", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym)
+       WRITE (*,*) "   |- XC  PROD. BAS.SYM. ", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_OC)
+       WRITE (*,*) "      |- XC  PROD. BAS.SYM. ORB.  CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_PC)
+       WRITE (*,*) "      |- XC  PROD. BAS.SYM. PHI.  CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_dRC)
+       WRITE (*,*) "      \- XC  PROD. BAS.SYM. dRHO. CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_functional)
+       WRITE (*,*) "   |- XC  FUNCTIONAL  ", tt
+       tt = FPP_TIMER_VALUE(XC_output)
+       WRITE (*,*) "   |- OUTPUT          ", tt
+       tt = FPP_TIMER_VALUE(XC_int)
+       WRITE (*,*) "   \- XC  INTEGRATION ", tt
+       tt = FPP_TIMER_VALUE(XC_int_dV)
+       WRITE (*,*) "      |-  XC deltaV PART ", tt
+       tt = FPP_TIMER_VALUE(XC_int_NB)
+       WRITE (*,*) "      |-  XC NOBLAS PART ", tt
+       tt = FPP_TIMER_VALUE(XC_int_B)
+       WRITE (*,*) "      \-  XC   BLAS PART ", tt
+    end block
+#endif
   end subroutine noRI_2c
   !*************************************************************\
 
@@ -297,7 +293,7 @@ contains
     integer(i4_kind)             :: n_spin
     integer(i4_kind)             :: status, i, j, ii
     integer(i4_kind)             :: counter
-    real   (r8_kind)             :: CC, tt
+    real   (r8_kind)             :: CC
     real   (r8_kind),ALLOCATABLE :: D(:,:)
     real   (r8_kind),ALLOCATABLE :: eps_full(:), eta_full(:)
     type   (arrmat2),ALLOCATABLE :: RM(:), DSP(:)
@@ -410,7 +406,7 @@ contains
        ABORT('DEAD BRANCH')
     end if
 
-    counter = 1  
+    counter = 1
     DO j=1,K
        RES(counter:counter+N-1) = RES(counter:counter+N-1) + D(:,j)
        counter = counter + N
@@ -428,32 +424,36 @@ contains
     FPP_TIMER_STOP(XC_output)
     FPP_TIMER_STOP(XC_all)
 
-    WRITE (*,*) MyID, "  RI TIMER      "
-    tt = FPP_TIMER_VALUE(XC_all)
-    WRITE (*,*) "   SUMMARY            ", tt
-    tt = FPP_TIMER_VALUE(XC_input)
-    WRITE (*,*) "   |- PREPARATION     ", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym)
-    WRITE (*,*) "   |- XC  PROD. BAS.SYM. ", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_OC)
-    WRITE (*,*) "      |- XC  PROD. BAS.SYM. ORB.  CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_PC)
-    WRITE (*,*) "      |- XC  PROD. BAS.SYM. PHI.  CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_pb_sym_dRC)
-    WRITE (*,*) "      \- XC  PROD. BAS.SYM. dRHO. CALC.", tt
-    tt = FPP_TIMER_VALUE(XC_functional)
-    WRITE (*,*) "   |- XC  FUNCTIONAL  ", tt
-    tt = FPP_TIMER_VALUE(XC_output)
-    WRITE (*,*) "   |- OUTPUT          ", tt
-    tt = FPP_TIMER_VALUE(XC_int)
-    WRITE (*,*) "   \- XC  INTEGRATION ", tt
-    tt = FPP_TIMER_VALUE(XC_int_dV)
-    WRITE (*,*) "      |-  XC deltaV PART ", tt
-    tt = FPP_TIMER_VALUE(XC_int_NB)
-    WRITE (*,*) "      |-  XC NOBLAS PART ", tt
-    tt = FPP_TIMER_VALUE(XC_int_B)
-    WRITE (*,*) "      \-  XC   BLAS PART ", tt
-
+#ifdef FPP_TIMERS
+    block
+       real (r8_kind) :: tt
+       WRITE (*,*) MyID, "  RI TIMER      "
+       tt = FPP_TIMER_VALUE(XC_all)
+       WRITE (*,*) "   SUMMARY            ", tt
+       tt = FPP_TIMER_VALUE(XC_input)
+       WRITE (*,*) "   |- PREPARATION     ", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym)
+       WRITE (*,*) "   |- XC  PROD. BAS.SYM. ", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_OC)
+       WRITE (*,*) "      |- XC  PROD. BAS.SYM. ORB.  CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_PC)
+       WRITE (*,*) "      |- XC  PROD. BAS.SYM. PHI.  CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_pb_sym_dRC)
+       WRITE (*,*) "      \- XC  PROD. BAS.SYM. dRHO. CALC.", tt
+       tt = FPP_TIMER_VALUE(XC_functional)
+       WRITE (*,*) "   |- XC  FUNCTIONAL  ", tt
+       tt = FPP_TIMER_VALUE(XC_output)
+       WRITE (*,*) "   |- OUTPUT          ", tt
+       tt = FPP_TIMER_VALUE(XC_int)
+       WRITE (*,*) "   \- XC  INTEGRATION ", tt
+       tt = FPP_TIMER_VALUE(XC_int_dV)
+       WRITE (*,*) "      |-  XC deltaV PART ", tt
+       tt = FPP_TIMER_VALUE(XC_int_NB)
+       WRITE (*,*) "      |-  XC NOBLAS PART ", tt
+       tt = FPP_TIMER_VALUE(XC_int_B)
+       WRITE (*,*) "      \-  XC   BLAS PART ", tt
+    end block
+#endif
   end subroutine noRI_4C
   !*************************************************************
 
@@ -478,7 +478,7 @@ contains
     type   (arrmat2),intent( IN),OPTIONAL :: DSP(:)
     integer(i4_kind)            ,OPTIONAL :: K
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     integer(i4_kind)                    :: vla, i_atom, n_spin
     integer(i4_kind)                    :: i_sp, i_ira
@@ -512,13 +512,13 @@ contains
 
     logical :: XLDA,CLDA,LDAON
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     vla    = vec_length                      !! GRID
     n_spin = symmetry_data_n_spin()          !! SPIN
     npc    = symmetry_data_n_partners(i_ir)  !! PARTNER
     n_irr  = symmetry_data_n_irreps()        !! IRREP
-    nk     = size(DSP(1)%m,2)                !! 
+    nk     = size(DSP(1)%m,2)                !!
 
     select case (X_KIND)
     case (X_NONE)
@@ -540,7 +540,7 @@ contains
        CLDA = .false.
     end select
 
-    if (XLDA .and. CLDA) then 
+    if (XLDA .and. CLDA) then
        LDAON = .true.
     else
        LDAON = .false.
@@ -835,7 +835,7 @@ contains
     end if
 
 #if 0
-    if (comm_i_am_master()) then 
+    if (comm_i_am_master()) then
        call show("M4i(AA)",M4i(AA)%m)
        call show("M4i(AB)",M4i(AB)%m)
        if (n_spin==2) then
@@ -880,7 +880,7 @@ contains
        end do
 
        deallocate(gphi, STAT=status)
-       ASSERT(status==0) 
+       ASSERT(status==0)
     end if
 
   end subroutine noRI_XC
@@ -915,7 +915,7 @@ contains
     type(arrmat5),optional,target, intent(IN )   :: gphi(:)
     real(r8_kind),optional, intent(INOUT) :: gdeltaRHO(:,:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: n_irr, as, as_tmp
     integer(kind=i4_kind)      :: i_ir_a, i_ir_s
     integer(kind=i4_kind)      :: oo_dim
@@ -927,7 +927,7 @@ contains
     integer(kind=i4_kind)      :: i_mlt, na, ns, i
 
     real(r8_kind),pointer      :: pcg(:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irr  = symmetry_data_n_irreps() ! number of irreps
 
@@ -992,13 +992,13 @@ contains
     integer(kind=i4_kind), intent(INOUT) :: as
     real(kind=r8_kind),    intent(INOUT) :: Uout(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_pa_c,i_pa_a,i_pa_s
     integer(kind=i4_kind) :: npa,nps,npc
     integer(kind=i4_kind) :: a, s
     real(kind=r8_kind)    :: Xas(na,ns)
     real(kind=r8_kind)    :: r1(vla)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     npc = size(pcg,1)
     npa = size(pcg,2)
     nps = size(pcg,3)
@@ -1044,7 +1044,7 @@ contains
     type(arrmat5), target, intent(IN   ), optional :: gphi(:)
     real(kind=r8_kind),    intent(IN   ), optional :: deltaVg  (:,:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)          :: n_irr, as_tmp, n_spin
     integer(kind=i4_kind)          :: as, i_ir_a
     integer(kind=i4_kind)          ::     i_ir_s, oo_dim
@@ -1054,7 +1054,7 @@ contains
     integer(kind=i4_kind)          :: na, ns
     integer(kind=i4_kind)          :: i_mlt
     real(kind=r8_kind),pointer     :: pcg(:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_irr  = symmetry_data_n_irreps() ! number of irrps
     n_spin = symmetry_data_n_spin()   ! number of spins
 
@@ -1100,11 +1100,11 @@ contains
                 as = as_tmp
                 call symGridInt2a(vla,na,ns,pcg,&
                      gphi_a(:,:,:,:),occs - 1,phi_s,unoccs - 1,deltaVg(:,:,:),as,res_mat)
-                
+
                 as = as_tmp
                 call symGridInt2s(vla,na,ns,pcg,&
                      phi_a,occs - 1,gphi_s(:,:,:,:),unoccs - 1,deltaVg(:,:,:),as,res_mat)
-                
+
              end if
 
           end do i_mlt_
@@ -1122,13 +1122,13 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(IN   ) :: vla,na,ns
     real(kind=r8_kind),    intent(IN   ) :: pcg(:,:,:)
-    real(kind=r8_kind),    intent(IN   ) :: phia(:,:,:), phis(:,:,:) 
+    real(kind=r8_kind),    intent(IN   ) :: phia(:,:,:), phis(:,:,:)
     real(kind=r8_kind),    intent(IN   ) :: Uin(:,:)
     integer(kind=i4_kind), intent(IN   ) :: oa, os
     integer(kind=i4_kind), intent(INOUT) :: as
     real(kind=r8_kind),    intent(INOUT) :: Uout(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_pa_c,i_pa_a,i_pa_s
     integer(kind=i4_kind) :: npa,nps,npc
     integer(kind=i4_kind) :: a, s, i, status
@@ -1136,7 +1136,7 @@ contains
     real(kind=r8_kind)    :: coeff
 
     real(kind=r8_kind),allocatable    :: phiv(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     npc = size(pcg,1)
     npa = size(pcg,2)
     nps = size(pcg,3)
@@ -1152,7 +1152,7 @@ contains
              i_pa_c_: do i_pa_c = 1, npc
                 FPP_TIMER_START(XC_int_NB)
                 coeff = pcg(i_pa_c,i_pa_a,i_pa_s)
-                if( abs(coeff) < 1e-7 ) CYCLE 
+                if( abs(coeff) < 1e-7 ) CYCLE
 
                 do i = 1, na
                    phiv(:vla,i) = phiv(:vla,i) &
@@ -1184,7 +1184,7 @@ contains
              do i_pa_c = 1, npc
                 FPP_TIMER_START(XC_int_NB)
                 coeff = pcg(i_pa_c,i_pa_a,i_pa_s)
-                if( abs(coeff) < 1e-7 ) CYCLE 
+                if( abs(coeff) < 1e-7 ) CYCLE
 
                 do i = 1, ns
                    phiv(:vla,i) = phiv(:vla,i) &
@@ -1229,13 +1229,13 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(IN   ) :: vla,na,ns
     real(kind=r8_kind),    intent(IN   ) :: pcg(:,:,:)
-    real(kind=r8_kind),    intent(IN   ) :: gphia(:,:,:,:), phis(:,:,:) 
+    real(kind=r8_kind),    intent(IN   ) :: gphia(:,:,:,:), phis(:,:,:)
     real(kind=r8_kind),    intent(IN   ) :: Uin(:,:,:)
     integer(kind=i4_kind), intent(IN   ) :: oa, os
     integer(kind=i4_kind), intent(INOUT) :: as
     real(kind=r8_kind),    intent(INOUT) :: Uout(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_pa_c,i_pa_a,i_pa_s
     integer(kind=i4_kind) :: npa,nps,npc
     integer(kind=i4_kind) :: a, s, i, status,r
@@ -1243,7 +1243,7 @@ contains
     real(kind=r8_kind)    :: coeff
 
     real(kind=r8_kind),allocatable    :: phiv(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     npc = size(pcg,1)
     npa = size(pcg,2)
     nps = size(pcg,3)
@@ -1258,7 +1258,7 @@ contains
           i_pa_c_: do i_pa_c = 1, npc
              FPP_TIMER_START(XC_int_NB)
              coeff = pcg(i_pa_c,i_pa_a,i_pa_s)
-             if( abs(coeff) < 1e-7 ) CYCLE 
+             if( abs(coeff) < 1e-7 ) CYCLE
 
              do i = 1, na
                 do r = 1,3
@@ -1310,7 +1310,7 @@ contains
     integer(kind=i4_kind), intent(INOUT) :: as
     real(kind=r8_kind),    intent(INOUT) :: Uout(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_pa_c,i_pa_a,i_pa_s
     integer(kind=i4_kind) :: npa,nps,npc,r
     integer(kind=i4_kind) :: a, s, i, status
@@ -1318,7 +1318,7 @@ contains
     real(kind=r8_kind)    :: coeff
 
     real(kind=r8_kind),allocatable    :: phiv(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     npc = size(pcg,1)
     npa = size(pcg,2)
     nps = size(pcg,3)
@@ -1333,7 +1333,7 @@ contains
           do i_pa_c = 1, npc
              FPP_TIMER_START(XC_int_NB)
              coeff = pcg(i_pa_c,i_pa_a,i_pa_s)
-             if( abs(coeff) < 1e-7 ) CYCLE 
+             if( abs(coeff) < 1e-7 ) CYCLE
 
              do i = 1, ns
                 do r = 1,3
@@ -1375,7 +1375,7 @@ contains
   subroutine noRI_receive(n_spin,M4i)
     !  Purpose: receive the results from the slaves
     !  Values of 2-index-integrals on the grid portion of
-    !  accessable to each slave are collected from the slaves    
+    !  accessable to each slave are collected from the slaves
     !  and added up to yield the final matrix
     !------------ Modules used ------------------- ---------------
     use xpack,       only: upck
@@ -1385,12 +1385,12 @@ contains
     !** End of interface *****************************************
     integer(i4_kind), INTENT(IN)     :: n_spin
     type(arrmat2),    INTENT(INOUT)  :: M4i(:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: status,n_procs,i_proc
     integer(kind=i4_kind) :: i_spin,i_dim,dim_ou_a,dim_ou_b
     integer(kind=i4_kind) :: idx
     real(kind=r8_kind),allocatable :: help_mat(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     ! loop over all slave processors
@@ -1415,7 +1415,7 @@ contains
              M4i(idx)%m = M4i(idx)%m + help_mat
 
              deallocate(help_mat,STAT=status)
-             ASSERT(status==0)  
+             ASSERT(status==0)
           end do
        end do
     end do
@@ -1427,7 +1427,7 @@ contains
   subroutine noRI_tomaster(n_spin,M4i)
     !  Purpose: send results from the slave to the master
     !  Values of 2-index-integrals on the grid portion of
-    !  accessable to each slave are send to the master        
+    !  accessable to each slave are send to the master
     !------------ Modules used ------------------- ---------------
     use xpack, only: pck
     use comm_module
@@ -1435,10 +1435,10 @@ contains
     !** End of interface *****************************************
     integer(i4_kind), INTENT(IN)     :: n_spin
     type(arrmat2),    INTENT(INOUT)  :: M4i(:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_dim,i_spin
     integer(kind=i4_kind) :: idx
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i_spin = 1,n_spin
        do i_dim=1, 2 !! dim_factor
@@ -1456,7 +1456,7 @@ contains
 
   !*************************************************************
   subroutine noRI_totape(X,i_ir,n_spin,M4i)
-    !  Purpose: 
+    !  Purpose:
     !  Write 2index matrix row by row to a linear tape.
     !------------ Modules used ------------------- ---------------
     !!    use readwriteblocked_module
@@ -1467,10 +1467,10 @@ contains
     integer(i4_kind), INTENT(IN)  :: X, i_ir, n_spin
     type(arrmat2),    INTENT(IN)  :: M4i(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !!    type(readwriteblocked_tapehandle) :: th_2index
     integer(kind=i4_kind)             :: i_spin,i_dim,idx
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i_spin=1, n_spin
        do i_dim=1, 2
@@ -1527,7 +1527,7 @@ contains
     real(kind=r8_kind),                intent(IN ) :: gw(:), rho(:,:), gamma(:,:)
     real(kind=r8_kind),dimension(:,:), intent(OUT) :: dFdg,dFdndn,dFdndg,dFdgdg
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind), dimension(vla  ) :: &
          Fx, Fc, Flda, eps
     real(kind=r8_kind), dimension(vla,2) :: &
@@ -1555,7 +1555,7 @@ contains
     dFxdgdg   = zero
 
     select case(X_KIND)
-    case ( X_XALPHA )  
+    case ( X_XALPHA )
        call exchange_lda(X_XALPHA,vla,2,rho,Fx,dFxdn,dFxdndn)
     case ( X_BECKE88 )
        call exchange_lda(X_XALPHA ,vla,2,rho,Fx,dFxdn,dFxdndn)
@@ -1574,7 +1574,7 @@ contains
        call exchange_gga(X_REVPBE,vla,2,rho,gamma,Fx,dFxdn,dFxdg,dFxdndn,dFxdndg,dFxdgdg)
     end select
 
-    !! CORRELATION PART        
+    !! CORRELATION PART
     Flda      = zero
     dFldadn   = zero
     dFldadndn = zero
@@ -1587,7 +1587,7 @@ contains
     dFcdgdg   = zero
 
     select case (C_KIND)
-    case ( C_VWN )  
+    case ( C_VWN )
        eps(1:vla) = 1.0E-16_r8_kind
        call vwn_calcMDA(  rho,dFcdn,2,Fc,vla,eps,dFcdndn)
     case ( C_PWlda )
@@ -1619,7 +1619,7 @@ contains
             dFcdndn,dFcdndg,dFcdgdg,dFldadndn)
        Fc      = Fc      + Flda
        dFcdn   = dFcdn   + dFldadn
-       dFcdndn = dFcdndn + dFldadndn  
+       dFcdndn = dFcdndn + dFldadndn
     end select
 
     if (n_spin == 1) then
@@ -1648,24 +1648,24 @@ contains
 
        dFdndn(1:vla,AA) = gw(1:vla) * dFxdndn(1:vla,XCAA)
        dFdndn(1:vla,AB) = gw(1:vla) * dFxdndn(1:vla,XCAB)
-    case (2) 
-       dFdg  (1:vla,AA) = gw(1:vla) * dFxdg(1:vla,XCAA)   
+    case (2)
+       dFdg  (1:vla,AA) = gw(1:vla) * dFxdg(1:vla,XCAA)
        dFdg  (1:vla,AB) = gw(1:vla) * dFxdg(1:vla,XCAB) / TWO !! will be x2 later
-       dFdg  (1:vla,BB) = gw(1:vla) * dFxdg(1:vla,XCBB)   
+       dFdg  (1:vla,BB) = gw(1:vla) * dFxdg(1:vla,XCBB)
        dFdg  (1:vla,BA) = gw(1:vla) * dFxdg(1:vla,XCAB) / TWO !! will be x2 later
 
        dFdndn(1:vla,AA) = gw(1:vla) * dFxdndn(1:vla,XCAA)
        dFdndn(1:vla,AB) = gw(1:vla) * dFxdndn(1:vla,XCAB)
        dFdndn(1:vla,BB) = gw(1:vla) * dFxdndn(1:vla,XCBB)
-       dFdndn(1:vla,BA) = gw(1:vla) * dFxdndn(1:vla,XCAB) 
+       dFdndn(1:vla,BA) = gw(1:vla) * dFxdndn(1:vla,XCAB)
     end select
 
     dFdndg = zero
     dFdgdg = zero
 
     do i = 1,size(dFdndg,2)
-       dFdndg(1:vla,i)  = gw(1:vla) * dFxdndg(1:vla,i) 
-       dFdgdg(1:vla,i)  = gw(1:vla) * dFxdgdg(1:vla,i) 
+       dFdndg(1:vla,i)  = gw(1:vla) * dFxdndg(1:vla,i)
+       dFdgdg(1:vla,i)  = gw(1:vla) * dFxdgdg(1:vla,i)
     end do
 
   end subroutine noRI_XC_calc
@@ -1675,7 +1675,7 @@ contains
   subroutine noRI_phicalc(vla, n_irr, n_spin, orbs, phi, gorbs, gphi)
     !  Purpose: ..
     !------------ Modules used ------------------- ---------------
-    use eigen_data_module,      only: eigvec 
+    use eigen_data_module,      only: eigvec
     use constants,              only: ZERO,ONE
     implicit none
     !------------ Declaration of formal parameters ---------------
@@ -1685,12 +1685,12 @@ contains
     type(orbital_gradient_type),optional,intent(IN ) :: gorbs(:)
     type(arrmat5),optional, target,      intent(inout) :: gphi(:) ! comes allocated
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: i_ir_a, i_sp, npa, i_pa,i
     real(kind=r8_kind),pointer :: eigv(:,:,:)
     real(kind=r8_kind),pointer :: phi_p(:,:,:,:), orbs_p(:,:,:)
     real(kind=r8_kind),pointer :: gphi_p(:,:,:,:,:), gorbs_p(:,:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do i_ir_a = 1, n_irr
 
        npa     =  symmetry_data_n_partners(i_ir_a)
@@ -1736,9 +1736,9 @@ contains
     type   (arrmat1),  intent(   IN) :: EPSETA(:)
     type   (arrmat2),  intent(INOUT) :: DSP(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: j, counter, ias, ias_dn
-    !------------ Executable code -------------------------------- 
+    !------------ Executable code --------------------------------
 
     counter = 1
 
@@ -1749,7 +1749,7 @@ contains
        do ias = 1, N
           if (ias <= NSP(UP)) then
              DSP(UP)%m(ias   ,j) = D(counter+ias-1) * EPSETA(UP)%m(ias)
-          else              
+          else
              ias_dn =ias - NSP(UP)
              DSP(DN)%m(ias_dn,j) = D(counter+ias-1) * EPSETA(DN)%m(ias_dn)
           end if
@@ -1764,7 +1764,7 @@ contains
 !!$  subroutine noRI_
 !!$    !  Purpose: ..
 !!$    !------------ Modules used ------------------- ---------------
-!!$    use 
+!!$    use
 !!$    implicit none
 !!$    !------------ Declaration of formal parameters ---------------
 !!$    integer(kind=i4_kind), intent(     ) ::
@@ -1774,7 +1774,7 @@ contains
 !!$    !** End of interface *****************************************
 !!$    !------------ Declaration of local variables -----------------
 !!$    integer(kind=i4_kind)                ::
-!!$    real(kind=r8_kind)                   ::     
+!!$    real(kind=r8_kind)                   ::
 !!$    logical                              ::
 !!$    character                            ::
 !!$    !------------ Executable code --------------------------------
@@ -1784,5 +1784,5 @@ contains
 !!$  !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module noRI_module

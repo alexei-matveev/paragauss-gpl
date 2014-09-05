@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module symm_positions
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module symm_positions
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only:&
@@ -66,12 +66,12 @@ module symm_positions
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   integer(IK),dimension(:),allocatable,public:: pcr_no,psb_ind
   type(symm_transformation_int),pointer,public      :: point_trafos(:)
@@ -84,27 +84,27 @@ module symm_positions
   ! point_trafos(n_timps)
   type(symm_transformation_int),pointer,public      :: point_trafos_pc1(:)
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public init,done,symm_equivalents_gen
   public symm_mapping_gen
   public :: symm_mapping_shells
 
   public :: symm_nabor
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine init()
@@ -196,7 +196,7 @@ contains
     !------------ Declaration of local constants  ----------------
     real(RK),parameter :: small = 1.e-10_rk
     ! very small value
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                :: i,j,k, n,l,alloc_stat,error
     ! counters
     integer(IK)                :: n_equal,n_equiv,n_centers
@@ -222,7 +222,7 @@ contains
     logical:: a_switch
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     DPRINT 'sp/symm_equivalents_gen: entered'
 
@@ -2067,13 +2067,13 @@ contains
     !------------ Declaration of local constants  ----------------
     real(RK),parameter :: small = 1.e-10_rk
     ! very small value
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                   :: i, j, k, l
     integer(IK)                   :: N_equal_atoms
     real(RK)                      :: position1(3)                              &
                                    , position2(3)                              &
                                    , position3(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     allocate( symm_positions_map(size( uas )) )
     ! loop over all uniques
     do i = 1, size( uas )
@@ -2124,14 +2124,14 @@ contains
     integer(IK)     , allocatable, intent(out) :: symm_map(:,:)
     !------------ Declaration of local constants  ----------------
     real(RK), parameter           :: small = 1.0e-11_rk ! very small value
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                   :: i, j, k, l, m
     integer(IK)                   :: n_equal_atoms
     real(RK)                      :: position1(3)                              &
                                    , position2(3)                              &
                                    , position3(3)
     logical                       :: found
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     !
     ALLOCATE( symm_map(group_num_el, n_atm) )
     !
@@ -2471,5 +2471,5 @@ end subroutine
   !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module symm_positions

@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module echo_input_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module provides a couple of utilities for
   !           echoing the input into output files
@@ -34,11 +34,11 @@ module echo_input_module
   !  Author: UB
   !  Date: 8/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: AS
   ! Date:   5/01
@@ -48,15 +48,15 @@ module echo_input_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module, only: r8_kind, i4_kind
   implicit none
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ public parameters ---------------------------------
   integer(i4_kind), public, parameter :: echo_level_short   = 0, &
@@ -66,25 +66,34 @@ module echo_input_module
   !------------ public variables ----------------------------------
 
   integer, parameter :: MAX_FMT = 35
-  character(len=MAX_FMT), public, protected :: flag_format  = '("    ",a," = ",a20:" # ",a)'
-  character(len=MAX_FMT), public, protected :: intg_format  = '("    ",a," = ",i20:" # ",a)'
-  character(len=MAX_FMT), public, protected :: real_format  = '("    ",a," = ",g20.14:" # ",a)'
 
-  character(len=MAX_FMT), public :: &
+  character (len=MAX_FMT), parameter, public :: flag_format = &
+       '("    ",a," = ",a20:" # ",a)'
+
+  character (len=MAX_FMT), parameter, public :: intg_format = &
+       '("    ",a," = ",i20:" # ",a)'
+
+  character (len=MAX_FMT), parameter, public :: real_format = &
+       '("    ",a," = ",g20.14:" # ",a)'
+
+  character (len=MAX_FMT), parameter, public :: &
+       real_format3 = '("    ",a7," = ",es10.3:" # ",a7)', &
+       real_format4 = '("    ",a ," = ",E20.10:" # ",a)', &
+       string_format= '("    ",a," = ",a    :" # ",a)'
+
+  ! FIXME: These are indeed modified from outside of this module:
+  character (len=MAX_FMT), public :: &
        real_format1 = '("    ",a," = ",f10.8:" # ",a)', &
-                            & real_format2 = '("    ",a2," = ",f10.8:" # ",a2)', &
-                            & real_format3 = '("    ",a7," = ",es10.3:" # ",a7)', &
-                            & real_format4 = '("    ",a ," = ",E20.10:" # ",a)', &
-                            & word_format  = '("    ",a," = ",a10  :" # ",a)', &
-                            & string_format= '("    ",a," = ",a    :" # ",a)'
+       real_format2 = '("    ",a2," = ",f10.8:" # ",a2)', &
+       word_format  = '("    ",a," = ",a10  :" # ",a)'
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: start, flag, intg, real, word, stop, echo
   public :: strng, intg_d, real_d
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ private variables ----------------------------------
   character(len=78), private :: list_name, prog_name
@@ -93,14 +102,14 @@ module echo_input_module
 
   contains
 
-  subroutine start(name,prog,unit,level)
+  subroutine start (name, prog, unit, level)
     ! Start writing a namelist
     !------------ Declaration of formal parameters ---------------
     character(len=*), intent(in) :: name, prog
     integer(i4_kind), intent(in) :: unit
     integer(i4_kind), intent(in) :: level
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer  status
     external error_handler
 
@@ -161,7 +170,7 @@ module echo_input_module
     logical, optional :: empty_line    ! default = .true.
     logical, optional :: drop_namelist ! default = echo_level controlled
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     character(len=9) :: format, comment*33
     integer     :: status, pos
     logical     :: keep, drop
@@ -226,7 +235,7 @@ module echo_input_module
     ! namelist has been echoed to the output or not.
     logical, optional :: keep_namelist ! default = echo_level controlled
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical     :: keep
 
     if (present(keep_namelist)) then
@@ -240,42 +249,50 @@ module echo_input_module
 
   !***************************************************************
 
-  subroutine flag(name,value,default,comment)
-     ! Write a logical input parameter
-     !------------ Declaration of formal parameters ---------------
-     character(len=*),           intent(in) :: name
-     logical         ,           intent(in) :: value, default
-     character(len=*), optional, intent(in) :: comment
+  subroutine flag (name, value, default, comment)
+     !
+     ! Echo a logical input parameter to e.g. input.out.
+     !
+     character (len=*), intent (in) :: name
+     logical, intent (in) :: value, default
+     character (len=*), optional, intent (in) :: comment
      !** End of interface *****************************************
-     !------------ Declaration of local variables -----------------
-     integer(i4_kind)                       :: status
-     character(len=32)                      :: commentstr
 
-     commentstr = ' '
-     if ( present(comment) ) commentstr = comment
+     integer (i4_kind) :: status
+     character (len=32) :: commentstr
+     character (len=5) :: val
+
+     commentstr = ''
+     if (present (comment)) commentstr = comment
+
+     if (value) then
+        val = " TRUE"
+     else
+        val = "FALSE"
+     endif
 
      status = 0
      if (echo_mode == echo_level_full .or. (value .neqv. default)) then
-        if (value) then
-           write( wrte_unit, flag_format, iostat=status )                      &
-           name," TRUE",trim(commentstr)
+        ! NOTE: The default format used colon edit descriptor. Thus it
+        ! makes a difference  it the the output list  has two or three
+        ! entries.  Watch  for  the  stray  comment sign  "#"  in  the
+        ! input.out!
+        if (present (comment)) then
+           write (wrte_unit, flag_format, iostat=status) &
+                name, val, trim (comment)
         else
-           write( wrte_unit, flag_format, iostat=status )                      &
-           name,"FALSE",trim(commentstr)
+           write (wrte_unit, flag_format, iostat=status) &
+                name, val
         endif
         written = .true.
      elseif (echo_mode == echo_level_default) then ! value .eqv. default
-        if (value) then
-           write(wrte_unit,flag_format,iostat=status)name," TRUE", &
-                trim(commentstr)//"(the default)"
-        else
-           write(wrte_unit,flag_format,iostat=status)name,"FALSE", &
-                trim(commentstr)//"(the default)"
-        endif
+        write (wrte_unit, flag_format, iostat=status) name, val, &
+             trim (commentstr) // "(the default)"
      endif
-     if (status /= 0) call error_handler( trim(prog_name)// &
-          ": write logical parameter '"//trim(name)//"' failed")
-
+     if (status /= 0) then
+        call error_handler (trim (prog_name) &
+             // ": write logical parameter '" // trim(name) // "' failed")
+     endif
   end subroutine flag
 
   !***************************************************************
@@ -354,13 +371,15 @@ module echo_input_module
 
    !******************************************************************
 
-  subroutine real(name,value,default,format,fmt,comment)
-     ! Write a real input parameter
-     !------------ Declaration of formal parameters ---------------
-     character(len=*), intent(in)           :: name
-     real(r8_kind)   , intent(in)           :: value, default
-     integer(i4_kind), intent(in), optional :: format
-     character(len=*), intent(in), optional :: fmt, comment
+  subroutine real (name, value, default, format, fmt, comment)
+     !
+     ! Echo a real input parameter.
+     !
+     implicit none
+     character (len=*), intent (in) :: name
+     real (r8_kind), intent (in) :: value, default
+     integer (i4_kind), intent (in), optional :: format
+     character (len=*), intent (in), optional :: fmt, comment
      !** End of interface *****************************************
      !------------ Declaration of local variables -----------------
      integer(i4_kind)                       :: status
@@ -369,9 +388,9 @@ module echo_input_module
      character(len=MAX_FMT) :: commentstr
 
      commentstr = ' '
-     if ( present(comment) ) commentstr = comment
+     if (present(comment)) commentstr = comment
 
-     if(present(format).and.present(fmt))then
+     if (present (format) .and. present (fmt)) then
         ABORT('two format specs')
      endif
 
@@ -395,15 +414,25 @@ module echo_input_module
 
      status = 0
      if (echo_mode == echo_level_full .or. (value /= default)) then
-        write(wrte_unit,outfmt,iostat=status) name, value, trim(commentstr)
+        ! NOTE: The default format used colon edit descriptor. Thus it
+        ! makes a difference  it the the output list  has two or three
+        ! entries.  Watch  for  the  stray  comment sign  "#"  in  the
+        ! input.out!
+        if (present (comment)) then
+           write (wrte_unit, outfmt, iostat=status) name, value, &
+                trim (comment)
+        else
+           write (wrte_unit, outfmt, iostat=status) name, value
+        endif
         written = .true.
      elseif (echo_mode == echo_level_default) then ! value == default
-        write(wrte_unit,outfmt,iostat=status) name, value                      &
-                                            , trim(commentstr)//"(the default)"
+        write (wrte_unit, outfmt, iostat=status) name, value, &
+             trim (commentstr) // "(the default)"
      endif
-     if (status /= 0) call error_handler( trim(prog_name)// &
-          ": write real parameter '"//trim(name)//"' failed")
-
+     if (status /= 0) then
+        call error_handler (trim (prog_name) &
+             // ": write real parameter '" // trim(name)//"' failed")
+     endif
   end subroutine real
 
   !***************************************************************
@@ -487,7 +516,7 @@ module echo_input_module
     character(len=*), intent(in) :: name
     character(len=*), intent(in) :: value, default
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind)             :: status
 
     status = 0

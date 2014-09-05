@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,7 +24,7 @@
 !
 module molmech_slave_module
 #include "def.h"
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use comm_module, only: &
        comm_save_recv,   &
@@ -40,7 +40,7 @@ module molmech_slave_module
   use species_module, only :       &
        send_receive_species,       &
        shutdown_species_on_slaves, &
-       lattice_calc 
+       lattice_calc
   use ewald_module, only : &
        send_receive_ewald, &
        recipr_ew_E_and_F,  &
@@ -65,18 +65,18 @@ module molmech_slave_module
        shutdown_interacting_lists
 
   implicit none
-  private       
+  private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public molmech_slave
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine molmech_slave()

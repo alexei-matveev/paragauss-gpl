@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module nto_plot_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Interfere in the orbital_plot_module and convert the MO grid points
   !           into NTO grid points
@@ -36,18 +36,18 @@ module nto_plot_module
   !  Date: 09/2007
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
   use type_module               ! type specification parameters
   use iounitadmin_module        ! routines for I/O
@@ -55,24 +55,24 @@ module nto_plot_module
   implicit none ! by default, all the variables have to be specifically declared
   save          ! save all variables defined in this module
   private       ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
 
   ! This matrix contains all the MOs that take part in the NTO
   ! expansions:
   integer(kind=i4_kind), allocatable , public :: nto_orb(:,:)
-  !------------ Interface statements ------------------------------
-  !------------ public functions and subroutines ------------------
+  !------------ Interface statements ---------------------------------
+  !------------ public functions and subroutines ---------------------
   public nto_plot_search     ! Subroutine called by orbital_plot_module
   public nto_plot_order      ! Subroutine called by orbital_plot_module
   public nto_plot_grid       ! Subroutine called by orbital_plot_module
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
-  !------------ Declaration of types ------------------------------
+  !===================================================================
+  !------------ Declaration of types ---------------------------------
 
   type, public :: coeff
      integer(i4_kind) :: index ! label of the NTO
@@ -110,12 +110,12 @@ module nto_plot_module
                                                      ! information of
                                                      ! each NTO
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !*************************************************************
   subroutine nto_plot_search(irrep,spin,list,current,num_nto,ss_or_st)
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
     !  Purpose: Read the unformatted file "nto.dat", where the
     !           data concerning the ntos is contained. Read only the
     !           NTOs that one wants to draw
@@ -150,7 +150,7 @@ contains
                                                    ! singlet-triplet
 
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: io_unit
     integer(kind=i4_kind)                :: count, nto_size
     integer(kind=i4_kind)                :: dimocc,dimunocc,mindim
@@ -161,7 +161,7 @@ contains
     logical                              :: it_exists,is_opened
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     !-----------------------------!
     !Reading the data from nto.dat!
@@ -544,5 +544,5 @@ contains
         end do
 
     end subroutine nto_plot_order
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module nto_plot_module

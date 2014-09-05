@@ -64,9 +64,8 @@
  /CONVERGENCE_LIST
 
  &XC_CONTROL
-    XALPHA         =  TRUE # (the default)
-    VWN            =  TRUE # (the default)
- /XC_CONTROL (namelist may be dropped)
+    xc = "vwn"
+ /XC_CONTROL
 
  &GRID
     SYM_REDUCE       =    FALSE # (the default)

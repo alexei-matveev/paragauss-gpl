@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module xc_hamiltonian
 !---------------------------------------------------------------
 !
@@ -48,7 +48,7 @@ module xc_hamiltonian
 !           the routine xc_clean is called internally between scf_cycles
 !           in order to reset variables to zero.
 !
-!           The main routine is called build_xc ( the wrapper build_xc_main)
+!           The main routine is called xc_build
 !           In this routine the hamiltonian is stored in one linear array
 !           The following tasks are performed:
 !            ! calculation of the orbitals and orbitalgradients
@@ -67,11 +67,11 @@ module xc_hamiltonian
 !  Author: MS
 !  Date: 2/96
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: MS
@@ -104,14 +104,14 @@ module xc_hamiltonian
 ! Date:   10/97
 ! Description: extension to spin orbit
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: ...
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 !------------ Modules used --------------------------------------
 !---------------------------------------------------------------
@@ -145,21 +145,26 @@ module xc_hamiltonian
 !== Interrupt end of public interface of module =================
 
 !------------ public variables ----------------------------------
-  real(kind=r8_kind), allocatable, public :: ham_xc_arr(:)
-  ! Elements of the kohn-Sham-Matrix
-  real(kind=r8_kind), allocatable, public :: ham_xc_arr_real(:),ham_xc_arr_imag(:)
-  ! Elements of the kohn-Sham-Matrix (in case of spin orbit the KS-Matrix is complex)
-  logical, public :: mat_initialized, matold_initialized
-  real(kind=r8_kind),public  :: s_average
+
+  ! Elements of the Kohn-Sham matrix:
+  real (r8_kind), allocatable, public, protected :: ham_xc_arr(:)
+
+  ! Elements of  the Kohn-Sham  matrix (in case  of spin orbit  the KS
+  ! matrix is complex):
+  real (r8_kind), allocatable, public, protected :: &
+       ham_xc_arr_real(:), ham_xc_arr_imag(:)
+
+  logical, public, protected :: mat_initialized, matold_initialized
+  real (r8_kind), public, protected  :: s_average
 
 !------------ public functions and subroutines ------------------
-  public :: xc_setup, build_xc_main, build_xc, xc_close, &
+  public :: xc_setup, xc_build, xc_close, &
        & xc_hamiltonian_store, xc_hamiltonian_recover,&
        & xc_get_exc
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   integer(i4_kind), parameter, private ::&
        & X=1, Y=2, Z=3,&
@@ -174,10 +179,9 @@ module xc_hamiltonian
          TWO  = 2.0_r8_kind     ,&
          ZERO = 0.0_r8_kind
 
-  real(kind=r8_kind),allocatable :: rho(:,:),&
-         dfdrho(:,:),&  ! derivative of f with respect to rho
-         ham_xc_arr_old(:), ham_xc_arr_old_real(:),ham_xc_arr_old_imag(:),&
-          !!$         & help_arr(:),&
+  real (r8_kind), allocatable :: rho(:,:), &
+         dfdrho(:,:), &  ! derivative of f with respect to rho
+         ham_xc_arr_old(:), ham_xc_arr_old_real(:), ham_xc_arr_old_imag(:),&
          & help_arr_real(:),help_arr_imag(:),help_arr2(:,:),& !<< GET RID OF THEM, they must be local vars
          & fxc(:),fxc_gga(:),&        ! funktion f according to JPG
          gamma(:,:),& ! norms of the density gradients
@@ -231,28 +235,6 @@ module xc_hamiltonian
 
 contains
 
-
-  subroutine build_xc_main(loop)
-    ! purpose : wrapper for build_xc; it runs only on the master and sends
-    !           the message "execute build_xc" to the slaves. Subsequently
-    !           build_xc is called. build_xc_main is called in every scf-
-    !           cycle by main_scf.
-    ! ------ Modules -------------------------------------------
-    use msgtag_module, only: msgtag_build_xc
-    implicit none
-    integer(kind=i4_kind),optional :: loop ! number of the actual scf-cycle
-                                           ! (within the current SCF run)
-    !** End of interface *****************************************
-
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts, msgtag_build_xc)
-       call comm_send()
-    endif
-
-    call build_xc(loop=loop)
-  end subroutine build_xc_main
-
-  !***********************************************************
 
   subroutine xc_allocate()
     use xc_cntrl, only: is_on, xc_so_spatial, xc_nl_calc
@@ -523,8 +505,11 @@ contains
          ('allocation failed (2core) in su xc_setup')
     end if
 #endif
-       if(comm_i_am_master()) then
-          allocate(ham_xc_arr_real(xc_length),ham_xc_arr_imag(xc_length),&
+       ! FIXME:   The  corresponding  allocation   on  slaves   is  in
+       ! xc_build().   Master may  need  to allocate  that earlier  to
+       ! e.g. read the saved SCF state from an earlier calculation:
+       if (comm_i_am_master()) then
+          allocate (ham_xc_arr_real(xc_length), ham_xc_arr_imag(xc_length),&
                stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
                ('allocation (3) failed in su xc_setup')
@@ -543,11 +528,10 @@ contains
        !
        ! STANDARD SCF (NO SPIN ORBIT)
        !
-!!$       allocate(help_arr(vec_length),stat=alloc_stat)
-       if(comm_i_am_master()) then
-          ! the old XC matrix now is a temporary array of build_xc
+       if (comm_i_am_master()) then
+          ! the old XC matrix now is a temporary array of xc_build
           ! and the XC matrix is no longer allocated in main_scf
-          allocate(ham_xc_arr(xc_length),stat=alloc_stat)
+          allocate (ham_xc_arr(xc_length), stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
                ('allocation (3) failed in su xc_setup')
           if (options_recover() /= recover_scfstate .or. &
@@ -700,14 +684,14 @@ contains
      endif
 
      if (comm_i_am_master()) then
-        ! the old XC matrix now is a temporary array of build_xc
+        ! the old XC matrix now is a temporary array of xc_build
         ! and the XC matrix is no longer allocated in main_scf
         if (options_spin_orbit) then
-           deallocate(ham_xc_arr_real,ham_xc_arr_imag,stat=alloc_stat)
+           deallocate (ham_xc_arr_real, ham_xc_arr_imag, stat=alloc_stat)
            if(alloc_stat/=0) call error_handler &
                 ("xc_close : deallocation (5 spinor) failed ")
         else
-           deallocate(ham_xc_arr,stat=alloc_stat)
+           deallocate (ham_xc_arr, stat=alloc_stat)
            if(alloc_stat/=0) call error_handler &
                 ("xc_close : deallocation (5) failed ")
         endif
@@ -838,7 +822,7 @@ contains
       use density_calc_module, only: density_calc, density_calc_nl
       use grid_module, only: more_grid, grid_loop_setup
       implicit none
-      real(kind=r8_kind),intent(inout) :: ham_xc_arr(:) ! ...(xc_length_vec)
+      real (r8_kind), intent(inout) :: ham_xc_arr(:) ! (xc_length_vec)
       character(len=*), intent(in)     :: variant ! "orbitals" or "spinors"
       ! controls how the density is evaluated, integration is always
       ! over plain orbital functions
@@ -1051,15 +1035,16 @@ contains
 
     end subroutine calc_xcks
 
-    subroutine build_xc(loop)
-    ! purpose : main routine for calculation of the numerical
-    !           XC-Hamiltonian
-    !           The elements of the hamiltonian are stored in the
-    !           linear array ham_xc_arr
-    ! Input-Parameter:
-    !   loop               number of SCF-cycle (within current SCF run)
-    !   vpnm (optional)    if called from master, this is the VPN
-    !
+    subroutine xc_build (loop)
+      !
+      ! Main routine  for calculation of  the numerical XC-Hamiltonian
+      ! The elements of the hamiltonian are stored in the linear array
+      ! ham_xc_arr(:).
+      !
+      ! Input-Parameter:
+      !   loop number of SCF-cycle (within current SCF run)
+      !
+      !
     use timer_module
     use time_module
     use occupation_module, only: get_n_elec
@@ -1067,39 +1052,42 @@ contains
     use xc_cntrl, only: is_on, whatis, xc_so_spatial,&
          & xc_nl_calc, xc_gga_version, xc_sop_version
     use iounitadmin_module, only: output_unit
-!!$    use xc_ham_trafo, only: show_ham
-    integer(kind=i4_kind),optional :: loop
+    integer (i4_kind)  :: loop
     !** End of interface *****************************************
 
     integer(kind=i4_kind) :: alloc_stat
 
     call xc_allocate()
-    if (.not.comm_i_am_master()) then
+
+    if (.not. comm_i_am_master()) then
+       ! FIXME:   The  corresponding  allocation   on  master   is  in
+       ! xc_setup().  Master  may need  to  allocate  that earlier  to
+       ! e.g. read the saved SCF state from an earlier calculation:
        if (options_spin_orbit) then
-          allocate(ham_xc_arr_real(xc_length),ham_xc_arr_imag(xc_length),stat=alloc_stat)
+          allocate (ham_xc_arr_real(xc_length), ham_xc_arr_imag(xc_length), stat=alloc_stat)
           ASSERT (alloc_stat==0)
        else
-          allocate(ham_xc_arr(xc_length),stat=alloc_stat)
+          allocate(ham_xc_arr(xc_length), stat=alloc_stat)
           ASSERT (alloc_stat==0)
        endif
     else ! on the master
        ! ham_xc_arr_old is now a temporary array which is deallocate
        ! directly after mixing again
        if (options_spin_orbit) then
-          allocate(ham_xc_arr_old_real(xc_length),ham_xc_arr_old_imag(xc_length),stat=alloc_stat)
+          allocate (ham_xc_arr_old_real(xc_length), ham_xc_arr_old_imag(xc_length), stat=alloc_stat)
           ASSERT (alloc_stat==0)
           ham_xc_arr_old_real = ham_xc_arr_real
           ham_xc_arr_old_imag = ham_xc_arr_imag
        else
-          allocate(ham_xc_arr_old(xc_length),stat=alloc_stat)
+          allocate (ham_xc_arr_old(xc_length), stat=alloc_stat)
           ASSERT (alloc_stat==0)
           ham_xc_arr_old = ham_xc_arr
        endif
        matold_initialized = mat_initialized
     endif
 
-    if(options_spin_orbit.and.is_on(xc_so_spatial))then
-       allocate(ham_xc_arr(xc_length_vec),stat=alloc_stat)
+    if (options_spin_orbit .and. is_on(xc_so_spatial)) then
+       allocate (ham_xc_arr(xc_length_vec), stat=alloc_stat)
        ASSERT (alloc_stat==0)
        ham_xc_arr = 0.0_r8_kind
     endif
@@ -1138,25 +1126,25 @@ contains
           ! GGA calculation
           !
           ASSERT(whatis(xc_GGA_version)==2)
-          DPRINT "xch/build_xc: calling GGA ..."
+          DPRINT "xch/xc_build: calling GGA ..."
           call calc_xcks_nl(ham_xc_arr)
-          DPRINT "xch/build_xc: ... done"
+          DPRINT "xch/xc_build: ... done"
        endif
     else
        ! SPIN ORBIT
        if (spin_orbit_polarized) then
           ! OPEN SHELL
           ASSERT(whatis(xc_sop_version)==2)
-          DPRINT 'xch/build_xc: call calc_xcks_sop() ...'
+          DPRINT 'xch/xc_build: call calc_xcks_sop() ...'
           call calc_xcks_sop()
-          DPRINT 'xch/build_xc: ... done'
+          DPRINT 'xch/xc_build: ... done'
        else
           ! CLOSED SHELL
           if(is_on(xc_so_spatial))then
              call calc_xcks_space_so(ham_xc_arr_real, ham_xc_arr)
           else
              if(xc_nl_calc)then
-                call error_handler("xch/build_xc: for SO-GGA use eg. XC='bp,spatial' key")
+                call error_handler("xch/xc_build: for SO-GGA use eg. XC='bp,spatial' key")
              endif
              call calc_xcks_so()
           endif
@@ -1199,11 +1187,11 @@ contains
        if (options_spin_orbit) then
           deallocate(ham_xc_arr_old_real,ham_xc_arr_old_imag,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('deallocation failed in su build_xc')
+               ('deallocation failed in su xc_build')
        else
           deallocate(ham_xc_arr_old,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('deallocation failed in su build_xc')
+               ('deallocation failed in su xc_build')
        endif
     end if
     call xc_deallocate()
@@ -1213,18 +1201,18 @@ contains
        if (options_spin_orbit) then
           deallocate(ham_xc_arr_real,ham_xc_arr_imag,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('deallocation failed in su build_xc')
+               ('deallocation failed in su xc_build')
        else
           deallocate(ham_xc_arr,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('deallocation failed in su build_xc')
+               ('deallocation failed in su xc_build')
        endif
     endif
 
     if(options_spin_orbit.and.is_on(xc_so_spatial))then
        deallocate(ham_xc_arr,stat=alloc_stat)
           if(alloc_stat/=0) call error_handler&
-               ('xcm/build_xc: ham_xc_arr dealloc failed')
+               ('xcm/xc_build: ham_xc_arr dealloc failed')
     endif
 
     if(comm_i_am_master()) then
@@ -1665,7 +1653,7 @@ contains
                        p_dn_real(1:vla,j,1)*p_dn_imag(1:vla,k,1)-&
                        p_dn_imag(1:vla,j,1)*p_dn_real(1:vla,k,1))*&
                        grdwts(1:vla)
-                  !call buggy("build_xc: now loop over partners")
+                  !call buggy("xc_build: now loop over partners")
                   do m=2,partners(i)
                      help_arr_real(1:vla)=help_arr_real(1:vla)+&
                           ( p_up_real(1:vla,j,m)*p_up_real(1:vla,k,m)+&
@@ -2025,7 +2013,7 @@ contains
 !!$                  do k=1,j
 !!$                     help_xc_real=0.0_r8_kind
 !!$                     help_xc_imag=0.0_r8_kind
-!!$                     !call buggy("build_xc: calculate help_arr_real")
+!!$                     !call buggy("xc_build: calculate help_arr_real")
 !!$                     ! <chij,up|chik,up>
 !!$                     help_arr_uu_real(1:vla)=&
 !!$                          ( p_up_real(1:vla,j,1)*p_up_real(1:vla,k,1)+&
@@ -2056,7 +2044,7 @@ contains
 !!$                          (p_dn_real(1:vla,j,1)*p_dn_imag(1:vla,k,1)-&
 !!$                          p_dn_imag(1:vla,j,1)*p_dn_real(1:vla,k,1))*&
 !!$                          grdwts(1:vla)
-!!$                     !call buggy("build_xc: now loop over partners")
+!!$                     !call buggy("xc_build: now loop over partners")
 !!$                     do m=2,partners(i)
 !!$                        ! <chij,up|chik,up>
 !!$                        help_arr_uu_real(1:vla)=help_arr_uu_real(1:vla)+&
@@ -2089,7 +2077,7 @@ contains
 !!$                             p_dn_imag(1:vla,j,m)*p_dn_real(1:vla,k,m))*&
 !!$                             grdwts(1:vla)
 !!$                     enddo! loop over partners
-!!$                     !call buggy("build_xc: building of xc_hamiltonian")
+!!$                     !call buggy("xc_build: building of xc_hamiltonian")
 !!$                     ! building of xc_hamiltonian
 !!$                     !
 !!$                     ! df/dn
@@ -2210,15 +2198,15 @@ contains
 !!$                  do k=1,j
 !!$                     help_xc_real=0.0_r8_kind
 !!$                     help_xc_imag=0.0_r8_kind
-!!$                     !call buggy("build_xc: calculate help_arr_real")
-!!$                     !print*,"build_xc: calculate help_arr_real"
+!!$                     !call buggy("xc_build: calculate help_arr_real")
+!!$                     !print*,"xc_build: calculate help_arr_real"
 !!$                     help_arr_real(1:vla)=&
 !!$                          ( p_up_real(1:vla,j,1)*p_up_real(1:vla,k,1)+&
 !!$                          p_up_imag(1:vla,j,1)*p_up_imag(1:vla,k,1)+&
 !!$                          p_dn_real(1:vla,j,1)*p_dn_real(1:vla,k,1)+&
 !!$                          p_dn_imag(1:vla,j,1)*p_dn_imag(1:vla,k,1))*&
 !!$                          grdwts(1:vla)
-!!$                     !call buggy("build_xc: calculate help_arr_imag")
+!!$                     !call buggy("xc_build: calculate help_arr_imag")
 !!$                     help_arr_imag(1:vla)=&
 !!$                          ( p_up_real(1:vla,j,1)*p_up_imag(1:vla,k,1)-&
 !!$                          p_up_imag(1:vla,j,1)*p_up_real(1:vla,k,1)+&
@@ -2289,7 +2277,7 @@ contains
 !!$                          p_dn_imag(1:vla,j,1)*q_dn_real(1:vla,3,k,1))*&
 !!$                          grdwts(1:vla)
 !!$
-!!$                     !call buggy("build_xc: now loop over partners")
+!!$                     !call buggy("xc_build: now loop over partners")
 !!$                     do m=2,partners(i)
 !!$                        help_arr_real(1:vla)=help_arr_real(1:vla)+&
 !!$                             ( p_up_real(1:vla,j,m)*p_up_real(1:vla,k,m)+&
@@ -2364,7 +2352,7 @@ contains
 !!$                             p_dn_imag(1:vla,j,m)*q_dn_real(1:vla,3,k,m))*&
 !!$                             grdwts(1:vla)
 !!$                     enddo! loop over partners
-!!$                     !call buggy("build_xc: building of xc_hamiltonian")
+!!$                     !call buggy("xc_build: building of xc_hamiltonian")
 !!$                     ! building of xc_hamiltonian
 !!$                     ! LDA-part of XC-Matrix
 !!$                     help_arr_real(1:vla) = help_arr_real(1:vla)*dfdrho(1:vla,1)
@@ -2412,7 +2400,7 @@ contains
 !!$      endif
     end subroutine calc_xcks_nl_so
 
-  end subroutine build_xc
+  end subroutine xc_build
 
    !*********************************************************
 
@@ -2497,45 +2485,50 @@ contains
 ! record  5: exc_int             [if numeric_exch]
 !*************************************************************
 
-   subroutine xc_hamiltonian_recover(th)
-     ! Purpose: recovers the XC hamiltonian and XC energy from a
-     !          readwriteblocked file in case the input switch
-     !          "read_scfstate" is set.
+   subroutine xc_hamiltonian_recover (th)
      !
-     ! subroutine called by: 'main_scf'
+     ! Recovers   the   XC   hamiltonian   and  XC   energy   from   a
+     ! readwriteblocked file in  case the input switch "read_scfstate"
+     ! is set.  Skips reading the  matrix elements if the  storage was
+     ! not allocated (on slaves).
+     !
+     ! Subroutine called by: main_scf()
      !
      ! UB 8/97
-     !------------ Modules ----------------------------------------
+     !
      use iounitadmin_module, only: write_to_output_units, output_unit
-     use output_module     , only: output_main_scf, output_data_read
+     use output_module , only: output_main_scf, output_data_read
      use readwriteblocked_module
-     !------------ Declaration of formal_parameters ---------------
-     type(readwriteblocked_tapehandle), intent(inout) :: th
+     implicit none
+     type (readwriteblocked_tapehandle), intent (inout) :: th
      !** End of interface *****************************************
-     !------------ Declaration of local variables   ---------------
-     allocatable           :: buffer
-     integer(kind=i4_kind) :: n_spin, spin_stored, arr_length
-     real(kind=r8_kind)    :: dummy(1), arr_dim(2), num_exch(1), buffer(:), &
-                              zero = 0.0_r8_kind, half = 0.5_r8_kind
-     logical               :: numeric_exch
-     integer               :: alloc_stat
-     !------------ Executable code --------------------------------
+
+     integer (i4_kind) :: n_spin, spin_stored, arr_length
+     real (r8_kind) :: dummy(1), arr_dim(2), num_exch(1)
+     real (r8_kind), allocatable :: buffer(:)
+     real (r8_kind), parameter :: zero = 0.0_r8_kind, half = 0.5_r8_kind
+     logical :: numeric_exch
+     integer :: alloc_stat
+
+     ! FIXME:  The arrays  to  hold  the data  are  allocated late  on
+     ! slaves!
+
      n_spin = options_n_spin()
      numeric_exch = options_xcmode() == xcmode_numeric_exch
 
-     call readwriteblocked_read(num_exch,th)
+     call readwriteblocked_read (num_exch, th)
      if (output_data_read) then
-        write(output_unit,'(/ a     )')'Recovered XC(num) matrix :'
-        write(output_unit,'(  a     )')'numeric exchange used ?'
-        write(output_unit,'(4es20.13)')num_exch(1)
+        write (output_unit, '(/ a     )') 'Recovered XC(num) matrix :'
+        write (output_unit, '(  a     )') 'numeric exchange used ?'
+        write (output_unit, '(4es20.13)') num_exch(1)
      endif
      if (num_exch(1) /= zero) then
-        call readwriteblocked_read(arr_dim,th)
-        spin_stored = int(arr_dim(1),i4_kind)
-        arr_length = int(arr_dim(2),i4_kind)
+        call readwriteblocked_read (arr_dim, th)
+        spin_stored = int (arr_dim(1), i4_kind)
+        arr_length = int (arr_dim(2), i4_kind)
         if (output_data_read) then
-           write(output_unit,'(  a     )')'n_spin, xc_length'
-           write(output_unit,'(4es20.13)')arr_dim(1:2)
+           write (output_unit, '(  a     )') 'n_spin, xc_length'
+           write (output_unit, '(4es20.13)') arr_dim(1:2)
         endif
         if (numeric_exch) then
            if (output_main_scf) call write_to_output_units &
@@ -2544,10 +2537,10 @@ contains
         else
            if (output_main_scf) call write_to_output_units &
                 ("XC_HAMILTONIAN_REC: XC hamiltonian ignored")
-           call readwriteblocked_skipread(arr_length+1,th)
+           call readwriteblocked_skipread (arr_length + 1, th)
            if (output_data_read) then
-              write(output_unit,'(  a     )')'ham_xc_arr skipped'
-              write(output_unit,'(  a     )')'exc_int    skipped'
+              write (output_unit, '(  a     )') 'ham_xc_arr skipped'
+              write (output_unit, '(  a     )') 'exc_int    skipped'
            endif
            return
         endif
@@ -2561,7 +2554,7 @@ contains
         return
      endif
 
-     ! start recovering XC hamiltonian now
+     ! Start recovering XC hamiltonian now
      if (spin_stored > n_spin .and. output_main_scf) then
         call write_to_output_units &
              ("XC_HAMILTONIAN_REC: trying to convert spin-polarized data from")
@@ -2578,47 +2571,65 @@ contains
      endif
 
      if (options_spin_orbit) then
-        call readwriteblocked_read(ham_xc_arr_real(1:xc_length:1),th)
-        call readwriteblocked_read(ham_xc_arr_imag(1:xc_length:1),th)
+        if (allocated (ham_xc_arr_real)) then
+           call readwriteblocked_read (ham_xc_arr_real(1:xc_length:1), th)
+           call readwriteblocked_read (ham_xc_arr_imag(1:xc_length:1), th)
+        else
+           call readwriteblocked_skipread (xc_length, th)
+           call readwriteblocked_skipread (xc_length, th)
+        endif
      else
-        call readwriteblocked_read(ham_xc_arr(1:xc_length:n_spin),th)
-     endif
-     if (output_data_read) then
-        write(output_unit,'( a,i1,a )')'ham_xc_arr(1:xc_length:',n_spin,')'
-        write(output_unit,'(4es20.13)')ham_xc_arr(1:xc_length:n_spin)
+        if (allocated (ham_xc_arr)) then
+           call readwriteblocked_read (ham_xc_arr(1:xc_length:n_spin), th)
+           if (output_data_read) then
+              write(output_unit, '( a,i1,a )') 'ham_xc_arr(1:xc_length:',n_spin,')'
+              write(output_unit, '(4es20.13)') ham_xc_arr(1:xc_length:n_spin)
+           endif
+        else
+           call readwriteblocked_skipread (xc_length / n_spin, th)
+        endif
      endif
      if (spin_stored > 1) then
         if (n_spin > 1) then
-           call readwriteblocked_read(ham_xc_arr(2:xc_length:2),th)
-           if (output_data_read) then
-              write(output_unit,'(  a     )')'ham_xc_arr(2:xc_length:2)'
-              write(output_unit,'(4es20.13)')ham_xc_arr(2:xc_length:2)
+           if (allocated (ham_xc_arr)) then
+              call readwriteblocked_read (ham_xc_arr(2:xc_length:2), th)
+              if (output_data_read) then
+                 write (output_unit, '(  a     )') 'ham_xc_arr(2:xc_length:2)'
+                 write (output_unit, '(4es20.13)') ham_xc_arr(2:xc_length:2)
+              endif
+           else
+              call readwriteblocked_skipread (xc_length / 2, th)
            endif
         else
-           allocate(buffer(xc_length),stat=alloc_stat)
-           if (alloc_stat.ne.0) call error_handler &
-                ("XC_HAMILTONIAN_REC: allocation of buffer failed")
-           call readwriteblocked_read(buffer,th)
-           if (output_data_read) then
-              write(output_unit,'(  a     )')'ham_xc_arr(2:xc_length:2)'
-              write(output_unit,'(4es20.13)')buffer
+           if (allocated (ham_xc_arr)) then
+              allocate (buffer(xc_length), stat=alloc_stat)
+              if (alloc_stat.ne.0) call error_handler &
+                   ("XC_HAMILTONIAN_REC: allocation of buffer failed")
+              call readwriteblocked_read (buffer, th)
+              if (output_data_read) then
+                 write (output_unit, '(  a     )') 'ham_xc_arr(2:xc_length:2)'
+                 write (output_unit, '(4es20.13)') buffer
+              endif
+              ham_xc_arr = (ham_xc_arr + buffer) * half
+              deallocate (buffer, stat=alloc_stat)
+              if (alloc_stat.ne.0) call error_handler &
+                   ("XC_HAMILTONIAN_REC: deallocation of buffer failed")
+           else
+              call readwriteblocked_skipread (xc_length, th)
            endif
-           ham_xc_arr = ( ham_xc_arr + buffer ) * half
-           deallocate(buffer,stat=alloc_stat)
-           if (alloc_stat.ne.0) call error_handler &
-                ("XC_HAMILTONIAN_REC: deallocation of buffer failed")
         endif
      elseif (n_spin > 1) then
-        ham_xc_arr(2:xc_length:2) = ham_xc_arr(1:xc_length:2)
+        if (allocated (ham_xc_arr)) then
+           ham_xc_arr(2:xc_length:2) = ham_xc_arr(1:xc_length:2)
+        endif
         mat_initialized = .true. ! because the spin polarization is missing
      endif
-     call readwriteblocked_read(dummy(1:1),th)
+     call readwriteblocked_read (dummy(1:1), th)
      exc_int = dummy(1)
      if (output_data_read) then
-        write(output_unit,'(  a     )')'exc_int'
-        write(output_unit,'(4es20.13)')dummy(1)
+        write (output_unit, '(  a     )') 'exc_int'
+        write (output_unit, '(4es20.13)') dummy(1)
      endif
-
    end subroutine xc_hamiltonian_recover
    !*************************************************************
 
@@ -2630,7 +2641,7 @@ contains
      !          The procedure is analogous to the one for the analytical
      !          matrixelements. ( see integral_calc_quad_2cob3c)
      !
-     ! subroutine called by: 'build_xc'
+     ! subroutine called by: 'xc_build'
      !
      ! MS,8/97
      !------------ Modules ----------------------------------------

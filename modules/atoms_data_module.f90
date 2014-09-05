@@ -1,48 +1,48 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module atoms_data_module
 !
 ! Author: AS
 ! Date: 03 2002
 !
-! This module collect set of atomic data which are used 
+! This module collect set of atomic data which are used
 ! at the moment in solvation_module, disp_rep_module and
-! potential_calc_module 
-!----------------------------------------------------------------
+! potential_calc_module
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: ...
 ! Date:   ...
 ! Description: ...
 !
-!===============================================================
+!=====================================================================
 # include "def.h"
   use type_module ! type specification parameters
   implicit none
@@ -52,12 +52,8 @@ module atoms_data_module
 !== Interrupt end of public interface of module =================
 !
 !-- Public variables --------------------------------------------
-!!!  character(len=2),parameter,public :: &
-#ifdef _LINUX
-  character(len=2),parameter,public :: &
-# else
-  character(len=2),public :: &
-#endif   
+
+  character (len=2), parameter, public :: &
        atom_name(98)= (/"H ","He","Li","Be","B ","C ","N ","O ","F ","Ne", &
                         "Na","Mg","Al","Si","P ","S ","Cl","Ar","K ","Ca", &
                         "Sc","Ti","V ","Cr","Mn","Fe","Co","Ni","Cu","Zn", &
@@ -69,16 +65,12 @@ module atoms_data_module
                         "Tl","Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th", &
                         "Pa","U ","Np","Pu","Am","Cm","Bk","Cf"/)
 
-  ! default van der Waals radii used in solvation_module to build a solvent 
-  ! excluding molecular surfaces (A.Bondi, J.Phys.Chem., V.68, N.3, P.441, 1964)
-!!!  real(kind=r8_kind),parameter,public :: &
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  ! Default van  der Waals radii  used in solvation_module to  build a
+  ! solvent excluding molecular surfaces (A.Bondi, J.Phys.Chem., V.68,
+  ! N.3, P.441, 1964)
+  real (r8_kind), parameter, public :: &
        vdW_radius(98)=(/1.20,1.40,1.82,0.00,0.00,1.70,1.55,1.52,1.47,1.54, &
-                        ! H    He   Li   Be   B    C    N    O    F    Ne 
+                        ! H    He   Li   Be   B    C    N    O    F    Ne
                         2.27,1.73,0.00,2.10,1.80,1.80,1.75,1.88,2.75,0.00, &
                         ! Na   Mg   Al   Si   P    S    Cl   Ar   K    Ca
                         0.00,0.00,0.00,0.00,0.00,0.00,0.00,1.63,1.40,1.39, &
@@ -98,20 +90,17 @@ module atoms_data_module
                         0.00,1.86,0.00,0.00,0.00,0.00,0.00,0.00/)
                         ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-  ! default van der Waals radii and K parameters used in disp_rep_module 
-  ! to calculate the short range contribution to the free solvation energy
+  ! Default   van  der   Waals  radii   and  K   parameters   used  in
+  ! disp_rep_module to  calculate the short range  contribution to the
+  ! free solvation energy
+  !
   ! (J.Caillet, P.Claverie, B.Pullman, Acta Cryst. B, V.32, P.2740, 1976
   !  J.Caillet, P.Claverie, Acta Cryst. A, V.31, P.448, 1975
   !  F.Vign�-Maeder, P.Claverie, J.Am.Chem.Soc., V.109, P.24, 1987
   !  J.Caillet, P.Claverie, B.Pullman, Acta Cryst. B, V.36, P.3266, 1978)
-!!!  real(kind=r8_kind),parameter,public :: &
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        R0_def(98)=(/1.20,0.00,0.00,0.00,0.00,1.70,1.60,1.50,1.45,0.00, &
-                    ! H    He   Li   Be   B    C    N    O    F    Ne 
+                    ! H    He   Li   Be   B    C    N    O    F    Ne
                     1.20,0.00,0.00,0.00,1.85,1.80,1.76,0.00,1.46,0.00, &
                     ! Na   Mg   Al   Si   P    S    Cl   Ar   K    Ca
                     0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00, &
@@ -131,14 +120,9 @@ module atoms_data_module
                     0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00/)
                     ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-!!!  real(kind=r8_kind),parameter,public :: & 
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        K_def(98)=(/1.00,0.00,0.00,0.00,0.00,1.00,1.18,1.36,1.50,0.00, &
-                   ! H    He   Li   Be   B    C    N    O    F    Ne 
+                   ! H    He   Li   Be   B    C    N    O    F    Ne
                    1.40,0.00,0.00,0.00,2.10,2.40,2.10,0.00,2.90,0.00, &
                    ! Na   Mg   Al   Si   P    S    Cl   Ar   K    Ca
                    0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00, &
@@ -158,14 +142,9 @@ module atoms_data_module
                    0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00/)
                    ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-  ! (A.K.Rappe, C.C. Casewit, K.S. Colwell, W.A.Goddard, W.M.Skiff, 
+  ! (A.K.Rappe,  C.C. Casewit,  K.S. Colwell,  W.A.Goddard, W.M.Skiff,
   ! J.Am.Chem.Soc., V.114, P.10024, 1992)
-!!!  real(kind=r8_kind),parameter,public :: &
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+  real (r8_kind), parameter, public :: &
        R_def_rap(103)=(/2.886,2.362,2.451,2.745,4.083,3.851,3.660,3.500, &
                         !  H     He    Li    Be    B     C     N     O
                         3.364,3.243,2.983,3.021,4.499,4.295,4.147,4.035, &
@@ -192,12 +171,8 @@ module atoms_data_module
                         !  Ac    Th    Pa    U     Np    Pu    Am    Cm
                         3.339,3.313,3.299,3.286,3.274,3.248,3.236/)
                         !  Bk    Cf    Es    Fm    Md    No    Lw
-  !!!real(kind=r8_kind),parameter,public :: &
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+
+  real (r8_kind), parameter, public :: &
        D_def_rap(103)=(/0.044,0.056,0.025,0.085,0.180,0.105,0.069,0.060, &
                         !  H     He    Li    Be    B     C     N     O
                         0.050,0.042,0.030,0.111,0.505,0.402,0.305,0.274, &
@@ -225,12 +200,8 @@ module atoms_data_module
                         0.013,0.013,0.012,0.012,0.011,0.011,0.011/)
                         !  Bk    Cf    Es    Fm    Md    No    Lw
 
-!!!  real(kind=r8_kind),parameter,public :: &
-#ifdef _LINUX
-  real(kind=r8_kind),parameter,public :: &
-# else
-  real(kind=r8_kind),public :: &
-#endif
+
+  real (r8_kind), parameter, public :: &
        zeta_def_rap(103)=(/12.00 ,15.24 ,12.00 ,12.00 ,12.052,12.73 ,13.407,14.085, &
                            !  H      He     Li     Be     B      C      N      O
                            14.762,15.440,12.0  ,12.0  ,11.278,12.175,13.072,13.969, &

@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module potentials_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use iounitadmin_module
   use filename_module
@@ -36,7 +36,7 @@ module potentials_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   type, public :: poten_data
      integer(kind=i4_kind) :: id        ! global identificator of the potential
@@ -71,12 +71,12 @@ module potentials_module
   end type list_of_potentials
   type(list_of_potentials), public :: poten_list
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public potential_list_init, read_potential, write_potential_to_output, &  
        convert_ff_parameters, shutdown_poten_data
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   character(len=10) :: pot_name 
@@ -92,7 +92,7 @@ module potentials_module
   character(len=200) :: df_read_data='NO'
 
   namelist /potential/ pot_name,atom_name,ff_parameter,read_data
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine potential_list_init()
@@ -442,7 +442,7 @@ contains
     end subroutine read_table
 
   end function read_potential
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   function find_nml(f_device,word,i)
 
     integer(kind=i4_kind), intent(in) :: f_device

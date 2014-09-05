@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -26,7 +26,7 @@
 subroutine energy_and_grad_of_cavity()
   !
   ! Calculates the cavitation energy or its gradients (scaled particle
-  ! theory) formulas from
+  ! theory) formulas from. Does no communication.
   !
 # include "def.h"
   use type_module, only: i4_kind, r8_kind ! type specification parameters
@@ -73,7 +73,7 @@ subroutine energy_and_grad_of_cavity()
 
   if(.not.do_gradients) then
      energy_cav=0.0_r8_kind
-     
+
      Y=4.0_r8_kind*pi*num_dens*rsolv**3/3.0_r8_kind
      YY=Y/(1.0_r8_kind-Y)
      K0= -log(1.0_r8_kind-Y)
@@ -88,11 +88,11 @@ subroutine energy_and_grad_of_cavity()
            if(skip_short(iuniq(i))) cycle do_nsp_i
         endif
         dd=r_sphere(i)/rsolv
-        
+
         Ecav=(K0+K1*dd+K2*dd**2+K3*dd**3)*Kb*abs_temperature
-        
+
         area_total=4.0_r8_kind*pi*r_sphere(i)**2
-        
+
         area_s=0.0_r8_kind
         do j=1,n_size
            do k=1,tessarea(j)%n_equal
@@ -104,15 +104,15 @@ subroutine energy_and_grad_of_cavity()
   else
      N_pc=0
      if(with_pc .and. .not.fixed_pc)  N_pc=pointcharge_N
-     
+
      Y=4.0_r8_kind*pi*num_dens*rsolv**3/3.0_r8_kind
      YY=Y/(1.0_r8_kind-Y)
      K0= -log(1.0_r8_kind-Y)
      K1= 3.0_r8_kind*YY
      K2= 3.0_r8_kind*YY+4.5_r8_kind*YY**2
 !!$             K3= Y*P/(num_dens*Kb*abs_temperature)
-     K3=0.0_r8_kind             
-     
+     K3=0.0_r8_kind
+
      unique1: do ma=1,N_moving_unique_atoms+N_pc
         if(ma <= N_moving_unique_atoms) then
            na=moving_unique_atom_index(ma)
@@ -121,21 +121,21 @@ subroutine energy_and_grad_of_cavity()
            na=ma-N_moving_unique_atoms
            ea=pointcharge_array(na)%N_equal_charges
         end if
-        
+
         unique2: do m=1,ea
            gradient=0.0_r8_kind
-           
+
            i_N: do i=1,N_spheres
               if(.not. cavitation_all) then
                  !use skip_short only when allocated!
                  if(skip_short(iuniq(i))) cycle i_N
               endif
               dd=r_sphere(i)/rsolv
-              
+
               Ecav=(K0+K1*dd+K2*dd**2+K3*dd**3)*Kb*abs_temperature
-              
+
               area_total=4.0_r8_kind*pi*r_sphere(i)**2
-              
+
               DPRINT 'i_symm_sort used here, shape=',shape(i_symm_sort)
               do j=1,n_size
                  do k=1,tessarea(j)%n_equal
@@ -176,36 +176,36 @@ subroutine energy_and_grad_of_cavity()
            end if
         enddo unique2
      enddo unique1
-     
+
      if(integralpar_2dervs) then
         unique_a: do ma=1,N_moving_unique_atoms
            na=moving_unique_atom_index(ma)
            ea=unique_atoms(na)%n_equal_atoms
            grad_dim=grad_index(ma+1)-grad_index(ma)
-           
+
            unique_b: do mb=1,N_moving_unique_atoms
               nb=moving_unique_atom_index(mb)
               eb=unique_atoms(nb)%n_equal_atoms
               grad_dim1=grad_index(mb+1)-grad_index(mb)
-              
+
               do n=1,ea
                  rotmat=>unique_atom_grad_info(ma)%m(:,:,n)
                  do n1=1,eb
                     rotmat1=>unique_atom_grad_info(mb)%m(:,:,1)
-                    
+
                     hessian=0.0_r8_kind
-                    
+
                     i_Ns:do i=1,N_spheres
                        if(.not. cavitation_all) then
                           !use skip_short only when allocated!
                           if(skip_short(iuniq(i))) cycle i_Ns
                        endif
                        dd=r_sphere(i)/rsolv
-                       
+
                        Ecav=(K0+K1*dd+K2*dd**2+K3*dd**3)*Kb*abs_temperature
-                       
+
                        area_total=4.0_r8_kind*pi*r_sphere(i)**2
-                       
+
                        do j=1,n_size
                           do k=1,tessarea(j)%n_equal
                              ism=i_symm_sort(j,k)
@@ -249,11 +249,11 @@ subroutine energy_and_grad_of_cavity()
      end if
   endif
 
-  if(do_gradients) then
-     call dealloc_geom_deriv_part2
+  if (do_gradients) then
+     call dealloc_geom_deriv_part2() ! no comm
   endif
 
-  call dealloc_cavity()
+  call dealloc_cavity()         ! no comm
 
   if(allocated(skip_short)) then
      !maybe not allocated if dispersion repulsion not calculated

@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module xcfit_hamiltonian
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module creates the XC-part of the hamiltionian by
   !           the fitting technique
@@ -37,11 +37,11 @@ module xcfit_hamiltonian
   !  Author: MS
   !  Date: 2/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: UB
   ! Date:   6/97
@@ -56,8 +56,8 @@ module xcfit_hamiltonian
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module  ! type specification parameters
   use orbitalstore_module
@@ -77,14 +77,14 @@ module xcfit_hamiltonian
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
-  public :: build_xcfit_main, xcfit_setup, build_xcfit, xcfit_close
+  !------------ public functions and subroutines ---------------------
+  public :: xcfit_setup, xcfit_build, xcfit_close
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   real(kind=r8_kind),allocatable :: rho(:,:),&
          dfdrho(:,:),&  ! derivative of f with respect to rho
@@ -103,22 +103,6 @@ module xcfit_hamiltonian
 
 
 contains
-
-  subroutine build_xcfit_main(loop)
-    ! purpose : wrapper for build_xcfit; it runs only on the master and sends
-    !           the message "execute build_xcfit" to the slaves. Subsequently
-    !           build_xc is called. build_xcfit_main is called in every scf-
-    !           cycle by main_scf
-    integer(kind=i4_kind),optional :: loop ! number of the actual scf-cycle
-    !** End of interface *****************************************
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts,msgtag_build_xcfit)
-       call comm_send()
-    endif
-    call build_xcfit(loop)
-  end subroutine build_xcfit_main
-
-  !***********************************************************
 
   subroutine xcfit_allocate()
     use machineparameters_module, only: machineparameters_veclen
@@ -263,9 +247,9 @@ contains
 
    !***************************************************************
 
-   subroutine build_xcfit(loop)
-     ! purpose : main routine for fitting the xc-hamiltonian
-     !           XC-Hamiltonian
+   subroutine xcfit_build (loop)
+     !
+     ! Main routine for fitting the xc-hamiltonian XC-Hamiltonian
      !
      use vwnc
      use time_module
@@ -274,8 +258,9 @@ contains
      use density_calc_module, only: density_calc
      use grid_module, only: more_grid, grid_loop_setup
      implicit none
-     integer(kind=i4_kind),optional :: loop ! number of the current scf cycle
+     integer (i4_kind) :: loop ! number of the current scf cycle
      !** End of interface *****************************************
+
      real(kind=r8_kind),parameter :: deps=1.0e-50_r8_kind
      integer(kind=i4_kind) :: i,j,s,vec_length_act,counter
      logical:: use_model_density
@@ -381,7 +366,7 @@ contains
         ! now mixing the xc-coefficients
         call mixing_xc(loop-1) ! iter=loop-1 instead of iter=loop : in order
                                ! to stay consistent with the V14alpha version
-                               ! of the PARAGAU program, where build_xcfit was
+                               ! of the PARAGAU program, where xcfit_build was
                                ! still located at the  e n d  of the SCF loop.
                                ! This way iter=1 at the first call of mixing_xc
         ! the old exchange coefficients are not needed anymore
@@ -392,7 +377,7 @@ contains
      end if
      call xcfit_deallocate()
 
-   end subroutine build_xcfit
+   end subroutine xcfit_build
 
    !***************************************************************
 

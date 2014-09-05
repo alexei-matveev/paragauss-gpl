@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module debug
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -35,24 +35,24 @@ module debug
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: ...
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only: &
        IK=>i4_kind, &
@@ -60,14 +60,14 @@ module debug
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 !!$  type, public ::  debug_
 !!$  end type debug_
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 !!$  integer(kind=IK), parameter, public  :: debug_
 !!$  real(kind=RK),    parameter, public  :: debug_
 !!$  logical,               parameter, public  :: debug_
@@ -78,7 +78,7 @@ module debug
 !!$  character,                        public  :: debug_
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
   interface show
      module procedure show_real_matrix
      ! show_real_matrix(name,real(:,:))
@@ -151,7 +151,7 @@ module debug
      module procedure count_NInf_5D
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: isInf
   public :: countInf
 #endif
@@ -181,21 +181,21 @@ module debug
 
   public :: dump
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
-!!$  type 
-!!$  end type 
+  !------------ Declaration of types ---------------------------------
+!!$  type
+!!$  end type
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  real(RK), parameter :: zero = 0.0_RK 
+  real(RK), parameter :: zero = 0.0_RK
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 #if 0 /* seems to be unused */
@@ -361,12 +361,6 @@ contains
     logical                 :: yes
     ! *** end of interface ***
 
-#ifdef FPP_HAVE_NANINFCHK
-    logical :: DNANCHK ! external func, works with Absoft
-
-    yes = DNANCHK(v)
-#endif
-#ifdef FPP_HAVE_ISNAN
 #ifndef INTRINSIC_ISNAN
     logical, external :: isNaN ! external func, provided by Intel
 #else
@@ -374,7 +368,6 @@ contains
 #endif
 
     yes = isNaN(v)
-#endif
   end function isNaN_s
 
   function isNaN_1D(v) result(mask)
@@ -472,13 +465,7 @@ contains
     logical                 :: yes
     ! *** end of interface ***
 
-#ifdef FPP_HAVE_NANINFCHK
-    logical :: DINFCHK ! external func, works with Absoft
-
-    yes = DINFCHK(v)
-#else
     yes = abs(v) > huge(v)
-#endif
   end function isInf
 #endif
 
@@ -548,11 +535,11 @@ contains
     real(RK),dimension(:,:),intent(in) :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK),parameter       :: zmax=5
     integer(IK)           :: i,j,n,m,zn,zm
     integer(IK)           ::         dn,dm
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n  = size(MM,1)
     m  = size(MM,2)
@@ -607,7 +594,7 @@ contains
 
   end subroutine show_real_matrix
   !*************************************************************
-  
+
   !*************************************************************
   subroutine zhow_real_matrix(mat,cut)
     !  Purpose: ..
@@ -618,12 +605,12 @@ contains
     real(RK),optional      ,intent(in) :: cut
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)           :: i,j,n,m
     integer(IK),parameter :: many=128
     integer(IK)           :: d_n,d_m
     real(RK)              :: cut_
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if( size(mat) == 0 ) RETURN
 
@@ -670,8 +657,8 @@ contains
           c = '-'
         endif
       endif
-#ifdef WITH_NANINFCHK
-      if( isNaN(x) )then
+#ifdef WITH_ISNAN
+      if (isNaN (x)) then
         c = 'N'
       endif
 #endif
@@ -689,9 +676,9 @@ contains
     real(RK),dimension(:,:),intent(in) :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)           :: i,j,n,m
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n = size(MM,1)
     m = size(MM,2)
@@ -724,9 +711,9 @@ contains
     real(RK),dimension(:),intent(in)   :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)           :: i,n
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n = size(MM)
 
@@ -747,8 +734,8 @@ contains
     real(RK),dimension(:,:,:),intent(in)   :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     write(*,'(A)') '<octave>'
     write(*,*)     '# ',trim(var(name)),' (',shape(MM),') in fortran order'
@@ -767,8 +754,8 @@ contains
     real(RK),dimension(:,:,:,:),intent(in)   :: MM
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     write(*,'(A)') '<octave>'
     write(*,*)     '# ',trim(var(name)),' (',shape(MM),') in fortran order'
@@ -1013,7 +1000,7 @@ contains
     integer(IK),parameter       :: many=7
     real(RK),dimension(4) :: norms
     integer(IK)           :: i,j,n,m,d_n,d_m
-    
+
     call error(any(shape(M_real)/=shape(M_imag)),"isam/show_cmplx: shapes ???")
 
     n = size(M_real,1)
@@ -1033,7 +1020,7 @@ contains
        write(*,'(I3," ",8(E15.8," "))')&
             & i, (M_real(i,j), j=1,m,d_m)
     enddo
-    
+
     write(*,'(A)') '\imag>>>'
     write(*,'(8I16)') (i,i=1,m,d_m)
     do i=1,n,d_n
@@ -1164,7 +1151,7 @@ select case(M_mod_nc)
   end subroutine display_oct_sqr_mat
 
   !***************************************************************************************
-  
+
   function examine_cmplx(M_real,M_imag) result(res)
     use error_module
     implicit none
@@ -1187,7 +1174,7 @@ select case(M_mod_nc)
     diag_norm_imag =   sum(pack(M_imag,diag_mask(n))**2)
     offdiag_norm_real= sum(pack(M_real,offdiag_mask(n))**2)
     offdiag_norm_imag= sum(pack(M_imag,offdiag_mask(n))**2)
-    
+
     res=(/ diag_norm_real,offdiag_norm_real,&
          & diag_norm_imag,offdiag_norm_imag /)
     return
@@ -1197,7 +1184,7 @@ select case(M_mod_nc)
     integer(IK),intent(in) :: n
     logical,dimension(n,n) :: m  !<<<result
     ! *** end of interface ***
-    
+
     integer(IK) :: i
 
     m = .false.
@@ -1205,7 +1192,7 @@ select case(M_mod_nc)
        m(i,i) = .true.
     enddo
   end function diag_mask
-  
+
   function offdiag_mask(n) result(m)
     integer(IK),intent(in) :: n
     logical,dimension(n,n) :: m  !<<<result
@@ -1283,5 +1270,5 @@ select case(M_mod_nc)
     call dump_real_buf(iou, buf, size(buf))
   end subroutine dump_real_3D
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module debug

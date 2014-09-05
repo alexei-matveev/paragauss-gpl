@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  output_module
 !---------------------------------------------------------------
 !
@@ -45,11 +45,11 @@ module  output_module
 !  Date: 10/95
 !
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: AS
@@ -61,7 +61,7 @@ module  output_module
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 #include "def.h"
 use type_module ! type specification parameters
 use iounitadmin_module ! iounitadmin_use_xxx are read in here
@@ -154,8 +154,7 @@ logical, public :: output_timing_summary           = .true. , &
 ! following parameter renamed to ..scf, old values kept for consistency
 ! with old input files, will give an warning message
 logical, private :: output_timing_posthoc           = .true. , &
-                   output_timing_detailedposthoc   = .false., &
-                   output_post_hoc_main = .false.
+     output_timing_detailedposthoc = .false.
 
 ! namelist /output_post_scf/
 logical, public :: output_post_scf_main = .false., &
@@ -184,9 +183,9 @@ public :: output_read, output_write
 public :: output_bcast!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of private input variables ------------
 
@@ -361,14 +360,7 @@ namelist /output_timing/         output_timing_summary          , &
                                  output_timing_slaves           , &
                                  output_timing_interrupts
 
-namelist /output_post_scf/       output_post_hoc_main, &
-                                 output_post_scf_main, &
-                                 output_main_gradient
-
-! doubles list namelist output_post_scf, is here for
-! consistency with old input
-namelist /output_post_hoc/       output_post_hoc_main, &
-                                 output_post_scf_main, &
+namelist /output_post_scf/       output_post_scf_main, &
                                  output_main_gradient
 
 namelist /output_dipole/         output_dipole_detailed      , &
@@ -385,7 +377,7 @@ namelist /output_solvation/      output_cavity_data, &
                                  output_cavity_long, &
                                  output_solv_grads
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
@@ -396,7 +388,7 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use input_module, only: input_error
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     df_output_n_density_dev = 5
     df_output_n_coeff_dev   = 5
@@ -763,12 +755,12 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use input_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: status, unit
     character(len=32) :: namelist_name
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     unit = input_intermediate_unit()
     ! read level
     output_level = df_output_level
@@ -858,7 +850,6 @@ contains
     output_timing_detailedposthoc   = df_output_timing_detailedps
 
     ! namelist /output_post_scf/
-    output_post_hoc_main = df_output_post_scf_main ! input consistency
     output_post_scf_main = df_output_post_scf_main
     output_main_gradient = df_output_main_gradient
 
@@ -923,18 +914,6 @@ contains
           read(unit, nml=output_timing, iostat=status)
           if (status .gt. 0) call input_error( &
                "output_read: namelist output_timing")
-       case ("output_post_hoc")
-          ! this case should be removed lateron, stays here
-          ! only for consistency
-          WARN('output_post_hoc has been renamed')
-          print *, " name of this list should be output_post_scf"
-          print *, " list will be redirected"
-          print *, " Please conside updating your input file"
-          WARN('Make sure not to use old and new one')
-          call input_read_to_intermediate
-          read(unit, nml=output_post_hoc, iostat=status)
-          if (status .gt. 0) call input_error( &
-               "output_read: namelist output_post_hoc")
        case ("output_post_scf")
           call input_read_to_intermediate
           read(unit, nml=output_post_scf, iostat=status)
@@ -961,15 +940,6 @@ contains
 
        if( output_cavity_long) output_cavity_data = .true.
     enddo
-
-
-    if (output_post_hoc_main .neqv. df_output_post_scf_main) then
-      WARN('output_post_hoc_main has been renamed')
-      print *, " output_post_hoc_main is now output_post_scf_main"
-      print *, " Now setting output_post_scf_main to output_post_hoc_main value"
-      print *, " Please conside updating your input file"
-      output_post_scf_main = output_post_hoc_main
-    endif
 
     if (output_timing_posthoc .neqv. df_output_timing_post_scf) then
       WARN('output_timing_posthoc has been renamed')
@@ -1229,11 +1199,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: commpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call commpack(output_level,info)
     if (info .ne. 0) call error_handler("output_pack: output_level")
     call commpack(output_scfloops,info)
@@ -1384,11 +1354,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: communpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call communpack(output_level,info)
     if (info .ne. 0) call error_handler("output_unpack: output_level")
     ! restore the output leve dependent default values

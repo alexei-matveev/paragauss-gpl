@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module relgrads
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module implement relativistic SR-DKH trafo, for the
   !  SO counterpart see reltrafo.f90
@@ -49,18 +49,18 @@ module relgrads
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author:
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 # include "def.h"
 #ifdef WITH_MATRIX_PARALLEL
@@ -77,17 +77,17 @@ module relgrads
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: rel_trafo_sr
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   interface bk
     module procedure bk_r_r
@@ -95,7 +95,7 @@ module relgrads
     module procedure bk_r
   end interface
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   integer(IK), parameter, public :: &
        IDKHN =     3, & ! (bitmask) DKH level 1, 2, or 3
@@ -137,8 +137,8 @@ module relgrads
 
   integer, parameter :: RD_P2DIAG = 1
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function is_on(OP) result(yes)
@@ -170,7 +170,7 @@ contains
     real(RK), intent(inout) :: SDSTO(:,:) !  == dervs_totalsym in gradient_data_module
     optional :: GRSTO, SDSTO
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     integer(IK) :: jobs
 
@@ -2159,5 +2159,5 @@ endif
     m = array(rmatrices(id, irr))
   end function get_2
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module relgrads

@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module slab_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use common_data_module
   use inp_out_module
@@ -32,7 +32,7 @@ module slab_module
   implicit none
   private       
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   type, public :: slab_cell
      real(kind=r8_kind) :: a, b
@@ -58,13 +58,13 @@ module slab_module
   real(r8_kind), public :: strain_s(3) ! 1-xx,2-yy, 3-xy
 
   logical, public :: slab_calc
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_slab_cell, write_slab_cell_vect_to_output, read_slab_vectors, &
        cart2frac_slab, frac2cart_slab, valid_cutoff_slab, image_slab, &
        renew_slab, store_vect_s, use_vect_s
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   type(slab_vectors) :: vect_s_store  !store buffer for vectors of real unit cell
@@ -77,7 +77,7 @@ module slab_module
   
   namelist /vectors_slab/ vector1, vector2
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !******************************************************************
   function read_slab_cell()

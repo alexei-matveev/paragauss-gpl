@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,11 +23,11 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 # include "def.h"
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module int_resp_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -36,46 +36,46 @@ module int_resp_module
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: ...
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module ! type specification parameters
-  use comm_module  
+  use comm_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
-  public int_resp_Clb_3c
+  !------------ public functions and subroutines ---------------------
+  public :: int_resp_Clb_3c
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
   !*************************************************************
-  subroutine int_resp_Clb_3c
+  subroutine int_resp_Clb_3c()
     !  Purpose: ..
     !------------ Modules used ------------------- ---------------
     use ch_response_module,   only: dimension_of_fit_ch
@@ -93,11 +93,11 @@ contains
     use io
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)              :: n_ir, i_ir_c, i_ir_a, i_ir_b, na, nb, nc
     integer(kind=i4_kind)              :: i_spin
     integer(kind=i4_kind)              :: is_counter
-    integer(kind=i4_kind)              :: n_procs!, io_unit 
+    integer(kind=i4_kind)              :: n_procs!, io_unit
     integer(kind=i4_kind)              :: k_index
     integer(kind=i4_kind)              :: occ_times_unocc_dim, status
     real(kind=r8_kind),    allocatable :: coulomb_3c_matrix(:,:,:)
@@ -111,14 +111,6 @@ contains
     real(kind=r8_kind),    allocatable :: RM(:,:)
 
     integer(kind=i4_kind)              :: n_spin, dim_factor
-    
-    !------------ Executable code --------------------------------
-    if(comm_i_am_master()) then
-       if(comm_parallel()) then 
-          call comm_init_send(comm_all_other_hosts,msgtag_response_3Clb_start)
-          call comm_send()
-       end if
-    end if
 
     n_ir       = ssym%n_irrep
     n_spin     = ssym%n_spin
@@ -136,7 +128,7 @@ contains
           NS = 0
           NF = 0
 
-          call resp_util_calc_ou(i_ir_c,i_spin,DM1)          
+          call resp_util_calc_ou(i_ir_c,i_spin,DM1)
 
           dim_sl = INT(dimension_of_fit_ch(i_ir_c)/n_procs)
           dim_ma = dimension_of_fit_ch(i_ir_c) &
@@ -166,7 +158,7 @@ contains
                 call resp_util_calc_transitions_v2(i_ir_a, i_ir_b, i_ir_c, &
                      i_spin, occ_times_unocc_dim)
 
-                if (occ_times_unocc_dim == 0) cycle 
+                if (occ_times_unocc_dim == 0) cycle
 
                 allocate(coulomb_3c_matrix(nc,nb,na), STAT = status)
                 ASSERT(status==0)
@@ -177,7 +169,7 @@ contains
                 ASSERT(status==0)
 
                 mult_irr = cg(i_ir_c,i_ir_a,i_ir_b)%mult
-                
+
                 imult_: do imult = 1, mult_irr
 
                    call int_send_3c_resp_read(i_ir_c, i_ir_a, i_ir_b, imult, coulomb_3c_matrix, nff)
@@ -192,13 +184,13 @@ contains
                    ! ******
                    ! collect results on master and save them to tape
                    ! ******
-                   if(comm_i_am_master()) then
+                   if (comm_i_am_master()) then
                       NS = NF + 1
                       NF = NF + size(final_coulomb,1)
                       RM(NS:NF,1:nc) = final_coulomb(:,1:nc)
                       iac = 1
                       do i_proc=2,n_procs
-                         call comm_save_recv(i_proc,msgtag_response_3Clb_send)
+                         call comm_save_recv (i_proc, msgtag_response_3Clb_send)
 !!$                         call upck(final_coulomb(:,1:nff(i_proc)))
                          call upck(final_coulomb)
                          iac = iac + nff(i_proc-1)
@@ -211,8 +203,8 @@ contains
                       call octave("RM",RM(NS:NF,:))
 #endif
 
-                   else                         
-                      call comm_init_send(comm_master_host,msgtag_response_3Clb_send)
+                   else
+                      call comm_init_send (comm_master_host, msgtag_response_3Clb_send)
                       call pck(final_coulomb)
                       call comm_send()
                    end if
@@ -258,11 +250,11 @@ contains
          i_spin, na, nb, coulomb_3c, coulomb_matrix)
       use constants,         only: zero
       use resp_util_module,  only: min_diff
-      
+
       use linalg_module,     only: matmatmul
       implicit none
 
-      integer(kind=i4_kind), intent(in)    :: i_ir_a, i_ir_b, i_spin 
+      integer(kind=i4_kind), intent(in)    :: i_ir_a, i_ir_b, i_spin
       integer(kind=i4_kind), intent(in)    :: na, nb
       real(kind=r8_kind),    intent(inout) :: coulomb_3c(:,:)
       real(kind=r8_kind),    intent(inout) :: coulomb_matrix(:)
@@ -279,9 +271,9 @@ contains
       ASSERT(status==0)
 
       aux_matrix = 0.0_r8_kind
-      
+
       is_counter = 0   ! combined metaindex a->b
-      
+
       i_occ_: do i_occ = occs, occe
          trafo=>eigvec(i_ir_a)%m(:,i_occ,i_spin)
          aux_matrix = matmul(coulomb_3c,trafo)
@@ -291,7 +283,7 @@ contains
             coulomb_matrix(is_counter) = dot_product(trafo, aux_matrix)
          end do i_unocc_
       end do i_occ_
-      
+
       ! deallocate matrices for intermediate results
       deallocate(aux_matrix,  stat=status)
       ASSERT(status==0)
@@ -302,5 +294,5 @@ contains
   !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module int_resp_module

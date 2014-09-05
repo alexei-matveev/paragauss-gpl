@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine main_master()
 !
 !  This routine encodes the MASTER PLAN for all workers.  Historically
@@ -56,12 +56,12 @@ subroutine main_master()
 !  Author: TB, FN
 !  Date: 10/95
 !
-!================================================================
-! End of public interface of module
-!================================================================
-!----------------------------------------------------------------
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: TB
@@ -110,12 +110,12 @@ subroutine main_master()
 ! Author:      ...
 ! Date:        ...
 ! Description: ...
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only: i4_kind, r8_kind
   use operations_module ! defines which operations are to be performed
-  use paragauss, only: toggle_legacy_mode
+  use comm, only: comm_rank, comm_same
   use filename_module, only: filesystem_is_parallel
   use iounitadmin_module, only: output_unit, stdout_unit, &
        write_to_output_units, write_to_trace_unit
@@ -136,7 +136,7 @@ subroutine main_master()
        integralstore_deallocate_pcm
   use initialization, only: initialize_with_input, finalize_geometry
   use xc_cntrl, only: xc_is_on=>is_on, xc_ANY
-  use post_scf_module
+  use post_scf_module, only: post_scf_main
   use energy_calc_module, only: write_energies, get_energy
 #ifdef FPP_DEBUG
   use error_module, only: MyID
@@ -144,8 +144,8 @@ subroutine main_master()
 #ifdef WITH_RESPONSE
   use response_module, only: response_main
 #endif
-  use efield_module, only: efield_calculate_integrals, efield_applied
-  use efield_module, only: efield_intensity, efield_change
+  use efield_module, only: efield_calculate_integrals, &
+       efield_applied, efield_intensity, efield_change
   use unique_atom_module, only: unique_atom_iwork
   use unique_atom_methods, only: unique_atom_make_gx
   use occupation_module, only: occupation_symmetry_check
@@ -164,22 +164,26 @@ subroutine main_master()
 #endif
 #endif
 #ifdef WITH_EFP
-  use efp_module, only: n_efp, read_gx_qm, def_efp_arrays, calc_X_points, calc_efield_points
-  use efp_module, only: print_id, qm_fixed
+  use efp_module, only: n_efp, read_gx_qm, def_efp_arrays, &
+       calc_X_points, calc_efield_points, print_id, qm_fixed
   use efp_efp_module, only: efp_efp_energy
   use efp_only_opt_module, only: geom_converged
 #endif
-  use density_data_module, only: open_densmat !!!!!!!!!!!!!!!!!!AS
+  use density_data_module, only: open_densmat
   use solv_cavity_module, only: stop_solv
   use potential_module, only: send_recv_space_point
-  use elec_static_field_module
+  ! DONT use elec_static_field_module, and nothing breaks?
   use symmetry, only: main_symm
   use interfaces, only: main_integral
   use interfaces, only: potential_calculate
   use interfaces, only: main_molmech
 #ifdef WITH_MOLMECH
-  use qmmm_interface_module  !!!!!!!!!!!!!AS
-  use qmmm1_interface_module !!!!!!!!!!!!AS
+  use qmmm_interface_module, only: imomm, imomm_mm_large, &
+       imomm_mm_small, mm_run, qm_mm, qm_mm_1, qm_mm_run, &
+       qm_mm_1_task, qmmm_read_input, &
+       sum_up_grads_and_write_gx
+  use qmmm1_interface_module, only: def_qm_mm_1_tasks, &
+       read_gx_qmmm, qmmm2pc, qmfield_at_mm_points, write_gx_qmmm
 #endif
   use calc3c_switches, only: print_epe
 #ifdef WITH_OPTIMIZER
@@ -205,16 +209,17 @@ subroutine main_master()
   DPRINT 'main_master: entered'
 
   !
-  ! If  you are  thinking  about adding  code  to be  executed on  all
-  ! workers, consider  adding it outside  of the "legacy"  mode blocks
-  ! enclosed by
+  ! NOTE:  The  code  has  been  converted to  SPMD  (single  program,
+  ! multiple data) so that all  workers execute this code. Some rarely
+  ! used branches not  covered by the testsuite have  not been tested,
+  ! though.
   !
-  !   do while (toggle_legacy_mode())
-  !      ...
-  !   enddo
-  !
-  ! Alternatively add  it to main.f90 or  pick one of the  subs in the
-  ! body such as
+  ! If you are thinking about adding code, try making sure that can be
+  ! executed  on  all workers.   Usually  it  is  sufficient to  avoid
+  ! writing to  the same file  and making sure the  pre-requisites are
+  ! available and  the same on  all workers.  You may  consider adding
+  ! such code  to main.f90 or  other high-level procedure  called from
+  ! here, such as
   !
   !     - initialize_with_input()
   !     - main_gradient()
@@ -222,12 +227,6 @@ subroutine main_master()
   !     - finalize_geometry()
   !     - ...
   !
-  ! that are executed by all workers and augment them.
-  !
-  ! FIXME: finish  converting to SPMD (single  program, multiple data)
-  ! so that all  workers execute the same code.  There  is still a few
-  ! cases of  a master-slave mode ---  search for toggle_legacy_mode()
-  ! blocks.
 
   !
   ! Print the  version info and  machine config, uses  output_unit, so
@@ -448,9 +447,10 @@ subroutine main_master()
      ! generating suface charge distribution (solvation effect)
      if (operations_solvation_effect) then
         call say ("call build_mol_surfaces()")
-        do while (toggle_legacy_mode())
-           call build_mol_surfaces()
-        enddo
+        ! Subroutine   with    an   implicit   (unchecked)   interface
+        ! here. Though  it runs  on all workers,  most of the  work is
+        ! done on master only:
+        call build_mol_surfaces() ! no comm?
         if (stop_solv) then
            call stop_timer (timer_initialisation)
            ! DONT exit geometry_loop
@@ -577,22 +577,18 @@ subroutine main_master()
 1111 if (operations_potential) then
         call say ("Starting the potential routines ...")
         if (esp_map) then
-           do while (toggle_legacy_mode())
+           if (comm_rank() == 0) then
               call calc_plane_grid()
-           enddo
+           endif
            call grid2space_2d()
            if (V_electronic) then
               call say ("call potential_calculate (Vel)")
-              do while (toggle_legacy_mode())
-                 if (use_saved_densmatrix) then
-                    call open_densmat()
-                 endif
-              enddo
+              if (use_saved_densmatrix) then
+                 call open_densmat() ! no comm, reads disk
+              endif
               call potential_calculate ('Potential')
            endif
-           do while (toggle_legacy_mode())
-              call get_poten_and_shutdown_2d()
-           enddo
+           call get_poten_and_shutdown_2d()
            if (.not. V_electronic) then
              tasks = tasks - 1
              cycle geometry_loop
@@ -600,16 +596,14 @@ subroutine main_master()
         elseif (pdc) then
            call say ("call potential_calculate (PDC)")
            call calc_shell_grid()
-           do while (toggle_legacy_mode())
-              if (use_dens_mat) then
-                 call open_densmat()
-              endif
-           enddo
+           if (use_dens_mat) then
+              call open_densmat() ! no comm, reads disk
+           endif
            call potential_calculate ('Potential')
-           do while (toggle_legacy_mode())
-              call collect_poten_3d()
-              call calc_poten_derive_charges()
-           enddo
+           call collect_poten_3d()
+           if (comm_rank() == 0) then
+              call calc_poten_derive_charges() ! no comm
+           endif
         endif
         call say ("Done with the potential routines.")
      endif
@@ -673,8 +667,9 @@ subroutine main_master()
 
 #endif
 
-     ! do PostSCF calculation of matrix elements needed for
-     ! response calculations with tdfrt response program
+     ! Do post-SCF calculation of  matrix elements needed for response
+     ! calculations with tdfrt response program:
+     ASSERT(comm_same(operations_response))
      if (operations_response) then
 #ifdef WITH_RESPONSE
         call say ("call response_main()")
@@ -699,38 +694,41 @@ subroutine main_master()
         call say ("main_epe_block")
         call main_epe_block()
 
-      call get_energy (tot=energy)
-      energy2 = energy
-         call get_epe_energies (lattice_energy=epe_latt_energy, &
-              epg_cluster_reg_I=cluster_regI, eshort_coupling_au=eshort)
-         energy = energy + epe_latt_energy
-         print*,'energy, energy2, eshort', energy, energy2, eshort
-         print*,'epe_side_optimized_energy', energy+eshort
-         epe_side_optimized_energy = energy + eshort
-         print*,'cluster_regI', cluster_regI
-         print*,'epe_latt_energy', epe_latt_energy
+        call get_energy (tot=energy)
+        energy2 = energy
+        call get_epe_energies (lattice_energy=epe_latt_energy, &
+             epg_cluster_reg_I=cluster_regI, eshort_coupling_au=eshort)
+        energy = energy + epe_latt_energy
+        print*,'energy, energy2, eshort', energy, energy2, eshort
+        print*,'epe_side_optimized_energy', energy+eshort
+        epe_side_optimized_energy = energy + eshort
+        print*,'cluster_regI', cluster_regI
+        print*,'epe_latt_energy', epe_latt_energy
 
-           call write_to_trace_unit ('epe_convergence_check')
-           call epe_convergence_check (epe_side_energy_converged, loop)
-         endif
+        call write_to_trace_unit ('epe_convergence_check')
+        call epe_convergence_check (epe_side_energy_converged, loop)
+     endif
 
-         ! calculate gradients
-        if (operations_gradients .and. .not. epe_relaxation .or. &
-           epe_relaxation .and. epe_side_energy_converged) then
-           call say ("Starting main_gradient() ...")
-           if (epe_relaxation .and. epe_side_energy_converged) then
-             call write_to_trace_unit ('epe_relaxation .and. epe_side_energy_converged')
-           endif
-
-           call main_gradient (loop) ! (2)
-           call say ("Done with the integral part for gradients routine.")
-        elseif (operations_gradients) then
-           !
-           ! FIXME: clean up is the task of finalize_geometry()
-           !        that is called anyway. Why doing it here?
-           !
-           ABORT ('please adapt')
+     ! Calculate gradients
+     if (operations_gradients .and. .not. epe_relaxation .or. &
+          epe_relaxation .and. epe_side_energy_converged) then
+        !
+        ! Regular branch here!
+        !
+        call say ("Starting main_gradient() ...")
+        if (epe_relaxation .and. epe_side_energy_converged) then
+           call write_to_trace_unit ('epe_relaxation .and. epe_side_energy_converged')
         endif
+
+        call main_gradient (loop) ! (2)
+        call say ("Done with the integral part for gradients routine.")
+     elseif (operations_gradients) then
+        !
+        ! FIXME: clean up is the task of finalize_geometry()
+        !        that is called anyway. Why doing it here?
+        !
+        ABORT ('please adapt')
+     endif
 #endif
 
 #ifdef WITH_MOLMECH

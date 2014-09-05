@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,7 +41,7 @@ module initialization
 !  Date:  9/11
 !
 !==============================================================================+
-! End of public interface of module
+  ! End of public interface of module
 !==============================================================================+
 !
 !------------------------------------------------------------------------------+
@@ -166,7 +166,6 @@ contains
     use spin_orbit_module,        only: spin_orbit_input_bcast
     use xcmda_hamiltonian,        only: mda_options_bcast
     use grid_module,              only: grid_bcast
-    use ph_cntrl,                 only: post_scf_input_bcast
 #ifdef WITH_RESPONSE
     use response_module,          only: response_input_bcast
 #endif
@@ -323,10 +322,7 @@ contains
     !
     ! bcast grid input
     call grid_bcast( (operations_post_scf .or. operations_response) )
-    !
-    ! bcast post scf input
-    call post_scf_input_bcast()
-    !
+
 #ifdef WITH_RESPONSE
     ! bcast response module input
     call response_input_bcast()
@@ -412,7 +408,7 @@ contains
     use operations_module, only: operations_scf, operations_integral, &
         operations_gradients, operations_symm, &
         operations_solvation_effect, operations_gx_test
-    use occupation_module, only: occupation_shutdown, dealloc_occ_num
+    use occupation_module, only: occupation_shutdown
     use occupied_levels_module, only: eigvec_occ_dealloc
     use fit_coeff_module, only: fit_coeff_shutdown
     use mat_charge_module, only: free_mat_charge
@@ -465,12 +461,7 @@ contains
         !
         if (integralpar_cpksdervs) then
 
-            call eigvec_vir_dealloc (IPARA)
-
-            ! FIXME: find matching for master and do it there, yet
-            !        better don duplicate functionality of
-            !        occupation_module
-            if (rank /= 0) call dealloc_occ_num()
+            call eigvec_vir_dealloc ()
 
             ! FIXME: so far does not harm if not allocated:
             call integralstore_deallocate()
@@ -517,10 +508,10 @@ contains
     call population_close()
 
     !
-    ! Various shutdown and deallocation work:
-    ! FIXME: why only if operations_scf?
+    ! Various  shutdown  and deallocation  work:  FIXME:  why only  if
+    ! operations_scf?
     !
-    if ( operations_scf ) then
+    if (operations_scf) then
         call occupation_shutdown()
     endif
 

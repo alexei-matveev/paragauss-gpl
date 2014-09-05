@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module ewald_solv_module
 !== Interrupt end of public interface of module =====              
 
@@ -44,9 +44,9 @@ module ewald_solv_module
 !------------ public functions and subroutines ------------------
   public calc_number_of_3D_images, init_ewald_3D_solv, calc_gauss_solv
   public shutdown_ewald_3D_solv, ewald_3d_contrib, ewald_3d_contrib_grad
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   integer(i4_kind) :: na,nb,nc
@@ -64,9 +64,9 @@ contains
     !------------ Modules used -----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: amax,bmax,cmax,a_sin,b_sin,g_sin
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     a_sin=sin(pi*cel%alpha/pi_degree)
     b_sin=sin(pi*cel%beta/pi_degree)
@@ -101,11 +101,11 @@ contains
     !------------ Modules used -----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: f
     real(r8_kind), parameter :: w_factor=one
     real(r8_kind), parameter :: accuracy=small
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ewald_param_solv=sqrt(((n_size*w_factor*pi**3)/volume**2)**(one/three))
     sqrt_pi=sqrt(pi)
@@ -123,7 +123,7 @@ contains
     !------------ Modules used -----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: max1,max2,max3
     real(r8_kind) :: drk,rk1(3),rk2(3),rk3(3),rk(3),cut2
     integer(i4_kind) :: i,j,k,status
@@ -134,7 +134,7 @@ contains
     end type store
     type(store), target :: first_data
     type(store), pointer ::   current_data, tmp_data, del
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     rk1=kvect%v1
     drk=sqrt(dot_product(rk1,rk1))
@@ -197,10 +197,10 @@ contains
     !------------ Modules used -----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: ii,i,j,k,k_ind,status
     real(r8_kind) :: kv(3),dkv,ep2,factor
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(gauss_multiplier(n_kvec),kvector(3,n_kvec),stat=status)
     ASSERT(status == 0)
@@ -231,10 +231,10 @@ contains
     real(r8_kind) :: Aij
     real(r8_kind) :: rij(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: drij, drij_2,er,er2,erfunc,r(3),krij
     integer(i4_kind) :: i,j,k
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     Aij=zero
 
@@ -285,10 +285,10 @@ contains
     real(r8_kind) :: dAij(3)
     real(r8_kind) :: rij(3),d_rij(3,3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: drij, drij_2,er,er2,erfunc,r(3),krij
     integer(i4_kind) :: i,j,k
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     dAij=zero
 
@@ -342,9 +342,9 @@ contains
     !------------ Modules used -----------------------------------
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(allocated(k_indexes)) then
        deallocate(k_indexes,stat=status)

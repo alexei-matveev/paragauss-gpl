@@ -1,61 +1,61 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  tddft_diag
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !
   !  Detalization:
   !  --------------
-  !  
-  !  Module called by: main_master 
+  !
+  !  Module called by: main_master
   !
   !
   !  References: ...
   !  Remarks   : As usual NOTHING is stored within this module.
   !              Any important information of needed by other parts
   !              parts of the program will be stored in the
-  !              "global_data_module.f90" 
+  !              "global_data_module.f90"
   !
   !  Author: SB
   !  Date:   01/06
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 # include "def.h"
   USE type_module          ! contains standard data types
@@ -69,29 +69,29 @@ MODULE  tddft_diag
 
   IMPLICIT NONE
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
-  PUBLIC diag_init
+  !------------ public functions and subroutines ---------------------
+  public :: diag_init
 
   INTEGER(KIND=i4_kind), PUBLIC, PARAMETER :: UP = 1, DN = 2
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   FPP_TIMER_DECL(diag_timer)
   FPP_TIMER_DECL(dvdson_timer)
   FPP_TIMER_DECL(output_timer)
   FPP_TIMER_DECL(dvdDiag_all)
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
   !*************************************************************
   SUBROUTINE diag_init()
-    !  Purpose: 
+    !  Purpose:
     ! MASTER AND SLAVE SHOULD COME HERE
     !------------ Modules used ----------------------------------
   USE filename_module,   ONLY: outfile
@@ -106,7 +106,7 @@ CONTAINS
     USE comm, only: comm_bcast, comm_barrier
     IMPLICIT NONE
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     REAL   (KIND=r8_kind),ALLOCATABLE :: QM1(:,:)
     REAL   (KIND=r8_kind),ALLOCATABLE :: auxdiag(:)
@@ -120,32 +120,32 @@ CONTAINS
     INTEGER(KIND=i4_kind),ALLOCATABLE :: MO_ALL(:,:),IRR(:,:)
     INTEGER(KIND=i4_kind)             :: i_sp
     ! LOGICAL                           :: it_exists
-    REAL   (KIND=r8_kind)             :: CC(4),tt
+    REAL (r8_kind) :: CC(4)
     INTEGER(KIND=i4_kind)             :: DIMWR(2) ,&
          DIMMS(gl_N_spin), DIMSL(gl_N_spin)
     LOGICAL                           :: tSS
     !------------ Declaration of subroutines used ----------------
     EXTERNAL error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     print *, MyID, "diag_init: entering"
 
     if (comm_i_am_master()) CALL system("rm "//TRIM(outfile("nto.tmp")))
 
-    if (comm_i_am_master()) CALL write_to_output_units(&
-         & '  diag_init: start calculation of diagonal')
+    call write_to_output_units &
+         ('  diag_init: start calculation of diagonal')
 
    !if(gl_NTO.and.comm_i_am_master()) then
    !    inquire(file=TRIM(outfile("nto.tmp")), exist=it_exists)
-   !    ! Skip TDDFT calculation because the results are on file nto.tmp      
+   !    ! Skip TDDFT calculation because the results are on file nto.tmp
    !    if(it_exists) then
    !        print *, MyID, "diag_init: master found nto.tmp file, skipping TDDFT calculation"
    !        call nto_module_main()
    !        print *, MyID, "diag_init: nto done"
    !        ! *** DO NO MORE! ***
    !        RETURN
-   !    end if    
-   !end if       
+   !    end if
+   !end if
 
     FPP_TIMER_START(dvdDiag_all)
 
@@ -153,12 +153,6 @@ CONTAINS
     n_ir = gl_N_irr
 
     gl_S_APP_XC = .false.
-
-    ! Tell the slaves to enter this subroutine (diag_init)
-    if(comm_i_am_master() .and. comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_tddft_clshell)
-       call comm_send()
-    end if
 
     i_ir_: do i_ir = 1, n_ir
 
@@ -179,8 +173,8 @@ CONTAINS
 !DBG::       print *,"MyID: ",comm_myindex()," For concrete ir c : ", i_ir
 
 
-       if (comm_i_am_master()) CALL write_to_output_units(&
-            '  diag_init: read of two-center Coulomb for irrep ',inte=i_ir)
+       call write_to_output_units &
+            ('  diag_init: read of two-center Coulomb for irrep ',inte=i_ir)
 
        !! Coul part
        call global_alloc_M('Qlm',NK)
@@ -192,8 +186,8 @@ CONTAINS
 
        call Q_calc(i_ir,gl_Q,QM1)
        if( gl_XC ) then
-          if (comm_i_am_master()) CALL write_to_output_units(&
-           & '  diag_init: read of two-center XC for irrep', inte=i_ir)
+          call write_to_output_units &
+               ('  diag_init: read of two-center XC for irrep', inte=i_ir)
           call XC_calc     (i_ir,n_sp,gl_T,QM1)
        end if
 
@@ -209,11 +203,11 @@ CONTAINS
        ALLOCATE(KERN(NK,NK), STAT=status)
        ASSERT(status==0)
 
-       if (comm_i_am_master()) CALL write_to_output_units(&
-           & '  diag_init: read of three-center Coulomb and calculation of diagonal for irrep ',inte=i_ir)
+       call write_to_output_units &
+            ('  diag_init: read of three-center Coulomb and calculation of diagonal for irrep ',inte=i_ir)
        i_sp_: do i_sp = 1, n_sp
-          if (comm_i_am_master()) CALL write_to_output_units(&
-           & '  diag_init: read of three-center Coulomb for spin',inte=i_sp)
+          call write_to_output_units &
+               ('  diag_init: read of three-center Coulomb for spin',inte=i_sp)
           call read_C( i_ir,i_sp,&
                gl_eta (i_ir,i_sp)%m, gl_eps(i_ir,i_sp)%m,&
                gl_N_as(i_ir,i_sp),   NK,&
@@ -223,7 +217,7 @@ CONTAINS
           !! BE INCLUDED INTO CALCULATIONS FOR noRI CASE
           !! IT MEANS, THAT THE DIAGONAL FOR NORI WILL BE BASED
           !! ONLY ON COULOMB INTERCHANGE INTEGRALS
-          !! THIS CASE IS HERE BECAUSE OF THE TEST OF THE 
+          !! THIS CASE IS HERE BECAUSE OF THE TEST OF THE
           !! NUMERICAL INSTABILITY DUE TO THE XC INTEGRALS
 
           if (gl_noRI .or. gl_S_App) then
@@ -290,8 +284,8 @@ CONTAINS
 
        if (gl_SS) then
 
-           if (comm_i_am_master()) CALL write_to_output_units(&
-           & '  diag_init: calculation of davidson for irrep ',inte=i_ir)
+           call write_to_output_units&
+                ('  diag_init: calculation of davidson for irrep ',inte=i_ir)
 
           FPP_TIMER_STOP (diag_timer)
           FPP_TIMER_START(dvdson_timer)
@@ -310,7 +304,7 @@ CONTAINS
             STAT = status)
        ASSERT(status==0)
 
-       NS = 1 
+       NS = 1
        NF = DIMUP
        do i = 1, n_sp
           call resp_util_buildr(DIMMS(i),DIMSL(i),&
@@ -330,7 +324,7 @@ CONTAINS
           NS = NF + 1
           NF = DIMAL
        end do
-       
+
        if (comm_i_am_master()) then
            if(gl_SS) call result_main(i_ir,DIMAL,eps,eta,MO_ALL,IRR)
        end if
@@ -385,7 +379,7 @@ CONTAINS
           if (tSS) gl_SS = .true.
        end if gl_ST_
 
-       !! Successive Approximations       
+       !! Successive Approximations
        if (gl_S_App) then
 
           if(gl_ST) call write_to_output_units("WARNING!!! SA for S->T")
@@ -439,7 +433,7 @@ CONTAINS
                call result_main(i_ir,DIMAL,eps,eta,MO_ALL,IRR)
           end if
        end if
-      
+
        FPP_TIMER_START(output_timer)
        deallocate(diag,eps,eta,MO_ALL,IRR,STAT=status)
        ASSERT(status==0)
@@ -451,20 +445,25 @@ CONTAINS
     FPP_TIMER_START(output_timer)
     call global_dealloc
 
-    if (comm_i_am_master()) call missing_irreps    
+    if (comm_i_am_master()) call missing_irreps
     FPP_TIMER_STOP (output_timer)
 
     FPP_TIMER_STOP(dvdDiag_all)
 
-    tt = FPP_TIMER_VALUE(diag_timer)
-    WRITE (*,*) MyID, "TDDFT DIAG TIMER "
-    WRITE (*,*) "   * DIAGONAL        ", tt
-    tt = FPP_TIMER_VALUE(dvdson_timer)
-    WRITE (*,*) "   * DAVIDSON/FULLXC ", tt
-    tt = FPP_TIMER_VALUE(output_timer)
-    WRITE (*,*) "   * OUTPUT          ", tt
-    tt = FPP_TIMER_VALUE(dvdDiag_all)
-    WRITE (*,*) "   * SUMMARY         ", tt
+#ifdef FPP_TIMERS
+    block
+       real (r8_kind) ::  tt
+       tt = FPP_TIMER_VALUE(diag_timer)
+       WRITE (*,*) MyID, "TDDFT DIAG TIMER "
+       WRITE (*,*) "   * DIAGONAL        ", tt
+       tt = FPP_TIMER_VALUE(dvdson_timer)
+       WRITE (*,*) "   * DAVIDSON/FULLXC ", tt
+       tt = FPP_TIMER_VALUE(output_timer)
+       WRITE (*,*) "   * OUTPUT          ", tt
+       tt = FPP_TIMER_VALUE(dvdDiag_all)
+       WRITE (*,*) "   * SUMMARY         ", tt
+    end block
+#endif
 
     print *, MyID, "diag_init: entering the barrier BEFORE"
     call comm_barrier()
@@ -473,10 +472,10 @@ CONTAINS
     print *, MyID, "diag_init: about to start NTO"
     ! MH: entry point for nto_module
     if(gl_NTO.and.comm_i_am_master()) then
-        print *, MyID, "diag_init: master calling NTO" 
+        print *, MyID, "diag_init: master calling NTO"
         call nto_module_main()
         print *, MyID, "diag_init: master finished NTO"
-    end if      
+    end if
     print *, MyID, "diag_init: continue after NTO"
 
     print *, MyID, "diag_init: entering the barrier AFTER"
@@ -510,14 +509,14 @@ CONTAINS
     !------------ Declaration of formal parameters ---------------
     REAL   (KIND=r8_kind),INTENT(INOUT) :: DIAG_AUX(:)
     REAL   (KIND=r8_kind),INTENT(IN)    :: KERN(:,:), AX(:,:)
-    INTEGER(KIND=i4_kind),INTENT(IN)    :: NM, NS, NK 
+    INTEGER(KIND=i4_kind),INTENT(IN)    :: NM, NS, NK
     REAL   (KIND=r8_kind),INTENT(INOUT) :: DIAG(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     REAL(KIND=r8_kind),ALLOCATABLE      :: DA(:)
     INTEGER(KIND=i4_kind) :: status, i, ias, j, i_proc, &
          NS_UP, NF_UP, Nas, NN
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (comm_i_am_master()) then
        NN = NM
@@ -529,7 +528,7 @@ CONTAINS
        do i = 1, NK
           do j = 1, NK
              DIAG_AUX(ias) = AX  (ias,i) &
-                  &        * KERN(i,j) & 
+                  &        * KERN(i,j) &
                   &        * AX  (ias,j) &
                   &        + DIAG_AUX(ias)
           end do
@@ -566,8 +565,8 @@ CONTAINS
 
   !*************************************************************
   subroutine Q_calc(ir,Qm,Qdm1)
-    !  Purpose: 
-    !  
+    !  Purpose:
+    !
     !  Output: Qm   =  Nsp * gl_Q^(-1)xgl_Qx(gl_Q^(-1))^T = Nsp * gl_Q^(-1)
     !          Qdm1 =  gl_Q^(-1)
     !------------ Modules used ----------------------------------
@@ -579,11 +578,11 @@ CONTAINS
     integer(i4_kind), intent(IN   ) :: ir
     real   (r8_kind), intent(OUT)   :: Qm(:,:), Qdm1(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 !!    integer(i4_kind) :: NSP
 !!    real   (r8_kind) :: AP(size(Qm,1),size(Qm,1))
-    !------------ Executable code --------------------------------
-    
+    !------------ Executable code ------------------------------------
+
     CALL read_Q(ir,Qm) ! read from file Qm:=gl_Q
 
     CALL invert_sym_matrix(Qm) ! Qdm1:=Qm^-1
@@ -592,11 +591,11 @@ CONTAINS
 
 #if 0
     ! AP = Qdm1xQm
-   
-#if 0   
+
+#if 0
     call matmatmul(Qdm1,Qm,AP)
     call matmatmul(AP,Qdm1,Qm,'N','T')
-#endif  
+#endif
 
     !!FIXME: Workaround baceause of strange bug in DGEMM
     !!FIXME: QM = NSP * Qdm1 should be enough
@@ -619,10 +618,10 @@ CONTAINS
     TYPE(arrmat2),         intent(INOUT) :: XC(:)
     real(kind=r8_kind),    intent(IN   ) :: Qdm1(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i
     real(kind=r8_kind)    :: AP(size(Qdm1,1),size(Qdm1,1))
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call read_R(ir,XC)
 
@@ -656,9 +655,9 @@ CONTAINS
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: irc, ira, irb, mlt
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do irc = nirr+1, size(cgr,1)
        do ira = 1, nirr
@@ -685,7 +684,7 @@ CONTAINS
 !!$  subroutine tddft_
 !!$  !  Purpose: ..
 !!$  !------------ Modules used ----------------------------------
-!!$    use 
+!!$    use
 !!$    implicit none
 !!$    !------------ Declaration of formal parameters ---------------
 !!$    integer(kind=i4_kind), intent(     ) ::
@@ -695,16 +694,16 @@ CONTAINS
 !!$    !** End of interface *****************************************
 !!$    !------------ Declaration of local variables -----------------
 !!$    integer(kind=i4_kind)                ::
-!!$    real(kind=r8_kind)                   ::     
+!!$    real(kind=r8_kind)                   ::
 !!$    logical                              ::
 !!$    character                            ::
 !!$    !------------ Executable code --------------------------------
-!!$      
+!!$
 !!$
 !!$  end subroutine tddft_
 !!$  !***********************************************************
 
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE tddft_diag

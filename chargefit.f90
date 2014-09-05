@@ -1,31 +1,31 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
-subroutine chargefit(loop, coeff_dev, coulomb_dev)
+!=====================================================================
+subroutine chargefit (loop, coeff_dev, coulomb_dev)
   !
   !  Purpose: This subroutine performs the charge fit.
   !
@@ -111,8 +111,8 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
 # include "def.h"
   use type_module    ! contains standard data types
   use comm, only: comm_rank, comm_bcast
-  use comm_module, only: comm_init_send, comm_send, comm_all_other_hosts
-  use msgtag_module, only: msgtag_charge_fit
+  use time_module, only: start_timer, stop_timer
+  use timer_module, only: timer_scf_chfit
   use symmetry_data_module, only: symmetry_data_n_irreps, &
     symmetry_data_n_spin, symmetry_data_dimension, &
     symmetry_data_n_proj_irreps, symmetry_data_dimension_proj
@@ -166,8 +166,8 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
   use interfaces, only: IMAST
   implicit none
   !------------ Declaration of formal parameters ----------------
-  integer(i4_kind), intent(in) :: loop
-  real(r8_kind), intent(out) :: coeff_dev, coulomb_dev
+  integer (i4_kind), intent (in) :: loop
+  real (r8_kind), intent (out) :: coeff_dev, coulomb_dev
   ! *** end of interface ***
 
 
@@ -195,17 +195,10 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
 
   DPRINT 'chargefit: entered'
 
-  if ( comm_rank() == 0 ) then
-      !
-      ! Tell slaves to enter chargefit():
-      !
-      call comm_init_send(comm_all_other_hosts, msgtag_charge_fit)
-      call comm_send()
-  endif
-
-  !
-  ! From here on all workers run in a parallel context!
-  !
+  ! This timer  was previously in  main_scf() then executed  at master
+  ! only.   Other  steps like  broadcasting  eigenvectors and  density
+  ! matrix generation were also included back then:
+  call start_timer (timer_scf_chfit)
 
   n_ch = fit_coeff_n_ch()
   n_xc = fit_coeff_n_xc()
@@ -643,7 +636,13 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
   call free_coeff_charge_old
 
   pert_orbitals: if (perturbation_theory) then
-     if(.not.integralpar_cpksdervs)  call eigvec_vir_dealloc(IMAST)
+     ! FIXME: we  are not in parallel context  here.  But historically
+     ! the  master  does deallocation  here.  Slaves  ivoked this  via
+     ! main_slave()  but  now do  it  below  right  after joining  the
+     ! parallel contex:
+     if (.not. integralpar_cpksdervs) then
+        call eigvec_vir_dealloc ()
+     endif
 
      if (.not.eigen_kept) then
         ! allocate n_rot as temporary working array
@@ -824,52 +823,58 @@ subroutine chargefit(loop, coeff_dev, coulomb_dev)
   endif
 
 999 CONTINUE
-    !
-    ! Here again, all workers run in a parallel context ...
-    !
+  !
+  ! Here again, all workers run in a parallel context ...
+  !
+  if (perturbation_theory) then
+     ! FIXME: master did that above slaves do it here, hm ...
+     if (comm_rank() /= 0 .and. .not. integralpar_cpksdervs) then
+        call eigvec_vir_dealloc ()
+     endif
+     !
+     ! Rotated eigenvectors need to be updated on all workers:
+     !
+     if (comm_rank() == 0) then
+        eigvec_rotated = any (n_rot > 0)
+     endif
 
-    if ( perturbation_theory ) then
+     ! This flag was set to a meaniful value only on master:
+     call comm_bcast (eigvec_rotated)
+
+     if (eigvec_rotated) then
         !
-        ! Rotated eigenvectors need to be updated on all workers:
+        ! Perturbation theory modified (?) eigenvectors, update
+        ! them everywhere (another question is WHY we do this):
         !
-        if ( comm_rank() == 0 ) then
-            eigvec_rotated = any(n_rot > 0)
+        call update_eigvec_occ()
+     endif
+
+     !
+     ! FIXME: we are in master only context here, doing manipulaitons
+     !        in the global state of other modules:
+     !
+     if (comm_rank() == 0) then
+        if (.not. eigen_kept) then
+           deallocate (n_rot, STAT=alloc_stat)
+           ASSERT(alloc_stat==0)
         endif
+     endif
+  endif
 
-        ! This flag was set to a meaniful value only on master:
-        call comm_bcast(eigvec_rotated)
+  !
+  ! Dealocate module variables in pert_coeff_module:
+  !
+  call pert_coeff_free()
 
-        if ( eigvec_rotated ) then
-            !
-            ! Perturbation theory modified (?) eigenvectors, update
-            ! them everywhere (another question is WHY we do this):
-            !
-            call update_eigvec_occ()
-        endif
+  if (perturbation_theory) then
+     !
+     ! This cleans up pairs_module()
+     !
+     call deallocate_pairs()
+  endif
 
-        !
-        ! FIXME: we are in master only context here, doing manipulaitons
-        !        in the global state of other modules:
-        !
-        if ( comm_rank() == 0 ) then
-            if (.not.eigen_kept) then
-                deallocate(n_rot, STAT=alloc_stat)
-                ASSERT(alloc_stat==0)
-            endif
-        endif
-    endif
-
-    !
-    ! Dealocate module variables in pert_coeff_module:
-    !
-    call pert_coeff_free()
-
-    if ( perturbation_theory ) then
-        !
-        ! This cleans up pairs_module()
-        !
-        call deallocate_pairs()
-    endif
+  ! See the top for the corresponding start:
+  call stop_timer (timer_scf_chfit)
 
   DPRINT 'chargefit: exit'
 end subroutine chargefit

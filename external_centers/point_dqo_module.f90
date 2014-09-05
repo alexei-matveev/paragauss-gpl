@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module point_dqo_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: keep information on eXternal point dipoles,
   !           point quadrupoles, point octopoles and repulsive
@@ -42,18 +42,18 @@ module point_dqo_module
   !  Date: 31.05.2007
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
 
   use type_module ! type specification parameters
@@ -66,9 +66,9 @@ module point_dqo_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type, public :: pointdipole_type
      character(len=12) :: name
      integer(i4_kind) :: N_equal_dipoles
@@ -108,7 +108,7 @@ module point_dqo_module
      integer(i4_kind), pointer :: group(:)
   end type repulsion_type
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind), public :: N_pd=0_i4_kind
   integer(i4_kind), public :: N_pq=0_i4_kind
   integer(i4_kind), public :: N_po=0_i4_kind
@@ -157,7 +157,7 @@ module point_dqo_module
 
   !------------ Interface statements -----------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: dealloc_dqo
   public :: dealloc_center_inform
   public :: symm_external_points
@@ -173,15 +173,15 @@ module point_dqo_module
   public :: X_grad_cart_write
   public :: calc_X_grads
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
   type(unique_atom_type), pointer :: unique_external_points(:)
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -236,7 +236,7 @@ contains
     type(pointoctopole_type), allocatable :: buffer_o(:)
     type(repulsion_type), allocatable :: buffer_r(:)
     logical :: do_alloc
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n=0
     do_Z=.false.; do_D=.false.; do_Q=.false.; do_O=.false.; do_R=.false.
@@ -919,9 +919,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if(associated(pd_array)) then
 
        do i=1,N_pd
@@ -2557,8 +2557,8 @@ contains
     real(r8_kind) :: vector_product(3)
     real(r8_kind) :: v1(3),v2(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     vector_product(1)=v1(2)*v2(3)-v1(3)*v2(2)
     vector_product(2)=v1(3)*v2(1)-v1(1)*v2(3)
@@ -2573,9 +2573,9 @@ contains
     !** End of interface *****************************************
     !------------ modules used -----------------------------------
      use iounitadmin_module, only: output_unit
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(print_X_grad) then
     if(N_pd > 0) then
@@ -2687,5 +2687,5 @@ contains
 
   end subroutine X_grad_cart_write
   !*************************************************************
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module point_dqo_module

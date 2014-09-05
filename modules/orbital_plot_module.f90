@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module orbital_plot_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Contains subroutines for plotting orbitals on a special grid. The
   !  orbitals, specified in the input,  evaluated on the plot grid and
@@ -44,11 +44,11 @@ module orbital_plot_module
   !  Author: MS
   !  Date: 12/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: AS
@@ -60,7 +60,7 @@ module orbital_plot_module
   ! Date:   08/2007
   ! Description: Added NTO plots. The modifications can be seen
   !              searching for "MODIFICATION FOR NTO"
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only: i4_kind, r8_kind
   use symmetry_data_module
@@ -69,10 +69,10 @@ module orbital_plot_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: orbital_plot_main
   public :: orbital_plot_read
   public :: orbital_plot_write
@@ -80,9 +80,9 @@ module orbital_plot_module
   public :: orbital_plot_check
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
   type :: inp ! USED FOR INPUT, UGLY!
@@ -1715,7 +1715,7 @@ contains
     !** End of interface *****************************************
     integer(i4_kind)           :: th
     type(readwriteblocked_tapehandle) :: th !
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind)           :: i_input, &
                                        alloc_stat, &
                                        i_list, &
@@ -1726,7 +1726,7 @@ contains
     real(r8_kind), allocatable :: rho_tot(:)
     real(r8_kind), parameter   :: au_A=0.52918_r8_kind
     character(len=200)              :: xsf_file
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call readwriteblocked_startread(readwriteblocked_filename(th),th)
     ! Read headers written by oplot_startwrite

@@ -3,7 +3,7 @@
     OPERATIONS_SCF               =  TRUE # (the default)
     OPERATIONS_INTEGRAL          =  TRUE # (the default)
     OPERATIONS_WRITE_INPUT       =  TRUE # (the default)
-    OPERATIONS_POST_HOC          =  TRUE # (the default)
+    OPERATIONS_POST_SCF          =  TRUE # (the default)
     OPERATIONS_GRADIENTS         =  TRUE # (the default)
     OPERATIONS_GEO_OPT           =  f
     OPERATIONS_READ_GX           =  F
@@ -86,14 +86,8 @@
  /CONVERGENCE_LIST
 
  &XC_CONTROL
-    XALPHA         =  TRUE # (the default)
-    VWN            =  TRUE # (the default)
- /XC_CONTROL (namelist may be dropped)
-
- &PHXC_CONTROL
-    XALPHA_PH         =  TRUE # (the default)
-    VWN_PH            =  TRUE # (the default)
- /PHXC_CONTROL
+    xc = "vwn"
+ /XC_CONTROL
 
  &OCCUPATION
     CHARGE             =   0.000000 # (the default)

@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module disp_rep_module
 !
 !  Author: AS,MF
@@ -36,8 +36,6 @@ module disp_rep_module
   use datatype
   use iounitadmin_module, only: output_unit,write_to_output_units
   use integralpar_module, only: integralpar_2dervs
-  use atoms_data_module
-
   implicit none
 
   save            ! save all variables defined in this module
@@ -111,9 +109,9 @@ module disp_rep_module
   integer(kind=i4_kind), public :: ndsa
   ! if I shall use data from Rappe
   logical, public :: use_rappe_data
-!===============================================================
-! End of public interface of module
-!===============================================================
+!=====================================================================
+  ! End of public interface of module
+!=====================================================================
 
   real(kind=r8_kind), allocatable :: K_solv(:),R_solv(:),K_solu(:),R_solu(:)
 
@@ -202,11 +200,14 @@ contains
 
   !********************************************************************
   subroutine disp_rep_read
-  ! read in namelist disper_repal and if not default solvent (water)
-  ! read in namelists solvent_atom to specify the solvent
-  !** End of interface *****************************************
-
+    !
+    ! Read  in  namelist  disper_repal  and  if  not  default  solvent
+    ! (water), read in namelists solvent_atom to specify the solvent,
+    !
     use input_module
+    use atoms_data_module, only: atom_name
+    implicit none
+    !** End of interface *****************************************
 
     integer(kind=i4_kind) :: unit,status,i,j
 
@@ -360,14 +361,17 @@ contains
   !*********************************************************
 
   !*********************************************************
-  subroutine initialize_data(skip_short,with_pc)
+  subroutine initialize_data (skip_short, with_pc)
     !
     ! Set the default  () values for the dispersion  repulsion data or
-    ! read in user defined parameters if given for an (unique) atom
+    ! read in user defined parameters if given for an (unique) atom.
+    !
+    ! See also get_rappe_data().
     !
     use constants, only: kcal ! to convert A_p and C_p
     use unique_atom_module, only: N_unique_atoms,unique_atoms
     use pointcharge_module, only: pointcharge_N,pointcharge_array
+    use atoms_data_module, only: atom_name, K_def, R0_def
     implicit none
     ! *** end of interface ***
 
@@ -488,7 +492,7 @@ contains
   !*********************************************************
 
   !*********************************************************
-  subroutine get_rappe_data(with_pc)
+  subroutine get_rappe_data (with_pc)
     !
     ! Do the same as initialize_data()  but use the data from Rappe as
     ! default.  The  different exponential  factors in the  Rappe data
@@ -497,6 +501,7 @@ contains
     use constants, only: kcal   ! D_def_rap(:) is in kcals
     use unique_atom_module, only: N_unique_atoms,unique_atoms
     use pointcharge_module, only: pointcharge_N,pointcharge_array
+    use atoms_data_module, only: atom_name, D_def_rap, R_def_rap, zeta_def_rap
     implicit none
     ! *** end of interface ***
 

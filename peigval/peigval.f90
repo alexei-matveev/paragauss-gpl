@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module peigval
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Distribute a matrices between processors and find
   !  an eigenvalue in optimal time
@@ -41,18 +41,18 @@ module peigval
   !  Date: 2.3.2004
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 #include "def.h"
   use type_module, only: IK=>i4_kind, RK=>r8_kind, RK_=>r4_kind ! type specification parameters
@@ -63,22 +63,22 @@ module peigval
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 !  public :: arrmat2, arrmat3
 !  type(arrmat2),allocatable,public           :: eigval(:)
 !  type(arrmat3),allocatable,public           :: eigvec(:)
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public parallelization_subroutine, eigs_entry 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine eigs_entry(eigvec, eigval) 
@@ -727,7 +727,7 @@ contains
                          DESCINIT, PDSYGVX, DSYGVX, DSYGVD, PDSYTTRD, &
                          BLACS_SETUP
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
       if( p == 1 ) then
@@ -1028,10 +1028,10 @@ contains
     ! *** end of interface ***
 
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: help,i,j,sj,si
     integer(kind=i4_kind) :: n_irrep ! number of irreps
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irrep = size(dim_irrep)
 
@@ -1052,6 +1052,6 @@ contains
     enddo
   end subroutine sort_irreps
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module peigval
 

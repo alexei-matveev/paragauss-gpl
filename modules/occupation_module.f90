@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module occupation_module
   !
   !  Purpose: Contains  routines and information connected
@@ -124,18 +124,18 @@ module occupation_module
   !
   !  Author: Folke Noertemann
   !  Date: 10/95
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification: added occ_num_occ,send_occ_num_occ,
   !              recv_occ_num_occ,alloc_occ_num_occ,
   !              seek_occupied_levels
   ! Author: F.Noertemann
   ! Date:   12/95
   ! Description: see above documentation
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: Uwe Birkenheuer
   ! Date:   6/97
@@ -182,9 +182,9 @@ module occupation_module
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include "def.h"
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module ! type specification parameters
   use datatype    ! user defined datatypes
   use symmetry_data_module  ! symmetry information
@@ -198,7 +198,7 @@ module occupation_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public constants and variables -----
   type, private :: irrep_t
@@ -241,7 +241,7 @@ module occupation_module
   logical                                  :: hole_localization
   logical                                  :: hole_update
   logical                                  :: fixed_spin_diff
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: occupation_read,  occupation_write, &
        get_n_elec, get_n_core_elec, reoccup, read_ocup, print_occ_num, &
        occupation_level_sort, occupation_2d_correct, &
@@ -253,7 +253,7 @@ module occupation_module
        get_diagonal_offset, eigenstates_store, eigenstates_recover, &
        occupation_print_popspectrum, occupation_symmetry_check,&
        occupation_fixed,occupation_get_holes, occupation_fixed_hole,&
-       occupation_jz, count_electrons,get_charge,dealloc_occ_num
+       occupation_jz, count_electrons, get_charge
 
   !
   ! FIXME: target is here only to make things like
@@ -265,9 +265,9 @@ module occupation_module
   ! allocatable component instead of pointer.
   !
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   real(kind=r8_kind),parameter :: convert1 = 27.211652_r8_kind, &
                                   convert2 = 1.0_r8_kind / convert1
 
@@ -308,8 +308,8 @@ module occupation_module
                         fixed_spin_diff, force_spectrum
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -318,14 +318,14 @@ contains
     !  Purpose: allocate the appropriate space for n_occo
     !** End of interface *****************************************
     use options_module, only: options_spin_orbit
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(sym),intent(in)       :: ssym
     integer(kind=i4_kind)       :: alloc_stat
     ! dimensions of irreps
     ! (in order to account for SPIN ORBIT more easily)
     integer(kind=i4_kind)                :: n_irrep
     ! n_irrep    : number of irreps
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! set appropriate dimensions of irreps
     ! (use projective irreps in case of spin orbit)
@@ -348,52 +348,54 @@ contains
   !*************************************************************
 
   subroutine alloc_occ_num()
-    !  Purpose: allocate the appropriate space for occ_num
-    !           and initialize with zero
+    !
+    ! Allocate the appropriate space for occ_num and initialize with
+    ! zero
+    !
     use options_module, only: options_spin_orbit
+    implicit none
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
-    integer(kind=i4_kind)      :: i_gamma,alloc_stat,n
+    integer (i4_kind) :: i_gamma, alloc_stat, n
 
-    ! dimensions of irreps
-    ! (in order to account for SPIN ORBIT more easily)
-    integer(kind=i4_kind)                :: n_irrep
-    integer(kind=i4_kind),allocatable    :: dim_irrep(:)
-    ! n_irrep    : number of irreps
-    ! dim_irrep : number of independent functions in irrep
-    !------------ Executable code --------------------------------
+    ! Dimensions of irreps (in order to account for SPIN ORBIT more
+    ! easily)
+    integer (i4_kind) :: n_irrep
+    integer (i4_kind), allocatable :: dim_irrep(:)
+    ! n_irrep: number of irreps
+    ! dim_irrep: number of independent functions in irrep
+
     DPRINT MyID//'alloc_occ_num'
 
-    ! set appropriate dimensions of irreps
-    ! (use projective irreps in case of spin orbit)
+    ! Set appropriate  dimensions of irreps (use  projective irreps in
+    ! case of spin orbit)
     if (options_spin_orbit) then
        !
        ! SPIN ORBIT
        !
-       n_irrep = ssym%n_proj_irrep
-       allocate(dim_irrep(n_irrep))
-       do n=1,n_irrep
-          dim_irrep(n) = ssym%dim_proj(n)
+       n_irrep = ssym % n_proj_irrep
+       allocate (dim_irrep(n_irrep))
+       do n = 1, n_irrep
+          dim_irrep(n) = ssym % dim_proj(n)
        enddo
     else ! options_spin_orbit
        !
        ! STANDARD SCF (NO SPIN ORBIT)
        !
-       n_irrep = ssym%n_irrep
-       allocate(dim_irrep(n_irrep))
-       do n=1,n_irrep
-          dim_irrep(n)  = ssym%dim(n)
+       n_irrep = ssym % n_irrep
+       allocate (dim_irrep(n_irrep))
+       do n = 1, n_irrep
+          dim_irrep(n) = ssym % dim(n)
        enddo
     endif ! options_spin_orbit
 
     allocate (occ_num(n_irrep), STAT=alloc_stat)
-     ASSERT(alloc_stat.eq.0)
+    ASSERT(alloc_stat==0)
     do i_gamma = 1, n_irrep
-       allocate(occ_num(i_gamma)%m(dim_irrep(i_gamma), ssym%n_spin), STAT=alloc_stat)
-       ASSERT(alloc_stat.eq.0)
+       allocate (occ_num(i_gamma) % m(dim_irrep(i_gamma), ssym%n_spin), STAT=alloc_stat)
+       ASSERT(alloc_stat==0)
     enddo
-    call init(occ_num)
+    call init (occ_num)
 
     if(operations_core_density)then
        allocate (occ_num_core(n_irrep),STAT=alloc_stat)
@@ -414,54 +416,35 @@ contains
 
   end subroutine alloc_occ_num
 
-  subroutine dealloc_occ_num()
-    implicit none
-    ! *** end of interface ***
-
-    integer(kind=i4_kind) ::            i,alloc_stat,n_irreps
-       n_irreps = symmetry_data_n_irreps()
-    if (allocated(occ_num)) then
-    DPRINT MyID//'occ_num allocated',allocated(occ_num)
-       do i=1,n_irreps
-          if (allocated (occ_num(i) % m)) then
-             deallocate (occ_num(i) % m, STAT=alloc_stat)
-             ASSERT(alloc_stat.eq.0)
-          endif
-       enddo
-       deallocate(occ_num,STAT=alloc_stat)
-       ASSERT(alloc_stat.eq.0)
-    DPRINT MyID//'occ_num deallocate done'
-    endif
-   end subroutine dealloc_occ_num
-
   subroutine occupation_shutdown()
-    ! Purpose: deallocate the variables
-    !          n_occo, n_occo_core, occ_num,occupied, num_list at the end
-    !          of the SCF-Cycles
-    ! Subroutine called by : main_scf
+    !
+    ! Deallocate the  variables n_occo, n_occo_core, occ_num, occupied,
+    ! num_list at the end of the SCF-Cycles
+    !
+    ! Subroutine called by : main_scf()
     !
     implicit none
     !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: alloc_stat, i, j
+    integer (i4_kind) :: alloc_stat, i, j
 
     check_num_list = .false.
 
-    if ( allocated(n_occo) ) then
+    if (allocated (n_occo)) then
        deallocate(n_occo, STAT=alloc_stat)
        ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(occ_num) ) then
-       do i = 1, size(occ_num)
-          deallocate(occ_num(i)%m, STAT=alloc_stat)
+    if (allocated (occ_num)) then
+       do i = 1, size (occ_num)
+          deallocate (occ_num(i) % m, STAT=alloc_stat)
           ASSERT(alloc_stat==0)
        enddo
        deallocate(occ_num, STAT=alloc_stat)
        ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(num_list) ) then
+    if (allocated (num_list)) then
         do i = 1, size(num_list)
             deallocate(num_list(i)%m, STAT=alloc_stat)
             ASSERT(alloc_stat==0)
@@ -470,12 +453,12 @@ contains
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(n_occo_core) ) then
+    if (allocated (n_occo_core)) then
         deallocate(n_occo_core, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(occ_num_core) ) then
+    if (allocated (occ_num_core)) then
         do i = 1, size(occ_num_core)
             deallocate(occ_num_core(i)%m, STAT=alloc_stat)
             ASSERT(alloc_stat==0)
@@ -484,17 +467,17 @@ contains
         ASSERT(alloc_stat==0)
     endif
 
-    if ( allocated(noc_start) ) then
+    if (allocated (noc_start)) then
         deallocate(noc_start, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(noc_fixed) ) then
+    if (allocated (noc_fixed)) then
         deallocate(noc_fixed, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if (allocated(occupation_numbers)) then
+    if (allocated (occupation_numbers)) then
         do i = 1, size(occupation_numbers,1)
             do j = 1, size(occupation_numbers,2)
                 deallocate(occupation_numbers(i, j)%occ, stat=alloc_stat)
@@ -505,28 +488,28 @@ contains
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(hole_irrep) ) then
+    if (allocated (hole_irrep)) then
         deallocate(hole_irrep, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(hole_list) ) then
+    if (allocated (hole_list)) then
         deallocate(hole_list, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(hole_spin) ) then
+    if (allocated (hole_spin)) then
         deallocate(hole_spin, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
-    if ( allocated(hole_occnum) ) then
+    if (allocated (hole_occnum)) then
         deallocate(hole_occnum, STAT=alloc_stat)
         ASSERT(alloc_stat==0)
     end if
 
     ! this variable will only be allocated if the symmetry_part is run
-    if ( allocated(occnum_hole) ) then
+    if (allocated (occnum_hole)) then
         do i = 1, size(occnum_hole)
             deallocate(occnum_hole(i)%m, STAT=alloc_stat)
             ASSERT(alloc_stat==0)
@@ -942,7 +925,7 @@ contains
     use unique_atom_module, only: N_unique_atoms, unique_atoms
     use input_module
     integer :: i_ua
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_elec      = 0.0_r8_kind
     n_core_elec = 0.0_r8_kind
@@ -985,7 +968,7 @@ contains
     real(kind=r8_kind), intent(out ) :: n_dummy
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_dummy = n_elec
 
   end subroutine get_n_elec
@@ -1000,7 +983,7 @@ contains
     real(kind=r8_kind), intent(out ) :: n_dummy
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_dummy = n_core_elec
 
   end subroutine get_n_core_elec
@@ -1014,7 +997,7 @@ contains
     real(kind=r8_kind), intent(out ) :: spin_diff
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     spin_diff = magn_moment
 
   end subroutine get_spin_diff
@@ -1028,7 +1011,7 @@ contains
     real(kind=r8_kind), intent(out ) :: df_spin_diff
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     df_spin_diff = df_magn_moment
 
   end subroutine get_df_spin_diff
@@ -1042,7 +1025,7 @@ contains
     real(kind=r8_kind), intent(in) :: fermi_unp
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     magn_moment = fermi_unp
 
   end subroutine put_magn_moment
@@ -1056,7 +1039,7 @@ contains
     logical, intent(out ) :: fixed_spin
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     fixed_spin = fixed_spin_diff
 
   end subroutine get_fix_spin_switch
@@ -1070,7 +1053,7 @@ contains
     logical, intent(out ) :: df_fixed_spin
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     df_fixed_spin = df_fixed_spin_diff
 
   end subroutine get_df_fix_spsw
@@ -1084,7 +1067,7 @@ contains
     logical, intent(in) :: fermi_fix_ud
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     fixed_spin_diff = fermi_fix_ud
 
   end subroutine put_fix_spin_switch
@@ -1099,7 +1082,7 @@ contains
     real(kind=r8_kind), intent(out ) :: offset
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     offset = diag_offset_ev / convert1
 
   end subroutine get_diagonal_offset
@@ -1111,7 +1094,7 @@ contains
     !           UB
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     get_min_spin_diff = min_spin_diff
 
   end function get_min_spin_diff
@@ -1123,14 +1106,14 @@ contains
     !          AS (04.02)
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     get_charge=charge
 
   end function get_charge
   !*************************************************************
 
   !*************************************************************
-  subroutine reoccup
+  subroutine reoccup ()
     !  Purpose: re-occupy the levels after the eigenvalues
     !           and eigenvectors are ready, i.e. after scf.
     !           (1) First a list with successive numbers of the
@@ -1162,7 +1145,7 @@ contains
     use output_module, only: output_reoccup
     use options_module, only: options_spin_orbit
     !------------ Declaration of formal parameters ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: i,m,n,is,degen,num_orb,index, &
          n_elec_int,num_spin,i_hole, alloc_stat
     logical :: hole
@@ -1183,7 +1166,7 @@ contains
     ! External an intrisic routines
     intrinsic max,nint
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! set appropriate dimensions of irreps
     ! (use projective irreps in case of spin orbit)
@@ -1209,8 +1192,12 @@ contains
        enddo
     endif ! options_spin_orbit
 
-    if(.not.allocated(n_occo)) call alloc_n_occo(ssym)
-    if(.not.allocated(occ_num)) call alloc_occ_num()
+    if (.not. allocated (n_occo)) then
+       call alloc_n_occo (ssym)
+    endif
+    if (.not. allocated (occ_num)) then
+       call alloc_occ_num()
+    endif
     call init(occ_num)
     call init(n_occo)
     if (operations_core_density) then
@@ -1579,7 +1566,7 @@ contains
     !** End of interface *****************************************
     !------------ Modules ----------------------------------------
     use filename_module, only: tmpfile
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)          :: io_u,num_orb, &
          icount,m,is,i
     real(kind=r8_kind),allocatable :: arr_help(:)
@@ -1654,7 +1641,7 @@ contains
     integer(kind=i4_kind),allocatable    :: dim_irrep(:)
     ! n_irrep    : number of irreps
     ! dim_irrep : number of independent functions in irrep
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)   :: i,is,m,n,mm,mstart,istart, &
          ii,iss,icount,alloc_stat
     logical                 :: separate
@@ -1843,31 +1830,33 @@ contains
 
   !*************************************************************
   subroutine occupation_2d_correct()
-  ! Purpose: in the case of pseudo 2D irreps occupy each pseudo partner
-  !          equally
-  !
-  ! Function called by: mainscf
-  ! Author: MS
-  ! Date  : 8/97
-  !** End of interface *****************************************
-  !------------ Declaration of local variables -----------------
-  integer(kind=i4_kind) :: i_gamma,i_m,i_s,counter
-  !------------ Executable code --------------------------------
+    !
+    ! In  the case  of pseudo  2D  irreps occupy  each pseudo  partner
+    ! equally.
+    !
+    ! Function called by: mainscf
+    ! Author: MS
+    ! Date  : 8/97
+    !
+    implicit none
+    !** End of interface *****************************************
 
-    do i_gamma=1,ssym%n_irrep
-       if(ssym%pseudo(i_gamma)) then
-          do i_m=1,ssym%dim(i_gamma),2
-             occ_num(i_gamma)%m(i_m,:)=0.5_r8_kind*(occ_num(i_gamma)%m(i_m,:)+&
-                  occ_num(i_gamma)%m(i_m+1,:))
-             occ_num(i_gamma)%m(i_m+1,:)=occ_num(i_gamma)%m(i_m,:)
+    integer (i4_kind) :: i_gamma, i_m, i_s, counter
+
+    do i_gamma = 1, ssym % n_irrep
+       if (ssym % pseudo(i_gamma)) then
+          do i_m = 1, ssym % dim(i_gamma), 2
+             occ_num(i_gamma) % m(i_m, :) = 0.5_r8_kind * &
+                  (occ_num(i_gamma) % m(i_m, :) + occ_num(i_gamma) % m(i_m + 1, :))
+             occ_num(i_gamma) % m(i_m + 1, :) = occ_num(i_gamma) % m(i_m, :)
           enddo
           ! now correct n_occo
-          do i_s=1,ssym%n_spin
-             counter=0
-             do i_m=1,ssym%dim(i_gamma)
-                if(occ_num(i_gamma)%m(i_m,i_s)>0.0_r8_kind) counter=counter+1
+          do i_s = 1, ssym % n_spin
+             counter = 0
+             do i_m = 1, ssym % dim(i_gamma)
+                if (occ_num(i_gamma) % m(i_m, i_s) > 0.0_r8_kind) counter = counter + 1
              end do
-             n_occo(i_s,i_gamma)=counter
+             n_occo(i_s, i_gamma) = counter
           end do
        end if
     enddo
@@ -1888,7 +1877,7 @@ contains
     use options_module, only: options_spin_orbit
     integer(kind=i4_kind),intent(in),optional :: loop
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)   :: io_u,i_gamma,m,is,i_dim
     ! number and dimensions of irreps (spin orbit and vector case)
     integer(kind=i4_kind)               :: n_irrep
@@ -2278,7 +2267,7 @@ contains
     logical  :: reset
     integer  :: status
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( options_spin_orbit ) then
       ABORT('SAVE_EIGENVEC not yet with SO')
@@ -2441,7 +2430,7 @@ contains
                              spin_stored, n_save(:,:), n_need(:,:)
     real(kind=r8_kind)    :: spin(1), buffer(:), half = 0.5_r8_kind
     integer               :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     external error_handler
 
     if (output_main_scf) call write_to_output_units &
@@ -2638,7 +2627,7 @@ contains
          alloc_stat,counter,i_hole,hole_count
     integer(kind=i4_kind) :: n_irreps
     integer(kind=i4_kind),allocatable :: dim_irrep(:),n_partners(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 #ifdef WITH_MOLMECH
     if(operations_mol_mech) return
@@ -2773,35 +2762,44 @@ contains
 
   !*************************************************************
   subroutine occupation_get_holes()
-    !Purpose: this routine is actually a 'wrapper' for the
-    ! routine 'eigen_hole_setup' which needs variables from
-    ! the occupation_module but which cannot import them via
-    ! a use-statement since the occupation_module is already
-    ! using the eigen_data_module. Of course, since 'main_scf'
-    ! is using the whole occupation module with all its public
-    ! variables the subsequent call to the routine
-    ! 'eigen_hole_setup' could also have been done in 'main_scf',
-    ! but would have appeared a bit awkward.
     !
-    ! subroutine called by: 'do_recover' in 'main_scf'.
-    !** End of interface *****************************************
+    ! This   routine   is  actually   a   wrapper   for  the   routine
+    ! eigen_hole_setup()    which    needs    variables    from    the
+    ! occupation_module   but   which  cannot   import   them  via   a
+    ! use-statement since  the occupation_module is  already using the
+    ! eigen_data_module.   Of course,  since main_scf()  is  using the
+    ! whole  occupation  module  with  all its  public  variables  the
+    ! subsequent  call to  the routine  eigen_hole_setup()  could also
+    ! have  been done  in main_scf(),  but would  have appeared  a bit
+    ! awkward.
+    !
+    ! Subroutine called by: 'main_scf()'.
+    !
     use options_module, only: options_spin_restricted
     use eigen_data_module, only: eigen_hole_setup
+    use comm, only: comm_rank
+    !** End of interface *****************************************
+
     logical :: force_hole
 
-    if(hole_localization) then
-       force_hole=.false.
+    ! The  staff below seems  to run  on master  only and  requires no
+    ! communication but some IO:
+    if (comm_rank() /= 0) return
+
+    ! In other words, force_hole == .not. hole_localization
+    if (hole_localization) then
+       force_hole = .false.
     else
-       force_hole=.true.
-    end if
-    if (options_spin_restricted()) then
-       call eigen_hole_setup(force_hole,n_holes,hole_list,hole_irrep,&
-            hole_update)
-    else
-       call eigen_hole_setup(force_hole,n_holes,hole_list,hole_irrep,&
-            hole_update,hole_spin)
+       force_hole = .true.
     endif
 
+    if (options_spin_restricted()) then
+       call eigen_hole_setup (force_hole, n_holes, hole_list, hole_irrep, &
+            hole_update)
+    else
+       call eigen_hole_setup (force_hole, n_holes, hole_list, hole_irrep, &
+            hole_update, hole_spin)
+    endif
   end subroutine occupation_get_holes
   !*************************************************************
 
@@ -2823,5 +2821,5 @@ contains
   end function occupation_jz
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module occupation_module

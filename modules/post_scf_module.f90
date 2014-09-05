@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module post_scf_module
   !
   !  Purpose: main module for calculation of the xc-energy
@@ -46,9 +46,9 @@ module post_scf_module
   !  Date: 9/96
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: MS
   ! Date:   3/97
@@ -78,8 +78,8 @@ module post_scf_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 ! define FPP_TIMERS 3
 # include "def.h"
   USE_MPI, only: MPI_WTIME
@@ -135,7 +135,7 @@ module post_scf_module
   real(r8_kind), parameter :: ZERO = 0.0_r8_kind
   real(r8_kind), parameter :: rho_cutoff=1.0E-08_r8_kind
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public ::&
        & post_scf_main, &
        & post_scf_deallocate_grad_xc
@@ -145,9 +145,9 @@ module post_scf_module
 #endif
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 !..............................................................................
 ! << OUTPUT ARRAYS >>
@@ -325,10 +325,7 @@ contains
     use time_module
     use unique_atom_methods, only: unique_atom_grad_information
     use iounitadmin_module
-    use xc_cntrl, only: is_on, xc_mgga
-    use ph_cntrl, only: &
-         nl_calc_ph, &
-         ph_cntrl_setup
+    use xc_cntrl, only: is_on, xc_mgga, nl_calc_ph => xc_nl_calc_ph
     use pointcharge_module
     use xc_func, only: xc_func_reset
     use integralpar_module, only: integralpar_2dervs,integralpar_cpksdervs
@@ -351,7 +348,6 @@ contains
     ! Write to trace unit to show progress of calculation:
     call dtrace ("Entering PostSCF part")
 
-    call ph_cntrl_setup()
     dummy=1
     do_grads=operations_gradients
     split_gradients=options_split_gradients()
@@ -1425,7 +1421,7 @@ contains
     use time_module
     use unique_atom_methods, only: unique_atom_grad_information
     use iounitadmin_module
-    use ph_cntrl, only:  nl_calc_ph,ph_cntrl_setup
+    use xc_cntrl, only:  nl_calc_ph => xc_nl_calc_ph
     use pointcharge_module
     use integralpar_module, only: integralpar_2dervs,integralpar_cpksdervs
     use cpksdervs_matrices,only:cpksalloc,cpks,cpks_Qxc_calculated
@@ -1446,8 +1442,6 @@ contains
      DPRINT MyID,'cpks_xc_main(',job,') cpks_Qxc_calculated  =',cpks_Qxc_calculated
 !    MEMSET(0)
 
-
-    call ph_cntrl_setup()
 
     do_grads=operations_gradients
     split_gradients=options_split_gradients()
@@ -2090,7 +2084,6 @@ contains
 
   subroutine post_scf_write_results
     use iounitadmin_module
-    use ph_cntrl
     use xc_func, only: xc_func_write
     implicit none
     ! purpose : write the results of the post_scf part
@@ -2218,9 +2211,9 @@ contains
     !** End of interface *****************************************
     use time_module
     use timer_module
-    use ph_cntrl
     use iounitadmin_module
     use xc_func
+    use xc_cntrl, only: nl_calc_ph => xc_nl_calc_ph
     implicit none
 
     integer(i4_kind) :: vla, xyz
@@ -2590,7 +2583,6 @@ contains
     !** End of interface *****************************************
     use time_module
     use timer_module
-    use ph_cntrl
     use xc_func ! exc_*, xc_functionals
     use cpks_grid_utils, only: symWtsNGra, cartNGra, cartNDer
     use cpks_xc_resp   , only: xc_resp_lda
@@ -3340,7 +3332,6 @@ contains
     !** End of interface *****************************************
     use time_module
     use timer_module
-    use ph_cntrl
     use xc_func ! exc_*, xc_functionals
     implicit none
     integer(i4_kind) :: i,ii,i_ea,i_ua,i_spin,k,i_vec,i_ma,i_m
@@ -3518,8 +3509,8 @@ contains
     !           - calcularions of derivatives not implemented yet
     use time_module
     use timer_module
-    use ph_cntrl
-    use xc_cntrl, only: xc_hcth_version, is_on, xc_mgga
+    use xc_cntrl, only: xc_hcth_version, is_on, xc_mgga, &
+         nl_calc_ph => xc_nl_calc_ph
     use xc_func ! exc_*, xc_functionals
 
     use cpksdervs_matrices, only: cpks, n_cpks, i_cpks, cpks_Qxc_calculated, &
@@ -5214,7 +5205,6 @@ contains
     !** End of interface *****************************************
     use time_module
     use timer_module
-    use ph_cntrl
     use xc_cntrl, only: xc_hcth_version
     use xc_func ! exc_*, xc_functionals
     use integralpar_module, only: integralpar_2dervs
@@ -5525,9 +5515,9 @@ contains
     use timer_module
 !temp comment    use rspace_plot
     use gamma_module
-    use ph_cntrl
     use iounitadmin_module
     use xc_func ! exc_*, xc_functionals
+    use xc_cntrl, only: nl_calc_ph => xc_nl_calc_ph
     implicit none
     real(kind=r8_kind), allocatable :: grad_rho(:,:,:), sec_der_rho(:,:,:), &
                                        gamm(:,:), dfdgrarho(:,:), &

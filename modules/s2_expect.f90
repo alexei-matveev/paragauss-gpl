@@ -1,47 +1,47 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module s2_expect
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module, only: &
        & IK=>i4_kind, &
@@ -49,109 +49,86 @@ module s2_expect
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
-!!$  type, public ::  s2_
-!!$  end type s2_
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
-!!$  integer(kind=IK), parameter, public  :: s2_
-!!$  real(kind=RK),    parameter, public  :: s2_
-!!$  logical,               parameter, public  :: s2_
-!!$  character,             parameter, public  :: s2_
-!!$  integer(kind=IK),            public  :: s2_
-!!$  real(kind=RK),               public  :: s2_
-!!$  logical,                          public  :: s2_
-!!$  character,                        public  :: s2_
+  !------------ Declaration of constants and variables ---------------
 
+  !------------ Interface statements ---------------------------------
 
-  !------------ Interface statements ------------------------------
-!!$  interface s2_
-!!$  end interfaces2_
-!!$  public s2_
-
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public s2_calc
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
-!!$  type 
-!!$  end type 
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
-!!$  integer(kind=IK), parameter :: 
-!!$  real(kind=RK),    parameter :: 
-!!$  logical,               parameter :: 
-!!$  character,             parameter :: 
-!!$  integer(kind=IK),           ::
-!!$  real(kind=RK),              ::     
-!!$  logical,                         ::
-!!$  character,                       ::
+  !------------ Declaration of constants and variables ---------------
 
-
-
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
   subroutine s2_calc()
-    !  Purpose: ..
-    !------------ Modules used ------------------- ---------------
-    use overlap_module, only: overlap !, read_overlap, dealloc_overlap
+    !
+    ! Runs on all workers.
+    !
+    use overlap_module, only: overlap
     use eigen_data_module, only: eigvec
     use occupation_module, only: occ_num
+    use comm, only: comm_rank
     implicit none
-    !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    integer(IK) :: n_irr
-    !------------ Executable code --------------------------------
 
-    DPRINT 's2::s2_calc: entered'
-    n_irr = size(occ_num)
+    integer (IK) :: n
 
     ! MOVED TO BEFORE SCF LOOP: call read_overlap()
-    ASSERT(allocated(overlap))
+    if (comm_rank() == 0) then
+       n = size (occ_num)
 
-    ASSERT(n_irr==size(overlap))
-    ASSERT(n_irr==size(eigvec))
+       ! Does not seem to be allocated on slaves:
+       ASSERT(allocated(overlap))
 
-    call s2_expectation(occ_num,overlap,eigvec)
+       ASSERT(n==size(overlap))
+       ASSERT(n==size(eigvec))
 
+       ! FIXME:  O(N^3) serial  step of  computing  alpha/beta overlap
+       ! here:
+       call s2_expectation (occ_num, overlap, eigvec)
+    endif
     ! DONE AFTER hamiltonian_shutdown(): call dealloc_overlap()
   end subroutine s2_calc
   !*************************************************************
 
 
   !*************************************************************
-  subroutine s2_expectation(occ,ovl,ev)
-    !  Purpose: compuites the expectation value of the
-    !     S2 = spin^2
-    !     according to the formula:
+  subroutine s2_expectation (occ, ovl, ev)
+    !
+    ! Computes  the  expectation value  of  the  S2  according to  the
+    ! formula:
     !
     !     S2 = S(S+1) + ( Nb - SUM(ja,jb) |Sab(ja,jb)|^2 )
-    !     with
-    !     Na >= Nb
-    !     S = (Na - Nb)/2
-    !     Sab(ja,jb) -- overlap of two occupied orbitals with different spins
     !
-    !------------ Modules used ------------------- ---------------
+    ! with Na  >= Nb, S =  (Na - Nb)/2,  and Sab(ja, jb) which  is the
+    ! overlap of two occupied orbitals with different spins
+    !
+    ! Does no communication but writes  to output. Runs on master only
+    ! so far. FIXME: O(N^3) here!
+    !
     use datatype, only: arrmat2, arrmat3
     use iounitadmin_module, only: output_unit
     implicit none
-    !------------ Declaration of formal parameters ---------------
     type(arrmat2), intent(in) :: occ(:) ! (n_irr)
     type(arrmat2), intent(in) :: ovl(:) ! (n_irr)
     type(arrmat3), intent(in) :: ev(:) ! (n_irr)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     real(RK), parameter :: one=1.0_RK, two=2.0_RK
     integer(IK) :: irr, n_irr
     integer(IK) :: iorb,ilev,n_orb,ia,ib
@@ -167,7 +144,7 @@ contains
     logical  :: flip
     real(RK), parameter :: thresh=0.5_rk
     integer(IK) :: ALF=1,BET=2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     DPRINT 's2::s2_expectation: entered'
@@ -178,7 +155,7 @@ contains
     WRITE(output_unit,'(A)') " = S(S+1) + N_{minor} - \Sum_{ij} |S^{ab}_{ij}|^2 ="
     WRITE(output_unit,'(A)') " =================================================="
     WRITE(output_unit,'(A)')
-    WRITE(output_unit,'(" level is considered occupied if nel >= ",F6.1)') thresh 
+    WRITE(output_unit,'(" level is considered occupied if nel >= ",F6.1)') thresh
 
     ! determine minor major spins:
     nna  = 0.0_rk
@@ -326,7 +303,7 @@ contains
 
     integer(IK),parameter       :: many=7
     integer(IK)           :: i,j,n,m,d_n,d_m
-    
+
     n = size(MM,1)
     m = size(MM,2)
 
@@ -348,5 +325,5 @@ contains
 #endif
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module s2_expect

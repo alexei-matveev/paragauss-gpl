@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,16 +24,16 @@
 !
 module qmmm_interface_module
 #include "def.h"
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module
   use iounitadmin_module
   use filename_module
   use string_qmmm_module
 
   implicit none
-  private       
+  private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   !------------ General qmmm interface variables
   logical, public :: efp     !see efp_module
@@ -42,7 +42,7 @@ module qmmm_interface_module
   logical, public :: qm_mm_1 !see qmmm1_interface_module
   integer, public, parameter :: mm_run=0, qmmm_read_input=-1
   integer, public, parameter :: imomm_mm_small=2, imomm_mm_large=3
-  integer, public, parameter :: qm_mm_run=4, slave_run=-2
+  integer, public, parameter :: qm_mm_run=4
   integer, public :: qm_mm_1_task
   !--------------------------------------------------------------
 
@@ -67,12 +67,12 @@ module qmmm_interface_module
   type(gradient),public :: grad_mm2(max_atom)
   type(gradient),public :: grad_mm3(max_atom)
 
-  real(r8_kind),public :: energy_qm, energy_mm2, energy_mm3 
-  !------------ public functions and subroutines ------------------
+  real(r8_kind),public :: energy_qm, energy_mm2, energy_mm3
+  !------------ public functions and subroutines ---------------------
   public qmmm_read,qmmm_write,read_qmmm_input,sum_up_grads_and_write_gx
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   character(len=10) :: method
@@ -95,7 +95,7 @@ module qmmm_interface_module
      integer                ::  mm_atom
      logical                ::  fixed_distance
      real(r8_kind)          ::  distance
-     real(r8_kind)          ::  ratio     
+     real(r8_kind)          ::  ratio
      integer                ::  atom_type       ! MM atom type for link atom.
   end type nml_link
   type (nml_link) :: linkinfo(max_link_atom)
@@ -127,7 +127,7 @@ module qmmm_interface_module
 
   namelist /link_atom_number/  n_link_atoms
   namelist /link_atom/         qm_atom,mm_atom,fixed_distance,distance,ratio,atom_type
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine qmmm_read()
@@ -136,7 +136,7 @@ contains
     use inp_out_module, only : upcase, check_string
     use operations_module, only : operations_qm_mm_new
     !------------ Declaration of formal parameters ----------------
-    !== End of interface ========================================== 
+    !== End of interface ==========================================
     !------------ Declaration of local variables ------------------
     integer :: unit, status
     !------------ Executable code ---------------------------------
@@ -161,7 +161,7 @@ contains
        efp=.false.
        return
     end if
-    
+
     call upcase(method)
 
     efp=check_string(method,"EFP")
@@ -177,7 +177,7 @@ contains
     if(qm_mm_1) return
     qm_mm=(index(method,"qm+mm") /= 0 .or. index(method,"QM+MM") /= 0)
     if(qm_mm) return
-    
+
     call error_handler("qmmm_read: what type of QMMM calculations do you want to run?")
 
   end subroutine qmmm_read
@@ -190,7 +190,7 @@ contains
     use operations_module, only: operations_echo_input_level
     !------------ Declaration of formal parameters ----------------
     integer(kind=i4_kind), intent(in) :: iounit
-    !== End of interface ========================================== 
+    !== End of interface ==========================================
     !------------ Declaration of local variables ------------------
     !------------ Executable code ---------------------------------
 
@@ -234,9 +234,9 @@ contains
 
   end subroutine init_arrs
   !****************************************************************
-  
+
   !****************************************************************
-  subroutine read_qmmm_input(saved_opt_step) !!PUBLIC 
+  subroutine read_qmmm_input(saved_opt_step) !!PUBLIC
 
     real(r8_kind),intent(out) :: saved_opt_step
 
@@ -273,11 +273,11 @@ contains
     call data_preparing()
 
     n_qm_at=n_qm_atom+n_link_atoms
-    
+
   end subroutine read_qmmm_input
   !****************************************************************
-  
-  !****************************************************************  
+
+  !****************************************************************
   subroutine read_master_input(input_name)
 
     !This subroutine reads master input and return many global variables
@@ -288,7 +288,7 @@ contains
     integer(i4_kind) :: i_unit
     integer(i4_kind) :: i,j,next
     character(len=*),intent(in)    :: input_name
-    character(len=*),parameter     :: qm_pattern     = '%QM_REGION'   
+    character(len=*),parameter     :: qm_pattern     = '%QM_REGION'
     character(len=*),parameter     :: int_pattern    = '%INTERFACE'
     character(len=*),parameter     :: enviro_pattern = '%ENVIRONMENT'
     character(len=*),parameter     :: link_pattern   = '%LINK_ATOMS'
@@ -343,7 +343,7 @@ contains
 
     ! Check whether QM input is empty data or not.
     if (n_qm_atom .eq.0 ) call error_handler("QMMM_INTERFACE: There is no QM atoms")
- 
+
     ! Now read in interface atoms and include them into QM atom lists.
     ! Check for enviro_pattern while reading.
 
@@ -411,9 +411,9 @@ contains
        mm_atom        = df_mm_atom
        fixed_distance = df_fixed_distance
        distance       = df_distance
-       ratio          = df_ratio   
+       ratio          = df_ratio
        atom_type      = df_atom_type
-   
+
        ! Read link information.
        read(unit=i_unit,nml=link_atom,err=130,end=130)
 
@@ -446,14 +446,14 @@ contains
     end do check_opt_pattern
 
     ! After opt_pattern was found, now store the input lines.
-    j = 0 
+    j = 0
     read_opt_input: do i = 1,max_nml_opt
        read(unit=i_unit,fmt='(a)',end=60,err = 150) record
 
        ! Check whether it is empty line or not. We do not store empty lines.
        next = 1
        call gettext(record,string,next)
-       if (next .eq. 1) then 
+       if (next .eq. 1) then
           cycle read_opt_input
        else
           j = j + 1
@@ -467,11 +467,11 @@ contains
 
 130 call error_handler("QMMM_INTERFACE: Unable to read link atom information")
 150 call error_handler("QMMM_INTERFACE: Cant read optimizer info")
- 
+
   end subroutine read_master_input
   !****************************************************************
-    
-  !****************************************************************  
+
+  !****************************************************************
   subroutine read_gx(gx_name)
 
     ! This subroutine returns values of array "gx" and also total number
@@ -483,9 +483,9 @@ contains
 
     gx_unit=openget_iounit(trim(inpfile(gx_name)), &
          form='formatted', status='unknown')
- 
+
     i=0
- 
+
     loop1: do
        i = i+1
        read(gx_unit,'(a)',err=30) record     ! Read a line of input
@@ -514,7 +514,7 @@ contains
 
   end subroutine read_gx
   !****************************************************************
-  
+
   !****************************************************************
   subroutine data_preparing()
 
@@ -538,7 +538,7 @@ contains
        r_x = gx(i_mm_atom)%x - gx(i_qm_atom)%x
        r_y = gx(i_mm_atom)%y - gx(i_qm_atom)%y
        r_z = gx(i_mm_atom)%z - gx(i_qm_atom)%z
- 
+
        r = sqrt( (r_x*r_x)+(r_y*r_y)+(r_z*r_z) )
 
        ! Determine distance ratio.
@@ -549,22 +549,22 @@ contains
        end if
 
        ! Add linkatom information into the gx information series.
-   
+
        n_atom_gx = n_atom_gx + 1
-   
+
        gx_qm(n_atom_gx)%x = gx(i_qm_atom)%x + (dist_ratio*r_x)
        gx_qm(n_atom_gx)%y = gx(i_qm_atom)%y + (dist_ratio*r_y)
        gx_qm(n_atom_gx)%z = gx(i_qm_atom)%z + (dist_ratio*r_z)
 
        gx_qm(n_atom_gx)%charge   = 1.00
-       gx_qm(n_atom_gx)%i_atom   = n_atom_gx 
+       gx_qm(n_atom_gx)%i_atom   = n_atom_gx
 
     end do
 
   end subroutine data_preparing
   !****************************************************************
-  
-  !**************************************************************** 
+
+  !****************************************************************
   subroutine sum_up_grads_and_write_gx() !Public
 
     integer(i4_kind) :: i,j,i_start,i_end,k
@@ -592,7 +592,7 @@ contains
        k=k+1
        grad_local(i)%x = grad_local(i)%x + grad_qm(k)%x
        grad_local(i)%y = grad_local(i)%y + grad_qm(k)%y
-       grad_local(i)%z = grad_local(i)%z + grad_qm(k)%z 
+       grad_local(i)%z = grad_local(i)%z + grad_qm(k)%z
     end do
     energy_total=energy_total + energy_qm
 
@@ -736,7 +736,7 @@ contains
       integer(i4_kind), intent(in) :: i,j
 
       deriv21_a = (1-g)*delta(i,j)
-      
+
     end function deriv21_a
     !============================================================
     function deriv23_a(i,j)
@@ -745,7 +745,7 @@ contains
       integer(i4_kind), intent(in) :: i,j
 
       deriv23_a = g*delta(i,j)
-      
+
     end function deriv23_a
     !============================================================
     function deriv21_b(i,j)
@@ -768,7 +768,7 @@ contains
 
   end subroutine sum_up_grads_and_write_gx
   !****************************************************************
-  
+
   !****************************************************************
   subroutine write_gx
 
@@ -811,7 +811,7 @@ contains
     ! Write gradient informations.
 
     do i = 1,n_atom
-       if (gx(i)%charge .ne. df_dummy_atom) then      
+       if (gx(i)%charge .ne. df_dummy_atom) then
           write(unit=out_unit,fmt=grad_format,err=50) i, grad_total(i)
        end if
     end do
@@ -828,6 +828,6 @@ contains
 
   end subroutine write_gx
   !****************************************************************
-  
-  !**************************************************************** 
+
+  !****************************************************************
 end module qmmm_interface_module

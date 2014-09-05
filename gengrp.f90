@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine gengrp(group,igroup,iorder,elem,namele,ncsco,fcsco)
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !     identifies the group by number in the canonical ordering used in
@@ -37,22 +37,22 @@ subroutine gengrp(group,igroup,iorder,elem,namele,ncsco,fcsco)
   !  version:   07.05.95
   !
 !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module, only: i4_kind,r8_kind
   implicit none
 !== Interrupt end of public interface of module =================
-  !------------ Declaration of formal parameters ------------------
+  !------------ Declaration of formal parameters ---------------------
   character(len=4), intent(in)           :: group
   !       group   name of the group
   integer(kind=i4_kind),intent(in)  :: iorder,igroup
@@ -69,9 +69,9 @@ subroutine gengrp(group,igroup,iorder,elem,namele,ncsco,fcsco)
   !                 separate operators
   !       fcsco   coefficient for the linear combination of class
   !                 operators
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ Declaration of local constants --------------------
   integer(kind=i4_kind), parameter ::  modnum=1, nptgrp=75, ngrpar=304

@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  int_send_2cff_module
 !---------------------------------------------------------------
 !
@@ -47,11 +47,11 @@ module  int_send_2cff_module
 !  Author: TB
 !  Date: 7/95
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !  Modification (Please copy before editing)
 !  Author:      Uwe Birkenheuer
 !  Date:        27.5.98
@@ -76,7 +76,7 @@ module  int_send_2cff_module
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 #include "def.h"
 use type_module ! type specification parameters
@@ -103,9 +103,9 @@ public int_send_2cff_setup, int_send_2cff_shutdown, &
        int_send_2cff_send, int_send_2cff_receive
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !................................................................
 ! triangle storage mode
@@ -225,7 +225,7 @@ integer(kind=i4_kind), private               :: n_ch, n_xc
 real(kind=r8_kind), allocatable :: &
      integral_2cch_pre(:)
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
@@ -236,7 +236,7 @@ contains
     !     1-dimensional data storage of results
     ! called by: int_send_2cff_setup (formerly done by metaindex_setup)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     implicit none
     integer(kind=i4_kind)                   :: status, pos, i_ir, i_ua, &
                                                i_bas, i_l, i_exp, i_ind, i_gc
@@ -247,7 +247,7 @@ contains
     integer(kind=i4_kind)         , pointer :: glob_index(:)
     integer(kind=i4_kind)         , pointer :: index(:,:)
     integer(kind=i4_kind)         , pointer :: n_rec
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
  
     i_ir = get_totalsymmetric_irrep()
  
@@ -405,7 +405,7 @@ contains
     !** End of interface *****************************************
     implicit none
     integer(kind=i4_kind), intent(in) :: n_quads
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: status
 
     ! calculate help arrays for mapping the integrals
@@ -466,10 +466,10 @@ contains
     use fit_coeff_module, only: fit_coeff_store_norm
     use mat_charge_module, only: mat_charge_set
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: status
     logical :: restart_timer
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! waiting for missing integrals
     if ( operations_integral ) then
@@ -831,8 +831,8 @@ contains
     !** End of interface *****************************************
     !------------ Modules used ----------------------------------
     implicit none
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
 
     call start_timer(timer_int_send_2cff(integralpar_i_int_part))
 
@@ -1239,11 +1239,11 @@ contains
     !  called by: main_slave, integral_main_2cff, int_send_2cff_shutdown
     !** End of interface *****************************************
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(quadrupel_type)            :: quadrupel
     logical                         :: restart_timer,need_ch_ch,&
                                        need_ch_xc,need_xc_ch,need_xc_xc
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( timer_int_idle_2cff(integralpar_i_int_part)%running ) then
        call stop_timer(timer_int_idle_2cff(integralpar_i_int_part))

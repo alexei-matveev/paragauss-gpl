@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module machineparameters_module
 !---------------------------------------------------------------
 !
@@ -34,11 +34,11 @@ module machineparameters_module
 !  Date: 10/95
 !
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 !
 ! Modification (Please copy before editing)
@@ -46,7 +46,7 @@ module machineparameters_module
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 !
 ! Modification (Please copy before editing)
@@ -54,7 +54,7 @@ module machineparameters_module
 ! Date:   01
 ! Description: Variable size Read/Write buffers introduced
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 #include "def.h"
 use type_module ! type specification parameters
@@ -98,9 +98,9 @@ public :: machineparameters_read, machineparameters_write
 public :: machineparameters_bcast!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of constants and variables ----
 
@@ -113,7 +113,7 @@ namelist /machineparameters/ machineparameters_veclen    , &
                              machineparameters_checkpreci, &
                              machineparameters_rw_buffer
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
@@ -124,11 +124,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use input_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: status, unit
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! read input
     machineparameters_veclen     = df_machineparameters_veclen
     machineparameters_ph_veclen  = -1
@@ -223,11 +223,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: commpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call commpack(machineparameters_veclen,info)
     if (info .ne. 0) call error_handler( &
          "machineparameters_pack: machineparameters_veclen")
@@ -253,11 +253,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: communpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call communpack(machineparameters_veclen,info)
     if (info .ne. 0) call error_handler( &
          "machineparameters_unpack: machineparameters_veclen")

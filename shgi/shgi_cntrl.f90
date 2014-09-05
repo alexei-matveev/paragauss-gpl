@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module shgi_cntrl
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Handling integral settings as a bitmap.
   !
@@ -34,18 +34,18 @@ module shgi_cntrl
   ! Copyright (c) 2006 Vladimir Nasluzov
   ! Copyright (c) 2006-2008 Alexey Shor
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! use CPU_TIME for timers:
 ! define FPP_TIMERS 2
 # include "def.h"
@@ -56,25 +56,25 @@ module shgi_cntrl
   implicit none
   save            ! save all variables defined in this module
   public          ! by default, all names are public
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   integer(I8K), parameter, private :: b=2_i8k ! Binary Base
   integer(I8K), parameter, public ::  &
@@ -206,7 +206,7 @@ module shgi_cntrl
   logical                :: do_efp_grad=.false.
 #endif
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   ! for collecting statistics:
   integer(IK) :: shgi_stat_num_ints = 0 ! save!
@@ -244,7 +244,7 @@ module shgi_cntrl
   FPP_TIMER_DECL(efld)
   FPP_TIMER_DECL(slgr)
   FPP_TIMER_DECL(slsd)
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function is_on(OP,OP1,OP2) result(yes)
@@ -324,5 +324,5 @@ contains
     MAXEXP = expmax
   end subroutine shgi_set_maxexp
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module shgi_cntrl

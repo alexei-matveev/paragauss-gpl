@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine main_scf()
   !
   !  Purpose: Main Level of the SCF part. Executed on all workers.
@@ -34,12 +34,12 @@ subroutine main_scf()
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !===============================================================
+  !===================================================================
   ! End of Public interface of module
-  !===============================================================
-  !----------------------------------------------------------------
+  !===================================================================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Author: UB
   ! Date:   27/5/97
@@ -60,26 +60,25 @@ subroutine main_scf()
   ! Date:   ...
   ! Description:   ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module, only: i4_kind, r8_kind ! type specification parameters
   use interfaces, only: chargefit
   use paragauss, only: toggle_legacy_mode
   use prescf_module, only: prescf_init, prescf_finalize
   use time_module, only: start_timer, stop_timer ! timing routines
-  use timer_module, only: timer_grid_setup, timer_scf, timer_scf_chfit, &
+  use timer_module, only: timer_grid_setup, timer_scf, &
        timer_scf_cycle, timer_scf_ham, timer_scf_preparations, &
        timer_scf_reoc, timer_scf_xc, timer_grid_small_to_large, &
        timer_print_scfcycle, timer_print_scf
-  use occupation_module, only: eigenstates_store, occupation_jz, &
-       occupation_spindiff, fixed_hole, n_occo, eigenstates_recover, &
-       print_occ_num, occupation_print_spectrum, occupation_2d_correct, &
-       occupation_get_holes, reoccup
+  use occupation_module, only: fixed_hole, n_occo, reoccup,&
+       print_occ_num, occupation_2d_correct, &
+       occupation_print_spectrum, occupation_get_holes
   use fermi_module, only: fermi_reoccup, fermi_level_broad, fermi_get_entropy, &
        fermi_write_input, fermi_read_scfcontrol
-  use occupied_levels_module, only: sndrcv_eigvec_occ1
+  use occupied_levels_module, only: sndrcv_eigvec_occ
   use options_module, only: xcmode_model_density, xcmode_extended_mda, &
        xcmode_numeric_exch, recover_fitcoeff, recover_scfstate, recover_ksmatrix, &
        xcmode_exchange_fit, recover_eigenvec, recover_fragment, options_save_ksmatrix, &
@@ -95,11 +94,11 @@ subroutine main_scf()
        write_to_trace_unit, write_to_output_units, openget_iounit, returnclose_iounit
   use grid_module, only: grid_main, grid_close
   use xc_cntrl, only: xc_is_on=>is_on, xc_ANY
-  use xc_hamiltonian, only: xc_setup, build_xc_main, &
+  use xc_hamiltonian, only: xc_setup, xc_build, &
        xc_hamiltonian_store, xc_hamiltonian_recover, xc_close, s_average
-  use xcfit_hamiltonian, only: xcfit_setup, build_xcfit_main, xcfit_close
+  use xcfit_hamiltonian, only: xcfit_setup, xcfit_build, xcfit_close
   use xcmda_hamiltonian, only: xcmda_setup, xcmda_coeff_store, &
-       build_xcmda_main, xcmda_coeff_recover, xcmda_close, &
+       xcmda_build, xcmda_coeff_recover, xcmda_close, &
        rho_exact, comp_exact
   use convergence_module, only: convergence_abort_calculation, convergence, &
        convergence_check_density_dev, convergence_max_iterations, &
@@ -110,15 +109,17 @@ subroutine main_scf()
        convergence_put_coulomb_dev, convergence_shutdown
   use eigen_data_module, only: print_eigendata, eigvec_write, eigen_data_dump
   use fit_coeff_module, only: print_coeff_charge, &
-       fit_coeff_store, fit_coeff_recover, fit_coeff_send, fit_coeff_normalize
+       fit_coeff_store, fit_coeff_recover, fit_coeff_sndrcv, &
+       fit_coeff_normalize, ICHFIT
 #ifdef WITH_CORE_DENS
   use fit_coeff_module, only: write_coeff_core
 #endif
-  use density_data_module, only: print_densmat, gendensmat_occ1, save_densmat, densmat
+  use density_data_module, only: print_densmat, gendensmat_occ, &
+       save_densmat, densmat
   use overlap_module, only: overlap
   use filename_module, only: outfile, recfile
   use hamiltonian_module, only: ham_tot, hamiltonian_store, hamiltonian_recover
-  use eigen_data_module, only: eigen_data_solve1, eigen_hole_shutdown, &
+  use eigen_data_module, only: eigen_data_solve, eigen_hole_shutdown, &
        build_lvsft_hamiltonian, make_level_shift
   use diis_fock_module, only: diis_fock_matrix, fixed_fock_matrix, &
        diis_fock_module_close, diis_on
@@ -135,13 +136,13 @@ subroutine main_scf()
   use mixing_module, only: mixing_read_scfcontrol
 #endif
   use population_module, only: population_mulliken, population_spor_mulliken
-  use comm_module, only: comm_parallel
+  use comm, only: comm_parallel, comm_same, comm_bcast, comm_rank
   use pairs_module, only: n_pairs
   use readwriteblocked_module, only: readwriteblocked_tapehandle, &
        readwriteblocked_stopread, readwriteblocked_startread, &
        readwriteblocked_startwrite, readwriteblocked_read, readwriteblocked_stopwrite, &
        readwriteblocked_write
-  use solv_electrostat_module, only: charge_mix_wrapper, build_solv_ham, &
+  use solv_electrostat_module, only: build_solv_ham, &
        dealloc_ham_solv, solv_energy_el, calc_q_e
   use solv_cavity_module, only: sol_start_cycle, n_Q_update
   use solv_charge_mixing_module, only: mix_charges, Qs_mix, Q_dealloc
@@ -159,7 +160,7 @@ subroutine main_scf()
   ! *** end of interface ***
 
   !------------ Declaration of local variables --------------------
-  integer (i4_kind) :: save_interval, xcmode, recover_mode, loop
+  integer (i4_kind) :: xcmode, recover_mode, loop
   integer (i4_kind) :: first_loop, trace_width(14)
   real (r8_kind) :: tot_en, spin_diff, time_for_last_cycle, entropy
   real (r8_kind) :: coeff_dev, coulomb_dev, density_dev
@@ -175,8 +176,9 @@ subroutine main_scf()
   ! One of the above, including .dat extension:
   character (len=NCHAR) :: rec_file
 
-  logical :: store_now, recover, etot_recovered, save_fitcoeff, &
-       save_scfstate, save_ksmatrix, save_eigenvec, save_eigenvec_all
+  logical :: scf_conv ! signifies SCF convergence, broadcasted to slaves
+  logical :: check_density_dev
+  logical :: store_now, recover, etot_recovered
   logical :: new_trace_header
   logical :: update_scfcontrol = .FALSE.
   integer (i4_kind), save :: scf_count = 0 ! counts calls to main_scf, i.e. geo_loops
@@ -264,25 +266,13 @@ subroutine main_scf()
   endif
 #endif /* ifdef WITH_SCFCONTROL */
 
-  ! Not quite  sure what it  does, but it  needs to be done  every scf
-  ! iteration.       It       was       previousely      done       in
-  ! convergence_read_scfcontrol() called from read/write_scfcontrol:
+  ! It was previousely done every SCF iteration in
+  ! convergence_read_scfcontrol() called from read/write_scfcontrol
   call convergence_resize_buffers()
 
   call stop_timer (timer_scf_preparations)
   call say ("preparations done")
   call write_to_trace_unit ("SCF preparations done")
-
-  do while (toggle_legacy_mode ())
-
-  ! load current state of the save_data options
-  save_fitcoeff = options_save_fitcoeff()
-  save_scfstate = options_save_scfstate()
-  save_ksmatrix = options_save_ksmatrix()
-  save_eigenvec = options_save_eigenvec()
-  save_eigenvec_all = options_save_eigenvec_all()
-  save_interval = options_save_interval()
-  store_now = .false.
 
   ! Here the SCF-Cycle starts
   call write_trace_header()
@@ -292,11 +282,14 @@ subroutine main_scf()
   ! FIXME: what about tot_en?
   loop = 0
   etot_recovered = .false.
+  ASSERT(comm_same(recover))
   if (recover) then
      !
-     ! Loads   loop,  etot_recovered   and  tot_en.   When  calling
-     ! hamiltonian_recover()   the  Fock   matrix  in   ham_tot  is
-     ! allocated and filled with data:
+     ! Loads   loop,   etot_recovered   and  tot_en.    When   calling
+     ! hamiltonian_recover() the  Fock matrix in  ham_tot is allocated
+     ! and filled with data. Master  seems to send the orders and data
+     ! to slaves  from there, the correspondig  receives are initiated
+     ! from main_slave():
      !
      call do_recover (recover_mode, n_pairs, loop, tot_en, eof=etot_recovered)
 
@@ -304,9 +297,10 @@ subroutine main_scf()
      loop = loop - 1
   endif
 
-  ! this is compared against base-1 loop:
+  ! This is compared against base-1 loop:
   first_loop = loop + 1
 
+  ASSERT(comm_same(fixed_hole))
   if (fixed_hole) then
      call say ("set up hole information in eigen_data_module")
      call occupation_get_holes()
@@ -316,14 +310,21 @@ subroutine main_scf()
      loop = loop + 1
      call start_timer (timer_scf_cycle)
 
-     if (save_interval /= 0) store_now = mod (loop, save_interval) == 0
+     ! Saving state every  iteration may require much IO,  do it maybe
+     ! every few iterations:
+     store_now = store_now_p (loop, options_save_interval())
+
      if (output_timing_scfloops .or. output_scfloops) then
         call write_to_output_units (" ")
         call write_to_output_units ("####### Loop: ", loop)
         call write_to_output_units (" ")
      endif
-     ! check recover options and fork accordingly
+
+     ! Check recover options and fork accordingly
+     ASSERT(comm_same(loop))
+     ASSERT(comm_same(first_loop))
      if (loop == first_loop .and. recover) then
+        ASSERT(comm_same(recover_mode))
         select case (recover_mode)
         case (recover_fitcoeff); goto 1000
         case (recover_scfstate); goto 1000
@@ -335,59 +336,71 @@ subroutine main_scf()
 
      ! Calculation of exchange-correlation hamiltonian:
      if (xc_is_on (xc_ANY)) then
+        ASSERT(comm_same(xcmode))
         select case (xcmode)
+
         case (xcmode_model_density, xcmode_extended_mda)
-           if (comm_parallel()) then
-              call say ("fit_coeff_send")
-              call fit_coeff_send()
+           ABORT("verify SPMD")
+           call say ("fit_coeff_sndrcv")
+           call fit_coeff_sndrcv (ICHFIT)
+           if ((rho_exact .or. comp_exact) .and. loop /= first_loop) then
+              call sndrcv_eigvec_occ()
            endif
-           if ((rho_exact .or. comp_exact) .and. loop /= first_loop) call sndrcv_eigvec_occ1()
            call start_timer (timer_scf_xc)
            call say ("xcmda_build_ham")
-           call build_xcmda_main ((loop == first_loop))
+           call xcmda_build ((loop == first_loop))
            call stop_timer (timer_scf_xc)
 
         case (xcmode_numeric_exch)
            if (loop /= first_loop) then
               call start_timer (timer_scf_xc)
-              call say ("build_xc_main")
-              call build_xc_main (loop-first_loop+1) ! <<< relative cycle number
+              call say ("xc_build")
+              ! Call with relative cycle number:
+              call xc_build (loop - first_loop + 1)
               call stop_timer (timer_scf_xc)
            endif
+
         case (xcmode_exchange_fit)
            if (loop /= first_loop) then
               call start_timer (timer_scf_xc)
-              call say ("xcfit_build_ham")
-              call build_xcfit_main (loop)
+              call say ("xcfit_build")
+              call xcfit_build (loop)
               call stop_timer (timer_scf_xc)
            endif
         end select
      endif
 
-     if (calc_Pol_centers() .and. loop >= first_loop+1) then
-!NO: #ifdef WITH_EFP, see if the conflict remains
-        if (loop == first_loop+1) then
-           do_update = .true.
-        else
-           do_update = (mod (loop - (first_loop + 1), n_update) == 0)
-        end if
-#ifdef WITH_EFP
-        if (operations_solvation_effect) then
-           if (do_pol_pcm .and. n_efp > 0) then
-              call allocate_V_and_Q_id()
-              call allocate_E_cav()
+     ! The code inside  this DO block is executed  on master only. The
+     ! slaves  are spinning  in  main_slave() and  waiting for  orders
+     ! during that time:
+     do while (toggle_legacy_mode ())
+        ! Master-only context here ...
+        if (calc_Pol_centers() .and. loop >= first_loop+1) then
+           if (loop == first_loop+1) then
+              do_update = .true.
+           else
+              do_update = (mod (loop - (first_loop + 1), n_update) == 0)
            end if
-           do_solv = (loop > first_loop+sol_start_cycle)
-        end if
-        call build_Pol_ham (print_id, do_update)
+#ifdef WITH_EFP
+           if (operations_solvation_effect) then
+              if (do_pol_pcm .and. n_efp > 0) then
+                 call allocate_V_and_Q_id()
+                 call allocate_E_cav()
+              end if
+              ! This is a variable in a efp_solv_module:
+              do_solv = (loop > first_loop + sol_start_cycle)
+           end if
+           call build_Pol_ham (print_id, do_update)
 #else
-        call build_Pol_ham (do_update)
+           call build_Pol_ham (do_update)
 #endif
-     end if
+        end if
+     enddo                      ! while (toggle_legacy_mode())
+     ! Parallel context from here on ...
 
-     !calculating solvation hamiltonian
+     ! Calculating solvation hamiltonian
      if (operations_solvation_effect .and. &
-          loop >= first_loop+sol_start_cycle) then  !!!!!!!!!!!!!
+          loop >= first_loop+sol_start_cycle) then
         if (mod (loop - (first_loop + sol_start_cycle), n_Q_update) == 0) then
            call calc_Q_e()
         end if
@@ -396,24 +409,24 @@ subroutine main_scf()
            call calc_V_and_Q_id()
         end if
 #endif
-        call charge_mix_wrapper (loop, first_loop + sol_start_cycle)
-        call build_solv_ham()
-     endif                                          !!!!!!!!!!!!!
+        call build_solv_ham (loop, first_loop + sol_start_cycle)
+     endif
 
      if (output_densmat) then
         call say ("densmat is written to file")
         call print_densmat (loop)
      endif
 
-1000 continue ! entry point for "read_fitcoeff" and "read_scfstate"
+     ! Entry point for "read_fitcoeff" and "read_scfstate":
+1000 continue
 
      ! Save fit coefficients and current SCF state if required
-     if (save_fitcoeff) then
-        call do_fitcoeff_store() ! reads loop and store_now
+     if (options_save_fitcoeff()) then
+        call do_fitcoeff_store (store_now) ! reads loop
      endif
      ! Save current SCF state if required
-     if (save_scfstate) then
-        call do_scfstate_store() ! reads loop and store_now
+     if (options_save_scfstate()) then
+        call do_scfstate_store (store_now) ! reads loop
      endif
 
      ! Calculation  of  other  (not  exchange  correlation)  parts  of
@@ -425,80 +438,111 @@ subroutine main_scf()
      !
      ! Build Coulomb  and Fock  matrices.  This also  call reset_ham()
      ! which allocates  and initializes  Fock matrix in  ham_tot. Some
-     ! recover  options  jump  over  this call.   This  subroutine  is
-     ! executed by all workers:
+     ! recover options jump over this call.
      !
      call ham_calc_main (loop - first_loop + 1) ! relative cycle number
 
-     if (operations_solvation_effect .and. &
-          loop >= first_loop + sol_start_cycle) then
-        call dealloc_ham_solv()
-        call solv_energy_el ()
-     endif
-
-     if (calc_Pol_centers() .and.loop >= first_loop+1) then
-        call dealloc_Pol_ham()
-        call calc_id_energy()
-     end if
-
      call stop_timer (timer_scf_ham)
 
-     ! write calculated energies
+     if (operations_solvation_effect .and. &
+          loop >= first_loop + sol_start_cycle) then
+        ! FIXME:  slaves  did it  earlier,  see build_solv_ham(),  but
+        ! since it is idempotent we just call it again:
+        call dealloc_ham_solv () ! no comm, idempotent
+
+        ! This one does not do much on slaves:
+        call solv_energy_el ()   ! no comm
+     endif
+
+     if (calc_Pol_centers() .and. loop >= first_loop+1) then
+        do while (toggle_legacy_mode ())
+           ! Master-only context here ...
+           call dealloc_Pol_ham()
+           call calc_id_energy()
+        enddo
+     end if
+
+     ! Write calculated  energies. Slaves  could always print  that to
+     ! stdout, however the values are partial there.
      call say ("write_energies")
-     if (output_scfloops .or. output_main_scf) call write_energies (output_unit)
-     if (output_scfloops .or. output_main_scf) call write_energies (stdout_unit)
+     if (output_scfloops .or. output_main_scf) then
+        call write_energies (output_unit)
+        if (comm_rank() == 0) then
+           call write_energies (stdout_unit)
+        endif
+     endif
      if (etot_recovered) then
-        500 format(2X, 'e_sum  =  ', F25.12, '  (recovered)')
-        if (output_scfloops .or. output_main_scf) write (output_unit, 500) tot_en
-        if (output_scfloops .or. output_main_scf) write (stdout_unit, 500) tot_en
+        if (output_scfloops .or. output_main_scf) then
+500        format(2X, 'e_sum  =  ', F25.12, '  (recovered)')
+           write (output_unit, 500) tot_en
+           if (comm_rank() == 0) then
+              write (stdout_unit, 500) tot_en
+           endif
+        endif
      else
         call get_energy (tot=tot_en)
      endif
-     ! and pass energy to the convergence check module
+     ! And pass energy to the convergence check module
      call convergence_put_energy (tot_en)
-     if (store_now) call store_total_energy ! reads tot_en
 
-2000 continue ! entry point for "read_ksmatrix"
-
-     ! Save Kohn-Sham matrix if required
-     if (save_ksmatrix) then
-        call do_ksmatrix_store() ! reads loop and store_now
+     if (store_now) then
+        ! Write tot_en to a file:
+        call store_total_energy()
      endif
+
+     ! Entry point for "read_ksmatrix":
+2000 continue
+
+     ! Save Kohn-Sham matrix if required. NOOP on slaves:
+     if (options_save_ksmatrix()) then
+        call do_ksmatrix_store (store_now) ! reads loop
+     endif
+
+#ifdef WITH_SCFCONTROL
+#warning "WITH_SCFCONTROL=1 is not useful for batch runs"
+     ! Read file with steering  parameters first and modify the length
+     ! of  convergence buffers  (if required)  keeping a  copy  of the
+     ! original   data.   Caution:   reloads  options_save_interval(),
+     ! options_save_fitcoeff().  If  you  want  every worker  to  know
+     ! updated parameters, you either  have to let everyone read them,
+     ! or broadcast them.
+     call read_scfcontrol()
+#endif /* ifdef WITH_SCFCONTROL */
 
      ! Check convergence and exit loop in case of convergence
      call say ("convergence is checked")
 
-#ifdef WITH_SCFCONTROL
-     ! Read file with steering  parameters first and modify the length
-     ! of  convergence buffers  (if required)  keeping a  copy  of the
-     ! original   data.   Caution:   reloads  options_save_interval(),
-     ! options_save_fitcoeff() ...
-     call read_scfcontrol()
-#endif /* ifdef WITH_SCFCONTROL */
+     ! Check SCF convergence.  FIXME: maybe make sure all workers have
+     ! the data to determine convergence on their own?
+     scf_conv = (convergence() .or. convergence_max_iterations (loop)) &
+          .and. loop /= first_loop
+     call comm_bcast (scf_conv)
 
-     if ((convergence() .or. convergence_max_iterations (loop)) .and. &
-          loop /= first_loop) then
-        ! Reads loop, tot_en and old values of the save_data options:
-        call do_final_store (n_vir=n_pairs)
-
-        call say ("timing cycle and exit scf_cycle")
+     if (scf_conv) then
         call stop_timer (timer_scf_cycle)
         call timer_grid_small_to_large()
-        if (output_timing_scfloops) call timer_print_scfcycle()
+
+        ! Does nothing when the slaves have no output:
+        if (output_timing_scfloops) then
+           call timer_print_scfcycle()
+        endif
+
+        ! Uses  global variables loop,  tot_en and  old values  of the
+        ! save_data options. NOOP on slaves.
+        call do_final_store (n_vir=n_pairs)
+
+        call say ("exit scf_cycle")
+
+        ! Let  everyone exit  the SCF  block.  This  is the  only exit
+        ! point:
         exit scf_cycle
      endif
+
      ! Now  update the save_data  options, deallocate  the temporarily
      ! kept  convergence  buffers (as  far  as  necessary), reset  the
      ! mixing buffers  (if required)  and update the  scf_control file
      ! accordingly
-     save_fitcoeff = options_save_fitcoeff()
-     save_scfstate = options_save_scfstate()
-     save_ksmatrix = options_save_ksmatrix()
-     save_eigenvec = options_save_eigenvec()
-     save_eigenvec_all = options_save_eigenvec_all()
-     save_interval = options_save_interval()
-     store_now = .false.
-     if (save_interval /= 0) store_now = mod (loop, save_interval) == 0
+     store_now = store_now_p (loop, options_save_interval())
      call convergence_clear_buffers()
 
      call mixing_reset_buffers (loop, update_scfcontrol)
@@ -510,15 +554,17 @@ subroutine main_scf()
 
      !
      ! In diis_fock_matrix() the total hamiltonian could be updated in
-     ! a  diis-  routine  to  get a  convergence  acceleration.   Only
-     ! ham_tot will be  changed by the routine.  It  could be switched
-     ! on by diis_on  = true in the diis  input list.  Parameters need
-     ! to  be  adapted;  their  best  choice depend  on  other  mixing
-     ! strategies like Perturbation Theory and Fermi broadening.
+     ! a DIIS routine to get a convergence acceleration.  Only ham_tot
+     ! will be  changed by  the routine.  It  could be switched  on by
+     ! diis_on = true in the  DIIS input namelist.  Parameters need to
+     ! be adapted; their best choice depend on other mixing strategies
+     ! like Perturbation Theory and Fermi broadening.
      !
      if (diis_on) then
        ASSERT (.not.options_spin_orbit)
        ASSERT (allocated(overlap))
+       ASSERT (allocated(ham_tot))
+       ASSERT (allocated(densmat))
        call diis_fock_matrix (ham_tot, overlap, densmat, loop)
 
        call fixed_fock_matrix (ham_tot, loop)
@@ -531,7 +577,7 @@ subroutine main_scf()
      ! Perform Hamiltonian diagonalization, see eigen_data_module.
      ! FIXME: pass arguments explicitly.
      !
-     call eigen_data_solve1()
+     call eigen_data_solve()
 
      ! Write eigendata to temporary file "eigenmist" for debugging
      if (output_each_eigendata) then
@@ -541,23 +587,37 @@ subroutine main_scf()
 
      ! Reoccupation of orbitals
      call start_timer (timer_scf_reoc)
+
      if (fermi_level_broad) then
         call say ("fermi_reoccup")
-        call fermi_reoccup()
+        ! FIXME:  The input  differes  on master  and  slaves so  that
+        ! Newton iteration fails:
+        if (comm_rank() == 0) then
+           call fermi_reoccup()
+        endif
      else
         call say ("reoccup")
         call reoccup()
      endif
+
      call say ("occupation_2d_correct")
      if (.not. options_spin_orbit) then
+        ! Does  no  communication.  Rewrites  occ_num(),  n_occo()  in
+        ! place:
         call occupation_2d_correct()
      endif
 
      call stop_timer (timer_scf_reoc)
 
-     ! Call on master after eigen_data_solve and scf_reocupp
-     if (lvshift_mixing)  call build_lvsft_hamiltonian &
-           (n_occo, level_shift, loop.gt.START_AFTER_CYCLE)
+     ! Call on  master after eigen_data_solve()  and reocupp(). FIXME:
+     ! The procedure  does no  communication, but fiddles  with global
+     ! variables that may not be available on slaves. Verify this next
+     ! time the ABORT() fires.
+     if (lvshift_mixing) then
+        ABORT("verify SPMD")
+        call build_lvsft_hamiltonian &
+             (n_occo, level_shift, loop .gt. START_AFTER_CYCLE)
+     endif
 
      if (output_spectrum) then
         call say ("print out spectrum")
@@ -569,26 +629,33 @@ subroutine main_scf()
         call print_occ_num (loop)
      endif
 
-3000 continue ! entry point for "read_eigenvec"
+     ! Entry point for "read_eigenvec":
+3000 continue
 
-     ! Save eigenstates and occupation if required
-     if (save_eigenvec) then
-        call do_eigenvec_store (n_vir=n_pairs) ! reads loop and store_now
+     ! Save eigenstates and occupation if required. NOOP on slaves.
+     if (options_save_eigenvec()) then
+        call do_eigenvec_store (store_now, n_vir=n_pairs) ! reads loop
      endif
 
      ! Setup  of  density  matrix  (on  each  slave)  and  fit  charge
      ! fitfunction coefficients
-     call start_timer (timer_scf_chfit)
      call say ("send_eigvec_occ")
 
-     call sndrcv_eigvec_occ1()
+     call sndrcv_eigvec_occ()
 
-     call say ("gendensmat_occ1")
-     if (convergence_check_density_dev() .and. &
-          .not. (recover .and. loop == first_loop)) then
-        call gendensmat_occ1 (density_dev)
+     call say ("gendensmat_occ")
+
+     ! The function here seems to  just return the input parameter and
+     ! thus should give the same value on all workers, modulo bugs, as
+     ! always:
+     check_density_dev = convergence_check_density_dev() &
+          .and. .not. (recover .and. loop == first_loop)
+
+     ASSERT(comm_same(check_density_dev))
+     if (check_density_dev) then
+        call gendensmat_occ (density_dev)
      else
-        call gendensmat_occ1()
+        call gendensmat_occ()
         if (recover .and. loop == first_loop) then
            density_dev = 0.0_r8_kind
         else
@@ -598,7 +665,7 @@ subroutine main_scf()
      call convergence_put_density_dev (density_dev)
 
      !
-     ! Moved from gendensmat_occ1() here:
+     ! Moved from gendensmat_occ() here:
      !
      if (output_densmat) then
         call print_densmat (loop)
@@ -619,8 +686,6 @@ subroutine main_scf()
         call say ("coeff_charge is written to file")
         call print_coeff_charge (loop)
      endif
-
-     call stop_timer (timer_scf_chfit)
 
      ! Calculate and print timing summary for SCF cycle
      call say ("timing")
@@ -644,28 +709,34 @@ subroutine main_scf()
 
   enddo scf_cycle
 
-  if (convergence()) then
-     call write_to_output_units ("")
+  ! This  checks convergence  of  energy AND  charge coefficients  AND
+  ! density  matrix AND Coulomb  (?).  FIXME:  This function  seems to
+  ! complete without crash but returns junk on slave workers:
+  scf_conv = convergence()
+  call comm_bcast (scf_conv)
+
+  if (scf_conv) then
      call write_to_output_units ("")
      call write_to_output_units ("####### convergence was reached in cycle ", inte=loop)
-     call write_to_output_units ("")
      call write_to_output_units ("")
      call write_to_trace_unit ("MAIN_SCF: convergence was reached in cycle ", inte=loop)
   else
      call write_to_output_units ("")
      call write_to_output_units ("####### aborting at maximal number of cycles: ", inte=loop)
      call write_to_output_units ("")
-     call write_to_output_units ("")
      call write_to_trace_unit ("MAIN_SCF: aborting at maximal number of cycles: ", inte=loop)
   endif
 
-  ! Expectation values of S2
+  ! Compute expectation  values of S2. Does some  output. FIXME: looks
+  ! like we have a serial O(N^3) step here:
+  ASSERT(allocated(n_occo))
   if (size (n_occo, 1) == 2) then ! unrestricted
      call s2_calc() ! from s2_expect.f90
   endif
 
 #ifdef WITH_CORE_DENS
   if (operations_core_density) then
+     ABORT("verify SPMD")
      call write_coeff_core (loop)
   end if
 #endif
@@ -673,18 +744,12 @@ subroutine main_scf()
   !
   ! The diis_fock_matrix()  routine will not  be used anymore  in this
   ! SCF,    so   we    deallocate   the    storage    matrices.    The
-  ! diis_charge_coeff() routine is treated the same way.  FIXME: maybe
-  ! move it into prescf_finalize() after making sure slaves do no harm
-  ! when executing it?
+  ! diis_charge_coeff() routine  is treated  the same way.   Make sure
+  ! slaves do  no harm when executing  it!  FIXME: maybe  move it into
+  ! prescf_finalize()?
   !
   call diis_fock_module_close()
 
-  enddo                         ! while (toggle_legacy_mode())
-
-  !
-  ! The  rest is  executed  on all  workers.  Except where  explicitly
-  ! indicated by do while (toggle_legacy_mode()) ... enddo blocks.
-  !
 
   ! Clean up the XC part:
   if (xc_is_on (xc_ANY)) then
@@ -704,14 +769,10 @@ subroutine main_scf()
      call say ("done xc_close()")
   endif
 
-  ! Write final calculated energies
-  call say ("write final calculated energies")
   if (operations_solvation_effect) then
-     do while (toggle_legacy_mode ())
-        call calc_Q_e ()
-        call solv_energy_el ()
-        call Q_dealloc ()
-     enddo
+     call calc_Q_e ()
+     call solv_energy_el ()     ! no comm
+     call Q_dealloc ()          ! no comm, idempotent
   endif
 
   if (calc_Pol_centers()) then
@@ -732,8 +793,12 @@ subroutine main_scf()
 #endif
   end if
 
+  ! Write final calculated energies
+  call say ("write final calculated energies")
   call write_energies (output_unit)
-  if (output_main_scf) call write_energies (stdout_unit)
+  if (comm_rank() == 0) then
+     if (output_main_scf) call write_energies (stdout_unit)
+  endif
   call get_energy (tot=tot_en)
 
   ! Write to trace unit to show progress of calculation
@@ -809,11 +874,27 @@ subroutine main_scf()
 
 contains
 
+  function store_now_p (loop, save_interval) result (yes)
+    implicit none
+    integer, intent (in) :: loop, save_interval
+    logical :: yes
+    ! *** end of interface ***
+
+    if (save_interval /= 0) then
+       yes = mod (loop, save_interval) == 0
+    else
+       yes = .false.
+    endif
+  end function store_now_p
+
 #ifdef WITH_SCFCONTROL
   subroutine write_scfcontrol()
     !
     ! Purpose: write  variables that can  be changed at each  cycle to
-    ! file.
+    ! file.   This  function  when  executed  in  parallel,  does  not
+    ! necessarily try writing to  the same file. The outfile() returns
+    ! a path  to a  scratch directory for  slaves, different  for each
+    ! worker.
     !
     ! To avoid  warning messages due to spurious  modifications of the
     ! scf control  data caused by the finite  accuracy achievable with
@@ -841,27 +922,22 @@ contains
   subroutine read_scfcontrol (warning)
     !
     ! Purpose: read variables  that can be changed at  each cycle from
-    ! file
+    ! file. FIXME:  as is it looks  like each worker  would be reading
+    ! different files as  outfile() points to scratch for  all but the
+    ! rank-0 worker.
     !
-    use input_module
+    use input_module, only: input_open, input_close
     logical, optional, intent (in) :: warning
     !** End of interface ***************************************
 
     ! not really an output file, but happens to reside in output directory:
     call input_open (trim (outfile ("scfcontrol")))
 
-    if (present (warning)) then
-       call convergence_read_scfcontrol (warning, new_trace_header)
-       call options_read_scfcontrol (warning)
-       call mixing_read_scfcontrol (warning)
-       call fermi_read_scfcontrol (warning, new_trace_header, update_scfcontrol)
-    else
-       call convergence_read_scfcontrol (new_trace_format=new_trace_header)
-       call options_read_scfcontrol()
-       call mixing_read_scfcontrol()
-       call fermi_read_scfcontrol (new_trace_format=new_trace_header, &
-            new_scfcontrol_data=update_scfcontrol)
-    endif
+    call convergence_read_scfcontrol (warning, new_trace_header)
+    call options_read_scfcontrol (warning)
+    call mixing_read_scfcontrol (warning)
+    call fermi_read_scfcontrol (warning, new_trace_header, update_scfcontrol)
+
     call input_close()
   end subroutine read_scfcontrol
 
@@ -874,7 +950,6 @@ contains
     ! file.
     !
     ! INTENT (IN)
-    ! character (len=*) :: data_dir
     ! character (len=*) :: fit_file, scf_file, ham_file, eig_file
     !
     implicit none
@@ -931,13 +1006,13 @@ contains
     ! SCF cycle and resets the SCF loop counter accordingly.
     !
     ! INTENT (IN)
-    ! character (len=*) :: data_dir
     ! character (len=*) :: rec_file
     ! INTENT (OUT)
     ! integer (i4_kind) :: loop
     ! real   (r8_kind) :: tot_en
     ! logical          :: eof (== etot_recovered)
-    ! ------- Declaraction of formal parameters ----------------
+    use occupation_module, only: eigenstates_recover
+    implicit none
     integer (i4_kind), intent (in) :: recover_mode
     integer (i4_kind), intent (in) :: n_vir
     integer (i4_kind), intent (out) :: loop
@@ -946,9 +1021,9 @@ contains
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
-    real (r8_kind)                :: energy(1)
+    real (r8_kind) :: energy(1)
 
-    ! recovery may  fail, to indicate  that the values of  output args
+    ! Recovery may  fail, to indicate  that the values of  output args
     ! are somehwat arbitrary this will be set to true:
     eof = .false.
 
@@ -956,7 +1031,7 @@ contains
        call readwriteblocked_startread (recfile (frg_file), th, variable_length=.true.)
        call eigenstates_recover (n_vir, th)
 
-       ! no data to recover tot_en from:
+       ! No data to recover tot_en from:
        eof = .true.
 
        !
@@ -968,6 +1043,7 @@ contains
 
     call readwriteblocked_startread (recfile (rec_file), th, variable_length=.true.)
     call fit_coeff_recover (th)
+    ASSERT(comm_same(options_reset_scfcycle()))
     call fit_coeff_normalize (spin_coeff=options_reset_scfcycle())
 
     call convergence_state_recover (th)
@@ -978,13 +1054,12 @@ contains
     case (recover_fitcoeff)
        if (xcmode == xcmode_model_density .or. &
             xcmode == xcmode_extended_mda) then
-        if (comm_parallel()) then
-          call say ("fit_coeff_send during recover")
-          call fit_coeff_send()
-        endif
+          call say ("fit_coeff_sndrcv during recover")
+          call fit_coeff_sndrcv (ICHFIT) ! FIXME: redundant?
           call say ("XC(MDA) coefficients re-computed during recover")
           call start_timer (timer_scf_xc)
-          call build_xcmda_main (.false.)
+          ABORT("SPMD?")
+          call xcmda_build (.false.)
           call stop_timer (timer_scf_xc)
        endif
 
@@ -995,10 +1070,8 @@ contains
     case (recover_scfstate)
        if (xcmode == xcmode_model_density .or. &
             xcmode == xcmode_extended_mda) then
-        if (comm_parallel()) then
-          call say ("fit_coeff_send during recover")
-          call fit_coeff_send()
-        endif
+          call say ("fit_coeff_sndrcv during recover")
+          call fit_coeff_sndrcv (ICHFIT) ! FIXME: redundant?
        endif
        call xcmda_coeff_recover (th)
        call xc_hamiltonian_recover (th)
@@ -1031,27 +1104,42 @@ contains
           write (output_unit, '(4es20.13)') energy(1)
        endif
     endif
+    ! Should return the same values everywhere:
+    ASSERT(comm_same(loop))
+    ASSERT(comm_same(tot_en))
+    ASSERT(comm_same(etot_recovered))
   end subroutine do_recover
 
 
-  subroutine do_fitcoeff_store
+  subroutine do_fitcoeff_store (store_now, mode, tot_en)
     !
-    ! Purpose: saves the information for the "saved_fitcoeff" file.
+    ! Purpose:   saves  the   information  for   the  "saved_fitcoeff"
+    ! file. NOOP on slaves.
     !
     ! INTENT (IN)
-    ! logical          :: store_now
     ! integer (i4_kind) :: loop
-    ! character (len=*) :: data_dir, fit_file
-    ! INTENT (OUT)
-    ! type (tape_handler) :: th
+    ! character (len=*) :: fit_file
+    use comm, only: comm_rank
+    implicit none
+    logical, intent (in) :: store_now
+    integer (i4_kind), intent (in), optional :: mode
+    real (r8_kind), intent (in), optional :: tot_en
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
+
+    if (comm_rank() /= 0) return
+
     if (store_now) then
        call readwriteblocked_startwrite (recfile (fit_file), th, variable_length=.true.)
        call fit_coeff_store (th)
-       call convergence_state_store (th)
+       ! Present when called from do_final_store():
+       call convergence_state_store (th, mode=mode)
        call mixing_state_store (loop, th)
+       ! Present when called from do_final_store():
+       if (present (tot_en)) then
+          call readwriteblocked_write ([tot_en], th)
+       endif
        call readwriteblocked_stopwrite (th)
     else
        ! Temporily saves  all data which might be  modified before the
@@ -1061,26 +1149,37 @@ contains
   end subroutine do_fitcoeff_store
 
 
-  subroutine do_scfstate_store
+  subroutine do_scfstate_store (store_now, mode, tot_en)
     !
-    ! Purpose: saves the information for the "saved_scfstate" file.
+    ! Purpose:   saves  the   information  for   the  "saved_scfstate"
+    ! file. NOOP on slaves.
     !
     ! INTENT (IN)
-    ! logical          :: store_now
     ! integer (i4_kind) :: loop
-    ! character (len=*) :: data_dir, fit_file
-    ! INTENT (OUT)
-    ! type (tape_handler) :: th
+    ! character (len=*) :: fit_file
+    use comm, only: comm_rank
+    implicit none
+    logical, intent (in) :: store_now
+    integer (i4_kind), intent (in), optional :: mode
+    real (r8_kind), intent (in), optional :: tot_en
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
+
+    if (comm_rank() /= 0) return
+
     if (store_now) then
        call readwriteblocked_startwrite (recfile (scf_file), th, variable_length=.true.)
        call fit_coeff_store (th)
-       call convergence_state_store (th)
+       ! Present when called from do_final_store():
+       call convergence_state_store (th, mode=mode)
        call mixing_state_store (loop, th)
        call xcmda_coeff_store (th)
        call xc_hamiltonian_store (th)
+       ! Present when called from do_final_store():
+       if (present (tot_en)) then
+          call readwriteblocked_write ([tot_en], th)
+       endif
        call readwriteblocked_stopwrite (th)
     else
        ! Temporily saves  all data which might be  modified before the
@@ -1090,55 +1189,65 @@ contains
   end subroutine do_scfstate_store
 
 
-  subroutine do_ksmatrix_store
+  subroutine do_ksmatrix_store (store_now, mode)
     !
-    ! Purpose: saves the information for the "saved_ksmatrix" file.
+    ! Purpose:   saves  the   information  for   the  "saved_ksmatrix"
+    ! file. Does nothing on the slave workers.
     !
     ! INTENT (IN)
-    ! logical          :: store_now
     ! integer (i4_kind) :: loop
-    ! character (len=*) :: data_dir, fit_file
-    ! INTENT (OUT)
-    ! type (tape_handler) :: th
+    ! character (len=*) :: fit_file
+    use comm, only: comm_rank
+    implicit none
+    logical, intent (in) :: store_now
+    integer (i4_kind), intent (in), optional :: mode
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
 
+    if (comm_rank() /= 0) return
+
     if (store_now) then
        call readwriteblocked_startwrite (recfile (ham_file), th, variable_length=.true.)
        call fit_coeff_store (th)
-       call convergence_state_store (th)
+       ! Present when called from do_final_store():
+       call convergence_state_store (th, mode=mode)
        call mixing_state_store (loop, th)
        call hamiltonian_store (th)
        call readwriteblocked_stopwrite (th)
     endif
   end subroutine do_ksmatrix_store
 
-  subroutine do_eigenvec_store (n_vir)
+  subroutine do_eigenvec_store (store_now, n_vir, mode)
     !
-    ! Purpose: saves the information for the "saved_eigenvec" file.
+    ! Purpose:   saves  the   information  for   the  "saved_eigenvec"
+    ! file. Does nothing on slaves.
     !
     ! INTENT (IN)
-    ! logical          :: store_now
     ! integer (i4_kind) :: loop
-    ! character (len=*) :: data_dir, fit_file
-    ! INTENT (OUT)
-    ! type (tape_handler) :: th
-    ! ---- Declaration of formal parameters --------------------
+    ! character (len=*) :: fit_file
+    use comm, only: comm_rank
+    use occupation_module, only: eigenstates_store
+    implicit none
+    logical, intent (in) :: store_now
     integer (i4_kind), intent (in) :: n_vir
+    integer (i4_kind), intent (in), optional :: mode
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
 
+    if (comm_rank() /= 0) return
+
+    ! Mode present when called from do_final_store().
     if (store_now) then
        call readwriteblocked_startwrite (recfile (eig_file), th, variable_length=.true.)
-       call fit_coeff_store (th)
-       call convergence_state_store (th)
-       call mixing_state_store (loop, th)
-       if (save_eigenvec_all) then
-          call eigenstates_store (th=th)
+       call fit_coeff_store (th, mode=mode)
+       call convergence_state_store (th, mode=mode)
+       call mixing_state_store (loop, th, mode=mode)
+       if (options_save_eigenvec_all()) then
+          call eigenstates_store (th=th, mode=mode)
        else
-          call eigenstates_store (n_vir, th=th)
+          call eigenstates_store (n_vir, th=th, mode=mode)
        end if
        call readwriteblocked_stopwrite (th)
     else
@@ -1147,7 +1256,7 @@ contains
        call fit_coeff_store (mode=recover_eigenvec)
        call convergence_state_store (mode=recover_eigenvec)
        call mixing_state_store (loop, mode=recover_eigenvec)
-       if (save_eigenvec_all) then
+       if (options_save_eigenvec_all()) then
           call eigenstates_store (mode=recover_eigenvec)
        else
           call eigenstates_store (n_vir, mode=recover_eigenvec)
@@ -1163,32 +1272,38 @@ contains
     !
     ! INTENT (IN)
     ! real   (r8_kind) :: tot_en
-    ! character (len=*) :: data_dir
     ! character (len=*) :: fit_file, scf_file
+    use comm, only: comm_rank
+    implicit none
     !** End of interface ***************************************
 
     type (readwriteblocked_tapehandle) :: th
 
-    if (save_fitcoeff) then
+    if (comm_rank() /= 0) return
+
+    ! FIXME: this might be a dead code, is it ever used?
+    if (options_save_fitcoeff()) then
        call readwriteblocked_startwrite (recfile (fit_file), th, &
             variable_length=.true., append=.true.)
-       call readwriteblocked_write ((/tot_en/), th)
+       call readwriteblocked_write ([tot_en], th)
        call readwriteblocked_stopwrite (th)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
-          write (output_unit, '(4es20.13)') (/tot_en/)
+          write (output_unit, '(4es20.13)') tot_en
        endif
     endif
-    if (save_scfstate) then
+
+    ! This one is used regualrly:
+    if (options_save_scfstate()) then
        call readwriteblocked_startwrite (recfile (scf_file), th, &
             variable_length=.true., append=.true.)
-       call readwriteblocked_write ((/tot_en/), th)
+       call readwriteblocked_write ([tot_en], th)
        call readwriteblocked_stopwrite (th)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
-          write (output_unit, '(4es20.13)') (/tot_en/)
+          write (output_unit, '(4es20.13)') tot_en
        endif
     endif
   end subroutine store_total_energy
@@ -1200,123 +1315,74 @@ contains
     ! not already done by do_<type>_store).
     !
     ! INTENT (IN)
-    ! integer (i4_kind) :: loop, save_interval
+    ! integer (i4_kind) :: loop
     ! real   (r8_kind) :: tot_en
-    ! character (len=*) :: data_dir
     ! character (len=*) :: fit_file, scf_file, ham_file, eig_file
-    ! ---- Declaration of formal parameters --------------------
+    use comm, only: comm_rank
+    use occupation_module, only: eigenstates_store
+    implicit none
     integer (i4_kind), intent (in) :: n_vir
     !** End of interface ***************************************
 
-    type (readwriteblocked_tapehandle) :: th
+    integer :: save_interval
     logical :: stored_curr, stored_prev
 
-    if (save_interval /= 0) then
-       stored_curr = mod (loop, save_interval) == 0
-       stored_prev = mod (loop-1, save_interval) == 0
-    else
-       stored_curr = .false.
-       stored_prev = .false.
-    endif
+    if (comm_rank() /= 0) return
+
+    save_interval = options_save_interval()
+
+    stored_curr = store_now_p (loop, save_interval)
+    stored_prev = store_now_p (loop - 1, save_interval)
 
     ! Calling convergence_state_store with mode=recover_nothings means
     ! that   no    data   has    been   saved   previously    by   any
     ! convergence_state_store command but  the kept convergence buffer
     ! from the  read_scfcontrol command are  to be considered  for the
     ! storing operation.
+    !
+    ! Older versions  used to print a warining  that convergence state
+    ! may be incomplete  if the program noticed that  the user changed
+    ! any options by way of scfcontrol file. If you change any options
+    ! during SCF you must know what you are doing.
 
-    if ((save_fitcoeff .and. .not. stored_curr) .or. &
-         (options_save_fitcoeff() .and. .not. save_fitcoeff)) then
-       call readwriteblocked_startwrite (recfile (fit_file), th, variable_length=.true.)
-       call fit_coeff_store (th)
-       if (save_fitcoeff) then
-          call convergence_state_store (th, recover_fitcoeff) ! reset mode
-       else
-          call convergence_state_store (th, recover_nothing) ! no stored data
-       endif
-       call mixing_state_store (loop, th)
-       call readwriteblocked_write ((/tot_en/), th)
-       call readwriteblocked_stopwrite (th)
+    if ((options_save_fitcoeff() .and. .not. stored_curr)) then
+       call do_fitcoeff_store (store_now=.true., &
+            mode=recover_fitcoeff, tot_en=tot_en)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
-          write (output_unit, '(4es20.13)') (/tot_en/)
-       endif
-       if (.not. save_fitcoeff) then
-          write (output_unit, '(/a)') 'Convergence State Data stored on file "' &
-               // fit_file // '" may be inconsistent'
+          write (output_unit, '(4es20.13)') tot_en
        endif
     endif
 
-    if ((save_scfstate .and. .not. stored_curr) .or. &
-         (options_save_scfstate() .and. .not. save_scfstate)) then
-       call readwriteblocked_startwrite (recfile (scf_file), th, variable_length=.true.)
-       call fit_coeff_store (th)
-       if (save_scfstate) then
-          call convergence_state_store (th, recover_scfstate) ! reset mode
-       else
-          call convergence_state_store (th, recover_nothing) ! no stored data
-       endif
-       call mixing_state_store (loop, th)
-       call xcmda_coeff_store (th)
-       call xc_hamiltonian_store (th)
-       call readwriteblocked_write ((/tot_en/), th)
-       call readwriteblocked_stopwrite (th)
+    if ((options_save_scfstate() .and. .not. stored_curr)) then
+       call do_scfstate_store (store_now=.true., &
+            mode=recover_scfstate, tot_en=tot_en)
        if (output_data_saved) then
           write (output_unit, '(/ a     )') 'Stored total energy :'
           write (output_unit, '(  a     )') 'tot_en'
-          write (output_unit, '(4es20.13)') (/tot_en/)
-       endif
-       if (.not. save_scfstate) then
-          write (output_unit, '(/a)') 'Convergence State Data stored on file "' &
-               // scf_file // '" may be inconsistent'
+          write (output_unit, '(4es20.13)') tot_en
        endif
     endif
 
-    if ((save_ksmatrix .and. .not. stored_curr) .or. &
-         (options_save_ksmatrix() .and. .not. save_ksmatrix)) then
-       call readwriteblocked_startwrite (recfile (ham_file), th, variable_length=.true.)
-       call fit_coeff_store (th)
-       call convergence_state_store (th, recover_nothing)
-       call mixing_state_store (loop, th)
-       call hamiltonian_store (th)
-       call readwriteblocked_stopwrite (th)
+    if ((options_save_ksmatrix() .and. .not. stored_curr)) then
+       call do_ksmatrix_store (store_now=.true., mode=recover_nothing)
     endif
 
-    if ((save_eigenvec .and. .not. stored_prev) .or. &
-         (options_save_eigenvec() .and. .not. save_eigenvec)) then
-       call readwriteblocked_startwrite (recfile (eig_file), th, variable_length=.true.)
-       if (save_eigenvec) then
-          call fit_coeff_store (th, recover_eigenvec)           ! reset mode
-          call convergence_state_store (th, recover_eigenvec)   ! reset mode
-          call mixing_state_store (loop-1, th, recover_eigenvec) ! reset mode
-          if (save_eigenvec_all) then
-             call eigenstates_store (th=th, mode=recover_eigenvec)
-          else
-             call eigenstates_store (n_vir, th, recover_eigenvec)   ! reset mode
-          end if
-       else
-          call fit_coeff_store (th)                         ! no stored data
-          call convergence_state_store (th, recover_nothing) ! no stored data
-          call mixing_state_store (loop-1, th)               ! no stored data
-          if (save_eigenvec_all) then
-             call eigenstates_store (th=th)
-          else
-             call eigenstates_store (n_vir, th)                 ! no stored data
-          end if
-       endif
-       call readwriteblocked_stopwrite (th)
-       if (.not. save_eigenvec) then
-          write (output_unit, '(/a)') 'Data stored on file "' &
-               // eig_file // '" may be inconsistent'
-       endif
+    if ((options_save_eigenvec() .and. .not. stored_prev)) then
+       call do_eigenvec_store (store_now=.true., n_vir=n_vir, &
+            mode=recover_eigenvec)
     endif
 
     if (options_save_as_fragment()) then
-       call say ("do_save_as_fragment")
-       call readwriteblocked_startwrite (recfile (frg_file), th, variable_length=.true.)
-       call eigenstates_store (th=th)
-       call readwriteblocked_stopwrite (th)
+       block
+          type (readwriteblocked_tapehandle) :: th
+
+          call say ("do_save_as_fragment")
+          call readwriteblocked_startwrite (recfile (frg_file), th, variable_length=.true.)
+          call eigenstates_store (th=th)
+          call readwriteblocked_stopwrite (th)
+       end block
     endif
     ! Deallocate  the temporarily kept  convergence buffers  and reset
     ! the mixing state buffers (if required)
@@ -1326,7 +1392,15 @@ contains
   end subroutine do_final_store
 
   subroutine write_trace_header
+    use comm, only: comm_rank
+    implicit none
+    ! *** end of interface ***
+
     integer (i4_kind) :: trace_bgn, trace_end
+
+    ! FIXME: some of the inquiry functions, notably
+    ! occupation_spindiff() fail on slaves:
+    if (comm_rank() /= 0) return
 
     trace_line = " "
     trace_end = 0
@@ -1444,8 +1518,17 @@ contains
 
   end subroutine write_trace_header
 
-  subroutine write_trace_item
-     integer (i4_kind) :: trace_bgn, trace_end
+  subroutine write_trace_item ()
+    use comm, only: comm_rank
+    use occupation_module, only: occupation_spindiff, occupation_jz
+    implicit none
+    ! *** end of interface ***
+
+    integer (i4_kind) :: trace_bgn, trace_end
+
+    ! FIXME: some of the inquiry functions, notably
+    ! occupation_spindiff() fail on slaves:
+    if (comm_rank() /= 0) return
 
      trace_end = 0
      ! loop
@@ -1483,7 +1566,7 @@ contains
      endif
      if (symmetry_data_n_spin() == 2) then
         ! spin difference
-        spin_diff = occupation_spindiff()
+        spin_diff = occupation_spindiff() ! FIXME: fails on slaves
         trace_bgn = trace_end + 1
         trace_end = trace_end + trace_width(7)
         write (trace_line(trace_bgn:trace_end), trace_format(7)) spin_diff

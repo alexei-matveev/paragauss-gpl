@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,11 +23,11 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module response_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module generates the ground state data which
   !           is needed for calculation of dynamic linear response
@@ -48,11 +48,11 @@ module response_module
   !  Date: 10/97
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: HH
   ! Date:   11/98
@@ -63,7 +63,7 @@ module response_module
   !   differences -> new version  response_write_eigenval_occ()
   ! - reorganization of the transformation of Coulomb integrals
   !   to MO basis in response_trans_Clb_integrals()
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: HH
   ! Date:   3/99
@@ -74,7 +74,7 @@ module response_module
   !   now dump of <rho*fxc> and <vxc> possible.
   !   Note: rho & Vxc may be read in from file
   !         -> allows finite difference test on matrix elements
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   ! Author: HH
   ! Date:   7/99
@@ -84,19 +84,19 @@ module response_module
   !               ttfs_hh_V20alpha-version was merged into V2.1
   !               it was easier to completely overwrite that version
   !               and to redo the changes)
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: HH
   ! Date:   10/99
   ! Description: Add treatment of hyperpolarizabilities
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 # include "def.h"
   use type_module ! type specification parameters
@@ -124,20 +124,19 @@ module response_module
   use density_calc_module, only: density_calc_setup,density_calc_nl
   use unique_atom_module
   use symmetry_data_module
-  USE init_tddft_module,   ONLY: init_tddft_start
-  USE tddft_diag,          ONLY: diag_init
+  USE init_tddft_module, only: init_tddft_start
+  USE tddft_diag, only: diag_init
   USE phys_param_module
-  use resp_util_module
   use exchange
   use debug
 
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: response_read_input
   public :: response_write_input
   public :: response_input_bcast
@@ -168,9 +167,9 @@ module response_module
 
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------- Physical constants etc. ------------------------
   ! conversion factor from eV in hartree atomic units from NST
@@ -458,8 +457,8 @@ module response_module
   FPP_TIMER_DECL(all)
   !!#endif
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -470,11 +469,11 @@ contains
     !           what kind of interface data for the response
     !           program shall be calculated.
     !** End of interface **************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     USE global_module, ONLY: gl_eig_crite
     integer(kind=i4_kind) :: unit,status !!$,iounit
 !!$    character(len=255)    :: pathname
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! default values
     if (n_spin==2) then
@@ -727,178 +726,185 @@ contains
     !
     ! Main routine of this module. Executed by all workers. FIXME: may
     ! need  some  work,  as  it  was previousely  executed  by  master
-    ! only. Controls  PostSCF calculation of data  needed for response
+    ! only. Controls post-SCF calculation  of data needed for response
     ! calculations.
     !
     USE int_send_2c_resp, only: int_send_2c_resp_rewrite
-    USE int_resp_module,  only: int_resp_Clb_3c
-    USE resp_dipole_module
-    USE noRI_module,      only: noRI_2c
+    USE int_resp_module, only: int_resp_Clb_3c
+    USE resp_dipole_module, only: resp_dipole_rewrite
+    USE noRI_module, only: noRI_2c
+    use comm, only: comm_rank, comm_barrier, comm_same
     implicit none
     !** End of interface *****************************************
 
-    real(r8_kind) :: tt
-
-    !------------ Executable code --------------------------------
-
-    ! MASTER:
-
-    if (comm_i_am_master()) then
 #ifdef FPP_TIMERS
-       FPP_TIMER_ZERO(RESPONSE_ALL)
-       FPP_TIMER_ZERO(RESPONSE_SETUP)
-       FPP_TIMER_ZERO(RESPONSE_DIPOL)
-       FPP_TIMER_ZERO(COULOMB_2C)
-       FPP_TIMER_ZERO(XC_2C)
-       FPP_TIMER_ZERO(COULOMB_3C)
-       FPP_TIMER_ZERO(DIAG_PLUS_DVDSON)
-       FPP_TIMER_ZERO(RESPONSE_CLOSE)
+    FPP_TIMER_ZERO(RESPONSE_ALL)
+    FPP_TIMER_ZERO(RESPONSE_SETUP)
+    FPP_TIMER_ZERO(RESPONSE_DIPOL)
+    FPP_TIMER_ZERO(COULOMB_2C)
+    FPP_TIMER_ZERO(XC_2C)
+    FPP_TIMER_ZERO(COULOMB_3C)
+    FPP_TIMER_ZERO(DIAG_PLUS_DVDSON)
+    FPP_TIMER_ZERO(RESPONSE_CLOSE)
 #endif
-       FPP_TIMER_START(RESPONSE_ALL)
-       FPP_TIMER_START(RESPONSE_SETUP)
-    end if
+    FPP_TIMER_START(RESPONSE_ALL)
+    FPP_TIMER_START(RESPONSE_SETUP)
 
     call response_setup()
 
-    if(comm_i_am_master()) then
+    call write_to_trace_unit("Entering response part")
 
-       call write_to_trace_unit("Entering response part")
+    call start_timer(timer_resp)
 
-       call start_timer(timer_resp)
+    ! *** Setup and Preparations ***
+    call start_timer(timer_resp_preparations)
 
-       ! *** Setup and Preparations ***
-       call start_timer(timer_resp_preparations)
+    call stop_timer(timer_resp_preparations)
 
-       call stop_timer(timer_resp_preparations)
+    !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    !%%% do calculate the integrals for LINEAR response only if %%%
+    !%%% NO hyperpolarizability calculation is requested        %%%
+    !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       !%%% do calculate the integrals for LINEAR response only if %%%
-       !%%% NO hyperpolarizability calculation is requested        %%%
-       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!!$       if(.NOT. (beta_A2 .or. beta_C) ) then
+    ! write header-interface-file with information for response program
+    call write_to_output_units("response_main: response_write_header")
+    call start_timer(timer_resp_preparations)
+    call start_timer(timer_resp_header)
 
-       ! write header-interface-file with information for response program
-       call write_to_output_units("response_main: response_write_header")
-       call start_timer(timer_resp_preparations)
-       call start_timer(timer_resp_header)
+    ! This writes  a file  to the temp  directory that will  be parsed
+    ! later in the  same run. FIXME: pass info  on a more conventional
+    ! way.
+    if (comm_rank() == 0) then
        call response_write_header()
-       call stop_timer(timer_resp_header)
+    endif
+    call comm_barrier()         ! slaves should probably wait
+    call stop_timer(timer_resp_header)
 
-       ! write MO eigenvalues and occupation numbers to a tape
-       call write_to_output_units("response_main: response_write_eigenval_occupation")
+    ! Write MO eigenvalues and occupation numbers to "eg_oc" tapes:
+    call write_to_output_units("response_main: response_write_eigenval_occupation")
+    if (comm_rank() == 0) then
        call response_write_eigenval_occ()
-       call stop_timer(timer_resp_preparations)
+    endif
+    call comm_barrier()         ! slaves should probably wait
+    call stop_timer(timer_resp_preparations)
 
-       FPP_TIMER_STOP (RESPONSE_SETUP)
-       FPP_TIMER_START(RESPONSE_DIPOL)
+    FPP_TIMER_STOP (RESPONSE_SETUP)
+    FPP_TIMER_START(RESPONSE_DIPOL)
 
-       ! *** Dipoles ***
-       ! do we have to produce the tape with transition dipole moments ?
-       if(calc_osc_strength) then
-          call write_to_trace_unit  ("Rewrite tapes with transition dipole moments")
-          call write_to_output_units("response_main: response_rewrite_dipoletape")
-          call start_timer(timer_resp_dipole)
-!!          if (comm_i_am_master()) call response_rewrite_dipoletape()
-          if (comm_i_am_master()) call resp_dipole_rewrite()
-          call stop_timer(timer_resp_dipole)
-       end if
+    ! *** Dipoles ***
+    ! do we have to produce the tape with transition dipole moments ?
+    ASSERT(comm_same(calc_osc_strength))
+    if (calc_osc_strength) then
+       call write_to_trace_unit  ("Rewrite tapes with transition dipole moments")
+       call write_to_output_units("response_main: response_rewrite_dipoletape")
+       call start_timer(timer_resp_dipole)
+       if (comm_rank() == 0) then
+          call resp_dipole_rewrite() ! serial
+       endif
+       call comm_barrier()      ! slaves should probably wait
+       call stop_timer(timer_resp_dipole)
+    end if
 
-       FPP_TIMER_STOP(RESPONSE_DIPOL)
+    FPP_TIMER_STOP(RESPONSE_DIPOL)
 
-       ! *** numerical 2-index-integrals ***
-       ! user input: do we have to calculate the numerical 2 index integrals ?
+    ! *** numerical 2-index-integrals ***
+    ! user input: do we have to calculate the numerical 2 index integrals ?
 
-       FPP_TIMER_START(RESPONSE_SETUP)
+    FPP_TIMER_START(RESPONSE_SETUP)
 
-       call write_to_trace_unit("Calculate numerical 2 index integrals")
-       call start_timer(timer_resp_2index)
+    call write_to_trace_unit("Calculate numerical 2 index integrals")
+    call start_timer(timer_resp_2index)
 
-       ! setup the grid and divide into parts and send those to slaves
-       call write_to_output_units("response_main: grid_main")
-       call grid_main (post_scf=.true.)
+    ! setup the grid and divide into parts and send those to slaves
+    call write_to_output_units("response_main: grid_main")
+    call grid_main (post_scf=.true.)
 
-       FPP_TIMER_STOP (RESPONSE_SETUP)
-       FPP_TIMER_START(COULOMB_2C)
+    FPP_TIMER_STOP (RESPONSE_SETUP)
+    FPP_TIMER_START(COULOMB_2C)
 
-       ! read <f_k|1/(r-r')|f_l> chargefit overlap integrals,
-       ! and rewrite them to response interface file
-       if (.not. saved_2c_Q) then
-          call write_to_output_units("response_main: int_send_2c_resp_rewrite")
-          call int_send_2c_resp_rewrite()
-       end if
+    ! read <f_k|1/(r-r')|f_l> chargefit overlap integrals,
+    ! and rewrite them to response interface file
+    ASSERT(comm_same(saved_2c_Q))
+    if (.not. saved_2c_Q) then
+       call write_to_output_units("response_main: int_send_2c_resp_rewrite")
+       call int_send_2c_resp_rewrite()
+    end if
 
-       FPP_TIMER_STOP (COULOMB_2C)
-       FPP_TIMER_START(XC_2C)
+    FPP_TIMER_STOP (COULOMB_2C)
+    FPP_TIMER_START(XC_2C)
 
-       if (.not. saved_XC) then !! .and. (.not. noRI)) then
-          call write_to_output_units("response_main: response_calc_2index_int_v2")
-          call response_calc_2index_int_v2()
-!!          call noRI_2c(X_KIND,C_KIND)
-       end if
+    ASSERT(comm_same(saved_XC))
+    if (.not. saved_XC) then !! .and. (.not. noRI)) then
+       call write_to_output_units("response_main: response_calc_2index_int_v2")
+       call response_calc_2index_int_v2()
+       !!          call noRI_2c(X_KIND,C_KIND)
+    end if
 
-       call stop_timer(timer_resp_2index)
+    call stop_timer(timer_resp_2index)
 
-       ! Clean up stuff that was needed for numerical 2/3-index integrals
-       call write_to_output_units("response_main: shutdown orbital_module")
-       ! shutdown orbital_module
-       call orbital_free(orbs_ob)
-       call orbital_shutdown()
+    ! Clean up stuff that was needed for numerical 2/3-index integrals
+    call write_to_output_units("response_main: shutdown orbital_module")
+    ! shutdown orbital_module
+    call orbital_free(orbs_ob)
+    call orbital_shutdown()
 
-       FPP_TIMER_STOP (XC_2C)
-       FPP_TIMER_START(COULOMB_3C)
+    FPP_TIMER_STOP (XC_2C)
+    FPP_TIMER_START(COULOMB_3C)
 
-       ! *** Transformation of Coulomb integrals ***
-       ! user input: do we have to calculate the analytical 3-index integrals
-       !             <phi_i phi_s|V_Clb|f_k> ?
-       if (.not. saved_3c_Q) then
-          call write_to_trace_unit("Transform 3 index Coulomb integrals")
-          call start_timer(timer_resp_Coulomb)
+    ! *** Transformation of Coulomb integrals ***
+    ! user input: do we have to calculate the analytical 3-index integrals
+    !             <phi_i phi_s|V_Clb|f_k> ?
+    ASSERT(comm_same(saved_3c_Q))
+    if (.not. saved_3c_Q) then
+       call write_to_trace_unit("Transform 3 index Coulomb integrals")
+       call start_timer(timer_resp_Coulomb)
 
-          call write_to_output_units("response_main: int_resp_Clb_3c")
+       call write_to_output_units("response_main: int_resp_Clb_3c")
 
-          call int_resp_Clb_3c
-          call stop_timer(timer_resp_Coulomb)
-       end if
+       call int_resp_Clb_3c()
+       call stop_timer(timer_resp_Coulomb)
+    end if
 
-       !! SB: THE MAIN CALCULATION IS HERE
-       if (comm_i_am_master()) then
-          call write_to_output_units("response_main: main response calculations (START)")
-       end if
+    ! SB: THE MAIN CALCULATION IS HERE
+    call write_to_output_units("response_main: main response calculations (START)")
 
-       FPP_TIMER_STOP (COULOMB_3C)
-       FPP_TIMER_START(DIAG_PLUS_DVDSON)
+    FPP_TIMER_STOP (COULOMB_3C)
+    FPP_TIMER_START(DIAG_PLUS_DVDSON)
 
-       call init_tddft_start()
+    call init_tddft_start()
 
-       call diag_init()
+    call diag_init()
 
-       if (comm_i_am_master()) then
-          call write_to_output_units("response_main: main response calculations (FINISH)")
-       end if
+    call write_to_output_units &
+         ("response_main: main response calculations (FINISH)")
 
-       FPP_TIMER_STOP (DIAG_PLUS_DVDSON)
-       FPP_TIMER_START(RESPONSE_CLOSE)
 
-       ! clean up: deallocate leftovers (module private objects etc...)
-       call write_to_output_units("response_main: shutdown response_module")
-       call response_shutdown()
+    FPP_TIMER_STOP (DIAG_PLUS_DVDSON)
+    FPP_TIMER_START(RESPONSE_CLOSE)
 
-       ! do the timing (we always do timing since the response part will
-       ! be the most time consuming part of the whole calculation)
-       call write_to_output_units("response_main: call timer_print_response")
-       call stop_timer(timer_resp)
+    ! clean up: deallocate leftovers (module private objects etc...)
+    call write_to_output_units("response_main: shutdown response_module")
+    call response_shutdown()
 
-       ! Shutdown the grid which was distributed among processors
-       call write_to_output_units("response_main: grid_close")
-       call grid_close (.false.)
+    ! do the timing (we always do timing since the response part will
+    ! be the most time consuming part of the whole calculation)
+    call write_to_output_units("response_main: call timer_print_response")
+    call stop_timer(timer_resp)
 
-       ! now we are finished
-       call write_to_trace_unit  ("Exit response part")
-       call write_to_output_units("response_main: done")
-       FPP_TIMER_STOP(RESPONSE_CLOSE)
-       FPP_TIMER_STOP(RESPONSE_ALL)
+    ! Shutdown the grid which was distributed among processors
+    call write_to_output_units("response_main: grid_close")
+    call grid_close (.false.)
 
-       !! TIMER OUTPUT
+    ! now we are finished
+    call write_to_trace_unit  ("Exit response part")
+    call write_to_output_units("response_main: done")
+    FPP_TIMER_STOP(RESPONSE_CLOSE)
+    FPP_TIMER_STOP(RESPONSE_ALL)
+
+#ifdef FPP_TIMERS
+    ! TIMER OUTPUT
+    block
+       real (r8_kind) :: tt
        tt = FPP_TIMER_VALUE(RESPONSE_SETUP)
        WRITE (*,*) "[m] RESPONSE TIMER "
        WRITE (*,*) "   * SETUP      ", tt
@@ -916,9 +922,8 @@ contains
        WRITE (*,*) "   * CLOSE      ", tt
        tt = FPP_TIMER_VALUE(RESPONSE_ALL)
        WRITE (*,*) "   * SUMMARY    ", tt
-
-    end if !!i_am_master_
-
+    end block
+#endif
   end subroutine response_main
   !*************************************************************
 
@@ -966,22 +971,20 @@ contains
 
   !*************************************************************
   subroutine response_setup()
-    !  Purpose: For master and every slave:
-    !  Setup module private variables needed in several subroutines
-    !------------ Modules used ------------------- ---------------
+    !
+    ! For  master  and every  slave:  Setup  module private  variables
+    ! needed in several subroutines.
+    !
     use ch_response_module, only: dimension_of_fit_ch
+    use resp_util_module, only: resp_util_set_level_index, &
+         resp_util_upck_level_index
     implicit none
     !** End of interface *****************************************
-    integer(kind=i4_kind)  :: i_ir, status
-    !------------ Executable code --------------------------------
 
-    if(comm_i_am_master() .and. comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_response_setup)
-       call comm_send()
-    end if
+    integer (i4_kind) :: i_ir, status
 
-    ! get suitable vectorlength for this machine
-    vec_length=machineparameters_veclen
+    ! Get suitable vectorlength for this machine
+    vec_length = machineparameters_veclen
 
     ! get symmetry information (from symmetry_data_module)
     n_spin  = ssym%n_spin      ! number of spins
@@ -1063,20 +1066,20 @@ contains
     else
        call resp_util_upck_level_index()
     end if
-
   end subroutine response_setup
   !*************************************************************
 
   !*************************************************************
   subroutine response_write_header()
-    !  Purpose: write header-interface-file with information for
-    !           response program
-    !           Called by master through "response_main()"
-    !------------ Modules used ------------------- ---------------
+    !
+    ! Write  header  interface  file  with  information  for  response
+    ! program.  Called by master through response_main().
+    !
     use echo_input_module
-    use ch_response_module,   only: dimension_of_fit_ch
+    use ch_response_module, only: dimension_of_fit_ch
     use symmetry_data_module, only: symmetry_data_n_irreps
-    use clebsch_gordan,       only: cg=>cg_eliminated, prod_bas
+    use clebsch_gordan, only: cg => cg_eliminated, prod_bas
+    use resp_util_module, only: resp_util_calc_transitions_v2
     implicit none
     !** End of interface *****************************************
 
@@ -1085,32 +1088,37 @@ contains
     integer(kind=i4_kind) :: occ_times_unocc_dim, nmult, nc, ou_dim
     integer(kind=i4_kind) :: i_mlt
     character(6)          :: Xw,Cw
-!!$    logical               :: flag_X, flag_C
-    !------------ Executable code --------------------------------
 
-    io_unit=openget_iounit(status='unknown',&
-         & file=trim(resp_dir)//'/'//trim(header_file))
+    io_unit = openget_iounit (status='unknown', &
+         file= trim (resp_dir) // '/' // trim (header_file))
 
-    n_irrep     = symmetry_data_n_irreps()
+    n_irrep = symmetry_data_n_irreps()
 
-    ! first write number of spins, irreps and chargefit functions
-    ! as namelist "system_data"
-    call start("SYSTEM_DATA","RESPONSE_WRITE_HEADER", io_unit, 1)  ! 1 = echo_level = default
-    call intg ("NUM_SPINS         ",n_spin ,-1)   ! -1 as default value i.e.
-    call intg ("NUM_IRREPS        ",n_irrep,-1)  ! suppress printing
-    do i_irrep = 1,n_irrep
+    ! First write  number of spins, irreps and  chargefit functions as
+    ! namelist  "system_data".  Set  echo level  to  suppress printing
+    ! defaults.  Most values have no meaningful defaults even.
+    call start ("SYSTEM_DATA","RESPONSE_WRITE_HEADER", io_unit, &
+         echo_level_full)
+    call intg ("NUM_SPINS         ", n_spin, -1)
+    call intg ("NUM_IRREPS        ", n_irrep, -1)
+    ! FIXME: this  is not a  standard namelist.  You cannot  have more
+    ! than one entry  with the same name there.  This precludes use of
+    ! standard namelist IO on the reader side!
+    do i_irrep = 1, n_irrep
        nc = dimension_of_fit_ch(i_irrep)
-       call intg("NUM_CHARGEFITFCTS ",nc,-1) ! of "default value"
+       call intg ("NUM_CHARGEFITFCTS ", nc, -1)
     end do
     call stop()
 
-    ! now write the input options for the response calculation as namelist
-    call start("RESPONSE_CONTROL","RESPONSE_WRITE_HEADER", io_unit,1)
+    ! Now  write the  input options  for the  response  calculation as
+    ! namelist
+    call start ("RESPONSE_CONTROL","RESPONSE_WRITE_HEADER", io_unit, &
+         echo_level_full)
 
-    if (n_spin==2) then
-       call word("TARGET            ",    "SS",df_target)
+    if (n_spin == 2) then
+       call word ("TARGET            ", "SS", df_target)
     else
-       call word("TARGET            ",    trim(adjustl(target)),df_target)
+       call word ("TARGET            ", trim (adjustl (target)), df_target)
     end if
 
     if (xalpha_resp ) X_KIND = X_XALPHA
@@ -1157,32 +1165,33 @@ contains
        Cw = "NONE"
     end select
 
-    call strng("EXCHANGE          ", TRIM(Xw),"NONE")
-    call strng("CORRELATION       ", TRIM(Cw),"NONE")
+    call strng("EXCHANGE          ", TRIM (Xw), "NONE")
+    call strng("CORRELATION       ", TRIM (Cw), "NONE")
 
-    call intg ("MAX_ITER          ",  max_iter,    df_max_iter)
-    call flag ("CALC_ALL          ",  calc_all,    df_calc_all)
-    call flag ("LANCZOS           ",  lanczos,     df_lanczos)
-    call flag ("noRI              ",  noRI,        df_noRI)
-    call flag ("S_APP             ",  S_App,       df_S_App)
-    call intg ("CALC_N_LOW        ",  calc_n_low,  df_calc_n_low)
-    call real ("LOWESTeV          ",  LOWESTeV,    df_LOWESTeV)
-    call intg ("MAX_SP_TRANS      ",  max_sp_trans,df_max_sp_trans)
+    call intg ("MAX_ITER          ",  max_iter, df_max_iter)
+    call flag ("CALC_ALL          ",  calc_all, df_calc_all)
+    call flag ("LANCZOS           ",  lanczos, df_lanczos)
+    call flag ("noRI              ",  noRI, df_noRI)
+    call flag ("S_APP             ",  S_App, df_S_App)
+    call intg ("CALC_N_LOW        ",  calc_n_low, df_calc_n_low)
+    call real ("LOWESTeV          ",  LOWESTeV, df_LOWESTeV)
+    call intg ("MAX_SP_TRANS      ",  max_sp_trans, df_max_sp_trans)
 
-    call flag ("NTO               ",  NTO         ,df_NTO)            !!!!!!MH NTO calculations
+    ! MH: NTO calculations
+    call flag ("NTO               ",  NTO, df_NTO)
 
     if (calc_osc_strength) then
-       call flag("CALC_OSC_STR      ",    .true.,.false.)
+       call flag("CALC_OSC_STR      ", .true., .false.)
     else
-       call flag("CALC_OSC_STR      ",   .false.,.false.)
+       call flag("CALC_OSC_STR      ", .false., .false.)
     end if
     call stop()
 
-    ! write the dimension (occupied * unoccupied) for each irrep/spin
-    write (io_unit,'("#   IR C  SPIN  NUMBER OF TRANSITIONS")',iostat=io_stat)
-    ASSERT( io_stat == 0 )
-    write (output_unit,'("#   IR C  SPIN  NUMBER OF TRANSITIONS")',iostat=io_stat)
-    ASSERT( io_stat == 0 )
+    ! Write the dimension (occupied * unoccupied) for each irrep/spin
+    write (io_unit, '("#   IR C  SPIN  NUMBER OF TRANSITIONS")', iostat=io_stat)
+    ASSERT(io_stat==0)
+    write (output_unit, '("#   IR C  SPIN  NUMBER OF TRANSITIONS")', iostat=io_stat)
+    ASSERT(io_stat==0)
 
     i_spin_: do i_spin=1,n_spin
        i_ir_c_: do i_ir_c = 1, n_irrep
@@ -1197,15 +1206,16 @@ contains
                 end do i_mlt_
              end do i_ir_b_
           end do i_ir_a_
-          write (io_unit,'(4X,I2,5X,I2,5X,I5)',iostat=io_stat) i_ir_c, i_spin, ou_dim
+          write (io_unit, '(4X,I2,5X,I2,5X,I5)', iostat=io_stat) &
+               i_ir_c, i_spin, ou_dim
           ASSERT(io_stat==0)
-          write (output_unit,'(4X,I2,5X,I2,5X,I5)',iostat=io_stat) i_ir_c, i_spin, ou_dim
+          write (output_unit, '(4X,I2,5X,I2,5X,I5)', iostat=io_stat) &
+               i_ir_c, i_spin, ou_dim
           ASSERT(io_stat==0)
        end do i_ir_c_
     end do i_spin_
 
     call return_iounit(io_unit)
-
   end subroutine response_write_header
   !*************************************************************
 
@@ -1221,11 +1231,11 @@ contains
     implicit none
     integer(i4_kind) :: n_irrep, n_spin
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: alloc_stat,n_procs,i_proc
     integer(kind=i4_kind) :: n_dim,i_ir,dcm
     real(kind=r8_kind),allocatable :: help_mat(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_procs=comm_get_n_processors()
     do i_proc=2,n_procs
@@ -1267,9 +1277,9 @@ contains
     implicit none
     integer(i4_kind), intent(in) :: n_irrep
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_irrep
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i_irrep = 1,n_irrep
        call comm_init_send(comm_master_host,msgtag_response_2in_send)
@@ -1282,25 +1292,23 @@ contains
 
   !*************************************************************
   subroutine response_write_2index_totape_v2(n_irrep,n_spin,dim_factor)
-    !  Purpose:
-    !  Write 2index matrix row by row to a linear tape.
-    !------------ Modules used ------------------- ---------------
-!   use iounitadmin_module,   only: openget_iounit,returnclose_iounit
+    !
+    ! Write 2index matrix row by row to a linear tape.
+    !
     use io, only: write_buffer
+    use resp_util_module, only: resp_util_fname
     implicit none
     integer(kind=i4_kind), intent(in) :: n_irrep,n_spin,dim_factor
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: i_spin,i_dim,i_ir,idx
 !   integer(kind=i4_kind)             :: io_unit
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i_ir = 1, n_irrep
        do i_spin=1, n_spin
           do i_dim=1, dim_factor
              idx = (i_spin-1)*dim_factor+i_dim
-!            io_unit = openget_iounit(trim(resp_dir)//'/'&
-!                 //resp_util_fname('xc_2c',i_ir,idx),form='unformatted',status='unknown')
              call write_buffer( trim(resp_dir)//'/'//resp_util_fname('xc_2c',i_ir,idx) &
                               , r2_index_matrix_v2(i_ir)%o(:,idx)                      &
                               )
@@ -1314,32 +1322,30 @@ contains
 
   !*************************************************************
   subroutine response_write_eigenval_occ()
-    use symmetry_data_module, only: symmetry_data_n_spin, symmetry_data_n_irreps
-    use clebsch_gordan, only: cg=>cg_eliminated
-    use resp_util_module
-    ! Purpose:
-    ! Write occupation numbers and eigenvalues to an interface
-    ! tape for the response program.
-    ! Note that in the response program only DIFFERENCES
-    !    "(epsilon_i - epsilon_s)"  and  "(f_i - f_s)"
-    ! of eigenvalues "epsilon_i,s" and (possibly fractional)
-    ! occupation numbers "f_i,s" between occupied (index "i")
-    ! and unoccupied (index "s") levels are needed,
-    ! like e.g. in the
+    !
+    ! Write occupation  numbers and  eigenvalues to an  interface tape
+    ! for  the response program.   Note that  in the  response program
+    ! only DIFFERENCES "(epsilon_i -  epsilon_s)" and "(f_i - f_s)" of
+    ! eigenvalues  "epsilon_i,s" and (possibly  fractional) occupation
+    ! numbers  "f_i,s"  between occupied  (index  "i") and  unoccupied
+    ! (index "s") levels are needed, like e.g. in the
     !
     !                     2*(epsilon_i - epsilon_s)*(f_i - f_s)
     ! lambda(is;omega) = ---------------------------------------
     !                      (epsilon_i - epsilon_s)^2 - omega^2
     !
-    ! quantity, where "omega" is the frequency.
-    ! However, the ordering of the difference-meta-index "is"
-    ! is crucial: it has to be the same as for the numerical
-    ! and analytical 3 index integrals calculated elsewhere in
-    ! this module !
-    !------------ Modules used ------------------- ---------------
+    ! quantity, where "omega" is the frequency.  However, the ordering
+    ! of the difference-meta-index  "is" is crucial: it has  to be the
+    ! same  as for  the  numerical and  analytical  3 index  integrals
+    ! calculated elsewhere in this module !
+    !
+    use symmetry_data_module, only: symmetry_data_n_spin, symmetry_data_n_irreps
+    use clebsch_gordan, only: cg => cg_eliminated
+    use resp_util_module, only: min_diff, resp_util_fname, &
+         resp_util_calc_transitions_v2, resp_util_borders
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     integer(kind=i4_kind)   :: io_unit, io_stat
     integer(kind=i4_kind)   :: i_ir_a, i_ir_b, i_spin, i_occ, i_unocc, i_ir_c
     integer(kind=i4_kind)   :: is_counter
@@ -1347,7 +1353,7 @@ contains
     integer(kind=i4_kind)   :: occs, occe, unoccs, unocce
     real(kind=r8_kind)      :: eig_diff, occ_diff
     integer(kind=i4_kind)   :: na, nb, npaa, npab, nmult, i_mlt
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_spin  = symmetry_data_n_spin()
     n_irrep = symmetry_data_n_irreps()
@@ -1410,11 +1416,12 @@ contains
   !*************************************************************
   subroutine response_shutdown
     !  Purpose: Clean up (deallocate private objects etc.)
+    use resp_util_module, only: MO_status, begin_index, end_index
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     ! todo:
@@ -1460,7 +1467,7 @@ contains
     use constants
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: vla, &
          & i_atom,i_fit,i_fit2,&
          & i_vec, counter, i_dim, i_spin
@@ -1532,7 +1539,7 @@ contains
 
     integer(i4_kind) :: CC
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (( .not. xalpha_resp ) .and. &
          ( .not. vwn_resp    ) .and. &
@@ -1548,16 +1555,6 @@ contains
 
     print *,"WARNING: NO BLAS"
     print *," rho_cutoff = ",rho_cutoff
-
-    ! start calculation on the slaves:
-    ! main_slave() will call this subroutine
-    !(response_calc_2index_integrals) on slaves
-    if(comm_i_am_master()) then
-       if(comm_parallel()) then  ! is this a parallel run ?
-          call comm_init_send(comm_all_other_hosts,msgtag_response_2index)
-          call comm_send()
-       end if
-    end if
 
     n_ir = ssym%n_irrep
 
@@ -2263,7 +2260,7 @@ contains
     use constants
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical :: lda_case
     integer(kind=i4_kind) :: vla, &
          & i_atom,i_fit,i_fit2,&
@@ -2346,7 +2343,7 @@ contains
 
     integer(i4_kind) :: dim
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( ( .not. xalpha_resp ) .and. &
          ( .not. vwn_resp    ) .and. &
@@ -2364,16 +2361,6 @@ contains
     if (  xalpha_resp ) lda_case = .true.
     if (     vwn_resp ) lda_case = .true.
     if ( pw_ldac_resp ) lda_case = .true.
-
-    ! start calculation on the slaves:
-    ! main_slave() will call this subroutine
-    !(response_calc_2index_integrals) on slaves
-    if(comm_i_am_master()) then
-       if(comm_parallel()) then  ! is this a parallel run ?
-          call comm_init_send(comm_all_other_hosts,msgtag_response_2index)
-          call comm_send()
-       end if
-    end if
 
     FPP_TIMER_START(all)
 
@@ -2756,14 +2743,15 @@ contains
     enddo
 
     FPP_TIMER_STOP(all)
+#ifdef FPP_TIMERS
     print *,'2c_resp TIMER: rho_calc  = ',FPP_TIMER_VALUE(rho_calc)
     print *,'2c_resp TIMER: XC_calc   = ',FPP_TIMER_VALUE(XC_calc)
     print *,'2c_resp TIMER: khi_calc  = ',FPP_TIMER_VALUE(khi_calc)
     print *,'2c_resp TIMER: loop_calc = ',FPP_TIMER_VALUE(loop_calc)
     print *,'2c_resp TIMER: all       = ',FPP_TIMER_VALUE(all)
-
+#endif
   end subroutine response_calc_2index_int_v2
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module response_module

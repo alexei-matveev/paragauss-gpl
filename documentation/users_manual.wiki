@@ -1,18 +1,8 @@
-<div style="text-align:center; font-weight: bold; font-size:50px">ParaGauss Manuals</div>
 
-<br>
+= ParaGauss User Manual =
 
-<div style="text-align:center; font-weight: italic; font-size:25px">Th Belling, U Birkenheuer, S Kr&uuml;ger, M Mayer, F N&ouml;rtemann,M Staufer, N R&ouml;sch</div>
-
-
-<div style="text-align:center; font-size:15px">
-ParaGauss Version V19
-<br>
-Version 1, 05/02/1998
-</div>
-
-
-<div class="so">
+Th. Belling, U. Birkenheuer, S. Krüger, M. Mayer, F. Nörtemann,
+M. Staufer, N Rösch
 
 = Read Me First =
 
@@ -21,160 +11,19 @@ Description of solvent effect specific options can be found in
 
 ----
 
-= How to start ParaGaus: the ttfs Script =
-
-The ttfs script is the driver script of the ParaGauss
-Program. Calculations can only be started using this script.
+= How to start ParaGauss =
 
 == Usage ==
 
- 
-  ttfs_[#ttfsopt_version ''version''] \
-    [#ttfsopt_name ''name''] \
-    [ [#ttfsopt_name_is_extension -name_is_extension] ] \
-    [ [#ttfsopt_extend_outputnames -extend_outputnames] ] \
-    [ [#ttfsopt_inputdir -inputdir] ''inputdir'' ]  \
-    [ [#ttfsopt_outputdir -outputdir] ''outputdir'' ]  \
-    [ [#ttfsopt_dir -dir] ''dir'' ] \
-    [ [#ttfsopt_newinput -newinput] ''filename'' ]  \
-    [ [#ttfsopt_gxfile -gxfile] ''filename'' ] \
-    [ [#ttfsopt_restartable -restartable] ] \
-    [ [#ttfsopt_save_old_output -save_old_output] ] \
-    [ [#ttfsopt_zip -zip] ] \
-    [ [#ttfsopt_vpp_mbx_size -vpp_mbx_size]  ''number'' ] \
-    [ [#ttfsopt_us -us] |
-      [#ttfsopt_pd -pd] ] \
-    [ [#ttfsopt_shared_fs -shared_fs]  ''dir'' ] \
-    [ [#ttfsopt_recover_in_datadir -recover_in_datadir] ] \
-    [ [#ttfsopt_keep_slaveoutput -keep_slaveoutput] ] \
-    [ [#ttfsopt_keep_core -keep_core] ]  \
-    [ [#ttfsopt_profile -profile] |
-      [#ttfsopt_count -count]  ''sourcedir'' |
-      [#ttfsopt_vpp_stats -vpp_stats]  ''optionnumber'' ]  \
-    [ [#ttfsopt_vers -vers] ''version'' ] \
-    [ [#ttfsopt_scriptvers -scriptvers] ''version'' ] \
-    [ [#ttfsopt_interfacevers -interfacevers] ''version'' ] \
-    [ [#ttfsopt_simolvers -simolvers] ''version'' ]  \
-    [ [#ttfsopt_opt -opt] ''geometry optimization program'' ] \
-    [ [#ttfsopt_integral -integral] |
-      [#ttfsopt_integral_split -integral_split] |
-      [#ttfsopt_split -split] | 
-      [#ttfsopt_split_scf -split_scf] |
-      [#ttfsopt_scf -scf] |
-      [#ttfsopt_interfacefile -interfacefile] |
-      [#ttfsopt_paragau -paragau] |
-      [#ttfsopt_help -help] ]  \
-    [ [#ttfsopt_datadir -datadir] ''datadir'' ] \
-    [ [#ttfsopt_rm_datadir -rm_datadir] |
-      [#ttfsopt_keep_datadir -keep_datadir] ] \
-    [ [#ttfsopt_oldinput -oldinput] ''filename'' ]  \
-    [ [#ttfsopt_interfaces -interfaces] ''filename'' ]  \
-    [ [#ttfsopt_lcgtooptions -lcgtooptions] ''option'' [''option'' ...] ]
-
-For obtaining on-line help:
-
- 
-  ttfs_''version'' -help
-
-The options listed above may appear in arbitrary order except for
-<code>-lcgtooptions</code> that must appear last. All options are
-optional. The first argument <code>''name''</code> as described below
-is obligatory.
-
-The following options are SP2-specific:
-
-* [ -us | -pd ]
-* [ -shared_fs ''dir'' ]
-
-The following options are VPP-specific:
-
-* [ -profile | -count ''sourcedir'' | -vpp_stats ''optionnumber'' ]
-* [ -vpp_mbx_size ''number'' ]
-
 == Location and naming of input and output files ==
-
-The ttfs script offers flexibility in naming and locating input and
-output files. Principally, two philosophies are supported for
-separating files of different calculations:
-
-; one specific directory for each calculation
-: use <code>''name''</code> to specify directory (absolute path recommended). No file name extensions are necessary.
-; several calculations in one directory kept apart by file name extensions.
-: use <code>''name''</code> to specify file name extensions and set <code>-name_is_extension</code>. Files are located either in present working directory or the one specified with <code>-dir ''dir''</code>.
-
-Separating input and output directory and naming files individually is also supported via the switches described below.
-
-; <code>''name''</code>
-: The meaning differs depending if you set [#ttfsopt_name_is_extension <code>-name_is_extension</code>].
-:* In case you do not set this flag, <code>''name''</code> is the default input and output directory of your calculation. Both relative and absolute paths are valid, but the absolute one is recommended. The last part of <code>''name''</code> is also a valid postfix for input files that allows to keep input files for different calculations in one input directory apart. In case you set <code>-extend_outputnames</code> it will also be the postfix to all output files.
-:* In case you set this flag, <code>''name''</code> is a postfix to all input and output files. The directory where your input and output files are located is the present working directory unless you specify other with <code>-dir</code> or <code>-inputdir</code> and <code>-outputdir</code>.  Intermediate directories used during the calculation are also termed according to <code>''name''</code>.
-; <code>[ -name_is_extension ]</code>
-: <code>''name''</code> is not used to set inputdir and outputdir but only as extension to input and output filenames. This implies automatically [#ttfsopt_extend_outputnames <code>-extend_outputnames</code>]. Note that input files without extensions are also accepted if none with extension exist.
-; <code>[ -extend_outputnames ]</code>
-: use last part of <code>''name''</code> as extension to output files.
-; <code>[ -inputdir ''inputdir'' ]</code>
-: directory that holds input files. Default is <code>''name''</code>, of if [#ttfsopt_name_is_extension <code>-name_is_extension</code>] is given present working directory.
-; <code>[ -outputdir ''outputdir'' ]</code>
-: directory where to store output files of new program run. If directory already exists old output files will be overwritten. Default is <code>''name''</code>, of if [#ttfsopt_name_is_extension <code>-name_is_extension</code>] is given present working directory.
-; <code>[ -dir ''dir'' ]</code>
-: equivalent to <code>[#ttfsopt_inputdir -inputdir] ''dir'' [#ttfsopt_outputdir -outputdir] ''dir''</code>.
-; <code>[ -newinput ''filename'' ]</code>
-: input file in <code>''inputdir''</code> to new program. Default is file input.
-; <code>[ -gxfile ''filename'' ]</code>
-: [#gx_file gx file] in <code>''inputdir''</code> containing geometry and Z-matrix for geometry optimization. Default is gx.
 
 == Various useful options ==
 
-; <code>[ -restartable ]</code>
-: leave [#gx_file gx file] and scf restart files in place instead of renaming them. This allows to restart calculation without modifying input/output directory. Default is moving these files to protect them from accidental modifications. The switch also implies -save_old_output (see below).
-; <code>[ -save_old_output ]</code>
-: move old output files (output, input.out, gx.start, trace file) to files with _<code>''number''</code> appended where <code>''number''</code> is the lowest one without existing files. All files of one run will obtain the same <code>''number''</code>.
-; <code>[ -zip ]</code>
-: compress output files
-; <code>[ -vpp_mbx_size ''number'' ]</code>
-: set size of mailbox for incoming PVM messages on VPP. ''number'' can take the following values resulting in the given mbx sizes on each host: {|
-| 1
-| 4 MB
-|-
-| 4
-| 16 MB
-|-
-| 16
-| 64 MB (this is the default)
-|-
-| 64
-| 256 MB
-|}
-; <code>[ -shared_fs ''dir'' ]</code>
-: use <code>''dir''</code> as shared scratch file system on SP2"
-; <code>[ -recover_in_datadir ]</code>
-: fetch and/or write scf recover files to <code>''datadir''</code> during calculation. Default is to store them in <code>''inputdir''</code> during calculation.
-
 == Debug options ==
-
-; <code>[ -keep_slaveoutput ]</code>
-: copy the slave output directories to the directoies termed after the hostnames or 1, 2, ... created in <code>''outputdir''</code>.
-; <code>[ -keep_core ]</code>
-: keep the core file for debugging in case new program crashes.
-; <code>[ -profile ]</code>
-: produce profiling information. Perform profiling by statistically recording position of program.
 
 == Selecting versions of called programs ==
 
-The versions of various programs called by the ttfs script can be selected individually. For normal purpose, the defaults should be fine. In most cases, the programs use the same <code>''version''</code> as the <code>ttfs_''version''</code> script.
-
-; <code>[ -vers ''version'' ]</code>
-: version of ParaGauss program to use Default is <code>''version''</code> of <code>ttfs_''version''</code> script.
-; <code>[ -mpi ]</code>
-: take an MPI executable instead of PVM
-
 == Exit status ==
-
-The ttfs script returns zero in case of successful execution and other values in case of errors. In the case of geometry optimization, zero is returned as long as the optimization did not yet converge within the number [[#CONVERGENCE_LIST|MAX_GEO_ITERATION]] of points allowed and 100 if the optimization converged.
-
-This is useful in the case of geometry optimization. If not all the geometry optimization cycles can be performed at once due to time limits of the queue system, the exit status of the ttfs script can be used for automatic resubmission of the job.
-
-The exit status of a program can be obtained via the shell variable "$status" directly after the execution of the program.
 
 == Examples ==
 
@@ -304,8 +153,6 @@ These files will be located in the output directory in case input and output dir
 
 ----
 
-<div class="so">
-
 = Calculation Modes =
 
 == Standard Mode ==
@@ -336,58 +183,8 @@ To start an SO calculation one needs:
 * you may want to set <tt>XC = "vwn,gga:all"</tt> in [[#PHXC_CONTROL|<tt>PHXC_CONTROL</tt>]] namelist
 
 == Usage of functionals ==
-</div>
 
 ----
-
-= Submitting Jobs =
-
-
-
-== Power Challenge ==
-
-You must use the queue system to start ParaGauss.
-
-Here is an example script file:
-
- <nowiki>
- #!/bin/tcsh
- #$ -cwd
- #$ -q para        
- #$ -cwd
- source /etc/cshrc
- source ~/.login
- /home/ttfs/bin.sgi/ttfs_</nowiki>''version name''
-
-Submit this file with the following command: <br /><code>> '''qsub ''time_estimate'' -pe pvm ''proc_nbr script_file'''''</code><br />where
-
-{|
-| <code>'''''time_estimate'''''</code>
-| is an estimate of the run time in the format "hh:mm"
-|-
-| <code>'''''proc_nbr'''''</code>
-| is the number of processors
-|-
-| <code>'''''script_file'''''</code>
-| is the script file described above. It must be executable.
-|}
-
-It might be necessary for huge calculations to make the PVM buffer used by the PVM daemon bigger than the default: In case you obtain error masseges like the following
-
- 
- libpvm [t40002]: da_new() Warning: shared buffer full, using malloc
- libpvm [t40002]: peer_send() Message(s) too long for shared buffer, deadlocked.
-
-... add the following lines to yout "<code>~/.cshrc"</code>" file:
-
- <nowiki>
- # set larger PVM buffer size for huge jobs
- setenv PVMBUFSIZE 104857600
- </nowiki>
-
-Remove these lines again as soon as your large calculations are
-complete since you request a vast amount of spoiled memory for each
-PVM job otherwise.
 
 = Geometry Optimization =
 
@@ -532,7 +329,7 @@ Most of the namelists can appear in arbitrary order, but some have to appear tog
 ; Post Hoc Grid
 : The namelists [[#GRID_PH|GRID_PH]] and [[#GRIDATOM_PH|GRIDATOM_PH]] have to be grouped together as described with namelist [[#GRID_PH|GRID_PH]]. In case this optional block does not appear the settings from the SCF grid are used.
 ; Output Options
-: The namelists [[#OUTPUT|OUTPUT]], [[#OUTPUT_CONFIG|OUTPUT_CONFIG]], [[#OUTPUT_DIPOLE|OUTPUT_DIPOLE]], [[#OUTPUT_INTEGRAL|OUTPUT_INTEGRAL]], [[#OUTPUT_IOUNITADMIN|OUTPUT_IOUNITADMIN]], [[#OUTPUT_POST_HOC|OUTPUT_POST_HOC]], [[#OUTPUT_SCF|OUTPUT_SCF]], [[#OUTPUT_SYM|OUTPUT_SYM]], [[#OUTPUT_TIMING|OUTPUT_TIMING]], [[#OUTPUT_TRACE|OUTPUT_TRACE]], and [[#OUTPUT_UNIQUE_ATOMS|OUTPUT_UNIQUE_ATOMS]] have to be grouped together as described with namelist [[#OUTPUT|OUTPUT]]. In case it appears, the optional namelists [[#OUTPUT|OUTPUT]] must start the block. The remaining optional namelists may appear in arbitrary order.
+: The namelists [[#OUTPUT|OUTPUT]], [[#OUTPUT_CONFIG|OUTPUT_CONFIG]], [[#OUTPUT_DIPOLE|OUTPUT_DIPOLE]], [[#OUTPUT_INTEGRAL|OUTPUT_INTEGRAL]], [[#OUTPUT_IOUNITADMIN|OUTPUT_IOUNITADMIN]], [[#OUTPUT_POST_SCF|OUTPUT_POST_SCF]], [[#OUTPUT_SCF|OUTPUT_SCF]], [[#OUTPUT_SYM|OUTPUT_SYM]], [[#OUTPUT_TIMING|OUTPUT_TIMING]], [[#OUTPUT_TRACE|OUTPUT_TRACE]], and [[#OUTPUT_UNIQUE_ATOMS|OUTPUT_UNIQUE_ATOMS]] have to be grouped together as described with namelist [[#OUTPUT|OUTPUT]]. In case it appears, the optional namelists [[#OUTPUT|OUTPUT]] must start the block. The remaining optional namelists may appear in arbitrary order.
 ; Information on Irreps
 : This block is only required in the outdated case the new symmetry part is not used. The namelists [[#SYMMETRY_DATA|SYMMETRY_DATA]] and [[#IRREP|IRREP]] have to be grouped together as described with namelist [[#SYMMETRY_DATA|SYMMETRY_DATA]].
 ; Symmetry Adaption Coefficients
@@ -988,7 +785,7 @@ Various important options.
      NUMERIC_EXCH        =      TRUE # (the default)
      SPIN_RESTRICTED     =      TRUE # (the default)
      RELATIVISTIC        =     FALSE # (the default)
-     <span class="so">SPIN_ORBIT          =     FALSE # (the default) /* Version > 2.1g */</span>
+     SPIN_ORBIT          =     FALSE # (the default)
      INTEGRALS_ON_FILE   =      TRUE # (the default)
      USE_MODEL_DENSITY   =     FALSE # (the default)
      ENERGIES_ALWAYS     =     FALSE # (the default)
@@ -1128,7 +925,7 @@ Default is to perform Single Point Calculation and Calculate Gradients.
      OPERATIONS_WRITE_FULL_INPUT  = FALSE # (the default)
      OPERATIONS_WRITE_SHORT_INPUT = FALSE # (the default)
      OPERATIONS_WRITE_INPUT_SLAVE = FALSE # (the default)
-     OPERATIONS_POST_HOC          =  TRUE # (the default)
+     OPERATIONS_POST_SCF          =  TRUE # (the default)
      OPERATIONS_GRADIENTS         =  TRUE # (the default)
      OPERATIONS_GEO_OPT           = FALSE # (the default)
      OPERATIONS_MAKE_GX           = FALSE # (the default)
@@ -1339,13 +1136,13 @@ This namelists determines which files should be used for output. File
 ; IOUNITADMIN_USE_BUGGY
 : output to file "buggy_log". This file is well suited for finding the exact location of a program crash since it is always opened and closed.
 
-=== OUTPUT_POST_HOC ===
+=== OUTPUT_POST_SCF ===
 
  
-  &OUTPUT_POST_HOC
-     OUTPUT_POST_HOC_MAIN = FALSE # (the default)
+  &OUTPUT_POST_SCF
+     OUTPUT_POST_SCF_MAIN = FALSE # (the default)
      OUTPUT_MAIN_GRADIENT = FALSE # (the default)
-  /OUTPUT_POST_HOC (namelist may be dropped)
+  /OUTPUT_POST_SCF (namelist may be dropped)
 
 === OUTPUT_SCF ===
 
@@ -1638,7 +1435,6 @@ READ_SCFSTATE and RESET_SCFCYCLE is switched to true.
 ; RESET_SCFCYCLE
 : Reset SCF cycle counting when recovering.
 
-<div class="so">
 
 ===SPIN_ORBIT===
 
@@ -1660,8 +1456,6 @@ This namelist defines what type of SO calculations you really need. <br />Possib
 : for second order DK transformation of the coulomb term. <tt>hDKH(2)</tt> and <tt>oDKH(2)</tt> are two flavors of the <tt>DKH(2)</tt> transformation. <tt>"o"</tt> stays for ''operator'', <tt>"h"</tt> stays for ''hamiltonian''. Short hand notation <tt>FitTrafo:DKH(2)</tt> is defaulted to <tt>oDKH(2)</tt>.
 
 Refer to [#Spin_Orbit Spin Orbit] section for more information on spin-orbit.
-
-</div>
 
 === SYMMETRY_DATA ===
 
@@ -2195,7 +1989,7 @@ ported to user defined combinations: PBEX, PBEC, PBEN, PBENx, PBENC,
 TPSSx, TPSSc, EXX
 
 ==== Explicit Flags (Deprecated) ====
-<span style="color:#FF0000;"> Namelist entries flagged for deletion. Dont use them any more! </span>
+Namelist entries flagged for deletion. Dont use them any more!
 
 Selects the exchange correlation functional used in the SCF part. If
 not specified otherwise (see
@@ -2212,7 +2006,7 @@ want to use a GGA correction, also the LDA functionals have to be
 selected.
  
   &XC_CONTROL
-     XC             = "undef" # (the default)</span>
+     XC             = "undef" # (the default)
      XALPHA         =  TRUE # (the default)
      VWN            =  TRUE # (the default)
      PWLDAc         = FALSE # (the default) /* version >= V20_delta */
@@ -2270,75 +2064,6 @@ selected.
 Namelists that are not present in current versions or that are going
 to be deleted soon
 
-==== PVMOPTIONS (Deleted) ====
-
-<span style="color:#FF0000;"> Namelist DELETED in current versions. Raises error if still in use! </span>
-
-This namelist controls parallel execution of program.
-
- 
-  &PVMOPTIONS
-     N_PROCS                  =      1 # This setting is always required
-     MASTER_WORK              =   TRUE # (the default)
-     PVM_TIMEOUT              =    900 # (the default)
-     PVM_TIMESTEP             =     10 # (the default)
-     CATCH_SLAVEOUT           =  FALSE # (the default)
-     PVM_MASTER_INTERRUPT_NBR =      1 # (the default)
-     PVM_SLAVE_INTERRUPT_NBR  =      5 # (the default)
-  /PVMOPTIONS
-
-; N_PROCS
-: Number of processors used. Take care to set the same number for the queue system.
-; MASTER_WORK
-: Master should handle a part of the fitfunction integrals.
-; PVM_TIMEOUT
-: [sec] If a host is idle and does not receive any messages for longer period, it will stop the calculation.
-; PVM_TIMESTEP
-: [sec] When trying to receive, check if all host are alive all PVM_TIMESTEP seconds.
-; CATCH_SLAVEOUT
-: Redirect output of slaves to standard output, i.e. screen or queue system output file. Does not work on all platforms.
-; PVM_MASTER_INTERRUPT_NBR
-: A performance parameter to the integral part. The master will really execute the interrupt function during calculation each PVM_MASTER_INTERRUPT_NBR time it is called.
-; PVM_SLAVE_INTERRUPT_NBR
-: A performance parameter to the integral part. The slave will really execute the interrupt function during calculation each PVM_SLAVE_INTERRUPT_NBR time it is called.
-
-==== PHXC_CONTROL (Deprecated) ====
-
-<span style="color:#FF0000;"> Namelist FLAGGED FOR DELETION in a future version. dont use it any more!</span>
-
-Since version 3.1.5 entries are ignored and the all possible
-functionals calculated.  Exceptions are MGGAs when a spin-orbit
-calculation is performed and hybrids when no exact exchange energy is
-available.
-
-
-Selects the exchange correlation potential used in the Post Hoc part.
-Default is to copy the settings from SCF part (see
-[[#XC_CONTROL|namelist XC_CONTROL]]).
- 
-  &PHXC_CONTROL
-     <span class="so[">[#PHXC_CONTRO|-XC XC]] = "undef"</span>
-     XALPHA_PH      =  TRUE # (the default)
-     VWN_PH         =  TRUE # (the default)
-     PWLDAc_PH      = FALSE # (the defa  = FALSE # (the default)
-     BECKE88_PH     = FALSE # (the default)
-     PERDEWWANG91C  = FALSE # (the default)
-     PERDEWWANG91X  = FALSE # (the default)
-     PBEx_PH        = FALSE # (the default) /* version >= V20_delta */
-     PBEc_PH        = FALSE # (the default) /* version >= V20_delta */
-     revPBEx_PH     = FALSE # (the default) /* version >= V20_delta */
-     PBENx_PH       = FALSE # (the default) /* version >= V20_delta */
-     revPW91c_PH    = FALSE # (the default) /* version >= V20_delta */
-  /PHXC_CONTROL
-
-See [[#XC_CONTROL|namelist XC_CONTROL]] for a explanation of the keywords and further remarks.
-
-<div class="so">
-
-; eg. '''<tt>XC = "vwn,gga:all"</tt>'''
-: it makes sense to use this clause only to calculate all (available) post-hoc energies at once (a good old feature of <tt>lcgto</tt>). Note that there is a difference beetween, say, <tt>PBE/VWN</tt> and <tt>PBE/PWLDA</tt>. I guess <tt>"gga:all"</tt> is the default in case you do not provide no options at all. Tested mainly with [#Spin_Orbit SO].
-
-</div>
 
 = Sample Input =
 

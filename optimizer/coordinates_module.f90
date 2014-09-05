@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,7 +24,7 @@
 !
 !==============================================================a
 module coordinates_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: routines to convert coordinates from
   !          cartesian to internal. The coordinates themselves
   !          are also kept in this module.
@@ -33,7 +33,7 @@ module coordinates_module
   !
   !  References: Wilson-Buch
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use math_module
@@ -51,7 +51,7 @@ module coordinates_module
   save            ! save all variables defined in this module
   private         ! by default, all names are private
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(kind=i4_kind),pointer,public :: sym_type(:)
   ! Wilsons B-Matrix
   real(kind=r8_kind),allocatable,public    :: bmat(:,:),bmat_prim(:,:)
@@ -85,14 +85,14 @@ module coordinates_module
   integer(kind=i4_kind),public             :: n_constraint
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public coordinates_setup,cart_to_internal,generate_bmat, &
        invert_bmat, fake_internals,internal_to_cart,sym_check,cart2cart, &
        print_internal,set_internal,val_types,alloc_bmat,free_bmat
   public dealloc_intcoor,dealloc_reduce,dealloc_constraint,dealloc_cartcoor
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !*************************************************************
 
@@ -1158,15 +1158,15 @@ contains
     use pointcharge_module, only: rcm
 #endif
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),intent(out)   :: q_dummy(:)
     integer(kind=i4_kind),intent(in) :: n_coor
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i
 #ifdef WITH_EFP
     integer(i4_kind) :: j
 #endif
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i=1,n_atoms
        q_dummy(3*i-2)=atom(i)%x(1)
@@ -1199,19 +1199,19 @@ contains
     !------------ Modules used ----------------------------------
     use strings, only: itoa
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(atom_type), intent(in) :: atom(:)
     real(kind=r8_kind),intent(out)   :: q_dummy(:)
     integer(kind=i4_kind),intent(in) :: n_coor
     type(int_coor),intent(inout)        :: coor(:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)        :: num_coord, p1, p2, b1, b2, ap, n_sym
     real(kind=r8_kind)           :: r13,r23,r34,r12,fac3
     real(kind=r8_kind)           :: c_phi,s_phi,c_phi2,s_phi2,c_phi3,s_phi3,&
          c_tau
     real(kind=r8_kind)           :: e31(3), e32(3), e34(3), e23(3), e12(3)
     real(kind=r8_kind)           :: help1(3),help2(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     integer(i4_kind) :: errors
 
@@ -1615,7 +1615,7 @@ ASSERT(distance_to_reactant.gt.small)
     type(int_coor),intent(in)          :: coor(:)
     integer(kind=i4_kind),intent(in)   :: n_coor
     real(kind=r8_kind),intent(out)   :: bmat_in(:,:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)        :: num_coord, p1, p2, b1, b2, ap
     real(kind=r8_kind)           :: r13,r23,r34,r12
     real(kind=r8_kind)           :: c_phi, s_phi, c_phi2, s_phi2, c_phi3, s_phi3
@@ -1625,7 +1625,7 @@ ASSERT(distance_to_reactant.gt.small)
     integer(kind=i4_kind)        :: start1, start2, start3, start4
     integer(kind=i4_kind),parameter  :: n_col = 10
     ! number of columns for b-matrix output
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! ATTENTION: for this subroutine it might be the case that
     ! ubound(coor) /= n_coor, namely when th B-matrix for the

@@ -11,7 +11,7 @@
     OPERATIONS_SCF               =  true
     OPERATIONS_INTEGRAL          =  true
     OPERATIONS_WRITE_INPUT       =  true
-    OPERATIONS_POST_HOC          =  true
+    OPERATIONS_POST_SCF          =  true
     OPERATIONS_GRADIENTS         =  f
     OPERATIONS_GEO_OPT           =  f
     OPERATIONS_MAKE_GX           =  f
@@ -317,10 +317,6 @@
  &XC_CONTROL
     XC = "vwn"
  /XC_CONTROL
-
- &PHXC_CONTROL
-    XC = "vwn,gga:all"
- /PHXC_CONTROL
 
  &GRID
     SYM_REDUCE   = TRUE

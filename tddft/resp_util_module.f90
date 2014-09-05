@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,11 +23,11 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 #include <def.h>
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module resp_util_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -36,24 +36,24 @@ module resp_util_module
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: ...
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   use iounitadmin_module
   use symmetry_data_module
   use eigen_data_module, only : eigvec, eigval
@@ -65,16 +65,16 @@ module resp_util_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   ! integer flag array indicating how the MO "i_mo" shall be used in the
   ! calculation of 3-index-integrals, where "i_mo=1,...,dim(i_irrep)".
   ! "MO_status(i_mo, i_irrep, i_spin)":
-  !  = -1   :  do not use this MO for the 3-index-integrals 
+  !  = -1   :  do not use this MO for the 3-index-integrals
   !            (useful for neglecting unphysically high MO`s)
-  !  =  0   :  use as an fully occupied MO 
+  !  =  0   :  use as an fully occupied MO
   !  =  1   :  use as an partially occupied MO
   !  =  2   :  use as an MO which contains absolutely NO CHARGE (=:empty)
   ! Note: this variable is calculated on the MASTER and then distributed
@@ -99,11 +99,11 @@ module resp_util_module
 
   ! Difference between levels: if gap between two levels smaller than min_diff,
   ! such transitions will be ignored.
-  real(kind=r8_kind), parameter, public :: min_diff = 0.00000001_r8_kind 
+  real(kind=r8_kind), parameter, public :: min_diff = 0.00000001_r8_kind
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public resp_util_set_level_index, &
        resp_util_upck_level_index, &
        resp_util_set_trans_bounds, &
@@ -114,13 +114,13 @@ module resp_util_module
        resp_util_buildi, &
        resp_util_buildr
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -133,10 +133,10 @@ contains
        & min_unocc_level_energy_au,&
        & max_unocc_level_energy_au, &
        & num_spectrum_levels)
-    !  Purpose: 
+    !  Purpose:
     !  Determine the value of the integer flag array "MO_status"
     !  using the user input parameters
-    !    "max_empty_level_index" 
+    !    "max_empty_level_index"
     !    "max_empty_level_energy"
     !    "unoccupied_level_criterion"
     !  and distribute it to the slaves.
@@ -147,24 +147,24 @@ contains
     !  The following rules are used to determine the
     !  possible values of "MO_status(i_mo, i_irrep, i_spin)",
     !  where "i_mo=1,...,dim(i_irrep)":
-    !  = -1   :  do not use this MO for the 3-index-integrals 
+    !  = -1   :  do not use this MO for the 3-index-integrals
     !            This value is assigned to all MO`s with an index
-    !            larger than "max_empty_level_index", or, if the 
+    !            larger than "max_empty_level_index", or, if the
     !            former is unspecified, with an energy eigenvalue
     !            larger than "max_empty_level_energy".
-    !  =  0   :  use as an fully occupied MO 
+    !  =  0   :  use as an fully occupied MO
     !            All MO`s with a charge larger than
     !               N_spin - "unoccupied_level_criterion"
     !  =  1   :  use as an partially occupied MO
-    !            All MO`s which do not fall into any of the other 
+    !            All MO`s which do not fall into any of the other
     !            categories.
-    !  =  2   :  use as an MO which contains absolutely NO 
+    !  =  2   :  use as an MO which contains absolutely NO
     !            CHARGE (=:empty).
     !            All MO`s with a charge less or equal than
     !               "unoccupied_level_criterion"
     !
-    !  NOTE: This subroutine is called by MASTER        
-    !------------ Modules used ------------------- ---------------
+    ! NOTE: This subroutine is called by MASTER
+    !
     use msgtag_module, only: msgtag_response_level_send
     implicit none
     real(kind=r8_kind),intent(in) :: &
@@ -174,11 +174,11 @@ contains
          & min_unocc_level_energy_au, &
          & max_unocc_level_energy_au
     logical,intent(in)            :: limit_unoccupied_levels
-    integer(kind=i4_kind),intent(in) :: & 
+    integer(kind=i4_kind),intent(in) :: &
          & max_level_index, &
          & num_spectrum_levels
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical               :: was_found(3)
     integer(kind=i4_kind) :: alloc_stat, i_irrep, i_spin, i_dim,&
          & print_dim
@@ -188,8 +188,8 @@ contains
     real(kind=r8_kind)    :: new_unocc_max_energy, new_unocc_min_energy
     ! symmetry information
 
-    integer(kind=i4_kind) :: n_spin, n_irrep 
-    !------------ Executable code --------------------------------
+    integer(kind=i4_kind) :: n_spin, n_irrep
+    !------------ Executable code ------------------------------------
 
     !## then allocate memory for the array MO_status
 
@@ -209,13 +209,13 @@ contains
 
     ! this will be the minimum charge for a fully occupied level
     !  it should be a little less then 2.0 for spin=1
-    !           and a little less then 1.0 for spin=2 
+    !           and a little less then 1.0 for spin=2
     full_charge = 2.0_r8_kind/real(n_spin,kind=r8_kind)&
          & - unoccupied_level_criterion
     ! this will be the maximum charge allowed in an totally empty level
     empty_charge = unoccupied_level_criterion
 
-    ! initialize MO_status with -1 
+    ! initialize MO_status with -1
     ! note: size(MO_status(:,i_irrep, i_spin)) may be larger than
     !       ssym%dim(i_irrep) !!!
     MO_status = -1_i4_kind
@@ -311,7 +311,7 @@ contains
     end do
 
     ! calculate total number of
-    !  - full orbitals               n_full, 
+    !  - full orbitals               n_full,
     !  - partially filled orbitals   n_partial
     !  - empty orbitals              n_empty
     n_full    = 0_i4_kind
@@ -384,7 +384,7 @@ contains
     end if
 
     if (comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_response_level_send)
+       call comm_init_send (comm_all_other_hosts, msgtag_response_level_send)
        call pck(MO_status)
        call pck(begin_index)
        call pck(end_index)
@@ -411,18 +411,17 @@ contains
 
   !*************************************************************
   subroutine resp_util_upck_level_index()
-    !  Purpose: 
-    !  Receive the indices of the highest FULLY occupied level
-    !  and of the lowest EMPTY level to all slaves.
-    !  NOTE: This subroutine is called by "main_slave()" only !         
-    !------------ Modules used ------------------- ---------------
+    !
+    ! Receive the indices  of the highest FULLY occupied  level and of
+    ! the lowest EMPTY level to  all slaves.  NOTE: This subroutine is
+    ! called on slaves only!
+    !
     use constants, only: zero
     use msgtag_module, only: msgtag_response_level_send
     implicit none
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    integer(i4_kind) :: max_dim, n_spin, n_irrep, alloc_stat
-    !------------ Executable code --------------------------------
+
+    integer (i4_kind) :: max_dim, n_spin, n_irrep, alloc_stat
 
     !## then allocate memory for the array MO_status
 
@@ -444,7 +443,7 @@ contains
     n_partial   = 0
     n_empty     = 0
 
-    call comm_save_recv(comm_master_host,msgtag_response_level_send)
+    call comm_save_recv (comm_master_host, msgtag_response_level_send)
     call upck(MO_status)
     call upck(begin_index)
     call upck(end_index)
@@ -468,13 +467,13 @@ contains
   !*************************************************************
   subroutine resp_util_set_trans_bounds(i_case, i_irrep, i_spin,&
        & n_dim, occ_start, occ_end, unocc_start, unocc_end)
-    ! Purpose: 
-    ! For fixed irrep and spin direction calculate the correct 
+    ! Purpose:
+    ! For fixed irrep and spin direction calculate the correct
     ! start and stop indices for the 3 cases "I_CASE":
     !       "occupied"                  "unoccupied"
     ! 1   full           MOs    ->   part. + empty  MOs
     ! 2   partially occ. MOs    ->   empty          MOs
-    ! 3   partially occ. MOs    ->   partially occ. MOs 
+    ! 3   partially occ. MOs    ->   partially occ. MOs
 
     implicit none
     ! --- declaration of formal parameters ---------------------
@@ -483,9 +482,9 @@ contains
     integer(kind=i4_kind), intent(out)           :: occ_start, occ_end
     integer(kind=i4_kind), intent(out)           :: unocc_start, unocc_end
     !** End of interface ***************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) ::  i_full, i_partial, i_empty, i_mo
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! define some internal abbreviations
     i_full    = n_full   (i_irrep, i_spin)
@@ -500,7 +499,7 @@ contains
        occ_end     = end_index(1,i_irrep,i_spin)
        if( (i_partial/=0) .AND. (i_empty/=0)) then
           unocc_start = minval(begin_index(2:3,i_irrep,i_spin))
-          unocc_end   = maxval(end_index(2:3,i_irrep,i_spin)) 
+          unocc_end   = maxval(end_index(2:3,i_irrep,i_spin))
        else if( (i_partial/=0) .and. (i_empty==0)) then
           unocc_start = begin_index(2,i_irrep,i_spin)
           unocc_end   = end_index(2,i_irrep,i_spin)
@@ -533,7 +532,7 @@ contains
           ! usually we have occ_end = end_index(2,i_irrep,i_spin) - 1
           ! but just in case that there are holes between partially occupied states
           ! we search for the correct by scanning all indices.
-          ! after the loop  occ_end holds that MO index which is the 
+          ! after the loop  occ_end holds that MO index which is the
           ! last but one (=Vorletzter Index) with MO_status=1 i.e. partially filled
           do i_mo=begin_index(2,i_irrep,i_spin),end_index(2,i_irrep,i_spin)-1
              if(MO_status(i_mo,i_irrep, i_spin)/=0) occ_end = i_mo
@@ -563,11 +562,11 @@ contains
     integer(kind=i4_kind), intent(IN   ) :: i_ir_c, i_spin
     integer(kind=i4_kind), intent(OUT  ) :: dim_ou
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: occs, occe,unoccs, unocce,i_occ, i_unocc
     integer(kind=i4_kind) :: i_ir_a,i_ir_b, n_irr
     integer(kind=i4_kind) :: imlt, nmult
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irr  = symmetry_data_n_irreps()
     dim_ou = 0_i4_kind
@@ -607,9 +606,9 @@ contains
     integer(kind=i4_kind), intent(IN ) :: i_ira, i_irb, i_spin
     integer(kind=i4_kind), intent(OUT) :: occs,occe,unoccs,unocce
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)              :: shift, i_shift
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     occs = 0
     occe = 0
@@ -624,7 +623,7 @@ contains
        occs = begin_index(2,i_ira,i_spin)  !! start with partial
     end if
 
-    if (begin_index(2,i_irb,i_spin) /= -1) then 
+    if (begin_index(2,i_irb,i_spin) /= -1) then
        unoccs = begin_index(2,i_irb,i_spin) !! start with partial
     elseif(begin_index(3,i_irb,i_spin) /= -1) then
        unoccs = begin_index(3,i_irb,i_spin) !! start with empty
@@ -644,7 +643,7 @@ contains
 
     shift = unoccs
     do i_shift = unoccs, unocce
-       if (abs(eigval(i_ira)%m(occe,i_spin)-eigval(i_irb)%m(i_shift,i_spin))<min_diff) then 
+       if (abs(eigval(i_ira)%m(occe,i_spin)-eigval(i_irb)%m(i_shift,i_spin))<min_diff) then
           shift = shift + 1
        end if
     end do
@@ -667,8 +666,8 @@ contains
     !------------ Declaration of local types ---------------------
     character(len=4) :: irc_char,isp_char
     character(len=5) :: fnm_char
-    !------------ Executable code --------------------------------
-    
+    !------------ Executable code ------------------------------------
+
     write (irc_char, '(i4)') i_ir
     write (isp_char, '(i1)') i_sp
     irc_char = adjustl(irc_char)
@@ -683,16 +682,16 @@ contains
 
     use clebsch_gordan, only: cg=>cg_eliminated, prod_bas
 
-    !  Purpose: 
-    ! For fixed irrep and spin direction calculate total number of 
-    ! occupied times unoccupied orbitals by taking fractional 
+    !  Purpose:
+    ! For fixed irrep and spin direction calculate total number of
+    ! occupied times unoccupied orbitals by taking fractional
     ! occupation numbers into account.
     !       "occupied"                  "unoccupied"
     ! 1   full           MOs    ->   part. + empty  MOs
     ! 2   partially occ. MOs    ->   empty          MOs
-    ! 3   partially occ. MOs    ->   partially occ. MOs 
+    ! 3   partially occ. MOs    ->   partially occ. MOs
     !
-    ! note: 
+    ! note:
     ! for type (1) we have (N_full)      going into (N_partial+N_empty)
     ! for type (2) we have (N_partial)   going into (N_empty)
     ! for type (3) we have (N_partial-1) going into (N_partial-1)
@@ -702,10 +701,10 @@ contains
     integer(kind=i4_kind), intent(out):: occ_times_unocc_dim
     logical, optional                 :: print_info
     !** End of interface ***************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_full, i_parta, i_partb, i_empty !!, i_resta, i_restb
     integer(kind=i4_kind) :: occs, occe, unocce, unoccs, i_occ, i_unocc
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (cg(i_irc,i_ira,i_irb)%mult==0) then
        occ_times_unocc_dim = 0
@@ -713,20 +712,20 @@ contains
     end if
 
     ! define some internal abbreviations
-    
+
     i_full    = n_full   (i_ira, i_spin)
     i_parta   = n_partial(i_ira, i_spin)
 
     i_partb   = n_partial(i_irb, i_spin)
     i_empty   = n_empty  (i_irb, i_spin)
 
-!!$    i_resta = na - i_full  - i_parta 
-!!$    i_restb = nb - i_partb - i_empty 
+!!$    i_resta = na - i_full  - i_parta
+!!$    i_restb = nb - i_partb - i_empty
 
     occ_times_unocc_dim = 0
 
     call resp_util_borders(i_ira,i_irb,i_spin,occs,occe,unoccs,unocce)
-    
+
     if ((occs == 0) .or. (unoccs==0)) return
     if ((occe == 0) .or. (unocce==0)) return
 
@@ -778,10 +777,10 @@ contains
     real(kind=r8_kind),    intent(IN   ) :: WM(:)
     real(kind=r8_kind),    intent(OUT  ) :: RM(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)           :: NST,NFN, i_proc, status
     real(kind=r8_kind), ALLOCATABLE :: AM(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if (comm_i_am_master()) then
        RM(1:NM) = WM
 
@@ -818,10 +817,10 @@ contains
     integer(kind=i4_kind), intent(IN   ) :: WM(:)
     integer(kind=i4_kind), intent(OUT  ) :: RM(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)               :: NST,NFN, i_proc, status
     integer(kind=i4_kind) , ALLOCATABLE :: AM(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (comm_i_am_master()) then
        RM(1:NM) = WM
@@ -848,5 +847,5 @@ contains
 
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module resp_util_module

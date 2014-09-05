@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  timer_module
 !---------------------------------------------------------------
 !
@@ -40,11 +40,11 @@ module  timer_module
 !  Author: TB
 !  Date: 2/96
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: TB
@@ -67,7 +67,7 @@ module  timer_module
 ! Date:   9/99
 ! Description: +EPE-timing
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only: r8_kind, i4_kind ! type specification parameters
@@ -248,9 +248,9 @@ public timer_setup, timer_print_summary, timer_print_scfcycle, &
 public :: timer_gather_slave_int_timing!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of private constants and variables ----
 type(timer_type), private, dimension(n_int_parts) :: &
@@ -270,7 +270,7 @@ type(timer_type), private, dimension(n_int_parts) :: &
      t_sl_int_rel
 
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
@@ -1086,68 +1086,80 @@ contains
      use iounitadmin_module, only: output_unit
      implicit none
    !** End of interface *****************************************
-!:UB[ added
+
    logical :: extended_mda, xcmda_called
-!:UB]
-   !------------ Executable code --------------------------------
-!:UB[ added
+
+   ! FIXME: what should  slaves do when they dont  have an output file
+   ! open? For now bail out:
+   if (output_unit <= 0) RETURN
+
    extended_mda = options_xcmode() == xcmode_extended_mda
    xcmda_called = options_xcmode() == xcmode_model_density .or. extended_mda
-!:UB]
+
    write(output_unit,*) ""
    write(output_unit,*) "Summary of Timing for SCF Cycle"
    write(output_unit,*) ""
+
    call print_timer(timer_scf_cycle,output_unit, &
         "Entire SCF cycle",start=.true.,sum=.true.,average=.true.,nbr=.true.)
+
    call print_timer(timer_scf_xc,output_unit, &
         "Numeric Build up of Exchange Part of Hamiltonian")
+
    call print_timer(timer_scf_ham,output_unit, &
         "Build up of Hamiltonian")
+
    call print_timer(timer_scf_eigen,output_unit, &
         "Eigensolver")
+
    call print_timer(timer_scf_reoc,output_unit, &
         "Reoccupation of Orbitals")
+
    call print_timer(timer_scf_chfit,output_unit, &
         "Chargefit")
+
    call print_timer(timer_grid_orbitals,output_unit, &
         "Calculation of orbitals", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.,nbr=.true.)
+
    call print_timer(timer_grid_density,output_unit, &
         "Calculation of density", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
-!:UB[ added
+
    if ( xcmda_called ) &
         call print_timer(timer_grid_trunc_dens,output_unit, &
         "Truncation of density", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
-!:UB]
+
    call print_timer(timer_grid_functionals,output_unit, &
         "Calculation of xc-functionals", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
-!:UB[ added
+
    if ( xcmda_called ) &
         call print_timer(timer_grid_trunc_funcs,output_unit, &
         "Truncation of xc-functionals", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
+
    if ( xcmda_called ) &
         call print_timer(timer_grid_projections,output_unit, &
         "Calculation of numerical projections", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
+
    if ( extended_mda ) &
         call print_timer(timer_grid_num_metric,output_unit, &
         "Calculation of numericl metric", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
+
    if ( xcmda_called ) &
         call print_timer(timer_grid_fit_coeffs,output_unit, &
         "Calculation of fitting coefficients", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
-!:UB]
-!:UB[ modified
+
    if ( .not.xcmda_called ) &
         call print_timer(timer_grid_xcbuild,output_unit, &
-!:UB]
         "Construction of the numerical XC-Hamiltonian", &
         diff=.false.,absolut=.false.,sum=.true.,average=.true.)
+
    write(output_unit,*) ""
    end subroutine timer_print_scfcycle
    !*************************************************************

@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module operations_module
 !---------------------------------------------------------------
 !
@@ -35,32 +35,32 @@ module operations_module
 !  Date: 10/95
 !
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: KN
 ! Date:   26/10/99
 ! Description: allows g-tensor calculations
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: ...
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: AS
 ! Date:   02/2001
 ! Description: allows potential calculations
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 #include "def.h"
 use type_module ! type specification parameters
@@ -69,7 +69,6 @@ private         ! by default, all names are private
 save
 !== Interrupt end of public interface of module =================
 
-logical         :: operations_post_hoc   ! Old keep for consistency, only to be changed here
 !------------- Declaration of public input parameters -----------
 logical, public :: operations_symm             , &
                    operations_scf              , &
@@ -123,9 +122,9 @@ public :: operations_read, operations_write
 public :: operations_bcast!()
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------- Definition of private default input values -------
 logical, private :: df_operations_symm              = .true. , &
@@ -205,7 +204,6 @@ namelist /operations/ operations_symm             , &
                       operations_write_input_slave, &
                       operations_get_input_out    , & !!!!!!!!!!!!AS
                       operations_post_scf         , &
-                      operations_post_hoc         , &
                       operations_gradients        , &
                       operations_geo_opt          , &
                       operations_qm_mm            , &
@@ -261,7 +259,7 @@ namelist /tasks/      task                        , &
 #endif
                       qm_epe                       !!!!!!!!!!!!!!AS
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
@@ -274,13 +272,13 @@ contains
     use input_module
     use echo_input_module, only: echo_level_full, echo_level_short, &
          echo_level_default
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: status, unit
     character(len=32) :: namelist_name
     logical           :: ok
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! read input
     operations_qm_epe            = df_operations_qm_epe !!!!!!!!!!!!!!!!!AS
     operations_potential         = df_operations_potential !!!!!!!!!!!!!!!!AS
@@ -295,8 +293,6 @@ contains
     operations_write_short_input = df_operations_write_short_input
     operations_write_input_slave = df_operations_write_input_slave
     operations_post_scf          = df_operations_post_scf
-    operations_post_hoc          = df_operations_post_scf
-         ! same as operations_post_scf, just kept for old input files
     operations_gradients         = df_operations_gradients
     operations_geo_opt           = df_operations_geo_opt
 #ifdef WITH_MOLMECH
@@ -444,15 +440,6 @@ contains
           print *,'operations_read: iostat=',status,'while reading nml=operations'
           call input_error("operations_read: namelist operations")
        endif
-
-       if (operations_post_hoc .neqv. df_operations_post_scf) then
-          WARN('operations_post_hoc has been renamed')
-          print *, " operations_post_hoc is now operations_post_scf"
-          print *, " Now setting operations_post_scf with new value"
-          print *, " Please, consider changing your input file."
-          operations_post_scf = operations_post_hoc
-       endif
-
 
 #ifndef NEW_EPE
        if( operations_epe_lattice) then
@@ -1158,11 +1145,11 @@ contains
     !** End of interface ***************************************
     !------------ Modules used -----------------------------------
     use comm_module, only: commpack
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call commpack(operations_scf,info)
     if (info .ne. 0) call error_handler( &
          "operations_pack: operations_scf")
@@ -1281,11 +1268,11 @@ contains
     !------------ Modules used -----------------------------------
     use comm_module, only: communpack
     use echo_input_module, only : echo_level_full, echo_level_short
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call communpack(operations_scf,info)
     if (info .ne. 0) call error_handler( &
          "operations_unpack: operations_scf")

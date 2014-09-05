@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  efm_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains subroutines which perform the Eigen Function
   !           Method (EFM)
@@ -37,18 +37,18 @@ module  efm_module
   !  Author: MM
   !  Date: 10/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 #include "def.h"
   use type_module, only:&
@@ -77,7 +77,7 @@ module  efm_module
        & efm_cscoII_diag_invspace
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public efm_trafo_gen,&
        & efm_proj_trafo_gen,&
        & efm_irrep_gen,&
@@ -108,7 +108,7 @@ module  efm_module
        & load_basis,     &
        & phase
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   ! the following factors are used to contruct the efmII and efmIII matrix
   ! they are chosen in order to obtain a optimal conditioned efm-matrix
   real(RK), public                           :: efm_subgroup_factor
@@ -129,9 +129,9 @@ module  efm_module
   ! efm_cg(group_num_ir,group_num_re)
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 
 contains
@@ -185,12 +185,12 @@ contains
     use type_module
     use iounitadmin_module
     use group_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(RK),allocatable             :: reg_trafo(:,:,:)
     ! trafo matrix of the regular representation for the  group
     real(RK),allocatable             :: reg_trafo_intr(:,:,:)
     ! trafo matrix of the regular representation for the intrinsic group
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate trafo matrices of the regular representation
     allocate(reg_trafo(group_num_el,group_num_el,group_num_el))
@@ -217,13 +217,13 @@ contains
     use type_module
     use iounitadmin_module
     use group_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(RK),allocatable             :: reg_trafo(:,:,:)
     ! trafo matrix of the regular representation for the  group
     real(RK),allocatable             :: reg_trafo_intr(:,:,:)
     ! trafo matrix of the regular representation for the intrinsic group
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate trafo matrices of the regular representation
     allocate(reg_trafo(group_num_el,group_num_el,group_num_el))
@@ -249,11 +249,11 @@ contains
     use type_module
     use iounitadmin_module
     use group_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                      :: i
     ! counter
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i=1,group_num_ir
        deallocate(irrep_can(i)%irrep_gen_coeff)
@@ -277,7 +277,7 @@ contains
     use type_module
     use iounitadmin_module
     use group_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                      :: l,nls
     ! angular momentum
     real(RK),allocatable             :: trafo_matrix(:,:,:)
@@ -319,7 +319,7 @@ contains
     use iounitadmin_module
     use group_module, n_irr => group_num_ir
     use clebsch_gordan
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                      :: i_irrep,j_irrep,k_irrep,i,j
     ! counter
     integer(IK)                      :: irrep_dim_i,irrep_dim_j
@@ -331,7 +331,7 @@ contains
     real(RK),allocatable             :: trafo_matrix(:,:,:)
     ! transformation matrix of the direct product
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate cg-coefficients
     allocate(efm_cg(n_irr,n_irr),stat=alloc_stat)
@@ -412,7 +412,7 @@ contains
     use iounitadmin_module
     use group_module, n_virr => group_num_ir, n_pirr => group_num_re
     use clebsch_gordan
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                      :: i_irrep,j_irrep,k_irrep,i
     ! counter
     integer(IK)                      :: irrep_dim_i,irrep_dim_j
@@ -429,7 +429,7 @@ contains
     type(efm_cscoII_diag_invspace)  :: invspace
     ! for reduction of product space
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate cg-coefficients
     allocate(efm_proj_cg(n_virr,n_pirr))
@@ -550,7 +550,7 @@ contains
     use iounitadmin_module
     use group_module
     !------------ Declaration of formal parameters ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(efm_cscoII_diag_invspace)     :: ylm_adapt
     ! eigenspace of CSCO-II
     type(group_proj_irrep),pointer     :: proj_irrep_can_imed(:)
@@ -562,7 +562,7 @@ contains
     integer(IK),allocatable  :: irrep_sequence(:)
     ! sequence of appearance
     logical                            :: pseudo
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate and initialize indicator if irrep appeared
     allocate(irrep_appeared_first(group_num_pir),irrep_sequence(group_num_pir))
@@ -762,10 +762,10 @@ contains
     ! group
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                :: i,j
     ! counter
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! initialize trafo matrices to zero, as most of their elements
     ! will be
@@ -803,10 +803,10 @@ contains
     ! group
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                :: i,j
     ! counter
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! initialize trafo matrices to zero, as most of their elements
     ! will be
@@ -844,7 +844,7 @@ contains
     !** End of interface *****************************************
 
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(RK)                   :: euler(4),quaternion(5)
     ! euler angles and quaternions
     integer(IK)                :: nls
@@ -856,7 +856,7 @@ contains
     real(RK),allocatable       :: dbeta(:,:)
     ! auxiliary array for old version of ylmrot
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     nls = 2*l+1
 
@@ -918,7 +918,7 @@ contains
     complex(CK),parameter     :: i = (0.0_rk,1.0_rk),czero = (0.0_rk,0.0_rk)
     ! imaginary one
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                :: two_j,two_j_plus_one
     ! angular momentum
     integer(IK)                :: kl,m,m1,alloc_stat
@@ -944,7 +944,7 @@ contains
 
 
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(U_matrix(2*l+1,2*l+1)&
          ,stat = alloc_stat)
@@ -1135,7 +1135,7 @@ contains
     real(RK),parameter         :: small = 0.000001_rk
     ! euler angles
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(RK)                   :: alpha,beta,gamma
     ! euler angles
     real(RK)                   :: sinb2,cosb2
@@ -1146,7 +1146,7 @@ contains
     ! sin and cos of (alpha - gamma)/2
 
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! take over inversion symmetry
     euler(4) = quaternion(5)
@@ -1421,7 +1421,7 @@ contains
     complex(CK),parameter :: i = (0.0_rk,1.0_rk)
     ! imaginary one
     real(RK),parameter     :: zero = 0.0_rk,one=1.0_rk
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)          :: alloc_stat
     ! help variables
     integer(IK)          :: dim_trafo,m
@@ -1433,7 +1433,7 @@ contains
     ! harmonics
     complex(CK),allocatable :: irrep_matrix_c(:,:)
     ! irrep matrix of complex spherical harmonics
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! determine size of transformation
     dim_trafo = 2*j+1
     ! determine inverse square root of two
@@ -1506,7 +1506,7 @@ contains
     complex(CK),parameter :: i = (0.0_rk,1.0_rk)
     ! imaginary one
     real(RK),parameter     :: zero = 0.0_rk,small = 1.0e-8_rk
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)          :: alloc_stat,max_fac
     ! otherwise
     integer(IK)          :: k
@@ -1523,7 +1523,7 @@ contains
     real(RK),allocatable :: fac(:)
     ! array of factorials
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     two_j_plus_1 = two_j + 1
     ! allocate and set factorials
     allocate(fac(two_j_plus_1),STAT=alloc_stat)
@@ -1642,7 +1642,7 @@ contains
     real(RK),allocatable     :: work1(:),work2(:),work3(:,:)
     ! work arrays
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     matz = 1
     dim_trafo = 4
@@ -1777,7 +1777,7 @@ contains
     real(RK)                         :: max_value,new_value,some
     ! help variables used for determation of the pivot element
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate help arrays
     allocate(permutation(row_dim))
@@ -1888,7 +1888,7 @@ contains
     complex(CK)                     :: some
     ! help variables used for determation of the pivot element
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate help arrays
     allocate(permutation(row_dim))
@@ -2041,7 +2041,7 @@ contains
 
     logical :: found
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate local arrays
     allocate(efm_matrix(group_num_el,group_num_el))
@@ -2568,7 +2568,7 @@ contains
     logical :: found
 
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate local arrays
 
@@ -3232,7 +3232,7 @@ contains
 
     logical :: found
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate local arrays
 
@@ -4029,7 +4029,7 @@ contains
     !------------ Declaration of local handles ----------------------
     type(efm_csco_eigenspace)  , pointer :: eigen_space_can_eigenspace
     type(efm_cscoII_eigenspace), pointer :: eigen_space_can_subspace
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate work arrays
     allocate(efm_matrix(dim_trafo,dim_trafo),efmII_matrix(dim_trafo,dim_trafo), &
@@ -4455,7 +4455,7 @@ contains
     real(RK)                             :: gen_eigen_value
     ! eigenvalue of basisvector, from which basis is generated
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate work arrays
     allocate(efm_matrix(dim_trafo,dim_trafo),efmII_matrix(dim_trafo,dim_trafo),csco_sub(dim_trafo,dim_trafo))
@@ -4717,12 +4717,12 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of local constants -----------------
     real(RK),parameter           :: small = 0.000001_rk
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                  :: i,j,i_irrep,multiplicity,irrep_dim,n
     ! counters
     complex(CK),allocatable     :: product_matrix(:,:),diff_matrix(:,:),irrep_basis(:,:)
     ! product of two rep matrices
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     !am: print*,"entered efm_check_proj_irrep"
     ! loop over irreps
     outer:do i_irrep=1,group_num_re
@@ -4781,12 +4781,12 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of local constants -----------------
     real(RK),parameter           :: small = 0.000001_rk
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)                  :: i,j
     ! counters
     complex(CK),allocatable     :: product_matrix(:,:),diff_matrix(:,:)
     ! product of two rep matrices
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(product_matrix(dim_trafo,dim_trafo))
     allocate(diff_matrix(dim_trafo,dim_trafo))
@@ -4819,7 +4819,7 @@ contains
     type(efm_cscoII_diag_invspace)      :: efm_type_inv
     integer(IK)               :: multi
     !------------ Modules used ------------------- ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(IK)   :: error,i
     external error_handler
     efm_type_inv%dimension = multi

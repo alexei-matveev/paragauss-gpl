@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  gradient_2c_fit_ch_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: contains all routines necessary to perform
   !           the two center fitfct gradient integrals:
   !           - [Da Fk|Fl] (Da (mat_charge))
@@ -35,23 +35,23 @@ module  gradient_2c_fit_ch_module
   !  References: ...
   !  Author: FN
   !  Date: 7/96
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: FN
   ! Date:   19.9.96
   ! Description: Discovered a sign error using the solid
   !              harmonics. Most corrections done in lr2_calc.
   !              One was done in ll_calc.
-  !----------------------------------------------------------------
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 !define FPP_TIMERS 2
 #include "def.h"
   use type_module ! type specification parameters
@@ -73,14 +73,14 @@ module  gradient_2c_fit_ch_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
-  !------------ public functions and subroutines ------------------
+  !== Interrupt end of public interface of module ====================
+  !------------ public functions and subroutines ---------------------
   public charge_overlap_grad
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   ! constants
   real(kind=r8_kind),parameter    :: pi=3.14159265358979324_r8_kind
 
@@ -97,8 +97,8 @@ module  gradient_2c_fit_ch_module
   ! mapping to get the cartesian components of grad yl right
   integer(kind=i4_kind),dimension(3) :: yl_map
   data yl_map /3,4,2/
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -106,9 +106,9 @@ contains
     !  Purpose: calculate grad(mat_charge)
     !** End of interface *****************************************
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)     :: la,lb,na,nb
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
  
     select case (quadrupel%l1)
     case (-1)
@@ -1609,7 +1609,7 @@ FPP_TIMER_STOP(t_contract_2c_dervs)
     integer(kind=i4_kind) :: ma, mb, begin,llm,k2dr
     logical :: moving_a,moving_b
     intrinsic max
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ma = unique_atoms(na)%moving_atom
     mb = unique_atoms(nb)%moving_atom
@@ -3008,7 +3008,7 @@ FPP_TIMER_STOP(t_contract_2c_dervs)
          alloc_stat,i,k2dr
     integer(kind=i4_kind) :: ma, mb
     logical :: moving_a,moving_b
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ma = unique_atoms(na)%moving_atom
     mb = unique_atoms(nb)%moving_atom

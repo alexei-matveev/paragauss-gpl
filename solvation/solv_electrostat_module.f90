@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module solv_electrostat_module
 !
 !  This module are used to calculate electrostatic
@@ -36,14 +36,14 @@ module solv_electrostat_module
 !  Author: AS
 !  Date: 07/69
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: ...
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt end of public interface of module =====
 
 !----modules used ------------------
@@ -58,7 +58,7 @@ module solv_electrostat_module
   use solv_cavity_module, only: tessarea, to_calc_grads, Q_e, Q_n, &
        Q_e_old, n_size, center2sphere, with_pc, fixed_pc, &
        cor_el, cor_nuc, &
-       grad_solv_totsym, grad_solv_totsym_tes, n_Q_update, dealloc_cavity
+       grad_solv_totsym, grad_solv_totsym_tes, n_Q_update
 #ifdef WITH_EFP
   use efp_module, only: efp, n_efp
 #endif
@@ -76,14 +76,14 @@ module solv_electrostat_module
 
   public solv_poten_transfer_data, &
        calc_Q_e, &
-       charge_mix_wrapper, sphere2center, &
+       sphere2center, &
        alloc_ham_solv, &
        dealloc_ham_solv, solv_energy_el,&
        matrix_generation, matrix_grad,nuc_grad,matrix_grad_vtn,nuc_grad_vtn, &
        shutdown_solvation, &
        init_forces_on_pc,solv_forces_on_pc,dealloc_solv_pc
 
-!================================================================
+  !===================================================================
 !== Interrupt end of public interface of module =====
 !--public variables ---
 
@@ -97,7 +97,7 @@ module solv_electrostat_module
 #if 0
   type(arrmat2),allocatable,public :: ham_solv_el_keep(:)
 #endif
-! End of public interface of module
+  ! End of public interface of module
 
   real(kind=r8_kind), allocatable :: A_matrix(:,:)
   real (r8_kind), public, allocatable :: A_matrix_inv(:,:) ! not protected
@@ -166,7 +166,7 @@ contains
     !
     ! Generate the "interaction" matrix of charged surface areas.  The
     ! inverse = matrix for calculating the induced surface charge from
-    ! the molecule potential on the surface
+    ! the molecule potential on the surface. Does no communucation.
     !
     use math_module, only: invert_matrix
     implicit none
@@ -178,10 +178,10 @@ contains
     real (r8_kind) :: distance, A_matrix_fs
     real (r8_kind) :: vect(3)
 
-    ! generating direct matrix A for the main COSMO equation
-    allocate(A_matrix_inv(n_size,n_size),stat=status)
-    if ( status /= 0) call error_handler( &
-         "matrix_generation: allocation of A_MATRIX is failed")
+    ! Generating direct matrix A for the main COSMO equation
+    allocate (A_matrix_inv(n_size, n_size), stat=status)
+    if (status /= 0) call error_handler &
+         ("matrix_generation: allocation of A_MATRIX is failed")
 
 !!$call cpu_time(tt)
 !!$print*,tt
@@ -228,8 +228,6 @@ contains
 !     deallocate(A_matrix,stat=status)
 !     if ( status /= 0) call error_handler( &
 !          "matrix_generation: deallocation of A_MATRIX is failed")
-
-
   end subroutine matrix_generation
   !********************************************************************
 
@@ -408,7 +406,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind), intent(in) :: grad_index(N_moving_unique_atoms + 1)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind) , parameter :: pi = 3.14159265355897932368_r8_kind
     integer(kind=i4_kind) :: i, i1, j, k, l, m, ng, na, na1, ea
     integer(kind=i4_kind) :: first_index,second_index,first_equal,second_equal
@@ -423,7 +421,7 @@ contains
     real(kind=r8_kind) :: torque(3),rc(3),vect_c(3)
     integer(i4_kind) :: center1(2), center2(2),grp,grp1,grp2
 #endif
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     eps_help=to_calc_grads%dielconst/(2.0_r8_kind*(to_calc_grads%dielconst-1.0_r8_kind))
 
@@ -608,32 +606,36 @@ contains
   !*************************************************************
 
   !***************************************************
-  subroutine solv_poten_transfer_data
-   !** End of interface *****************************************
+  subroutine solv_poten_transfer_data()
+    !
+    ! Copies data from solv_cavity_module to potential_module. Does no
+    ! communication.
+    !
+    use potential_module, only: N_points, point_in_space
+    use solv_cavity_module, only: tessarea, dealloc_cavity
+    implicit none
+    !** End of interface *****************************************
 
-    use potential_module, only: N_points,point_in_space
+    integer (i4_kind) :: status
+    integer (i4_kind) :: i, j
+    N_points = n_size
 
-    integer(kind=i4_kind) :: status
-    integer(kind=i4_kind) :: i,j
-    N_points=n_size
+    allocate (point_in_space(N_points), stat=status)
+    if (status /= 0) call error_handler &
+         ("solv_poten_transfer_data: allocation of point_in_space is failed")
 
-    allocate(point_in_space(N_points),stat=status)
-    if ( status /= 0) call error_handler( &
-         "solv_poten_transfer_data: allocation of point_in_space is failed")
-
-    do i=1,N_points
-       point_in_space(i)%N_equal_points=tessarea(i)%n_equal
-       allocate(point_in_space(i)%position(3,point_in_space(i)%N_equal_points), &
+    do i = 1, N_points
+       point_in_space(i) % N_equal_points = tessarea(i) % n_equal
+       allocate (point_in_space(i) % position(3, point_in_space(i) % N_equal_points), &
             stat=status)
-       if ( status /= 0) call error_handler( &
-            "solv_poten_transfer_data: allocation of point_in_space%N_equal_points is failed")
-       do j=1,point_in_space(i)%N_equal_points
-          point_in_space(i)%position(:,j)=tessarea(i)%xyz(j,:)
+       if (status /= 0) call error_handler &
+            ("solv_poten_transfer_data: allocation of point_in_space%N_equal_points is failed")
+       do j = 1, point_in_space(i) % N_equal_points
+          point_in_space(i) % position(:,j) = tessarea(i) % xyz(j, :)
        enddo
     enddo
 
-    call dealloc_cavity()
-
+    call dealloc_cavity()       ! no comm
   end subroutine solv_poten_transfer_data
   !******************************************************
 
@@ -817,11 +819,18 @@ contains
 
   !******************************************************
   subroutine calc_Q_e()
+    !
+    ! Computes  the charges  on the  surface  of the  cavity from  the
+    ! values of electrostatic  potential there. Called from main_scf()
+    ! and starts on on all workers, but does not do the same on all of
+    ! them.
+    !
     use solv_cavity_module, only: e => dielectric_constant ! and more
     use potential_module, only: point_in_space, N_points, V_pot_e, &
          start_read_poten_e
     use occupation_module, only: get_n_elec
     use solv_charge_mixing_module, only: mix_charges
+    use comm, only: comm_rank
     implicit none
     !** End of interface *****************************************
 
@@ -832,7 +841,12 @@ contains
     integer (i4_kind) :: i
 
     DPRINT 'slv:build_solv_ham: eneterd'
-    call start_read_poten_e
+
+    ! To be executed on all workers:
+    call start_read_poten_e()
+
+    ! FIXME: why not let all of the workers do the rest?
+    if (comm_rank() /= 0) return
 
     call get_n_elec(N_electrons)
 
@@ -955,8 +969,8 @@ contains
   !******************************************************
   subroutine charge_mix_wrapper (scf_iter, first_iter)
     !
-    ! Called on master from main_scf() just before build_solv_ham() is
-    ! invoked on all workers. Slaves do not seem to execute this sub.
+    ! Called on  master from build_solv_ham().  Slaves do  not seem to
+    ! execute this sub.
     !
     use solv_charge_mixing_module, only: solv_charge_mix, mix_charges
     use potential_module, only: N_points
@@ -971,25 +985,21 @@ contains
   !*********************************************************
 
   !******************************************************
-  subroutine build_solv_ham()
+  subroutine build_solv_ham (loop, first_loop)
     !
     ! Setup  the part  of  hamiltonian due  to the  electron-dependent
     ! electrostatic interactions between solute and solvent.
     !
-    ! Runs in  parallel context. Called from main_scf()  on master and
-    ! from main_slave() upon reveival of the message that is sent from
-    ! here.
+    ! Runs in parallel context. Called from main_scf().
     !
-    use comm_module, only: comm_i_am_master, comm_all_other_hosts, &
-         comm_init_send, comm_send
-    use msgtag_module, only: msgtag_solv_ham
+    use comm, only: comm_rank
     implicit none
+    integer (i4_kind), intent (in) :: loop, first_loop
     !** End of interface *****************************************
 
-    ! Tell slaves to also enter this subroutine:
-    if (comm_i_am_master()) then
-       call comm_init_send (comm_all_other_hosts, msgtag_solv_ham)
-       call comm_send()
+    ! Was previousely called from main_scf() on master only:
+    if (comm_rank() == 0) then
+       call charge_mix_wrapper (loop, first_loop)
     endif
 
     ! Broadcast Q_e, Q_id, etc. to all workers:
@@ -1039,37 +1049,37 @@ contains
   !******************************************************
 
   !******************************************************
-  subroutine dealloc_ham_solv
-   !** End of interface *****************************************
+  subroutine dealloc_ham_solv()
+    !
+    ! Does no communication. Idempotent.
+    !
+    implicit none
+    !** End of interface *****************************************
 
-    use symmetry_data_module  ! provide ssym
+    integer (i4_kind) :: i, status
 
-
-    integer(kind=i4_kind)       :: n_irrep,status
-    integer(kind=i4_kind)       :: i
-
-    n_irrep = symmetry_data_n_irreps()
+    ! To make it idempotent:
+    if (.not. allocated (ham_solv_el)) return
 
 #if 0
        if(.not.allocated(ham_solv_el_keep)) &
        allocate( ham_solv_el_keep(size(ham_solv_el)))
 #endif
-    do i=1,n_irrep
+    do i = 1, size (ham_solv_el) ! n_irrep
 #if 0
        if(.not.associated(ham_solv_el_keep(i)%m)) &
        allocate(ham_solv_el_keep(i)%m(size(ham_solv_el(i)%m,1),size(ham_solv_el(i)%m,2)))
        ham_solv_el_keep(i)%m=ham_solv_el(i)%m
     print*,'scf ham_solv',sum(ham_solv_el_keep(i)%m)
 #endif
-       deallocate( ham_solv_el(i)%m,STAT=status)
+       deallocate (ham_solv_el(i) %m, STAT=status)
        if (status.ne.0) call error_handler &
             ("dealloc_ham_solv: deallocation of ham_solv_el(1) failed")
     enddo
 
-    deallocate (ham_solv_el,STAT=status)
+    deallocate (ham_solv_el, STAT=status)
     if (status.ne.0) call error_handler &
          ("dealloc_ham_solv: deallocation of ham_solv_el failed ")
-
   end subroutine dealloc_ham_solv
   !******************************************************
 
@@ -1317,8 +1327,12 @@ contains
        if (item_arr_poten /= 0) call poten_integral_close(th_poten)
     endif
 
-    ! FIXME: when is this done on master?
-    if (my_ind /= 1) call dealloc_ham_solv()
+    ! FIXME:  master does  it later  after  ham_calc_main() presumably
+    ! added all cotributions to  Fock matrix, see main_scf(). It looks
+    ! like the slaves try to free O(N^2) storage as soon as possible:
+    if (my_ind /= 1) then
+       call dealloc_ham_solv()  ! no comm, idempotent
+    endif
 
     deallocate(dim_irrep,stat=status)
     if ( status .ne. 0) call error_handler( &
@@ -1347,6 +1361,10 @@ contains
     ! stored  in  the  module  private  variable  "energy_core_n"  was
     ! pre-computed earlier by do_const_part_of_ham_and_energy().
     !
+    ! Does no communication.  Is executed  on all workers, but see the
+    ! body. Historically was executed by master only.
+    !
+    use comm, only: comm_rank
     use potential_module, only: N_points, V_pot_e, V_pot_n, V_pot_pc
 #ifdef WITH_EFP
     use solv_cavity_module, only: Q_id
@@ -1356,7 +1374,10 @@ contains
     implicit none
     !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: i
+    integer (i4_kind) :: i
+
+    ! FIXME: do slaves have all the data to perform computation?
+    if (comm_rank() /= 0) return
 
     energy_solv_el = 0.0
     do i = 1, N_points
@@ -1548,7 +1569,7 @@ ASSERT(all(unique_atoms(:)%zc==0))
     real(kind=r8_kind),pointer  :: xa(:,:),xb(:,:),rotmat(:,:)
     real(kind=r8_kind) :: gradient(3)
     integer :: sphere_c,sphere_t
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! FIXME: sanity check, remove when confident:
     if (.not. pseudopot_present) then
@@ -1816,9 +1837,9 @@ ASSERT(all(unique_atoms(:)%zc==0))
 
   subroutine shutdown_solvation()
     !
-    ! Executed by all workers in a paralle context.
-    ! Deallocates some used variables, let us make an entry point
-    ! for a full shurdown.
+    ! Executed  by all  workers  in a  parallel  context. Called  from
+    ! finalize_geometry() every  geometry iteration.  Deallocates some
+    ! used variables. Let us make an entry point for a full shutdown.
     !
     use comm, only: comm_rank
     use potential_module, only: deallocate_pot, bounds_free_poten, &
@@ -1828,18 +1849,18 @@ ASSERT(all(unique_atoms(:)%zc==0))
     !** End of interface *****************************************
 
     !
-    ! Delete everything connected with solvation effect
+    ! Delete everything related to solvation effect
     !
-    if ( comm_rank() == 0 ) then
+    if (comm_rank() == 0) then
         ! FIXME: was historically different for master and slaves
         call deallocate_pot()
 
-        if(N_unique_atoms > 0) call bounds_free_poten()
+        if (N_unique_atoms > 0) call bounds_free_poten()
 
         call dealloc_A_inv()
     endif
 
-    if(N_unique_atoms > 0) call destroy_poten_file()
+    if (N_unique_atoms > 0) call destroy_poten_file()
 
     call dealloc_space_points()
   end subroutine shutdown_solvation

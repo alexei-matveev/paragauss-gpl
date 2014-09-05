@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module efp_data_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: stores EFP-DFT  parameters for effective fragments
   !           (H2O currently). All data taken from US-GAMESS source code
@@ -43,28 +43,28 @@ module efp_data_module
   !  Date: 4/10/2007
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   use type_module ! type specification parameters
   use common_data_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type, public :: charge
      real(r8_kind) :: q
      real(r8_kind) :: C
@@ -101,22 +101,22 @@ module efp_data_module
      real(r8_kind) :: A(4)
   end type ef_ef_rep
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind), public, parameter :: n_gx_points=3,n_nuc=3, n_emp=5, n_pol=5, n_rep_q=3, n_rep_f=4
   real(r8_kind), public, parameter :: gx_num(3)=(/8.01, 1.02, 1.03/)
   integer(i4_kind), public, parameter :: n_water_centers=11
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   real(r8_kind), parameter :: C_i        =zero
   real(r8_kind), parameter :: A_i        =zero
   real(r8_kind), parameter :: D_i(3)     =zero
@@ -329,7 +329,7 @@ module efp_data_module
 
   integer(i4_kind) :: i
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   type(multpol), public :: dft_water_nuc(n_nuc)=(/                     &
                                 multpol(                               &
                                         mname1,mcoor1,mass1,           &
@@ -442,7 +442,7 @@ module efp_data_module
                                  ef_ef_rep(rname3,rcoor3,CrEfEf3,ArEfEf3), &
                                  ef_ef_rep(rname4,rcoor4,CrEfEf4,ArEfEf4)  &
                                  /)
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module efp_data_module

@@ -1,22 +1,22 @@
 #-*- makefile -*-
 #
-# ParaGauss, a program package for high-performance computations
-# of molecular systems
-# Copyright (C) 2014
-# T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-# M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-# A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-# T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-# M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-# M. Roderus, N. Rösch
+# ParaGauss,  a program package  for high-performance  computations of
+# molecular systems
 #
-# This program is free software; you can redistribute it and/or modify it
-# under the terms of the GNU General Public License version 2 as published
-# by the Free Software Foundation [1].
+# Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+# F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+# A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+# D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+# S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+# A. Nikodem, T. Soini, M. Roderus, N. Rösch
 #
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# This program is free software; you can redistribute it and/or modify
+# it under  the terms of the  GNU General Public License  version 2 as
+# published by the Free Software Foundation [1].
+#
+# This program is distributed in the  hope that it will be useful, but
+# WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+# MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 # General Public License for more details.
 #
 # [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -323,7 +323,6 @@ libttfs_callcomm.a += \
 		modules/orbitalprojection_module.o \
 		modules/output_module.o \
 		modules/pert_coeff_module.o \
-		modules/ph_cntrl.o \
 		external_centers/pointcharge_module.o \
 		external_centers/point_dqo_module.o \
 		external_centers/induced_dipoles_module.o \
@@ -721,14 +720,6 @@ endif
 ifeq ($(WITH_ISNAN),1)
 	FPPOPTIONS += -DWITH_ISNAN
 	FPPOPTIONS += -DWITH_ISINF
-endif
-
-ifeq ($(WITH_NANINFCHK),1)
-	libttfs_dontcallcomm.a += naninfchk.o
-	FPPOPTIONS += -DFPP_HAVE_NANINFCHK
-
-# for absoft only:
-naninfchk.o: FFLAGS += -YBOZTYPE=INT
 endif
 
 #

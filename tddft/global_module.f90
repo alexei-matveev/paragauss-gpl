@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  global_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:
   !  Database to hold GENERAL information needed in various parts
@@ -45,27 +45,27 @@ MODULE  global_module
   !  Date:   11/98
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: SB
   ! Date:   11/04
   ! Description: totally rebuilded
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
   USE type_module ! type specification parameters
   USE iounitadmin_module
@@ -77,9 +77,9 @@ MODULE  global_module
   IMPLICIT NONE
   SAVE            ! save all variables defined in this module
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   LOGICAL, PUBLIC               :: &
        gl_calcall, gl_oscstr, &
@@ -115,19 +115,19 @@ MODULE  global_module
   REAL(KIND=r8_kind), PUBLIC, ALLOCATABLE :: gl_Q(:,:)
 
 
-  !------------ public functions and subroutines ------------------
-  PUBLIC global_alloc,global_alloc_M,global_dealloc_M,global_dealloc
+  !------------ public functions and subroutines ---------------------
+  PUBLIC :: global_alloc, global_alloc_M, global_dealloc_M, global_dealloc
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
 
   !*************************************************************
@@ -332,13 +332,6 @@ CONTAINS
 
     n_spin = gl_N_spin
 
-#if 0
-    if(comm_i_am_master() .and. comm_parallel()) then
-       call comm_init_send(comm_master_host,msgtag_tddft_dealloM)
-       call comm_send()
-    end if
-#endif
-
     if (allocated(gl_L)) then
        do i = 1,n_spin
           DEALLOCATE(gl_L(i)%m,STAT=status)
@@ -469,5 +462,5 @@ CONTAINS
 !!$  END FUNCTION global_data_get_S_index
 !!$  !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE global_module

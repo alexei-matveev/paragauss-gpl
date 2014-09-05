@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module dlb_common
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: code common for all DLB implementations
   !
@@ -39,26 +39,26 @@ module dlb_common
   !  Date: 08/10->09/10
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "dlb.h"
   USE_MPI!, only: MPI_STATUS_SIZE, MPI_SUCCESS, MPI_COMM_NULL, &
        !MPI_DOUBLE_PRECISION, MPI_WTIME, MPI_DATATYPE_NULL
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
-  !------------ public functions and subroutines ------------------
+  !== Interrupt end of public interface of module ====================
+  !------------ public functions and subroutines ---------------------
 
   public :: distribute_jobs
 
@@ -124,9 +124,9 @@ module dlb_common
   !
   integer (ik), public, protected :: termination_master
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !
   ! This scalar  holds the  number of jobs  initially assigned  to the
@@ -170,16 +170,16 @@ module dlb_common
   logical, allocatable :: message_on_way(:) ! which messages are
                                             ! already sent
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
   double precision :: time_offset = -1.0
   logical, allocatable              :: all_done(:)
     ! only allocated on termination_master, stores which procs
     ! jobs are finished. If with masterserver: which proc has terminated
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 ! ONLY FOR DEBBUGING (WITHOUT PARAGAUSS)
@@ -224,7 +224,7 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     integer (ik), intent(in)  :: output_level
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     double precision, allocatable :: times(:,:), help_arr(:)
     double precision              :: time_singles(12)
     integer (ik)              :: ierr
@@ -529,7 +529,7 @@ contains
     integer (lk)                :: my_jobs(L_JOB)
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer (lk) :: n_procs, my_rank
     integer (lk) :: jobs_per_proc
     integer (lk) :: rest

@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine main_gradient(loop)
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This is the main routine of the integral part
   !           for calculation of energy gradients
@@ -40,9 +40,9 @@ subroutine main_gradient(loop)
   !  Author: MS
   !  Date: 12/96
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: Uwe Birkenheuer
@@ -51,9 +51,9 @@ subroutine main_gradient(loop)
   !              Split_Gradients concept introduced
   !              Gradients for Model_Density_Approach introduced
   !
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 !..............................................................................
 !
 ! Individual force contributions
@@ -123,19 +123,19 @@ subroutine main_gradient(loop)
 ! F_rho         gradient_totalsym        gradient_mda_rho            MDA
 ! F_num        -grad_xc                 -grad_grid                   both
 !..............................................................................
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: A.Hu
   ! Date:   4/99
   ! Description: added pseudopotentials contributions to gradients
   !
-  !----------------------------------------------------------------
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: AS
@@ -147,9 +147,9 @@ subroutine main_gradient(loop)
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 ! define FPP_TIMERS 2
 # include "def.h"
   use type_module          ! type specification parameters
@@ -269,7 +269,6 @@ subroutine main_gradient(loop)
   use interfaces, only: main_integral, integral_trafo, RELGRAD, RELSDER
   use interfaces, only: potential_calculate
   use interfaces, only: grad_solv_calculate
-  use occupation_module, only: dealloc_occ_num
 #ifdef WITH_EXPERIMENTAL
   use symmetry_data_module, only: irrep_dimensions
   use cpks_common, only: cpks_alloc_p1w1, cpks_free_p1w1, cpks_p1, cpks_w1
@@ -279,15 +278,12 @@ subroutine main_gradient(loop)
   use eri4c_options, only: J_exact, K_exact
 #endif
   implicit none
-
-
-  integer(i4_kind), intent(in) :: loop ! used only on master so far
+  integer (i4_kind), intent (in) :: loop ! used only on master so far
   ! *** end of interface ***
 
   integer :: rank
   logical :: model_density, split_gradients
   integer (kind=i4_kind) :: i, n_equal_max
-! real(kind=r8_kind),allocatable :: gradient_totalsym_fit(:)
   integer(i4_kind) :: IFIT
   integer(i4_kind) :: IREL
   logical :: tty                ! used in say() subprogram
@@ -302,7 +298,7 @@ subroutine main_gradient(loop)
   FPP_TIMER_DECL(rel)
   FPP_TIMER_DECL(cpks)
   FPP_TIMER_DECL(int2)
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   !------------ Executable code -----------------------------------
 
@@ -402,66 +398,63 @@ subroutine main_gradient(loop)
   ! ================ CONTEXT: ALL PROCESSORS ===============
   if(.not. operations_integral) goto 1000 ! not to calculate QM gradients
 
-     ! FIXME:  yet better, make  sure that  fit_coeff_sndrcv() handles
-     ! the serial case gracefully:
-     if (comm_size () > 1) then
-        call say ("fit_coeff_sndrcv")
-        ! MDA:  update coeff_xcmda must  be sent  to each  slave else:
-        ! coeff_charge has not yet been send to the slaves
-        IFIT = ICHFIT
-        if (model_density) IFIT = IFIT + IXCFIT
-        call fit_coeff_sndrcv (IFIT)
-     endif
+  ! Here fit_coeff_sndrcv() handles  the serial case gracefully.  MDA:
+  ! update coeff_xcmda  must be sent to each  slave else: coeff_charge
+  ! has not yet been send to the slaves.
+  call say ("fit_coeff_sndrcv")
+  IFIT = ICHFIT
+  if (model_density) IFIT = IFIT + IXCFIT
+  call fit_coeff_sndrcv (IFIT)
 
-     call say ("main_integral(1)")
+  if (options_relativistic) then
+     call integralpar_set ('RelGrads')
+  else
+     call integralpar_set ('Gradients')
+  end if
 
-     if(options_relativistic) then
-        call integralpar_set('RelGrads')
-     else
-        call integralpar_set('Gradients')
-     end if
-
-     !********Initial steps before computing the gradients in presence of electric field*****!
-     ! Passing the value of eletric field strength to master and slave.
-     !
-     call efield_send_recv()
+  ! Initial  steps  before  computing  the gradients  in  presence  of
+  ! electric field.   Passing the value  of eletric field  strength to
+  ! master and slave.
+  call efield_send_recv()
 
 
-     ! Computation of 2e integral derivatives with ERI4C library
-     ! TODO: AVOID GENERATING DENSITY MATRIX AGAIN....
+  ! Computation of 2e integral  derivatives with ERI4C library.  TODO:
+  ! AVOID GENERATING DENSITY MATRIX AGAIN....
 #if WITH_ERI4C == 1
-     IF ( K_exact .or. J_exact ) THEN
-       call gendensmat_occ()
-       !
-       call exact_2e_grads( densmat, gradient_totalsym )
-       ! TODO: in the case of enabled DFT+U densmat is generated again by init
-       call density_data_free()
-     ENDIF
+  IF (K_exact .or. J_exact) THEN
+     call gendensmat_occ()
+     !
+     call exact_2e_grads( densmat, gradient_totalsym )
+     ! TODO: in the case of enabled DFT+U densmat is generated again by init
+     call density_data_free()
+  ENDIF
 #endif
 
 #ifdef WITH_DFTPU
-     !
-     ! Inital steps before computing DFT+U gradients:
-     !
-     call dft_plus_u_grad_init()
-     call dft_plus_u_mo_grad_init()
+  !
+  ! Inital steps before computing DFT+U gradients:
+  !
+  call dft_plus_u_grad_init()
+  call dft_plus_u_mo_grad_init()
 #endif
 
-     ! DONE by integralpar_set(...):
-     ! integralpar_cpks_contribs=.false. ! explicit functional dervs only
+  ! DONE by integralpar_set(...): integralpar_cpks_contribs =
+  ! .false. Explicit functional dervs only
 
-     FPP_TIMER_START(int1)
-     call main_integral () ! (1) First call: gradients, maybe second derivatives
-     FPP_TIMER_STOP(int1)
-     DPRINT MyID,'main_gradient:  calc_3c=',FPP_TIMER_VALUE(t_calc_3center)
-     DPRINT MyID,'main_gradient:  int1=',FPP_TIMER_VALUE(int1)
+  call say ("main_integral(1)")
+
+  FPP_TIMER_START(int1)
+  call main_integral () ! (1) First call: gradients, maybe second derivatives
+  FPP_TIMER_STOP(int1)
+  DPRINT MyID,'main_gradient: calc_3c=',FPP_TIMER_VALUE(t_calc_3center)
+  DPRINT MyID,'main_gradient: int1=',FPP_TIMER_VALUE(int1)
 
 #ifdef WITH_DFTPU
-     !
-     ! Final steps after computing DFT+U gradients,
-     ! Deallocate internal structures and 'densmat'
-     !
-     call dft_plus_u_grad_finalize()
+  !
+  ! Final steps  after computing DFT+U  gradients, Deallocate internal
+  ! structures and 'densmat'
+  !
+  call dft_plus_u_grad_finalize()
 #endif
 
      if (integralpar_2dervs .and. rank == 0) then

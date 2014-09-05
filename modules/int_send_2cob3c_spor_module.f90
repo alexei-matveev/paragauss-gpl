@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  int_send_2cob3c_spor_module
 !---------------------------------------------------------------
 !
@@ -60,9 +60,9 @@ module  int_send_2cob3c_spor_module
 !  Author: TB
 !  Date: 7/95
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: TB
@@ -72,7 +72,7 @@ module  int_send_2cob3c_spor_module
 !              files for each IRREP and quadrupel that are
 !              handled by readwriteblocked-module.
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
 !
 ! Modification (Please copy before editing)
@@ -80,8 +80,8 @@ module  int_send_2cob3c_spor_module
 ! Date:   20/01/2004
 ! Description: ...
 !
-!----------------------------------------------------------------
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
 !
 ! Modification (Please copy before editing)
@@ -89,7 +89,7 @@ module  int_send_2cob3c_spor_module
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 #include "def.h"
 use type_module ! type specification parameters
@@ -173,9 +173,9 @@ public int_send_2cob3c_spor_setup, int_send_2cob3c_spor_shutdown, &
        int_send_2cob3c_s_rec_filesizes
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Declaration of private types ----
 
@@ -231,7 +231,7 @@ type(tapehandle_arr),allocatable :: th_arr(:)
      ! th_arr(n_irrep): only used for rel. gradients; see tapehandle_arr
 
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
@@ -282,7 +282,7 @@ contains
     integer (i4_kind), pointer :: metaindex(:)
     type (index_ind1_exp1_ua2_type), pointer :: ind1_exp1_ua2(:,:,:)
 #endif
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! calculate borders
     first_host = 1
@@ -685,7 +685,7 @@ contains
        integer(kind=i4_kind), pointer ::  n_floats_if_c_uc(:)
     end type quadrupel_file_handle_type
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: status, i_ir, i_unique,i_l, &
          i_file1, i_file2, n_file2, n_integrals, n_free_iounits, &
          i_file2_new, n_file2_new, n_concat, n_tot_records, n_tot_records_rel,&
@@ -737,7 +737,7 @@ contains
     integer(kind=i4_kind) :: chklength
     integer(kind=i4_kind) :: n_if_ChFit
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(.not.options_integrals_on_file())then
        call error_handler(&
@@ -2019,7 +2019,7 @@ contains
                                     , Pack2cIntBlock                           &
                                     , Pack3cIntBlock
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i_host, i_ir, n_ir, n_if_c_max, &
          n_if_c_uc_max
     type(readwriteblocked_tapehandle),target :: th
@@ -3720,7 +3720,7 @@ contains
     !** End of interface *****************************************
     use symm_adapt_int, only: UnPackIntBlock
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle) :: th
     type(quadrupel_type) :: quadrupel
     integer(kind=i4_kind) :: i_ir, n_ir, n_if_c_max, n_if_c_uc_max
@@ -3730,7 +3730,7 @@ contains
          n_floats_if_c_uc(:,:), n_floats_if_c_uc_max(:), n_if_c_uc(:)
     ! n_floats_if_c(i_if_c,i_ir), n_floats_if_c_max(i_ir), n_if_c(i_ir)
     ! n_floats_if_c_uc(i_if_c,i_ir), n_floats_if_c_uc_max(i_ir), n_if_c_uc(i_ir)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if ( timer_int_idle_2cob3c(integralpar_i_int_part)%running ) then
        call stop_timer(timer_int_idle_2cob3c(integralpar_i_int_part))

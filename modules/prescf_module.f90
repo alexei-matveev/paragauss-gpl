@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  prescf_module
   !-------------- Module specification ---------------------------
   !
@@ -59,9 +59,9 @@ module  prescf_module
   !                                    from file or arbitrary values. This is hard-
   !                                    coded in this routine. No decision in DOIT
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: AS
@@ -78,9 +78,9 @@ module  prescf_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
 
@@ -88,16 +88,16 @@ module  prescf_module
   private
   save
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: prescf_init!(), is called by all workers
   public :: prescf_finalize!(), is called by all workers
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -123,10 +123,10 @@ contains
     use filename_module, only: outfile
     use iounitadmin_module
     use output_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: io_u
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (output_reoccup .or. output_eigendata) then
        io_u = get_iounit()
@@ -324,10 +324,8 @@ contains
 
     call density_data_alloc() ! no comm!
 
-    if ( rank == 0 ) then
-      ! occ_num seems to be present only on master?
-      call alloc_occ_num() ! no comm!
-    endif
+    ! NOTE: occ_num array may not be always valid on slaves
+    call alloc_occ_num() ! no comm!
 
     !
     ! (5) setup bounds on all workers:
@@ -443,5 +441,5 @@ contains
     if(output_main_scf .and. comm_rank() == 0) &
       call write_to_output_units(msg)
   end subroutine trace
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module prescf_module

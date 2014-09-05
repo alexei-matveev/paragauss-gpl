@@ -3,6 +3,8 @@
 # $Id: mkdepf90,v 1.6 2011-11-03 07:41:09 nikodem Exp $
 # Author:  Ted Stern <stern@cray.com>
 #
+# Posted by Ted Stern <stern@cray.com> on comp-fortran-90 (2002)
+#
 # Usage:
 #
 #	mkdepf90.perl \

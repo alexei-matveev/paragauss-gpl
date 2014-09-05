@@ -7,7 +7,7 @@
     OPERATIONS_WRITE_FULL_INPUT  = FALSE
     OPERATIONS_WRITE_SHORT_INPUT = FALSE
     OPERATIONS_WRITE_INPUT_SLAVE = FALSE
-    OPERATIONS_POST_HOC          =  true
+    OPERATIONS_POST_SCF          =  true
     OPERATIONS_GRADIENTS         =  f
     OPERATIONS_GEO_OPT           =  f
     OPERATIONS_MAKE_GX           =  f
@@ -108,19 +108,8 @@
  /CONVERGENCE_LIST
 
  &XC_CONTROL
-    xalpha  = true
-    vwn     = true
-    PERDEW  = f
-    BECKE88 = f
+    xc = "vwn"
  /XC_CONTROL
-
- &PHXC_CONTROL
-   # XC = "vwn,gga:all"
-   XALPHA_PH = true
-   VWN_PH    = true
-   BECKE88_PH = true
-   PERDEW_PH  = true
- /PHXC_CONTROL
 
  &GRID
     SYM_REDUCE       =     true

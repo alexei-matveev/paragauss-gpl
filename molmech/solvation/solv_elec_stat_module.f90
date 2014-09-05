@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module solv_elec_stat_module
 !
 !  This module are used to calculate electrostatic
@@ -57,9 +57,9 @@ module solv_elec_stat_module
   public matrix_grad,dealloc_cavity_mm,dealloc_a_inv
 
   real(kind=r8_kind), public, allocatable ::A_matrix_inv(:,:)
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
   real(r8_kind), allocatable :: A_matrix(:,:)
@@ -156,11 +156,11 @@ contains
     real(r8_kind) :: rij(3)
     integer(i4_kind) :: i,j
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: n1,n2,n3,m
     real(r8_kind) :: drij,drij_2,a12(3),da12,da12_2,sum,cos_theta,zeta,rij_a12
     real(r8_kind) :: P0,P1,P2,sum1,Aij1,ab_min,r2a2,buf
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call image_slab(rij)
 
@@ -307,11 +307,11 @@ contains
     real(r8_kind) :: rij(3)
     integer(i4_kind) :: i,j
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: n1,n2,n3,n4,n5,n6,m
     real(r8_kind) :: drij,drij_2,a12(3),da12,da12_2,sum,cos_theta,zeta,rij_a12
     real(r8_kind) :: P0,P1,P2,sum1,Aij1,ab_min,r2a2,buf
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call image(rij)
 
@@ -470,9 +470,9 @@ contains
     real(r8_kind), intent(in) :: x, P_n,P_n_1
     integer(i4_kind), intent(in) :: n1
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: n
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n=float(n1-1)
 
@@ -490,10 +490,10 @@ contains
     real(r8_kind), intent(in) :: x, P_n,P_n_1
     integer(i4_kind), intent(in) :: n
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: n1
     integer(i4_kind) :: n2
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n1=float(n); n2=n+1
 
@@ -516,9 +516,9 @@ contains
     integer(i4_kind)             :: gcd
     integer(i4_kind), intent(in) :: u1, v1
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind)             :: u, v
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if(u1==0.and.v1==0) then
        gcd=1
        return
@@ -645,13 +645,13 @@ contains
     real(r8_kind) :: dAij(3)
     real(r8_kind) :: rij(3),d_rij(3,3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: Aij,Aij1,drij,drij_2,rij_a12,da12_2,da12
     real(r8_kind) :: cos_theta,rdr(3),a12(3),adr(3)
     real(r8_kind) :: sum,sum1,sum_d(3),aaaa,dP2,drda,buf,dr3da
     real(r8_kind) :: P0,P1,P2,r2a2,zeta,b2(3),db2(3)!,dA1(3),dA2(3),dA3(3),A1,A2,A3
     integer(i4_kind) :: n1,n2,n3,m,k
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call image_slab(rij)
 
@@ -844,13 +844,13 @@ contains
     real(r8_kind) :: dAij(3)
     real(r8_kind) :: rij(3),d_rij(3,3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: Aij,Aij1,drij,drij_2,rij_a12,da12_2,da12
     real(r8_kind) :: cos_theta,rdr(3),a12(3),adr(3)
     real(r8_kind) :: sum,sum1,sum_d(3),aaaa,dP2,drda,buf,dr3da
     real(r8_kind) :: P0,P1,P2,r2a2,zeta,b2(3),db2(3)!,dA1(3),dA2(3),dA3(3),A1,A2,A3
     integer(i4_kind) :: n1,n2,n3,n4,n5,n6,m,k
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call image(rij)
 

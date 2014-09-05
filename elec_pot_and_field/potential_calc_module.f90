@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -33,11 +33,11 @@ module potential_calc_module
   !  Author: AS
   !  Date: 02/2001
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: AS
   ! Date:   03/2002
@@ -49,12 +49,16 @@ module potential_calc_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
-  use type_module
-  use comm_module
-  use iounitadmin_module
-  use potential_module
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
+# include "def.h"
+  use type_module, only: i4_kind, r8_kind
+  use iounitadmin_module, only: output_unit, openget_iounit, &
+       returnclose_iounit
+  use potential_module, only: spacepoint_type, point_in_space, &
+       N_points, V_pot_e, V_pot_n, V_pot_pc, dealloc_space_points, &
+       deallocate_pot, start_read_poten_e, get_poten_n, bounds_free_poten, &
+       send_recv_space_point, get_poten_pc
   use filename_module, only: inpfile
 #ifdef FPP_AIX_XLF
   use matrix_module, only: matmult
@@ -64,14 +68,14 @@ module potential_calc_module
   save
   private
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public poten_calc_read, poten_calc_write, calc_plane_grid, grid2space_2d, &
        get_poten_and_shutdown_2d, calc_shell_grid, collect_poten_3d, &
        calc_poten_derive_charges
 !==================================================================
-! End of public interface of module
+  ! End of public interface of module
 !==================================================================
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !-- Declaration of privat constant and variable  ----------------
   type poten
      real(kind=r8_kind) :: r(3)
@@ -368,17 +372,18 @@ contains
 
 !******************************************************************
   subroutine calc_plane_grid()
-    !------------ Modules used ------------------------------------
+    !
+    ! Does  no  communication  but   some  IO  to  disk.  Called  from
+    ! main_master() on master only.
+    !
     use unique_atom_module, only: N_unique_atoms,unique_atoms
-    !------------ Declaration of formal parameters ----------------
     !== End of interface ==========================================
-    !------------ Declaration of local variables ------------------
+
     real (r8_kind) :: center_coor(3), xaxis(3), yaxis(3), zaxis(3)
     real (r8_kind) :: length01, r01(3), rbuf(3), mat_rot(3,3)
     real(kind=r8_kind) :: atcoor(3,100),mat_rot_t(3,3)
     integer (i4_kind) :: iz(100), nat, atunit
     integer(kind=i4_kind) :: istat,i1,j1,k1
-    !------------ Executable code ---------------------------------
 
     allocate(pot_on_plane(xgrid,ygrid),stat=istat)
     if(istat /= 0) call error_handler( &
@@ -663,82 +668,112 @@ contains
 
 !********************************************************************
   subroutine get_poten_and_shutdown_2d()
-    !------------ Modules used --------------------------------------
-    use density_data_module, only: density_data_free1
-    !------------ Declaration of formal parameters ------------------
+    !
+    ! Executed on all workers.  Called from main_master(). Writes some
+    ! output  to disk.   Historically this  procedure was  executed on
+    ! master only  while slaves were spinning  in main_slave() waiting
+    ! for orders.
+    !
+    use density_data_module, only: density_data_free
+    use comm, only: comm_size, comm_rank
     !== End of interface ============================================
-    !------------ Declaration of local variables --------------------
-    real(kind=r8_kind) :: x,y,conv
-    integer(kind=i4_kind) :: v_unit,i,j,k,l,m,istat
-    !------------ Executable code -----------------------------------
 
-    if(V_electronic) call start_read_poten_e()
-    if(V_nuclear) call get_poten_n()
-    if(V_pc) call get_poten_pc()
+    real (r8_kind) :: x, y, conv
+    integer (i4_kind) :: v_unit, i, j, k, l, m, istat
 
-    if(index(potential_task,"esp_map")/=0) then
-       if(scilab) then
-          v_unit=openget_iounit(trim(inpfile('Vpoints')),  &
+    if (V_electronic) then
+       call start_read_poten_e()
+    endif
+
+    ! FIXME:  may  need some  tweaking  to  run  on all  workers.   In
+    ! particular  wiriting  to  the  same  file  will  never  work  in
+    ! parallel. Maybe just goto towards the end?
+    if (comm_size() > 1) then
+       ABORT("verify SPMD")
+    endif
+    ! FIXME: here or below?
+    if (comm_rank() /= 0) goto 999 ! clean up and exit
+
+    if (V_nuclear) call get_poten_n()
+    if (V_pc) call get_poten_pc()
+
+    if (index (potential_task, "esp_map") /= 0) then
+       if (scilab) then
+          v_unit = openget_iounit (trim (inpfile ('Vpoints')),  &
                form='formatted', status='unknown')
-       else if(worksheet) then
-          v_unit=openget_iounit(trim(inpfile('V.txt')),  &
+       else if (worksheet) then
+          v_unit = openget_iounit (trim (inpfile ('V.txt')),  &
                form='formatted', status='unknown')
-       else if(gnuplot) then
-          v_unit=openget_iounit(trim(inpfile('V.gpl')),  &
+       else if (gnuplot) then
+          v_unit = openget_iounit (trim (inpfile ('V.gpl')),  &
                form='formatted', status='unknown')
        endif
-       conv=1.0_r8_kind
-       if(index(output_units,"eV-a")/=0) conv=au2ang
-       do i=1,Xgrid
-          if(worksheet .or. gnuplot) then
-             x=(Xlimits(1)+(i-1)*(Xlimits(2)-Xlimits(1))/(xgrid-1))*conv
+       conv = 1.0_r8_kind
+       if (index (output_units, "eV-a") /= 0) conv = au2ang
+       do i = 1, Xgrid
+          if (worksheet .or. gnuplot) then
+             x = (Xlimits(1) + (i - 1) * (Xlimits(2) - Xlimits(1)) / (xgrid - 1)) * conv
           endif
-          do j=1,Ygrid
-             if(worksheet .or. gnuplot) then
-                y=(Ylimits(1)+(j-1)*(Ylimits(2)-Ylimits(1))/(ygrid-1))*conv
+          do j = 1, Ygrid
+             if (worksheet .or. gnuplot) then
+                y = (Ylimits(1) + (j - 1) * (Ylimits(2) - Ylimits(1)) / (ygrid - 1)) * conv
              endif
-             pot_on_plane(i,j)%pot=0.0_r8_kind
-             kk: do k=1,N_points
-                do l=1,point_in_space(k)%N_equal_points
-                   if(dot_product(pot_on_plane(i,j)%r-point_in_space(k)%position(:,l), &
-                        pot_on_plane(i,j)%r-point_in_space(k)%position(:,l)) == 0.0_r8_kind) then
-                      m=k
-                      exit kk
-                   endif
+             pot_on_plane(i, j) % pot = 0.0_r8_kind
+             kk: do k = 1, N_points
+                do l = 1, point_in_space(k) % N_equal_points
+                   ! Maybe  norm2()  fortran  intrinsic  if  an  extra
+                   ! sqrt() is not too expensive?:
+                   associate (v => pot_on_plane(i, j) % r - point_in_space(k) % position(:, l))
+                     if (dot_product (v, v) == 0.0) then
+                        m = k
+                        exit kk
+                     endif
+                   end associate
                 enddo
              enddo kk
-             if(V_electronic) &
-                  pot_on_plane(i,j)%pot=pot_on_plane(i,j)%pot+V_pot_e(m)/point_in_space(m)%N_equal_points
-             if(V_nuclear) &
-                  pot_on_plane(i,j)%pot=pot_on_plane(i,j)%pot+V_pot_n(m)/point_in_space(m)%N_equal_points
-             if(V_pc) &
-                  pot_on_plane(i,j)%pot=pot_on_plane(i,j)%pot+V_pot_pc(m)/point_in_space(m)%N_equal_points
-             if(V_abs_limit > 0.0_r8_kind .and. abs(pot_on_plane(i,j)%pot) > V_abs_limit) then
-                pot_on_plane(i,j)%pot=sign(V_abs_limit,pot_on_plane(i,j)%pot)
+             if (V_electronic) then
+                pot_on_plane(i, j) % pot = pot_on_plane(i, j) % pot + &
+                     V_pot_e(m) / point_in_space(m) % N_equal_points
+             endif
+             if (V_nuclear) then
+                pot_on_plane(i, j) % pot= pot_on_plane(i, j) % pot + &
+                     V_pot_n(m) / point_in_space(m) % N_equal_points
+             endif
+             if (V_pc) then
+                pot_on_plane(i, j) % pot = pot_on_plane(i, j) % pot + &
+                     V_pot_pc(m) / point_in_space(m) % N_equal_points
+             endif
+             if (V_abs_limit > 0.0_r8_kind .and. &
+                  abs (pot_on_plane(i, j) % pot) > V_abs_limit) then
+                pot_on_plane(i, j) % pot = sign (V_abs_limit, pot_on_plane(i, j) % pot)
              end if
-             if(index(output_units,"eV-a")/=0) pot_on_plane(i,j)%pot=pot_on_plane(i,j)%pot*27.211652_r8_kind
-             if(scilab) then
-                write(v_unit,'(f25.15)') pot_on_plane(i,j)%pot
-             else if(worksheet .or. gnuplot) then
-                write(v_unit,'(3f25.15)') x,y,pot_on_plane(i,j)%pot
-                if(gnuplot .and. j==Ygrid) write(v_unit,'(a)') ""
+             if (index (output_units, "eV-a") /= 0) then
+                pot_on_plane(i, j) % pot = pot_on_plane(i, j) % pot * 27.211652_r8_kind
+             endif
+             if (scilab) then
+                write (v_unit, '(f25.15)') pot_on_plane(i, j) % pot
+             else if (worksheet .or. gnuplot) then
+                write (v_unit, '(3f25.15)') x, y, pot_on_plane(i, j) % pot
+                if (gnuplot .and. j == Ygrid) write (v_unit, '(a)') ""
              endif
           enddo
        enddo
-       call returnclose_iounit(v_unit)
+       call returnclose_iounit (v_unit)
 
-       deallocate(pot_on_plane, stat=istat)
+       deallocate (pot_on_plane, stat=istat)
        if ( istat /= 0) call error_handler( &
               "potential_calc_module: deallocation pot_on_plane failed")
     endif
 
-    call dealloc_space_points()
-    call deallocate_pot()
-    if(V_electronic) then
-       call bounds_free_poten()
-       call density_data_free1()
-    endif
+    ! FIXME: I assume this staff should be executed on all workers?
+999 continue
+    call dealloc_space_points() ! no comm
+    call deallocate_pot()       ! no comm
 
+    if (V_electronic) then
+       call bounds_free_poten() ! no comm
+       call density_data_free() ! no comm
+    endif
   end subroutine get_poten_and_shutdown_2d
 !********************************************************************
 
@@ -1708,7 +1743,10 @@ contains
 
 !********************************************************************
   subroutine collect_poten_3d()
-    use density_data_module, only: density_data_free1
+    !
+    ! Runs on all workers.
+    !
+    use density_data_module, only: density_data_free
     !== End of interface ============================================
 
 
@@ -1717,20 +1755,23 @@ contains
 !!$    call get_poten_pc() !@@@@@@@@@@@@@@@@@@@@@@@
 
     call bounds_free_poten()
-    call density_data_free1()
+    call density_data_free()
   end subroutine collect_poten_3d
 !********************************************************************
 
 !********************************************************************
   subroutine calc_poten_derive_charges()
-    !------------ Modules used --------------------------------------
+    !
+    ! Does  not  seem  to   use  any  communication.  Runs  on  master
+    ! only. Called from main_master().
+    !
     use occupation_module, only : get_charge
     use unique_atom_module, only : N_unique_atoms,unique_atoms
 !!$    use pointcharge_module, only: pointcharge_N, pointcharge_array !@@@@@@@@@@@@@@
     use dipole_module, only : dipole_total
-    !------------ Declaration of formal parameters ------------------
+    implicit none
     !== End of interface ============================================
-    !------------ Declaration of local variables --------------------
+
     integer(kind=i4_kind) :: N_charges,N_dim,N_dim_old
     integer(kind=i4_kind), allocatable :: IPIV(:),b_help(:)
     real(kind=r8_kind), allocatable :: V_fix_at(:),a_matrix(:,:),b_vector(:,:)
@@ -2143,8 +2184,8 @@ contains
 
        if((.not.symm_restr .or. icycle == 2) .or. &
             (symm_restr .and. N_cycles == 1)) then
-          call dealloc_space_points()
-          call deallocate_pot()
+          call dealloc_space_points() ! no comm
+          call deallocate_pot()       ! no comm
        end if
 
     end do N_cyc

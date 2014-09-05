@@ -1,34 +1,34 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module density_data_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !-------------- Module specification ---------------------------
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains the density matrix DENSMAT and all
   !           routines for
@@ -50,8 +50,6 @@ module density_data_module
   !                              density_data_free
   !                              print_densmat -> print densat to file
   !                                               $TTFSOUT/densmat.new
-  !                             gendensmat_occ1-> invokes densmat calculations
-  !                                               using gendensmat_occ
   !                             gendensmat_occ -> generate the density matrix
   !                                               based on the data available
   !                                               in the occupied_levels_module
@@ -65,11 +63,11 @@ module density_data_module
   !  Author: Folke Noertemann
   !  Date: 11/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: UB
@@ -103,7 +101,7 @@ module density_data_module
   ! Date:   ...
   ! Description: ...
   !
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
 ! define FPP_SERIAL /* if parallel version of gendensmat() breaks */
   use type_module ! type specification parameters
@@ -115,7 +113,7 @@ module density_data_module
   implicit none
   save
   private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
   !------------ Declaration of public constants and variables -----
@@ -128,23 +126,18 @@ module density_data_module
   ! in case of creating a core density
   type(arrmat3), allocatable, public, protected :: core_densmat(:)
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: print_densmat, &
        save_densmat, open_densmat
 
   public :: density_data_alloc!(), does no communication
   public :: density_data_free!(), does no communication
-
-  ! MUSTDIE:
-  public :: density_data_free1!(), does density_data_free() and tells slaves to do so
-
-  public :: gendensmat_occ1!(density_deviation), also tells slaves to join
   public :: gendensmat_occ!(density_deviation), to be executed in parallel context
   public :: gendensmat_tot!( irrep, dmat ), for one irepp only
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   public :: arrmat3 !,sym
 
   integer(i4_kind), parameter :: &
@@ -153,7 +146,7 @@ module density_data_module
        DM_CORE = 3
 
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -280,29 +273,6 @@ contains
     endif
   end subroutine density_data_free
 
-  subroutine density_data_free1()
-    !
-    ! MUSTDIE!
-    !
-    ! Rather call density_data_free() from a parallel context instead.
-    !
-    use comm_module, only: comm_init_send, comm_all_other_hosts &
-                         , comm_send, comm_i_am_master
-    use msgtag_module, only: msgtag_density_data_free
-    implicit none
-    ! *** end of interface ***
-
-    ASSERT(comm_i_am_master())
-
-    WARN('call density_data_free() directly')
-
-    call comm_init_send(comm_all_other_hosts, msgtag_density_data_free)
-    call comm_send()
-
-    call density_data_free()
-  end subroutine density_data_free1
-
-  !*************************************************************
 
   subroutine print_densmat(loop)
     ! Purpose: print out the density matrix to file
@@ -317,7 +287,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind),intent(in),optional :: loop
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: io_u,count,i,is,m,n,i_dim
     data count / 0 /
 
@@ -363,44 +333,6 @@ contains
     return
   end subroutine print_densmat
 
-  !*************************************************************
-
-  subroutine gendensmat_occ1(density_dev)
-    !
-    !  Purpose: to envoke the computation of the density matrix
-    !           on the master and each slave
-    !
-    !  Subroutine called by: mainscf
-    !
-    !  Author: U. Birkenheuer  --  extracted from CHARGEFIT (TG)
-    !                              and adopted to gendensmat_occ
-    !  Date: 7/97
-    !
-    ! Modules used -----------------------------------------------
-    use comm_module, only: comm_parallel, comm_i_am_master &
-      , comm_init_send, comm_send, comm_all_other_hosts
-    use msgtag_module, only: msgtag_dens
-    !------------ Declaration of formal parameters ---------------
-    implicit none
-    real(kind=r8_kind), optional, intent(out) :: density_dev
-    !** End of interface *****************************************
-    !------------ Executable code --------------------------------
-    !*************************************************************
-
-    !
-    ! Tell slaves to call this sub ...
-    ! (FIXME: call gendensmat_occ() from a parallel context instead):
-    !
-    if( comm_parallel() .and. comm_i_am_master() ) then
-       call comm_init_send(comm_all_other_hosts, msgtag_dens)
-       call comm_send()
-    endif
-
-    !
-    ! This runs in a parallel context
-    !
-    call gendensmat_occ(density_dev)
-  end subroutine gendensmat_occ1
 
   subroutine gendensmat_tot(irr, P)
     !
@@ -431,22 +363,29 @@ contains
 
   !*************************************************************
 
-  subroutine gendensmat_occ(density_dev)
+  subroutine gendensmat_occ (density_dev)
     !
-    !  Purpose: Assemble  density matrix from  occupied eigenstates as
-    !  stored in eigvec_occ  and occ_num_occ.  Allocates denity matrix
-    !  if it is not already allocated.
+    ! Purpose:  Assemble density matrix  from occupied  eigenstates as
+    ! stored in  eigvec_occ and occ_num_occ.   Allocates denity matrix
+    ! if it is not already allocated.
     !
-    !  Input parameter (not modified on output):
+    ! Input parameter (not modified on output):
     !
-    !  Name:              Description/Range:
-    !  ssym               ssymmetry stuff
-    !  n_occo             the index of the heighest non-empty orbital
-    !  occ_num_occ        occupation number of the occupied states
-    !  eigvec_occ         the orbital coefficient of the occupied states
+    !   Name:        Description/Range:
+    !   ssym         ssymmetry stuff
+    !   n_occo       the index of the heighest non-empty orbital
+    !   occ_num_occ  occupation number of the occupied states
+    !   eigvec_occ   the orbital coefficient of the occupied states
     !
-    !  Subroutine called by: pre_dens_master, chargefit(),
-    !  properties_main().
+    ! Subroutine called by: main_scf(), main_gradient(),
+    ! properties_main().
+    !
+    ! FIXME: the presence of the argument toggles more allocations for
+    ! space to  store the old  density matrix in  order to be  able to
+    ! compute  the difference.   This argument  was present  on master
+    ! (call   from  main_scf())   but   not  on   slaves  (call   from
+    ! main_slave()).  Now that it  is called  from a  paralle context,
+    ! this argument is present on every worker.
     !
     !  Author: Uwe Birkenheuer (based on gendensmat of TG)
     !  Date: 7/97
@@ -466,7 +405,7 @@ contains
     use options_module, only: options_spin_orbit
     use output_module, only: output_n_density_dev
     implicit none
-    real(kind=r8_kind), optional, intent(out) :: density_dev
+    real (r8_kind), optional, intent (out) :: density_dev
     ! *** end of interface ***
 
     integer(kind=i4_kind)       :: i_gamma
@@ -513,9 +452,8 @@ contains
     endif
 
     !
-    ! Now set up the new density matrix,
-    ! this sub does the real work and updates global
-    ! densmat/densmat_real/densmat_imag:
+    ! Now set up  the new density matrix, this sub  does the real work
+    ! and updates global densmat/densmat_real/densmat_imag:
     !
     call gendensmat()
 
@@ -557,24 +495,25 @@ contains
        density_dev = dev(1)
 
        !
-       ! The whole complexity for these lines in the output:
+       ! FIXME:  Most of  the complexity  is  for these  lines in  the
+       ! output which I never looked at.
        !
        if (output_n_density_dev > 0) then
-          write(output_unit,*)" "
-          write(output_unit,*)"MAX. DIFF. IN DENSITY MATRIX      "
-          write(output_unit,1000) dev
-          write(output_unit,*)" "
-          1000 format(2x,6ES13.3)
+          if (output_unit > 0) then
+             write (output_unit, *) " "
+             write (output_unit, *) "MAX. DIFF. IN DENSITY MATRIX      "
+             write (output_unit, 1000) dev
+             write (output_unit, *) " "
+1000         format (2x, 6ES13.3)
+          endif
        endif
     endif
   end subroutine gendensmat_occ
 
   subroutine gendensmat()
-    !  Purpose: Assemble density matrix from occupied eigenstates
-    !           as stored in eigvec_occ and occ_num_occ.
-    !           UB 7/97
-    !** End of interface *****************************************
     !
+    ! Assemble density  matrix from occupied eigenstates  as stored in
+    ! eigvec_occ and occ_num_occ.  UB 7/97
     !
     !  Input parameter (not modified on output):
     !
@@ -605,6 +544,7 @@ contains
     use occupied_levels_module, only: eigvec_occ, occ_num_occ,eigvec_occ_real,eigvec_occ_imag, &
                                       occ_num_core_occ
     use options_module, only: options_spin_orbit
+    implicit none
     ! *** end of interface ***
 
     integer(i4_kind)       :: i_gamma, i_spin
@@ -973,9 +913,9 @@ contains
     use filename_module, only: inpfile
     use iounitadmin_module, only : get_iounit,return_iounit
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: i,j,k,io_u
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     io_u = get_iounit()
     open(unit= io_u, form='unformatted',status='replace', &
@@ -992,65 +932,40 @@ contains
     close(io_u)
     call return_iounit(io_u)
   end subroutine save_densmat
-  !*************************************************************
-  subroutine open_densmat
-    ! Purpose: read the density matrix earlier saved in INPUT directory
-    ! At the moment it was realized for not spin_orbit
-    ! Modules used -----------------------------------------------
+
+
+  subroutine open_densmat()
+    !
+    ! Read the density matrix earlier  saved in INPUT directory At the
+    ! moment it was realized for not spin_orbit
+    !
     use filename_module, only: inpfile
-    use iounitadmin_module, only : get_iounit,return_iounit
-    use comm_module
-    use msgtag_module
-    !------------ Declaration of local variables -----------------
-    integer(kind=i4_kind) :: i, j, k, io_u, info
-    logical               :: yes
-    real(kind=r8_kind), allocatable :: help_arr(:)
-    logical, allocatable :: mask(:,:,:)
-    !------------ Executable code --------------------------------
+    use iounitadmin_module, only : openget_iounit, returnclose_iounit
+    ! *** end of interface ***
 
-    if (comm_i_am_master()) then
-       inquire(file=trim(inpfile('densmat.save')), exist=yes)
-       if(.not.yes) call error_handler(&
-            "open_densmat: file densmat.save cannot be read. It is absent")
+    integer (i4_kind) :: i, j, k, io_u
+    logical :: yes
 
-       io_u = get_iounit()
-       open(unit= io_u, form='unformatted',status='old', &
-            file=trim(inpfile('densmat.save')))
+    inquire (file= trim (inpfile ('densmat.save')), exist= yes)
+    if (.not. yes) call error_handler &
+         ("open_densmat: file densmat.save cannot be read. It is absent")
 
-       do i=1,ssym%n_irrep
-          do j=1,ssym%dim(i)
-             do k=1,ssym%dim(i)
-                read(io_u) densmat(i)%m(j,k,1:ssym%n_spin)
-             end do
-          end do
-       end do
+    io_u = openget_iounit (file= trim (inpfile ('densmat.save')), &
+         form= 'unformatted', status= 'old')
 
-       close (io_u)
-       call return_iounit(io_u)
+    ASSERT(allocated(densmat))
+    do i = 1, ssym % n_irrep
+       ASSERT(allocated(densmat(i)%m))
+       do j = 1, ssym % dim(i)
+          do k = 1, ssym % dim(i)
+             read (io_u) densmat(i) % m(j, k, 1: ssym % n_spin)
+          enddo
+       enddo
+    enddo
 
-       call comm_init_send(comm_all_other_hosts,msgtag_open_densmat)
-       do i=1,ssym%n_irrep
-          allocate(help_arr(ssym%dim(i)*ssym%dim(i)*ssym%n_spin))
-          help_arr=pack(densmat(i)%m,.true.)
-          call commpack(help_arr,ssym%dim(i)*ssym%dim(i)*ssym%n_spin,1,info)
-          deallocate(help_arr)
-       end do
-       call comm_send()
-    else
-       allocate(densmat(ssym%n_irrep))
-       do i=1,ssym%n_irrep
-          allocate(help_arr(ssym%dim(i)*ssym%dim(i)*ssym%n_spin))
-          allocate(mask(ssym%dim(i),ssym%dim(i),ssym%n_spin))
-          mask=.true.
-          call communpack(help_arr,ssym%dim(i)*ssym%dim(i)*ssym%n_spin,1,info)
-          allocate(densmat(i)%m(ssym%dim(i),ssym%dim(i),ssym%n_spin))
-          densmat(i)%m=unpack(help_arr,mask,0.0_r8_kind)
-          deallocate(help_arr,mask)
-       end do
-    end if
-
+    call returnclose_iounit (io_u)
   end subroutine open_densmat
-  !*************************************************************
+
 
   subroutine copy2(a, b)
     implicit none

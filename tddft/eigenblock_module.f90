@@ -1,48 +1,48 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 MODULE  eigenblock_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Author: SB
   ! Date: 07/2005
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   USE type_module ! type specification parameters
   USE iounitadmin_module 
@@ -53,19 +53,19 @@ MODULE  eigenblock_module
   IMPLICIT NONE
   SAVE            ! save all variables defined in this module
   PRIVATE         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   PUBLIC eigenblock_mult
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 CONTAINS
 
   SUBROUTINE eigenblock_mult(N, K, A, D)
@@ -82,7 +82,7 @@ CONTAINS
     REAL   (KIND=r8_kind),INTENT(in   )  :: A(:)
     REAL   (KIND=r8_kind),INTENT(inout)  :: D(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     REAL   (KIND=r8_kind), ALLOCATABLE :: A_2d_up(:,:), A_2d_dn(:,:)
     REAL   (KIND=r8_kind), ALLOCATABLE :: aD(:,:)
     REAL   (KIND=r8_kind), ALLOCATABLE :: D_2d(:,:), KERN(:,:)
@@ -392,7 +392,7 @@ CONTAINS
     !------------ Declaration of formal parameters ---------------
     INTEGER(KIND=i4_kind),INTENT(INOUT) :: iteration_cycle
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !------------ Executable code -----------------------------------
 
     ! increment number of iterations
@@ -407,5 +407,5 @@ CONTAINS
   END SUBROUTINE eigenblock_showprogress
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 END MODULE eigenblock_module

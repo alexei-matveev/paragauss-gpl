@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module init_module
   !-------------- Module specification ---------------------------
   !
@@ -45,22 +45,22 @@ module init_module
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
   use type_module ! type specification parameters
   use datatype    ! user defined stuff
 
@@ -88,7 +88,7 @@ module init_module
 public :: init,arrmat3,arrmat2,arrmat2int
 
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
@@ -97,9 +97,9 @@ contains
   subroutine init_ham(ham)
     !------------ Declaration of formal parameters ---------------
     type(arrmat3),intent(inout) :: ham(:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)      :: i_gamma
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do i_gamma = 1,ubound(ham,1)
        ham(i_gamma)%m = zero
     enddo
@@ -110,7 +110,7 @@ contains
   subroutine init_arr_1dim(arr)
     !------------ Declaration of formal parameters ---------------
     real(kind=r8_kind),    intent(out ) :: arr(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     arr = zero
   end subroutine init_arr_1dim
   !*************************************************************
@@ -119,7 +119,7 @@ contains
   subroutine init_arr_1dim_int(arr)
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind),    intent(out ) :: arr(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     arr = zero_int
   end subroutine init_arr_1dim_int
   !*************************************************************
@@ -128,7 +128,7 @@ contains
   subroutine init_arr_2dim(arr)
     !------------ Declaration of formal parameters ---------------
     real(kind=r8_kind),intent(out)   :: arr(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     arr = zero
   end subroutine init_arr_2dim
   !*************************************************************
@@ -137,7 +137,7 @@ contains
   subroutine init_arr_2dim_int(arr)
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind),intent(out)   :: arr(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     arr = zero_int
   end subroutine init_arr_2dim_int
   !*************************************************************
@@ -146,7 +146,7 @@ contains
   subroutine init_arr_3dim(arr)
     !------------ Declaration of formal parameters ---------------
     real(kind=r8_kind),intent(out)   :: arr(:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     arr = zero
   end subroutine init_arr_3dim
   !*************************************************************
@@ -155,9 +155,9 @@ contains
   subroutine init_arrmat2_vec(arr)
     !------------ Declaration of formal parameters ---------------
     type(arrmat2),intent(inout)       :: arr(:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do i=lbound(arr,1),ubound(arr,1)
        arr(i)%m = zero
     enddo
@@ -168,9 +168,9 @@ contains
   subroutine init_arrmat2int_vec(arr)
     !------------ Declaration of formal parameters ---------------
     type(arrmat2int),intent(inout)    :: arr(:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)             :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do i=lbound(arr,1),ubound(arr,1)
        arr(i)%m = zero_int
     enddo

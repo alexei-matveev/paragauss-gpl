@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  integralpar_module
 !---------------------------------------------------------------
 !
@@ -61,11 +61,11 @@ module  integralpar_module
 !  Date:   5/96
 !
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification
 ! Author: MS
@@ -128,7 +128,7 @@ module  integralpar_module
 ! Author: ...
 ! Date:   ...
 ! Description: ...
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
 #include "def.h"
 use type_module ! type specification parameters
@@ -199,7 +199,7 @@ logical, parameter :: &
            df_integralpar_2cob_ipd_grad    = .false.
 
 integer(i4_kind), parameter :: df_integralpar_i_int_part = 1
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 ! to check that nobody modifies these controls from outside of this
 ! module declare them ``protected'':
@@ -346,9 +346,9 @@ public :: integralpar_set!(Task)
 public :: integralpar_send_receive!()
 public :: integralpar_setup!()
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !................................................................
 ! integralpar       SCF       PROPER   POSTHOC  GRADS    DIPOLE
@@ -395,7 +395,7 @@ public :: integralpar_setup!()
 ! HH 7/98. Descriptions appears outdated.
 logical, parameter :: integralpar_resp_prescreen = .false.
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   recursive subroutine integralpar_set(task)
@@ -597,7 +597,7 @@ contains
     !------------ Modules used ------------------- ---------------
     implicit none
     !------------ Declaration of subroutines used ----------------
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ! integer:
     integralpar_i_int_part       = df_integralpar_i_int_part
     ! logical:
@@ -668,7 +668,7 @@ contains
     !** End of interface *****************************************
     !------------ Modules used ------------------- ---------------
     !------------ Declaration of subroutines used ----------------
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 #   define DIFFI(x,y) call diffi(x,y,__STRING(x))
 #   define DIFFL(x,y) call diffl(x,y,__STRING(x))
     ! integer:
@@ -761,7 +761,7 @@ contains
     !  called by: integralpar_set(task)
     implicit none
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     integralpar_2cff = integralpar_2cch_no .or. &
          integralpar_2cxc_no .or. &
@@ -814,7 +814,7 @@ contains
 
   !*************************************************************
   subroutine integralpar_set_field()
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     integralpar_2cob_potential = .false.
     integralpar_pot_for_secderiv = .false.
     integralpar_2cob_field = .true.
@@ -905,7 +905,7 @@ contains
 
   !*************************************************************
   subroutine integralpar_set_potential()
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     integralpar_2cob_potential = .true.
     ! 2-center orbital integral of potential
     integralpar_2cob_field = .false.
@@ -1007,7 +1007,7 @@ contains
     logical :: exchange_fit, extended_mda
     exchange_fit = options_xcmode() == xcmode_exchange_fit
     extended_mda = options_xcmode() == xcmode_extended_mda
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     integralpar_2cob_pvsp = options_relativistic
     integralpar_2cob_pvxp = options_spin_orbit
     integralpar_2cob_pvec =  options_spin_orbit
@@ -1046,7 +1046,7 @@ contains
     !  Only overlap and renorm coefficients are to be calculated
     !  called by main_master
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     integralpar_offdiag_dipoles = .false.
     ! no dipole matrix elements between diffrent Irreps
     integralpar_gradients = .false.
@@ -1135,7 +1135,7 @@ contains
   !*************************************************************
   subroutine integralpar_set_grad_solv()
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     integralpar_offdiag_dipoles = .false.
     ! no dipole matrix elements between diffrent Irreps
     integralpar_gradients=.true.
@@ -1228,7 +1228,7 @@ contains
     !  run of integral part in gradient part.
     !  called by main_master
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     integralpar_offdiag_dipoles = .false.
     ! no dipole matrix elements between diffrent Irreps
     integralpar_gradients=.true.
@@ -1321,7 +1321,7 @@ contains
     logical, intent(in) :: offdiag_dipoles
     ! are dipole matrix elements between diffrent Irreps required ?
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     call integralpar_set('defaults')
 
@@ -1433,11 +1433,11 @@ contains
     !------------ Modules used -----------------------------------
     use comm_module, only: commpack
     use calc3c_switches
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call commpack(integralpar_2cob_potential,info)
     if (info .ne. 0) call error_handler( &
          "integralpar_pack: integralpar_2cob_potential")
@@ -1604,11 +1604,11 @@ contains
     !------------ Modules used -----------------------------------
     use comm_module, only: communpack
     use calc3c_switches
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: info
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call communpack(integralpar_2cob_potential,info)
     if (info .ne. 0) call error_handler( &
          "integralpar_unpack: integralpar_2cob_potential")
@@ -1769,5 +1769,5 @@ contains
   end subroutine integralpar_unpack
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module integralpar_module

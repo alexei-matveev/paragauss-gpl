@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module solv_cavity_module
 !
 !  This module are used to
@@ -44,16 +44,16 @@ module solv_cavity_module
 !  Author: AS
 !  Date: 07/06
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: ...
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt end of public interface of module =====
 
 !----modules used ------------------
@@ -67,7 +67,6 @@ module solv_cavity_module
        returnclose_iounit
   use group_module ,only: symm_transformation_int
   use output_module ,only: output_cavity_data, output_cavity_long
-  use atoms_data_module
   use integralpar_module, only: integralpar_2dervs
   use polyhedron_module
 #ifdef FPP_AIX_XLF
@@ -89,8 +88,8 @@ module solv_cavity_module
        dealloc_geom_deriv_part1, dealloc_geom_grad, dealloc_cavity, &
        correction_param
 
-!================================================================
-!================================================================
+  !===================================================================
+  !===================================================================
 !== Interrupt of public interface of module =========
 !----private types
 # define MAX_POL_VER 30
@@ -180,7 +179,7 @@ module solv_cavity_module
   type(cavity_data), public, allocatable :: tessarea(:)
   integer(i4_kind),public,allocatable :: center2sphere(:,:)
 
-! End of public interface of module
+  ! End of public interface of module
 
   logical :: save_cav
   type(symm_transformation_int), pointer :: point_trafos(:)
@@ -332,7 +331,7 @@ module solv_cavity_module
   real(r8_kind),parameter :: d=0.15_r8_kind
   integer(i4_kind) :: Nd
   real(r8_kind) :: a(7)
-  !parameters defining behavior FIXPVA
+  ! Parameters defining behavior FIXPVA, in Angsrom:
   real(r8_kind), parameter :: mm11=0.02_r8_kind
   real(r8_kind), parameter :: mm12=0.55_r8_kind
   real(r8_kind), parameter :: nn11=1.0_r8_kind
@@ -744,13 +743,17 @@ contains ! of module
 
   !**************************************************************
   subroutine correction_param()
+    !
+    ! Does no communication.
+    !
     use solv_charge_mixing_module, only: mix_charges
+    implicit none
+    ! *** end of interface ***
 
-    if(mix_charges()) then
-       cor_el           =.false.
-       cor_nuc          =.false.
+    if (mix_charges()) then
+       cor_el =.false.
+       cor_nuc =.false.
     end if
-
   end subroutine correction_param
   !**************************************************************
 
@@ -774,8 +777,9 @@ contains ! of module
     ! 4) symm_sorted_centers(): find and store symmetry equivalent
     !    surface tesserae
     !
-    ! Called by main_master(), main_gradient() and (intern)
-    ! disp_rep_wrap().
+    ! Called  by  build_mol_surfaces(),  main_gradient() and  (intern)
+    ! disp_rep_wrap().    Does   not   look    like   it    does   any
+    ! communication. Runs on master only.
     !
     use unique_atom_module
     use pointcharge_module
@@ -1068,8 +1072,12 @@ contains ! of module
     !------------------------------------------------------------
     ! Public interface of module
     subroutine calc_cavity_1
-      !private subroutine
-      !solvent accessible surface (only for dispersion-repulsion and cavitation terms)
+      !
+      ! Private  subroutine.   Solvent  accessible surface  (only  for
+      ! dispersion-repulsion and cavitation terms)
+      !
+      use atoms_data_module, only: vdW_radius, atom_name, R_def_rap
+      implicit none
       ! End of public interface of module
 
       real(kind=r8_kind) :: v_d_w_r
@@ -1203,7 +1211,11 @@ contains ! of module
 
     !------------------------------------------------------------
     subroutine calc_cavity
-      ! the solvent excluding surface
+      !
+      ! The solvent excluding surface
+      !
+      use atoms_data_module, only: atom_name, vdW_radius, R_def_rap
+      implicit none
       !** End of interface *****************************************
 
       real(kind=r8_kind) :: r_mini, r_new
@@ -1715,8 +1727,13 @@ contains ! of module
 
     !------------------------------------------------------------
     subroutine calc_cavity_93
-      !Solvent excluding surface (Gepol93 algorithm)
+      !
+      ! Solvent excluding surface (Gepol93 algorithm)
+      !
+      use atoms_data_module, only: atom_name, vdW_radius, R_def_rap
+      implicit none
       !** End of interface *****************************************
+
       real(r8_kind), allocatable :: r_sphere_buf(:)
       real(r8_kind), allocatable :: xyz_sphere_buf(:,:)
       integer(i4_kind), allocatable :: parents_buf(:,:)
@@ -7187,12 +7204,15 @@ DPRINT 'max cent',max_cent
   !************************************************************
 
   !******************************************************
-  subroutine dealloc_geom_deriv_part2
-   !dealloc darea,dcenter of cagr
-   !** End of interface *****************************************
-
-    use unique_atom_module, only : N_moving_unique_atoms,unique_atoms,moving_unique_atom_index
-    use pointcharge_module, only : pointcharge_array, pointcharge_N
+  subroutine dealloc_geom_deriv_part2()
+    !
+    ! Dealloc darea, dcenter of cagr (?). Does no communication.
+    !
+    use unique_atom_module, only: N_moving_unique_atoms, &
+         unique_atoms, moving_unique_atom_index
+    use pointcharge_module, only: pointcharge_array, pointcharge_N
+    implicit none
+    !** End of interface *****************************************
 
     integer(kind=i4_kind) :: status,N_pc
     integer(kind=i4_kind) :: i,j,l,na,ea
@@ -7247,7 +7267,6 @@ DPRINT 'max cent',max_cent
 
 1   deallocate(i_symm_sort,stat=status)
     ASSERT(status.eq.0)
-
   end subroutine dealloc_geom_deriv_part2
   !*****************************************************
 
@@ -7976,12 +7995,14 @@ DPRINT 'max cent',max_cent
   !****************************************************
 
   !******************************************************
-  subroutine dealloc_cavity
-   !deallocate tesserea
-   !** End of interface *****************************************
+  subroutine dealloc_cavity()
+    !
+    ! Deallocate tesserea. Does no communication.
+    !
+    implicit none
+    !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: status
-    integer(kind=i4_kind) :: i
+    integer (i4_kind) :: i, status
 
     DPRINT 'dealloc_cavity: enetered'
     DPRINT 'dealloc_cavity: size(tessarea)=',size(tessarea)
@@ -7993,36 +8014,35 @@ DPRINT 'max cent',max_cent
             "dealloc_cavity: deallocation of TESSAREA%XYZ  failed")
     enddo
     deallocate(tessarea,stat=status)
-    if ( status /= 0) call error_handler( &
+    if (status /= 0) call error_handler( &
          "dealloc_cavity: deallocation TESSAREA is failed")
 
     DPRINT 'dealloc_cavity: shape(r_sphere)=', shape(r_sphere)
     deallocate(r_sphere, stat=status)
-    if ( status /= 0) call error_handler( &
+    if (status /= 0) call error_handler( &
          "dealloc_cavity: deallocation r_sphere is failed")
-    if(allocated(iuniq))  then
+    if (allocated(iuniq))  then
         deallocate(iuniq,stat=status)
-       if ( status /= 0) call error_handler( &
+       if (status /= 0) call error_handler( &
             "dealloc_cavity: deallocation of iuniq is failed")
     endif
 
     DPRINT 'dealloc_cavity: shape(xyz_sphere)=',shape(xyz_sphere)
     deallocate(xyz_sphere, stat=status)
-    if ( status /= 0) call error_handler( &
+    if (status /= 0) call error_handler( &
          "dealloc_cavity: deallocation xyz_sphere is failed")
 
-    if(allocated(parents)) then
+    if (allocated(parents)) then
        deallocate(parents, stat=status)
-       if ( status /= 0) call error_handler( &
+       if (status /= 0) call error_handler( &
             "dealloc_cavity: deallocation of parents is failed")
     endif
 
-    if(allocated(zero_area)) then
+    if (allocated(zero_area)) then
        deallocate(zero_area, stat=status)
-       if ( status /= 0) call error_handler( &
+       if (status /= 0) call error_handler( &
             "dealloc_cavity: deallocation of zero_area is failed")
     endif
-
   end subroutine dealloc_cavity
   !******************************************************
 end module solv_cavity_module

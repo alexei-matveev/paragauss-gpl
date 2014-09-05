@@ -1,43 +1,43 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module xc_func
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) Alexei Matveev
   ! Copyright (c) Alexey Shor
   ! Copyright (c) Sergey Bosko
   ! Copyright (c) Thomas Soini
 
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: SB
@@ -60,17 +60,17 @@ module xc_func
   ! TO TURN THE OLD CODE ON UNCOMMENT THIS:
 # define OLD_CODE
   !
-  !----------------------------------------------------------------
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module ! type specification parameters
@@ -79,16 +79,16 @@ module xc_func
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: xc_functionals
   public :: xc_func_reset
   public :: xc_func_reduce
@@ -99,19 +99,19 @@ module xc_func
   public :: qm_xc!(xc, ra, rb, gaa, gab, gbb) result (f) bind(c)
 #endif
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   type, private :: xc_pot
     real(r8_kind)     :: contrib(1:xc_NXC)
     character(len=32) :: name
   end type xc_pot
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   logical :: &
        gga_mode, &
        tau_mode, &
@@ -128,8 +128,8 @@ module xc_func
   real(kind=r8_kind) :: energy(1:xc_NXC) ! xc_NXC from xc_cntrl
   ! array for the values of the functionals
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   real(r8_kind) function frac(op)
@@ -144,9 +144,9 @@ contains
     integer(i4_kind), intent(in) :: op
     ! *** end of interface ***
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical                      :: is_on
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     frac = 0.0_r8_kind
     if( .not.scf_mode )then
@@ -207,7 +207,7 @@ contains
     optional :: frr, frg, fgg ! for sec ders only
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind) :: x(vla), xr(vla,ispin), xg(vla,2*ispin-1),xt(vla,ispin)
     real(r8_kind) :: y(vla), yr(vla,ispin), yrr(vla,2*ispin-1) ! for e.g. perdewwang
     real(r8_kind) :: xc_frac
@@ -215,7 +215,7 @@ contains
     integer(i4_kind) :: lda_flavor
     integer(i4_kind) :: xc, NXC
     integer(i4_kind) :: ider
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(size(rho,1)>=vla)
     ASSERT(size(rho,2)>=ispin)
@@ -1390,5 +1390,5 @@ contains
 #endif
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module xc_func

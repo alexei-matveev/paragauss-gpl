@@ -1,48 +1,49 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module fermi_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
-  !  Purpose: contains routines for the level broadening
+  !  Purpose: contains routines for the level broadening. None of the
+  !  procedures here use any communication.
   !
   !
-  !  Module called by: main_scf
+  !  Module called by: main_scf()
   !
   !  References: Old LCGTO and references therein
   !
   !  Author: FN
   !  Date: 4/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification
   !
   ! Author: Thomas Seemueller
@@ -54,13 +55,13 @@ module fermi_module
   !              (1 - 1e-12) and (1e-12)
   !              added: get_spin_diff_parameters
   !
-  !----------------------------------------------------------------
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype    ! user defined datatypes
@@ -70,8 +71,6 @@ module fermi_module
   use occupation_module
   use iounitadmin_module, only: write_to_output_units,output_unit,&
        stdout_unit
-  use eigen_data_module, only: eigval,holes_per_irrep,spin_of_hole,&
-       n_holes_per_irrep
   use output_module, only: output_fermi,output_fermi_newton
   use options_module, only: options_spin_orbit
 
@@ -81,20 +80,20 @@ module fermi_module
   private         ! by default, all names are private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public variables -------------------
   public :: fermi_level_broad, &
             fermi_fix_up_and_down ! kept for compatibility
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public fermi_reoccup, fermi_read, fermi_write_input, fermi_get_entropy, &
        fermi_read_scfcontrol, check_occ_fermi
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   ! --------- private interface ----------------
   interface e_fermi_start
@@ -102,7 +101,7 @@ module fermi_module
      module procedure ef_start_spin
   end interface
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   ! these constants are mainly used in the erfc-function
   real(kind=r8_kind), parameter    :: zero = 0.0_r8_kind,       &
        half=0.5_r8_kind,                                        &
@@ -178,24 +177,24 @@ module fermi_module
   ! dim_irrep : number of independent functions in irrep
 
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 contains
 
 
   !*************************************************************
 
   subroutine fermi_reoccup()
-    !  Purpose: main routine for the reoccupation including
-    !           gaussian level broadening around the
-    !           fermi energy.
-    !** End of interface *****************************************
+    !
+    ! Main  routine  for  the  reoccupation including  gaussian  level
+    ! broadening around the fermi energy. Does no communication.
     !
     !  Author: FN
     !  Date: 4/96
     !
-    !------------ Modules used ----------------------------------
     use iounitadmin_module, only: output_unit
-    !------------ Declaration of local variables -----------------
+    implicit none
+    !** End of interface *****************************************
+
     real(kind=r8_kind)             :: efs = zero
     real(kind=r8_kind),allocatable :: efs_spin(:),e_fermi_spin(:)
     integer(kind=i4_kind)          :: alloc_stat,is
@@ -311,15 +310,12 @@ contains
     !            from the Aufbauprinciple) in order to reach
     !            convergence in 4-5 steps ( see P.Knappe,
     !            Dissertation, 1990)
-    !** End of interface *****************************************
     !
-    !------------ Modules used ----------------------------------
-!    use occupation_module, only: occupation_level_sort, &
-!         get_n_elec,num_list
-
-    !------------ Declaration of formal parameters ---------------
+    use eigen_data_module, only: eigval
+    implicit none
     real(kind=r8_kind),    intent(out) :: efs
-    !------------ Declaration of local variables -----------------
+    !** End of interface *****************************************
+
     real(kind=r8_kind)               :: n_elec,remmel,degen,delta_hole,&
                                         occ_hole,remmel_core
     integer(kind=i4_kind)            :: n_elec_int,step_dummy
@@ -327,7 +323,7 @@ contains
     logical                          :: hole
 
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(n_irrep/=-1)
 
@@ -448,13 +444,11 @@ contains
     !  Subroutine called by: fermi_reoccup
     !  Author: FN
     !  Date: 4/96
-    !------------ Modules used --------------------------------------
-!    use occupation_module, only: occupation_level_sort, &
-!         get_n_elec, num_list
-    !------------ Declaration of formal parameters ------------------
-    real(kind=r8_kind),    intent(out ) :: efs(:)
+    use eigen_data_module, only: eigval
+    implicit none
+    real (r8_kind), intent (out) :: efs(:)
     !** End of interface *****************************************
-    !------------ Declaration of subroutines ------------------------
+
     external error_handler
     !------------ Declaration of local variables --------------------
     real(kind=r8_kind)               :: n_elec,remmel,degen,delta_hole,&
@@ -891,7 +885,7 @@ contains
 
   !*************************************************************
 
-  subroutine newton(e_start,e_end)
+  subroutine newton (e_start, e_end)
     ! Purpose: Newton-Rhaphson procedure to calculate the
     !          Fermi energy.
     !          This procedure seeks the zeros of the
@@ -903,18 +897,16 @@ contains
     !          N  : total number of electrons
     !          arg_i : (ef - e_i/(sqrt(2)*sigma))
     !
-    !------------ Modules used ----------------------------------
-!    use occupation_module, only: get_n_elec, occ_num, &
-!         alloc_occ_num,n_occo,alloc_n_occo
     use init_module, only: init
-    !------------ Declaration of formal parameters ---------------
-    real(kind=r8_kind), intent(in)  :: e_start
-    real(kind=r8_kind), intent(out) :: e_end
+    use eigen_data_module, only: eigval
+    implicit none
+    real (r8_kind), intent (in) :: e_start
+    real (r8_kind), intent (out) :: e_end
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     integer(kind=i4_kind)     :: step,i,m,is,counter
-    real(kind=r8_kind)        :: ef,degen,fn,dfn, &
-         df, deltan, delta_e, n_elec, delta_hole
+    real (r8_kind) :: ef, degen, fn, dfn, df, deltan, delta_e, &
+         n_elec, delta_hole
     real(kind=r8_kind)           :: summ
     real(kind=r8_kind),parameter :: small = 1.e-8_r8_kind
     real(kind=r8_kind)           :: gamma_plus,gamma_minus,&
@@ -932,11 +924,11 @@ contains
 
     call get_n_elec(n_elec)
 
-    if (.not.allocated(occ_num)) then
+    if (.not. allocated (occ_num)) then
        call alloc_occ_num()
     endif
 
-    if (.not.allocated(n_occo)) then
+    if (.not. allocated (n_occo)) then
        call alloc_n_occo(ssym)
     endif
 
@@ -1015,21 +1007,21 @@ contains
           enddo element
        enddo irrep
 
+       ! Calculate the energetic  distances gamma_plus and gamma_minus
+       ! between ef and the nearest eigenvalue both for higher and for
+       ! lower lying levels
+       gamma_plus = HUGE (zero)
+       gamma_minus = HUGE (zero)
+       irrp: do i = 1, n_irrep
+          elemt: do m = 1, dim(i)
+             spn: do is = 1, ssym % n_spin
+                e_diff = eigval(i) % m(m, is) - ef
+                if (e_diff == zero ) cycle ! the case when ef==E(HOMO)
 
-       ! calculate the energetic distances gamma_plus and
-       ! gamma_minus between ef and the nearest
-       ! eigenvalue both for higher and for lower lying levels
-       gamma_plus  = HUGE(zero)
-       gamma_minus = HUGE(zero)
-       irrp: do i=1,n_irrep
-          elemt: do m=1,dim(i)
-             spn: do is=1,ssym%n_spin
-                e_diff = eigval(i)%m(m,is) - ef
-                if( e_diff .eq. zero ) cycle ! the case when ef==E(HOMO)
-                if (e_diff .gt. zero) then
-                   gamma_plus  = min( e_diff,gamma_plus)
+                if (e_diff > zero) then
+                   gamma_plus = min (e_diff, gamma_plus)
                 else
-                   gamma_minus = min(-e_diff,gamma_minus)
+                   gamma_minus = min (-e_diff, gamma_minus)
                 endif
              enddo spn
           enddo elemt
@@ -1141,16 +1133,14 @@ contains
     !          additionally a number of unpaired electrons
     !          can be specified (fermi_unpaired > 0).
     !
-    !------------ Modules used ----------------------------------
-!    use occupation_module, only: get_n_elec, occ_num, &
-!         alloc_occ_num,n_occo,alloc_n_occo
     use init_module, only: init
     use machineparameters_module, only: machineparameters_DimCheck
-    !------------ Declaration of formal parameters ---------------
+    use eigen_data_module, only: eigval
+    implicit none
     real(kind=r8_kind), intent(in)  :: e_start_spin(:)
     real(kind=r8_kind), intent(out) :: e_end_spin(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+
     integer(kind=i4_kind)     :: step,i,m,is,alloc_stat
     real(kind=r8_kind)        :: degen,fn,dfn, &
          df,deltan,delta_e,n_elec,delta_hole
@@ -1389,11 +1379,14 @@ contains
     ! References: YL Luke 1975, pp 123-4
     !             Num. Rec. 1988 "CHEBEV"
     !
+    ! See also: epe_dir/culon_module.f90, utilities/ewald.f90,
+    ! utilities/ewald_new.f90
+    !
     !------------ Declaration of formal parameters ---------------
     real(kind=r8_kind), intent(in) :: x
     real(kind=r8_kind)             :: erfc
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind),parameter :: na=25,nc=22
     real(kind=r8_kind)              :: a(0:na),c(0:nc)
     real(kind=r8_kind)              :: d,dd,alpha,z,sv
@@ -1519,7 +1512,8 @@ contains
     !** End of interface *****************************************
     use iounitadmin_module
     use filename_module, only: tmpfile
-    !------------ Declaration of local variables -----------------
+    use eigen_data_module, only: eigval
+    implicit none
     integer(kind=i4_kind) :: io_u,i,m,is,counter
     type(arrmat2),allocatable :: eigval_help(:)
     !------------ Declaration of subroutines used ----------------
@@ -1758,33 +1752,39 @@ contains
   end function fermi_get_entropy
 
   !*************************************************************
-  subroutine fermi_hole(irrep,orb,is,step,hole,delta)
-    ! Purpose: look up if the current orbital is assigned a hole.
-    !          This is done by looping through all holes in the
-    !          current Irrep (holes_per_irrep(i_irr)%m and see if
-    !          if the orbital with indices 'irrep','orb' and 'is'
-    !          is a hole.
-    !          'delta' returns the amount by which the degeneracy
-    !          in the calling routine has to be decreased to achieve the
-    !          user-specified occupation number for the hole.
+  subroutine fermi_hole (irrep, orb, is, step, hole, delta)
     !
-    ! Subroutine called by : newton,newton_spin
-    ! --- Declaration of formal parameters --------------------
-    integer(kind=i4_kind),intent(in)  :: irrep,orb,is,step
-    logical,intent(out)               :: hole
-    real(kind=r8_kind),intent(out)    :: delta
-    ! --- declaration of local variables ----------------------
+    ! Look up if the current orbital is assigned a hole.  This is done
+    ! by   looping   through   all   holes  in   the   current   Irrep
+    ! (holes_per_irrep(i_irr)%m and see if if the orbital with indices
+    ! 'irrep','orb' and 'is' is a hole.  'delta' returns the amount by
+    ! which the degeneracy in the  calling routine has to be decreased
+    ! to achieve the user-specified occupation number for the hole.
+    !
+    ! Subroutine called by : newton, newton_spin
+    !
+    use eigen_data_module, only: eigval, holes_per_irrep, &
+         n_holes_per_irrep, spin_of_hole
+    implicit none
+    integer (i4_kind), intent (in) :: irrep, orb, is, step
+    logical, intent (out) :: hole
+    real (r8_kind), intent (out) :: delta
+    ! *** end of interface ***
+
     integer(kind=i4_kind)  :: i_hole,degen
+
     hole=.false.
     degen = symmetry_data_n_partners(irrep) * num_spin
     holes: do i_hole=1,n_holes_per_irrep(irrep)
        if (holes_per_irrep(irrep)%m(i_hole).eq.orb .and. &
             spin_of_hole(irrep)%m(i_hole).eq.is) then
           if (output_fermi) then
-             write(output_unit,'("Newton-Step ",i3,":   Orbital ",i4," in Irrep ",i2," with eigenvalue ",ES13.3," is a hole")')&
-                  step,orb,irrep,eigval(irrep)%m(orb,is)*convert1
-             write(stdout_unit,'("Newton-Step ",i3,":   Orbital ",i4," in Irrep ",i2," with eigenvalue ",ES13.3," is a hole")')&
-                  step,orb,irrep,eigval(irrep)%m(orb,is)*convert1
+             write (output_unit, &
+                  '("Newton-Step ",i3,":   Orbital ",i4," in Irrep ",i2," with eigenvalue ",ES13.3," is a hole")')&
+                  step, orb, irrep, eigval(irrep) % m(orb, is) * convert1
+             write (stdout_unit, &
+                  '("Newton-Step ",i3,":   Orbital ",i4," in Irrep ",i2," with eigenvalue ",ES13.3," is a hole")')&
+                  step, orb, irrep, eigval(irrep) % m(orb, is) * convert1
           endif
           hole=.true.
           delta=degen-occnum_hole(irrep)%m(i_hole)
@@ -1811,10 +1811,10 @@ contains
     ! Author: TS
     ! Date  : 12/99
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical   :: fixed_spdiff,df_fixed_spdiff
     real(kind=r8_kind) :: magn_momt,df_magn_momt
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! make the input switches fixed_spin_diff and
     ! magn_moment (occuptaion_module) available
@@ -1858,5 +1858,5 @@ contains
   end subroutine check_occ_fermi
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module fermi_module

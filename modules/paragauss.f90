@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module paragauss
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose:  holds what  was previousely  in main.f90.   This  is to
   !  allow calling ParaGauss as a subroutine from more than one place.
@@ -48,49 +48,52 @@ module paragauss
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module ! type specification parameters
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: qm_init             ! () -> world
   public :: qm_run              ! (world)
   public :: qm_finalize         ! (world)
   public :: toggle_legacy_mode  ! ()
+#ifdef WITH_GUILE
+  public :: qm_init_scheme      ! (), bind(c), see guile/guile-qm.c
+#endif
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine qm_run(world) bind(C)
@@ -218,13 +221,6 @@ contains
 
     ! To give you some time to attach the debugger by "gdb -p PID":
     DCALL print_pids_and_sleep(20) ! ... seconds
-
-#ifdef WITH_GUILE
-    !
-    ! Make a few procedure available to the Scheme interpreter:
-    !
-    call qm_init_scheme()
-#endif
   end function qm_init
 
   subroutine qm_finalize(world) bind(C)
@@ -302,13 +298,11 @@ contains
   subroutine qm_init_scheme() bind(c)
     !
     ! Exports a  few auxiliary methods  to the Scheme  interpreter. At
-    ! the moment qm_init_scheme() is  run from qm_init().  So that the
-    ! gsubrs  it   exposes  only  become   available  after  executing
-    ! (qm-init)  in  Scheme interpreter  OR  upon (use-modules  (guile
-    ! paragauss)).
+    ! the moment qm_init_scheme() at Scheme module initialization time
+    ! so that the  gsubrs it exposes only become  available after upon
+    ! the respective (use-modules ...).
     !
-    use iso_c_binding, only: c_funptr, c_funloc
-    use scm, only: scm_t, scm_define_gsubr
+    use iso_c_binding, only: c_funloc
     use xc_func, only: qm_xc
     use vdw_dft, only: vdw_dft_phi
     use grid_module, only: guile_pople_radius, guile_slater_radius, &
@@ -319,36 +313,34 @@ contains
     implicit none
     ! *** end of interface ***
 
-    type(c_funptr) :: fun
-    type(scm_t) :: proc
-
 #ifdef  WITH_MATRIX_PARALLEL
-    !
-    ! FIXME: GFortran 4.3 fails if  you inline call to c_funloc(), use
-    ! a temp var as a workaround:
-    !
-    fun = c_funloc (qm_test_eigensolver)
-    proc = scm_define_gsubr ("qm-test-eigensolver", 1, 0, 0, fun)
+    call export ("qm-test-eigensolver", 1, c_funloc (qm_test_eigensolver))
 #endif
-
-    fun = c_funloc (qm_xc)
-    proc = scm_define_gsubr ("qm-xc", 6, 0, 0, fun)
-
-    fun = c_funloc (vdw_dft_phi)
-    proc = scm_define_gsubr ("qm-vdw-dft-phi", 2, 0, 0, fun)
-
-    fun = c_funloc (guile_pople_radius)
-    proc = scm_define_gsubr ("pople-radius", 1, 0, 0, fun)
-
-    fun = c_funloc (guile_slater_radius)
-    proc = scm_define_gsubr ("slater-radius", 1, 0, 0, fun)
-
-    fun = c_funloc (guile_ionic_radius)
-    proc = scm_define_gsubr ("ionic-radius", 1, 0, 0, fun)
+    call export ("qm-xc", 6, c_funloc (qm_xc))
+    call export ("qm-vdw-dft-phi", 2, c_funloc (vdw_dft_phi))
+    call export ("pople-radius", 1, c_funloc (guile_pople_radius))
+    call export ("slater-radius", 1, c_funloc (guile_slater_radius))
+    call export ("ionic-radius", 1, c_funloc (guile_ionic_radius))
 
 #ifdef WITH_BGY3D_NON_GPL
     call bgy3d_init_scheme()
 #endif
+    contains
+
+      subroutine export (name, req, funptr)
+        use iso_c_binding, only: c_funptr
+        use scm, only: scm_t, scm_define_gsubr, scm_export
+        implicit none
+        character (len=*), intent (in) :: name
+        integer, intent (in) :: req
+        type (c_funptr), intent (in) :: funptr
+        ! *** end of interface ***
+
+        type (scm_t) :: proc
+
+        proc = scm_define_gsubr (name, req, 0, 0, funptr)
+        call scm_export (name)
+      end subroutine export
   end subroutine qm_init_scheme
 
 #ifdef  WITH_MATRIX_PARALLEL
@@ -395,5 +387,5 @@ contains
 #endif /* WITH_MATRIX_PARALLEL */
 #endif /* WITH_GUILE */
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module paragauss

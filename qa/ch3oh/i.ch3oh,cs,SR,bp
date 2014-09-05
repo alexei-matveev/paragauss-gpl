@@ -100,15 +100,9 @@
     MAX_GEO_ITERATION     =   1
  /CONVERGENCE_LIST
 
-&XC_CONTROL
-    XALPHA         =  TRUE # (the default)
-    VWN            =  TRUE
-    PERDEW         =  TRUE
-    BECKE88        =  TRUE
-    PWLDAc         =  F 
-    PBEc           =  F 
-    PBENx          =  F 
- /XC_CONTROL (namelist may be dropped)       
+ &XC_CONTROL
+    xc = "bp"
+ /XC_CONTROL
 
  &OCCUPATION
     CHARGE             =   0.000000 # (the default)

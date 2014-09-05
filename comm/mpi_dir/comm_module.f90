@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module comm_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !comm_module.f90
   !
   !  Purpose: This  module contains all the necessary entities
@@ -73,11 +73,11 @@ module comm_module
   !  Author: TG
   !  Date: 8/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: AS
@@ -89,9 +89,9 @@ module comm_module
   ! Date:   ...
   ! Description: ...
   !
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
 #ifdef _COMPAC_FORTRAN
 #  define MPI_COMM_RANK MPI_Comm_rank_
@@ -108,18 +108,17 @@ module comm_module
   ! includes standard MPI fortran header file:
   USE_MPI, only: MPI_COMM_NULL, MPI_MAX_PROCESSOR_NAME
   use commpack_module ! interface for MPI packing and unpacking of data
-  use msgtag_module
   implicit none
   save ! save all variables defined in this module
   private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of constants public variables----------
   integer(kind=i4_kind), parameter, public :: comm_master_host = 1
   integer(kind=i4_kind), parameter, public :: comm_all_other_hosts = -1
   integer(kind=i4_kind), parameter, public :: comm_any_message = -1
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   !
   ! All public nams should be prefixed with "comm_"
@@ -140,9 +139,9 @@ module comm_module
 
   public :: comm_save_recv
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
 
@@ -165,7 +164,7 @@ module comm_module
 
   !------------ Declaration of private functions and subroutines --
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   !---------------- Interface statements ---------------------------
   ! The routines described by the following interfaces are defined in comm.c
@@ -219,8 +218,8 @@ module comm_module
   end interface
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine comm_enroll(world)
@@ -286,7 +285,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of local variables ----------------
     integer(i4_kind) :: i, n
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     write(io_u,*)
     write(io_u,*) 'MPI configuration:'
     write(io_u,*)
@@ -326,6 +325,7 @@ contains
     ! Sending private information to  slaves. Currently only for early
     ! testing.
     !
+    use msgtag_module, only: msgtag_commdata
     implicit none
     !** End of interface *****************************************
 
@@ -402,20 +402,26 @@ contains
 
   !***************************************************************
 
-  subroutine comm_init_send(target,msgtag)
-    ! purpose: Initialises send. First argument is only a dummy
-    !          which is needed to keep the PVM counterpart happy.
-    !------------ Declaration of formal parameters --------------
-    integer(kind=i4_kind),intent(in) :: target,msgtag
-    !** End of interface *****************************************
+  subroutine comm_init_send (target, msgtag)
+    !
+    ! Initialises send.  Will be followed by commpack()  and closed by
+    ! comm_send().
+    !
 #ifdef _DPRINT
-    if( verbose )then
+    use msgtag_module, only: msgtag_name
+#endif
+    implicit none
+    integer (i4_kind), intent (in) :: target, msgtag
+    !** End of interface *****************************************
+
+#ifdef _DPRINT
+    if (verbose) then
     print *, comm_myindex(), &
-         'comm_init_send: tag ',trim(msgtag_name(msgtag)), &
-         ' target=',target
+         'comm_init_send: tag ', trim (msgtag_name (msgtag)), &
+         ' target=', target
     endif
 #endif
-    call comm_init_send_buf(target,msgtag)
+    call comm_init_send_buf (target, msgtag)
   end subroutine comm_init_send
 
   !***************************************************************
@@ -454,10 +460,14 @@ contains
 
   !***************************************************************
 
-  subroutine comm_save_recv(source, msgtag, info)
+  subroutine comm_save_recv (source, msgtag, info)
     !
     ! Receive a message, block until a matching one arrives
     !
+    use msgtag_module, only: msgtag_error
+#ifdef _DPRINT
+    use msgtag_module, only: msgtag_name
+#endif
     implicit none
     integer(kind=i4_kind),intent(in) :: source, msgtag
     integer(kind=i4_kind), optional, intent(out) :: info
@@ -467,42 +477,46 @@ contains
     character(len=500) :: message
 
 #ifdef _DPRINT
-    if( verbose )then
+    if (verbose) then
        print *, comm_myindex(), &
-            'comm_save_recv: waiting for tag ',trim(msgtag_name(msgtag)), &
+            'comm_save_recv: waiting for tag ', trim (msgtag_name (msgtag)), &
             ' from=',source
     endif
 #endif
 
-    call comm_save_recv_c(source, msgtag, err)
-    if(present(info)) info = err
+    call comm_save_recv_c (source, msgtag, err)
+    if (present (info)) info = err
 
 #ifdef _DPRINT
-    if( verbose )then
+    if (verbose) then
        print *, comm_myindex(), &
-            'comm_save_recv: received tag ',trim(msgtag_name(comm_msgtag())), &
-            ' from=',source
+            'comm_save_recv: received tag ', trim (msgtag_name (comm_msgtag())), &
+            ' from=', source
     endif
 #endif
 
     ! FIXME: error handling code, possibly needs revision:
-    if( msgtag .eq. comm_any_message ) then
-       if ( comm_msgtag() .eq. msgtag_error) then
-          call communpack(message,err)
-          if (err.ne.0) call error_handler("comm_save_recv: &
-               & unpacking of error message failed")
-          call error_handler(message)
+    if (msgtag == comm_any_message) then
+       if (comm_msgtag() == msgtag_error) then
+          call communpack(message, err)
+          if (err /= 0) call error_handler &
+               ("comm_save_recv: unpacking of error message failed")
+          call error_handler (message)
        endif
     endif
   end subroutine comm_save_recv
 
   !***************************************************************
 
-  logical function comm_save_recv_nonblocking(source, msgtag, info)
+  logical function comm_save_recv_nonblocking (source, msgtag, info)
     !
-    ! Try to receive, but do not block if there is nothing
+    ! Try  to  receive,   but  do  not  block  if   there  is  nothing
     ! matching. Just return "false" in that case.
     !
+    use msgtag_module, only: msgtag_error
+#ifdef _DPRINT
+    use msgtag_module, only: msgtag_name
+#endif
     implicit none
     integer(kind=i4_kind), intent(in) :: source, msgtag
     integer(kind=i4_kind),optional,intent(out) :: info
@@ -511,31 +525,30 @@ contains
     integer(kind=i4_kind) :: recv, err
     character(len=500) :: message
 
-    recv = comm_save_recv_nonblocking_buf(source, msgtag)
+    recv = comm_save_recv_nonblocking_buf (source, msgtag)
     ASSERT(recv==0.or.recv==1)
-    if(present(info)) info = 0
+    if (present (info)) info = 0
 
-    if(recv.eq.0) &
-         comm_save_recv_nonblocking = .false.
+    if (recv == 0) comm_save_recv_nonblocking = .false.
 
-    if(recv.eq.1) then
+    if(recv == 1) then
        comm_save_recv_nonblocking = .true.
 
 #ifdef _DPRINT
-       if( verbose )then
+       if (verbose) then
          print *, comm_myindex(), &
-              'comm_save_recv_nonblocking: received tag ',trim(msgtag_name(msgtag)), &
-              ' from=',source
+              'comm_save_recv_nonblocking: received tag ', trim (msgtag_name (msgtag)), &
+              ' from=', source
        endif
 #endif
 
        ! FIXME: error handling code, possibly needs revision:
-       if(msgtag.eq. comm_any_message) then
-          if ( comm_msgtag().eq. msgtag_error) then
-             call communpack(message,err)
-             if (err.ne.0) call error_handler("comm_save_recv_nonblocking: &
-                  & unpacking of error message failed")
-             call error_handler(message)
+       if (msgtag == comm_any_message) then
+          if (comm_msgtag() == msgtag_error) then
+             call communpack (message, err)
+             if (err /= 0) call error_handler &
+                  ("comm_save_recv_nonblocking: unpacking of error message failed")
+             call error_handler (message)
           endif
        endif
     endif
@@ -593,5 +606,5 @@ contains
   end subroutine comm_set_verbose
 #endif
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module comm_module

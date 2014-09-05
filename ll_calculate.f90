@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine ll_calculate(na,nb,la,lb,imode,many_3c)
   !
   !  Purpose: calculation of all primitive 2 center orbital
@@ -37,10 +37,10 @@ subroutine ll_calculate(na,nb,la,lb,imode,many_3c)
   !  Author: MS
   !  Date:   8/96
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: AS
   ! Date:   11-12/99
@@ -58,7 +58,7 @@ subroutine ll_calculate(na,nb,la,lb,imode,many_3c)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 ! define FPP_TIMERS 2
 # include "def.h"
   use unique_atom_module, noname=>pseudopot_present
@@ -82,7 +82,7 @@ subroutine ll_calculate(na,nb,la,lb,imode,many_3c)
   use shgi_cntrl, only: IPSEU
   implicit none
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   integer(kind=i4_kind),intent(in) :: na ! number of unique atom a
   integer(kind=i4_kind),intent(in) :: nb ! number of unique atom b
@@ -99,9 +99,9 @@ subroutine ll_calculate(na,nb,la,lb,imode,many_3c)
   !   ...
   ! enddo
   ! offsets OFF_* defined in int_data_2cob3c_module
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   integer(i4_kind), parameter :: &
        AxB = 1, &

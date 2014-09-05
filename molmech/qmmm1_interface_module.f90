@@ -1,21 +1,21 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 module qmmm1_interface_module
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module
 #ifdef _COMPAC_FORTRAN
@@ -36,7 +36,7 @@ module qmmm1_interface_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   !------------ Declaration of public constants and variables -----
   type, public :: gx_file
      real(r8_kind) :: number
@@ -55,14 +55,14 @@ module qmmm1_interface_module
   real(r8_kind), public :: Energy_qmmm, Energy_qm, Energy_mm
 
   integer, public :: N_gx_atoms, N_gx_qm_atoms
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public read_gx_qmmm,qmmm2pc,QMfield_at_mm_points,qm_grads_to_qmmm1, &
        mm_grads_to_qmmm1,write_gx_qmmm,read_qmmm1,def_qm_mm_1_tasks
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   !------------ Declaration of private constants and variables ----
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !****************************************************************
   subroutine def_qm_mm_1_tasks()
@@ -106,7 +106,7 @@ contains
     end type read_gx
     type(read_gx), target :: first_data
     type(read_gx), pointer :: current_data, tmp_data, del
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     gxf = openget_iounit(file=trim(inpfile('gxfile')), status='old', &
          form='formatted')
@@ -209,11 +209,11 @@ contains
     !------------ modules used -----------------------------------
     use species_module
     use slab_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical :: read_qmmm1
 
     integer (i4_kind) :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if(n_species /= N_gx_atoms) call error_handler( &
          "QMMM1: Number of atoms in molmech.inp does not coincide with "// &
          "those in gxfile")
@@ -247,7 +247,7 @@ contains
     use solv_cavity_module, only : with_pc,fixed_pc
     use species_module, only : n_species,atoms_cart,atoms
     use qmmm_interface_module, only : qm_mm_1
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type gx2pc
        type(pointcharge_type) :: data
        type(gx2pc), pointer :: next_data
@@ -257,7 +257,7 @@ contains
 
     integer :: i,j,n,i_uq_pc,i_uq_pc_old,n_eq
     integer :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i=1,n_species
        j=atoms_cart(i)%type
@@ -471,11 +471,11 @@ contains
     !------------ modules used -----------------------------------
     use energy_and_forces_module, only: E_total,Grad
     use qmmm_interface_module, only : qm_mm_1
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: i
     character(len=2) :: qmmm_type
     real(r8_kind) :: G(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     Energy_mm=E_total/h2kJm
 
@@ -531,14 +531,14 @@ contains
   !*********************************************************
   subroutine write_gx_qmmm()
     !------------ modules used -----------------------------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer :: gxf,ios,status
     integer, parameter :: max_gx_atoms=1000
     character(len=256) :: buffer
     integer :: i,j,N_at
     real(r8_kind), allocatable :: z_num(:),xyz(:,:)
     integer, allocatable :: uq_num(:),at_num(:),zmat(:,:),numx(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(z_num(max_gx_atoms),xyz(3,max_gx_atoms),uq_num(max_gx_atoms), &
          at_num(max_gx_atoms),zmat(3,max_gx_atoms),numx(3,max_gx_atoms), &

@@ -1,46 +1,59 @@
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module bgy3d
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Copyright (c) 2014 Alexei Matveev
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  ! This  program is  free software;  you can  redistribute  it and/or
+  ! modify  it under  the  terms  of the  GNU  General Public  License
+  ! version 2 as published by the Free Software Foundation [1].
+  !
+  ! This program  is distributed in the  hope that it  will be useful,
+  ! but  WITHOUT ANY WARRANTY;  without even  the implied  warranty of
+  ! MERCHANTABILITY or  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  ! General Public License for more details.
+  !
+  ! [1] http://www.gnu.org/licenses/gpl-2.0.html
+  !
+  ! Please see the accompanying LICENSE file for further information.
+  !
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module, only: r8_kind ! type specification parameters
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: rism_term ! (unique_atoms, energy, gradient_cartesian)
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   interface
      subroutine bgy3d_molmech (n, x, e, g) bind(c)
@@ -52,11 +65,11 @@ module bgy3d
      end subroutine bgy3d_molmech
   end interface
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine rism_term (unique_atoms, energy, gradient_cartesian)
@@ -117,5 +130,5 @@ contains
     enddo
   end subroutine rism_term
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module bgy3d

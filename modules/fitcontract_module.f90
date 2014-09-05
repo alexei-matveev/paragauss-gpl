@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  fitcontract_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: contains all routines and data necessary to
   !           perform fitcontractions on the 3-center-primitive
   !           integrals.
@@ -48,11 +48,11 @@ module  fitcontract_module
   !
   !  Author: FN
   !  Date: 6/96
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: MS
   ! Date:   3/97
@@ -66,7 +66,7 @@ module  fitcontract_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype, only: three_center_l_v2, arrmat5
@@ -82,9 +82,9 @@ module  fitcontract_module
   implicit none
   private         ! by default, all names are private
   save            ! by default, all data are to be kept
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: fitcontract,print_fcalloc
 #ifdef WITH_EPE
   public :: fitcontract_eperef
@@ -92,9 +92,9 @@ module  fitcontract_module
   !!SB: should be only for resp, but...
   public :: fitcontract_v2
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 !..............................................................................
 ! << OUTPUT ARRAYS >>
@@ -144,7 +144,7 @@ module  fitcontract_module
 !                                             [ prim_i | f_k | d/dR prim_j ]
 !..............................................................................
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   integer(kind=i4_kind)            :: counter
   logical                          :: do_glob_cons
   real(kind=r8_kind),parameter     :: zero=0.0_r8_kind
@@ -159,8 +159,8 @@ module  fitcontract_module
   integer(kind=i4_kind):: fcalloc(4)=0
   logical :: model_density, spin_polarized
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -200,7 +200,7 @@ contains
     ! [ the input integrals, spoiled on output! ]
 
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 !!$    type(arrmat1int), allocatable :: proj_index_ch(:,:)
 
 !!$    integer(kind=i4_kind)            :: i_uncont, &
@@ -214,7 +214,7 @@ contains
     integer(kind=i4_kind), save           :: irrep_ffc(20,20)
     integer(kind=i4_kind)                 :: ffc, nexp, nind, LL, i_c, i_pa, i_ir
     integer(kind=i4_kind)                 :: i_l, i_ind, m2, m1, npa, nirr, dim
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 
     if (operations_response) then
@@ -372,10 +372,10 @@ contains
 #endif
       ! only used for 'grad' case [ the output integrals ]
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                   :: i_glob,N_glob_cons
     real(kind=r8_kind), pointer   :: prim_int_3c(:,:,:,:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ua => unique_atoms(i_ua)
     select case ( flag )
     case ( 'ch' )
@@ -568,7 +568,7 @@ contains
 #endif
     ! only present for gradient case
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)            :: i_uncont,i_cont,i_exp, &
          i_l, i_ind, i_ir, counter_old, counter_ind, m1, m2, &
          l_max,l_min,dim_intermediate,n_independent,i_a,i_b,i_ab, &
@@ -580,7 +580,7 @@ contains
     type(unique_atom_basis_type),         pointer :: uab
     real(kind=r8_kind),pointer :: pointer_int(:,:,:,:,:)
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! first keep the counter
     counter_old = counter
@@ -938,7 +938,7 @@ contains
     real(kind=r8_kind)               :: coef
     real(kind=r8_kind),allocatable   :: intermediate(:)
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! first get some things from the 'unique_atom_module'
     n_contributing = &
@@ -1057,7 +1057,6 @@ contains
     !  reshaped from fit_contract by VN
     !------------ Modules used -----------------------------------
     use orbitalprojection_module
-    use int_data_2cob3c_module, only: prim_int_3c_co, prim_int_3c_xc
     implicit none
     !------------ Declaration of formal parameters ---------------
     character(*),intent(in)           :: flag ! 'ch' or 'xc' or 'grad'
@@ -1079,10 +1078,10 @@ contains
          mda_spin_gradients(:,:,:,:), mda_xcpot_gradients(:,:,:,:)
       ! only used for 'grad' case [ the output integrals ]
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                   :: N_glob_cons
 !!$    integer(kind=i4_kind)                   :: i_glob
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ua => unique_atoms_eperef(i_ua)
     orbitalprojection => orbitalprojection_ch_eperef
        uabr => ua%r2_ch
@@ -1144,7 +1143,7 @@ contains
          spin_grads(:,:,:,:), xcpot_grads(:,:,:,:)
     ! only present for gradient case
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)            :: i_uncont,i_cont,i_exp, &
          i_l, i_ind, i_ir, counter_old, counter_ind, m1, m2, &
          l_max,l_min,dim_intermediate,n_independent,i_a,i_b,i_ab, &
@@ -1156,7 +1155,7 @@ contains
     type(unique_atom_basis_type),         pointer :: uab
     real(kind=r8_kind),pointer :: pointer_int(:,:,:,:,:)
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! first keep the counter
     counter_old = counter

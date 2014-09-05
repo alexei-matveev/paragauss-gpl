@@ -1,61 +1,55 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module ham_calc_module
   !
-  !  Purpose: Contains routines for calculating the
-  !           'three-center'-parts of the hamiltonian
-  !           as well as routines to add already existing
-  !           integrals to the hamiltonian. Also the corresponding
-  !           energies are calculated by different calls
-  !           The Exchange part of the hamiltonian can
-  !           either be done via the Fitfunctions or
-  !           numerically. Only in the former case
-  !           the contribution to and the energy are calculated here.
-  !           The numerical calculation of the XC part takes place in
-  !           'xc_hamiltonian'.
-  !           In this module are routines for the master
-  !           as well as for the slave. Each routine includes
-  !           two lines to check they are called in the right
-  !           way.
+  !  Contains routines for calculating the 'three-center'-parts of the
+  !  hamiltonian as well as routines to add already existing integrals
+  !  to  the   hamiltonian.   Also  the   corresponding  energies  are
+  !  calculated  by   different  calls   The  Exchange  part   of  the
+  !  hamiltonian  can  either  be   done  via  the  Fit  functions  or
+  !  numerically. Only in the former  case the contribution to and the
+  !  energy are calculated here.   The numerical calculation of the XC
+  !  part  takes  place  in  'xc_hamiltonian'.   In  this  module  are
+  !  routines for the master as well as for the slave.
   !
   !
-  !  Module called by: mainscf
+  !  Module called by: main_scf()
   !
   !  References: still none
   !
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: TG
@@ -104,8 +98,8 @@ module ham_calc_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype    ! user defined types
@@ -120,70 +114,52 @@ module ham_calc_module
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: ham_calc_main!(loop)
 
   !------------ public formal parameters types to subroutines ---
   public :: arrmat3, arrmat2, readwriteblocked_tapehandle
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ Declaration of constants  -----------------------
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
   subroutine ham_calc_main (loop)
     !
     ! Entry point for building hamiltonian (Fock) matrix.  Executed in
-    ! parallel  context by  all  workers. Called  from main_scf()  and
-    ! man_slave() on master and slaves, respectively.
+    ! parallel context by all workers. Called from main_scf().
     !
     use comm, only: comm_rank, comm_bcast
-    use comm_module, only: comm_init_send, comm_send, &
-         comm_all_other_hosts                     ! MUSTDIE
-    use msgtag_module, only: msgtag_ham_calc_main ! MUSTDIE
     use symmetry_data_module, only: ssym
-    use unique_atom_module, only: unique_atoms
     use hamiltonian_module, only: reset_ham
     use energy_calc_module, only: init_energy
     use bounds_module, only: bounds_ch, bounds_xc
     use hamiltonian_module, only: ham_tot, ham_tot_real, ham_tot_imag
     use density_data_module, only: densmat, densmat_real, densmat_imag
 #ifdef WITH_BGY3D_NON_GPL
+    use unique_atom_module, only: unique_atoms
     use bgy3d, only: bgy3d_term
 #endif
     implicit none
-    integer (i4_kind), value :: loop ! meaningfull on master only
+    integer (i4_kind) :: loop
     ! *** end of interface ***
 
     integer(i4_kind) :: rank
 
-#ifdef WITH_BGY3D
+#ifdef WITH_BGY3D_NON_GPL
     real(r8_kind) :: e_bgy      ! electrostatic energy
 #endif
 
     rank = comm_rank()
-
-    !
-    ! Tell slaves to call ham_calc_main. FIXME: yet better call from a
-    ! parallel context ...
-    !
-    if (rank == 0) then
-      ! FIXME: legacy communication primitives here:
-      call comm_init_send (comm_all_other_hosts, msgtag_ham_calc_main)
-      ! ... the corresponding tag receive in main_slave
-      call comm_send()
-    endif
-
-    ! Broadcast to slaves, loop has the VALUE attribute:
-    call comm_bcast (loop)
 
     ! RESET_HAM allocates and initializes the necessary parts
     ! of the hamiltonian:
@@ -193,44 +169,41 @@ contains
     call init_energy() ! initializes the energies
 
     !
-    ! For historical reasons much of the code is executed by master only (see
-    ! build_1e_hamiltonian). The Coulomb and exchange terms are computed in
-    ! parallel, however:
+    ! For historical  reasons much of  the code is executed  by master
+    ! only, see  the call to build_1e_hamiltonian().   The Coulomb and
+    ! exchange  terms  (FIXME:  non  functional in  GPL  version)  are
+    ! computed in parallel, however
     !
     if (.not. options_spin_orbit) then
       !
       ! STANDARD SCF
       !
-      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc                    &
-                               , h_matrix       = ham_tot                      &
-                               , d_matrix       = densmat                      )
+      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc, &
+           h_matrix = ham_tot, d_matrix = densmat)
     else
       !
       ! SPIN ORBIT
       !
-      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc                    &
-                               , h_matrix_real = ham_tot_real                  &
-                               , h_matrix_imag = ham_tot_imag                  &
-                               , d_matrix_real = densmat_real                  &
-                               , d_matrix_imag = densmat_imag                  )
+      call build_2e_hamiltonian (loop, bounds_ch, bounds_xc, &
+           h_matrix_real = ham_tot_real, h_matrix_imag = ham_tot_imag, &
+           d_matrix_real = densmat_real, d_matrix_imag = densmat_imag)
     endif
 
-    if ( rank == 0 ) then
+    if (rank == 0) then
       if (.not. options_spin_orbit) then
         !
         ! STANDARD SCF
         !
-        call build_1e_hamiltonian( loop, ham_tot      = ham_tot                &
-                                       , densmat      = densmat                )
+        call build_1e_hamiltonian (loop, &
+             ham_tot = ham_tot, densmat = densmat)
         !
       else
         !
         ! SPIN ORBIT
         !
-        call build_1e_hamiltonian( loop, ham_tot_real = ham_tot_real           &
-                                       , ham_tot_imag = ham_tot_imag           &
-                                       , densmat_real = densmat_real           &
-                                       , densmat_imag = densmat_imag           )
+        call build_1e_hamiltonian (loop, &
+             ham_tot_real = ham_tot_real, ham_tot_imag = ham_tot_imag, &
+             densmat_real = densmat_real, densmat_imag = densmat_imag)
       endif
     endif
 
@@ -325,8 +298,8 @@ contains
     use solv_electrostat_module,  only: ham_solv_el
     use solv_cavity_module,       only: sol_start_cycle
     use operations_module,        only: operations_solvation_effect
-    use overlap_module,           only: overlap
 #ifdef WITH_DFTPU
+    use overlap_module,           only: overlap
     use dft_plus_u_module,        only: dft_plus_u_in_use                      &
                                       , dft_plus_u_term
 #endif
@@ -782,11 +755,11 @@ contains
                                   , direct_2c_energy_calc_and_add
 #if WITH_ERI4C == 1
     use eri4c_options, only: J_exact, K_exact
+    use unique_atom_module, only: unique_atoms
 #endif
     use options_module,       only: options_spin_orbit
-    use unique_atom_module,   only: unique_atoms
-    use overlap_module,       only: overlap
 #ifdef WITH_DFTPU
+    use overlap_module, only: overlap
     use dft_plus_u_module,    only: dft_plus_u_mo_in_use                       &
                                   , dft_plus_u_proj
 #endif
@@ -808,7 +781,7 @@ contains
     type(arrmat2), optional, intent(inout) :: h_matrix_imag(:)
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     logical                                :: numeric_exch                     &
                                             , exchange_fit                     &
                                             , model_density
@@ -846,7 +819,7 @@ contains
     real(r8_kind), allocatable             :: f_array(:)
     real(r8_kind), allocatable             :: x_array(:)
     !
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     !
     ! Check input variables
     if (.not. options_spin_orbit) then
@@ -1329,7 +1302,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind),           intent(out)   :: trace_K
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !
     real(r8_kind)                          :: factor_K_mat
     real(r8_kind)                          :: factor_K_eny
@@ -1544,7 +1517,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), optional, intent(inout) :: x_array(:)
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle) :: th_ch,th_xc,th_ch_imag,th_xc_imag
     integer(kind=i4_kind) :: n_xc, n_ch, info, i_gamma, i_spin, &
          i_meta_ch, i_meta_xc
@@ -1571,7 +1544,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), allocatable :: koeff_xc(:, :), koeff_en_xc(:)
     real(r8_kind) :: coeff_unused(0)
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     exchange_fit  = options_xcmode() == xcmode_exchange_fit
     numeric_exch  = options_xcmode() == xcmode_numeric_exch
@@ -1962,7 +1935,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), dimension(:),       optional, intent(inout) :: m_subsection
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !
     integer(i4_kind)           :: item_arr_ch
     integer(i4_kind)           :: i_last
@@ -2188,7 +2161,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), dimension(:),                 intent(inout) :: x_subsection
     !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind)           :: alloc_stat
     integer(i4_kind)           :: item_arr_xc
     integer(i4_kind)           :: i_last
@@ -2287,7 +2260,7 @@ ASSERT(n_fit==fit_coeff_n_ch())
     real(r8_kind), intent(out)   :: e_efield
     ! *** end of interface ***
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     type(readwriteblocked_tapehandle)    :: th_efield
     integer(kind=i4_kind)                :: i_gamma,m,n_dim,i_meta,i_last
     real(kind=r8_kind),pointer           :: buffer_den(:),buffer_efield(:)

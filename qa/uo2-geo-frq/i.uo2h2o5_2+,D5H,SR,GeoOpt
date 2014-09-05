@@ -83,7 +83,7 @@
  /CONVERGENCE_LIST
 
  &XC_CONTROL
-    XC = 'vwn'
+    XC = "vwn"
  /XC_CONTROL
 
  &OCCUPATION

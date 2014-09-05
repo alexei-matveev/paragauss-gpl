@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module occupied_levels_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Routines for sending and receiving the
   !           eigenvectors that correspond to occupied levels
@@ -55,11 +55,11 @@ module occupied_levels_module
   !  Author: MS,FN
   !  Date: 1/96
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: MS
   ! Date:   3/97
@@ -96,7 +96,7 @@ module occupied_levels_module
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module ! type specification parameters
@@ -105,7 +105,7 @@ module occupied_levels_module
   implicit none
   private         ! by default, all names are private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 !------------ Declaration of constants and variables ------------
   public arrmat2,arrmat3
@@ -134,46 +134,21 @@ module occupied_levels_module
 
 !------------ public functions and subroutines ------------------
   public :: eigvec_occ_dealloc!()
-  public sndrcv_eigvec_occ, sndrcv_eigvec_occ1
-
+  public :: sndrcv_eigvec_occ
   public :: update_eigvec_occ!(), to be executed in parallel context
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !------------ Subroutines ---------------------------------------
 contains
 
-  !*************************************************************
-  subroutine sndrcv_eigvec_occ1()
-    !  Purpose: sometimes eigvec are sended from a complete master only
-    !           context, this functions enables the usage of sndrcv in
-    !             it
-    !             master sends command to join in his subroutine to slaves
-    !             slaves will also enter this routine
-    !------------ Modules used ------------------- ---------------
-    use comm_module, only: comm_init_send, comm_send, comm_i_am_master, &
-        comm_all_other_hosts
-    use msgtag_module, only: msgtag_occ_levels
-    implicit none
-    !------------ Declaration of formal parameters ---------------
-    !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
-
-    if (comm_i_am_master()) then
-      call comm_init_send(comm_all_other_hosts, msgtag_occ_levels)
-      call comm_send()
-    end if
-    call sndrcv_eigvec_occ()
-  end subroutine sndrcv_eigvec_occ1
-
-  !*************************************************************
   subroutine sndrcv_eigvec_occ()
-    !  Purpose: summarizes sending and receiving of the eigenvectors
-    !           of the occupied levels
-    !------------ Modules used ------------------- ---------------
+    !
+    ! Summarizes  sending and  receiving  of the  eigenvectors of  the
+    ! occupied levels.
+    !
     use comm
     use operations_module, only: operations_core_density
     use options_module, only: options_spin_orbit
@@ -183,10 +158,10 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i, m
     integer(i4_kind) :: rank
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     rank = comm_rank()
 
@@ -295,13 +270,13 @@ contains
     integer(kind=i4_kind), intent( in  ) :: n_occo(:,:), n_occo_core(:,:)
     type(sym),             intent( in  ) :: ssym
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: alloc_stat
     integer(kind=i4_kind)                :: n_irrep
     integer(kind=i4_kind), allocatable   :: dim_irrep(:)
     integer(kind=i4_kind)                :: i, n
     integer(kind=i4_kind), allocatable   :: eigvec_occ_dim(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if (options_spin_orbit) then
        !
        ! SPIN ORBIT

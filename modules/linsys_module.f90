@@ -1,34 +1,34 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module linsys_module 
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !-------------- Module specification ---------------------------
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Provides subroutines for solving the linear equation
   !           systems occuring during the fitting procedures
@@ -82,27 +82,27 @@ module linsys_module
   !  Author: Uwe Birkenheuer (extracted from lin_solve by FN)
   !  Date: 7/7/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
-  !------------ public functions and subroutines ------------------
+  !== Interrupt end of public interface of module ====================
+  !------------ public functions and subroutines ---------------------
   public decompose_linsys, solve_linsys, constrain_linsys_cb, constrain_linsys_Qx 
   public gmat_linsys
 
@@ -113,13 +113,13 @@ module linsys_module
   end interface
   public constrain_linsys
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! LAPACK Routines used 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! SUBROUTINE DPPTRF( UPLO, N, AP, INFO )
   ! CHARACTER          UPLO
   ! INTEGER            INFO, N
@@ -152,7 +152,7 @@ module linsys_module
   !         > 0:  if INFO = i, the leading minor of order i is not
   !               positive definite, and the factorization could not be
   !               completed.
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! SUBROUTINE DPPTRS( UPLO, N, NRHS, AP, B, LDB, INFO )
   ! CHARACTER          UPLO
   ! INTEGER            INFO, LDB, N, NRHS
@@ -185,9 +185,9 @@ module linsys_module
   ! INFO    (output) INTEGER
   !         = 0:  successful exit
   !         < 0:  if INFO = -i, the i-th argument had an illegal value
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -208,10 +208,10 @@ contains
     real   (kind=r8_kind), optional, intent(in   ) :: q_vec(:)
     real   (kind=r8_kind), optional, intent(  out) :: c_vec(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: info, n_sum !,i,j
 !   real   (kind=r8_kind)::summ
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !  summ=0.0_r8_kind
 !  do j=1,n_dim
@@ -275,10 +275,10 @@ contains
     real   (kind=r8_kind), intent(out) :: g_mat(n_dim,n_dim)
     real(kind=r8_kind),intent(out) :: zmat(:,:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: info,i,j
     real(kind=r8_kind),allocatable :: fmat(:,:),matcha(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
   if(present(matcharge) ) then
    allocate(matcha(n_dim,n_dim))
    do j=1,n_dim
@@ -351,9 +351,9 @@ contains
     real   (kind=r8_kind), optional, intent(inout) :: n_val
     real   (kind=r8_kind), optional, intent(in   ) :: q_vec(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: info, n_sum
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if (present(c_vec) .and. present(n_val) .and..not.present(q_vec)) then
       n_sum = n_dim + 1
@@ -405,9 +405,9 @@ contains
     real   (kind=r8_kind), intent(in   ) :: c_vec(:)
     real   (kind=r8_kind), intent(inout) :: n_val
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: n_sum
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_sum = n_dim + 1
     n_val = ( n_val - sum(c_vec(1:n_dim)*b_vec) ) / c_vec(n_sum)
@@ -438,9 +438,9 @@ contains
     real   (kind=r8_kind), intent(inout) :: n_val
     real   (kind=r8_kind), intent(in   ) :: q_vec(:)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: n_sum
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_sum = n_dim + 1
     n_val = ( n_val - sum(q_vec*x_vec) ) / c_vec(n_sum)

@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module eigen_data_module
   !-------------- Module specification ---------------------------
   !
@@ -56,11 +56,11 @@ module eigen_data_module
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: TG
@@ -91,9 +91,9 @@ module eigen_data_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype    ! user defined types
@@ -107,7 +107,7 @@ module eigen_data_module
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
   integer(kind=i4_kind) :: allocate_stat(5)
   !------------ Declaration of public constants and variables -----
   public :: arrmat2,arrmat3
@@ -132,10 +132,9 @@ module eigen_data_module
   ! allocatable component instead of pointer.
   !
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: eigen_data_solve!(), to be called from a parallel context
-  public :: eigen_data_solve1!(), trampoline for master/main_slave, must die
   public :: eigen_data_alloc!(), does no communication
   public :: eigen_data_free!(), does no communication
 
@@ -150,9 +149,9 @@ module eigen_data_module
   public :: eigen_data_dump!(file), to dump hamiltonian, eigenvectors and eigenvalues to file
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 ! interface rsg
 !    SUBROUTINE RSG(NM,N,A,B,W,MATZ,Z,IERR)
@@ -196,33 +195,10 @@ module eigen_data_module
 
 
 
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !------------ Subroutines ---------------------------------------
 contains
 
-
-  !*************************************************************
-  subroutine eigen_data_solve1()
-    !
-    ! Separate the legacy parallel context from eigen_data_solve()
-    !
-    use comm_module, only: comm_init_send, comm_send, comm_all_other_hosts, &
-         comm_i_am_master
-    use msgtag_module, only: msgtag_eigen_data_solve
-    implicit none
-    !** End of interface *****************************************
-
-    if( comm_i_am_master() )then
-       !
-       ! First tell the slaves to enter this subroutine:
-       !
-       call comm_init_send(comm_all_other_hosts, msgtag_eigen_data_solve)
-       call comm_send()
-    endif
-
-    call eigen_data_solve()
-  end subroutine eigen_data_solve1
-  !*************************************************************
 
   !*************************************************************
   subroutine eigen_data_solve()
@@ -241,7 +217,9 @@ contains
     !
     use symmetry_data_module, only: ssym  ! symmetry information
     use comm, only: comm_bcast, comm_rank
+#if defined(WITH_MATRIX_PARALLEL) || defined(WITH_SCHEDEIG)
     use overlap_module, only: overlap
+#endif
     use time_module, only: start_timer, stop_timer
     use timer_module, only: timer_scf_eigen
 #ifdef WITH_SCHEDEIG
@@ -317,18 +295,19 @@ contains
   end subroutine eigen_data_solve
   !*************************************************************
 
-  subroutine build_lvsft_hamiltonian(n_occo, level_shift, set_start_lvshift)
+  subroutine build_lvsft_hamiltonian (n_occo, level_shift, set_start_lvshift)
     !
-    ! input:  ham_lsft matrixes to be modifed
-    !         level_shift - energy shifts of vacant levels
+    ! Global  variable ham_lsft(:)  holding the  matrices  is modifed,
+    ! level_shift  -   energy  shifts   of  vacant  levels.   Does  no
+    ! communication.
     !
-    ! result: modified ham_lsft for all representations
+    ! Result: modified ham_lsft for all representations.
     !
     use symmetry_data_module, only: ssym
     implicit none
-    integer(kind=i4_kind), intent(in), dimension(:,:) :: n_occo
-    real(kind=r8_kind), intent(in) :: level_shift
-    logical, intent(in) :: set_start_lvshift
+    integer (i4_kind), intent (in), dimension(:, :) :: n_occo
+    real (r8_kind), intent (in) :: level_shift
+    logical, intent (in) :: set_start_lvshift
     ! *** end of interface ***
 
     integer(kind=i4_kind) :: i_gamma,is,nm,vac
@@ -336,17 +315,14 @@ contains
 
     make_level_shift = set_start_lvshift
 
-    ! set appropriate dimensions of irreps
-    ! (use projective irreps in case of spin orbit)
-     do i_gamma = 1,ssym%n_irrep
-       if ( ssym%dim(i_gamma) == 0 ) cycle
+    ! Set appropriate  dimensions of irreps (use  projective irreps in
+    ! case of spin orbit)
+     do i_gamma = 1, ssym % n_irrep
+       if (ssym % dim(i_gamma) == 0) cycle
 
-       nm = ssym%dim(i_gamma)
+       nm = ssym % dim(i_gamma)
        do is = 1, ssym%n_spin
-          !             call rsg(nm,nn,ham_tot(i_gamma)%m(1:nn,1:nn,is), &
-          !                  overlap(i_gamma)%m,eigval(i_gamma)%m(1:nn,is),matz, &
-          !                  eigvec(i_gamma)%m(1:nn,1:nn,is),ierr)
-          allocate(shifts(nm, nm), temp(nm, nm), stat=allocate_stat(1))
+          allocate (shifts(nm, nm), temp(nm, nm), stat=allocate_stat(1))
           ASSERT(allocate_stat(1).eq.0)
           allocate_stat(1) = size(shifts) * 2
 
@@ -356,10 +332,10 @@ contains
              shifts(vac, vac) = level_shift
           enddo
 
-          temp = matmul(shifts, transpose(ham_lsft(i_gamma)%m(:, :, is)))
+          temp = matmul (shifts, transpose (ham_lsft(i_gamma) % m(:, :, is)))
 
           ham_lsft(i_gamma)%m(1:nm, 1:nm, is) = &
-               matmul(ham_lsft(i_gamma)%m(:, :, is), temp)
+               matmul (ham_lsft(i_gamma) % m(:, :, is), temp)
 
           deallocate(shifts, temp, stat=allocate_stat(1))
           ASSERT(allocate_stat(1) .eq. 0)
@@ -390,10 +366,10 @@ contains
     ! *** end of interface ***
 
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: help,i,j,sj,si
     integer(kind=i4_kind) :: n_irrep ! number of irreps
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_irrep = size(dim_irrep)
 
@@ -1398,19 +1374,23 @@ contains
   subroutine eigen_hole_setup (force_hole, n_holes, hole_list, &
        hole_irrep, force_update, hole_spin)
     !
-    ! Purpose: fill the variables 'n_holes_per_irrep',
-    ! 'holes_per_irrep' and eigvec_hole using the variables
-    ! fixed_hole, hole_list and hole_irrep from the occupation
-    ! module.
+    ! Fill  the variables  'n_holes_per_irrep',  'holes_per_irrep' and
+    ! eigvec_hole  using  the   variables  fixed_hole,  hole_list  and
+    ! hole_irrep from the occupation module.
     !
-    ! Subroutine called by: 'occupation_get_holes', which in turn
-    ! is called by 'do_recover' in 'main_scf' to ensure that
+    ! Subroutine  called by occupation_get_holes(),  which in  turn is
+    ! called by main_scf() to ensure that
+    !
     ! a) fixed_hole modus works only with recovered eigenvectors
+    !
     ! b) eigenvectors are allocated and initialized
-    !-------------------------------------------------------
+    !
+    ! Does not seem  to do any communication. By  way of eigvec_read()
+    ! does  IO (reading)  in  case of  spin-orbit.  Currently runs  on
+    ! master only.
+    !
     use symmetry_data_module
     implicit none
-    ! --- Declaration of formal parameters -----------------
     logical,intent(in)               :: force_hole
     integer(kind=i4_kind),intent(in) :: n_holes
     integer(kind=i4_kind),intent(in) :: hole_list(:)
@@ -1418,12 +1398,11 @@ contains
     integer(i4_kind), intent(in), optional :: hole_spin(:)
     logical,intent(in)               :: force_update
     !** End of interface ***************************************
-    ! --- Declaration of local variables -------------------
+
     integer(kind=i4_kind) :: counter,alloc_stat,i,j,num_hole&
          ,num_spin,i_hole
     logical :: spin_restricted
     integer(i4_kind) :: irr,n_irr,n_func,n_hole,hole
-    !---- Executable code ----------------------------------
 
     if (present(hole_spin)) then
        spin_restricted=.false.
@@ -1438,14 +1417,14 @@ contains
     endif
 
     fixed_hole=.true.
-    ! This variable determines if the projector, i.e. the
-    ! hole eigenvector originating from the reference
-    ! calculation is to be updated during the SCF-Cycles
-    ! even if the hole does not *jump* from one orbital
-    ! to another. This can be set in order to take care of
-    ! cases where the holes moves slowly and then suddenly
+
+    ! This  variable  determines  if  the  projector,  i.e.  the  hole
+    ! eigenvector originating from the  reference calculation is to be
+    ! updated during the  SCF-Cycles even if the hole  does not *jump*
+    ! from one  orbital to another. This  can be set in  order to take
+    ! care of  cases where  the holes moves  slowly and  then suddenly
     ! cannot be idetnified anymore.
-    update_projector=force_update
+    update_projector = force_update
 
     if(options_spin_orbit)then
        n_irr = symmetry_data_n_proj_irreps()
@@ -1453,13 +1432,13 @@ contains
        n_irr = symmetry_data_n_irreps()
     endif
 
-    if(options_spin_orbit.and..not.EIGDATA_VALID)then
+    if (options_spin_orbit .and. .not. EIGDATA_VALID) then
        DPRINT 'eid::eigen_hole_setup: call eigvec_read()'
        call eigvec_read()
        DPRINT 'eid::eigen_hole_setup: .'
     endif
 
-    ! allocate the array 'n_holes_per_irrep' for later use
+    ! Allocate the array 'n_holes_per_irrep' for later use
     allocate(n_holes_per_irrep(n_irr),STAT=alloc_stat)
     if (alloc_stat/=0) call error_handler&
          ("eigen_hole_setup: allocation of n_holes_per_irrep failed")
@@ -1477,9 +1456,7 @@ contains
             n_holes_per_irrep(hole_irrep(i)) + 1
     enddo
 
-    irreps: do i=1,n_irr !symmetry_data_n_irreps()
-!!$       ! zero-length arrays are allowed:
-!!$       if (n_holes_per_irrep(i) == 0) cycle irreps
+    irreps: do i = 1, n_irr     ! symmetry_data_n_irreps()
 
        allocate(holes_per_irrep(i)%m(n_holes_per_irrep(i)),STAT=alloc_stat)
        if (alloc_stat/=0) call error_handler &
@@ -1508,14 +1485,11 @@ contains
           allocate(eigvec_hole(n_irr),STAT=alloc_stat)
           if (alloc_stat/=0) call error_handler&
                ("eigen_hole_setup: allocation (1) failed")!
-          irreps_2:  do i=1,n_irr !symmetry_data_n_irreps()
+          irreps_2:  do i = 1, n_irr ! symmetry_data_n_irreps()
              allocate(eigvec_hole(i)%m(symmetry_data_dimension(i),&
                   n_holes_per_irrep(i),symmetry_data_n_spin()),STAT=alloc_stat)
              if(alloc_stat/=0) call error_handler &
                   ("eigen_hole_setup: allocation (2) failed")
-
-!!$             ! zero-length loops are allowed:
-!!$             if (n_holes_per_irrep(i) == 0) cycle irreps_2
 
              do i_hole=1,n_holes_per_irrep(i)
                 num_hole=holes_per_irrep(i)%m(i_hole)
@@ -1527,24 +1501,21 @@ contains
                         eigvec(i)%m(:,num_hole,num_spin)
                 endif
              enddo
-             ! now eigvec_hole(irrep)%m(basis,orbital_with_hole,spin)
-             ! contains the eigenvector for the orbitals specified
-             ! to have a hole.
+             ! Now  eigvec_hole(irrep)  % m(basis,  orbital_with_hole,
+             ! spin)  contains   the  eigenvector  for   the  orbitals
+             ! specified to have a hole.
           enddo irreps_2
        else
           DPRINT 'eid::eigen_hole_setup: spin-orbit branch...'
           ASSERT(EIGDATA_VALID)
-!!$          DPRINT 'eid::eigen_hole_setup: n_irr=',n_irr,&
-!!$               & 'size(n_holes_per_irrep)=',size(n_holes_per_irrep)
-!!$          DPRINT 'eid::eigen_hole_setup: n_holes_per_irrep=',n_holes_per_irrep
+
           allocate(eigvec_hole_real(n_irr),eigvec_hole_imag(n_irr),&
                & STAT=alloc_stat)
           ASSERT(alloc_stat==0)
           do irr=1,n_irr
              n_func = symmetry_data_dimension_proj(irr)
              n_hole = n_holes_per_irrep(irr)
-!!$             DPRINT 'eid::eigen_hole_setup: n_func=',n_func,'n_hole=',n_hole,&
-!!$                  & 'size(holes_per_irrep(irr)%m=',size(holes_per_irrep(irr)%m)
+
              allocate(&
                   & eigvec_hole_real(irr)%m(n_func,n_hole),&
                   & eigvec_hole_imag(irr)%m(n_func,n_hole),&
@@ -1927,7 +1898,7 @@ contains
     integer(kind=i4_kind) :: i,alloc_stat
 
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! if variables were already allocated then reallocate them to
     ! ensure proper size

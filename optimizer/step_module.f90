@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module step_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !  Purpose: PRELIMINARY. Contains all routines and data
   !           to calculate the next step. Could also
   !           be called newton_module or update_module
@@ -37,11 +37,11 @@ module step_module
   !
   !  Author: FN
   !  Date: 7/97
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: VVP
   ! Date:   11/05
@@ -83,12 +83,12 @@ module step_module
   ! together       2005. - TUM. [/home/vysotskiy/DOCS/Report_MEMO/MEMO_OPTI.pdf]
   !Note: GDIIS used in the end of optimization process for convergence acceleration. Accepted by Prof. Dr. J.M.Bofill.  
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use gradient_module, only: grad_intern,energy!,energy_ph
@@ -100,8 +100,8 @@ module step_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
-  !------------ Declaration of constants and variables ------------
+  !== Interrupt end of public interface of module ====================
+  !------------ Declaration of constants and variables ---------------
   real(kind=r8_kind),       public     :: step_mean_square,step_max_comp
 
   ! these variables are made public only to allow saving/restoring persistent state:
@@ -122,15 +122,15 @@ module step_module
   real(kind=r8_kind),allocatable       :: f_vec(:)
   logical,public:: noline,new_mep_point
   integer(kind=i4_kind),public:: number_nolines=0
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: newton_step
   public :: step_module_persistent_state ! saves/restores gdiis_work(:num_stpt) ...
   
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of constants and variables ----
+  !------------ Declaration of constants and variables ---------------
   
   ! This type is very helpful for GDIIS  
   type gdiis_point
@@ -146,8 +146,8 @@ module step_module
   type(gdiis_point)                  :: gdiis_work(max_point) ! (persistent) Stores info about previous "num_stpt" points
   logical                            :: gdiis_storage_initialized = .false.
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine step_setup(mth)
@@ -160,7 +160,7 @@ contains
     use opt_data_module, only: n_internal
     !------------ Declaration of formal parameters ---------------
     character(len=*),    intent(in)  :: mth
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)            :: alloc_stat,ah_dim
     !------------ Executable code --------------------------------  
 
@@ -211,9 +211,9 @@ contains
     real(kind=r8_kind),    intent(in)    :: hesse_eigval(:),f_vec(:)
     real(kind=r8_kind),    intent(in)    :: mu,lambda,r_curr
     real(kind=r8_kind),    intent(inout) :: ahesse(:,:)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     ahesse=zero
     ahesse(1,1)=-mu*r_curr*r_curr
     ahesse(1,2:)=f_vec(:)
@@ -229,9 +229,9 @@ contains
     !-------------------------------------------------------------
     !------------ Declaration of formal parameters ---------------
     character(len=*),    intent(in)      :: mth
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)   :: alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     deallocate(step,STAT=alloc_stat)
     ASSERT(alloc_stat==0)
     deallocate(f_vec,STAT=alloc_stat)
@@ -261,9 +261,9 @@ contains
     !------------ Declaration of formal parameters ---------------
     real(kind=r8_kind),intent(in)        :: mu,lambda
     integer(kind=i4_kind)                :: n_negative
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_negative=0_i4_kind
     do i=1,size(hesse_eigval)
        if (hesse_eigval(i)+mu-lambda<zero) then
@@ -292,10 +292,10 @@ contains
     use coordinates_module
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind),intent(in) :: geo_loop
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     character(len=4)                     :: mth
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! Define method:
     quart=.false.
@@ -352,7 +352,7 @@ contains
     real(kind=r8_kind),parameter         :: eps1=0.00005,eps2=0.0000005
     logical                              :: desired,accepted,do_gdiis
 !   logical,save                         :: less_t_r_curr ! made global
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
    if(step_reset) r_curr=step_max
 
@@ -1420,7 +1420,7 @@ contains
     integer(kind=i4_kind),parameter :: maxiter=1000
         real(kind=r8_kind)              :: ad,mu_prev
     real(kind=r8_kind)              :: delta = 0.0002_r8_kind
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 !    mu=max(-hesse_eigval(1),0.0_r8_kind)+delta 
     mu=-hesse_eigval(1)+delta 
     mu_prev=mu+delta
@@ -1558,7 +1558,7 @@ contains
     logical,              intent(in)  :: less_t_r_curr
     real(kind=r8_kind),   intent(out) :: r_curr,e_cur
     logical,              intent(out) :: accepted
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)                :: r,de_obj,e_curr
 !    real(kind=r8_kind),save           :: e_prev
     real(kind=r8_kind)                :: r1e,r1i,rue,rui
@@ -2374,4 +2374,4 @@ endif
   end subroutine step_module_persistent_state
  
 end module step_module
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------

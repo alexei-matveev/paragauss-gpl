@@ -1,36 +1,36 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine write_input
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
-!  Purpose: Writing an input file that can be interpreted by 
+!  Purpose: Writing an input file that can be interpreted by
 !           read_input() to file "$TTFSOUT/input.out".
-!           The write routines of various modules are called in 
+!           The write routines of various modules are called in
 !           the same order as the read routines in read_input.
 !
 !  Subroutine called by: main_master
@@ -38,19 +38,19 @@ subroutine write_input
 !  Author: TB
 !  Date: 10/95
 !
-!================================================================
-! End of public interface of module
-!================================================================
-!----------------------------------------------------------------
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: ...
 ! Date:   ...
 ! Description: ...
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
   use type_module ! type specification parameters
   use unique_atom_methods
   use symmetry_data_module
@@ -66,7 +66,6 @@ subroutine write_input
   use output_module
   use machineparameters_module, only: machineparameters_write
   use grid_module, only: grid_write_ph, grid_write
-  use ph_cntrl, only: post_scf_write_input
   use xc_cntrl,    only: xc_write_input
   use xcmda_hamiltonian, only: mda_options_write
   use occupation_module, only: occupation_write
@@ -144,7 +143,7 @@ subroutine write_input
   if ( operations_old_input ) then
      call error_handler("write_input: operations_old_input outdated")
   endif
-     
+
      if (output_write_input) call write_to_output_units("write input: symmetry_group")
      call symmetry_data_group_write(unit)
 
@@ -159,13 +158,13 @@ subroutine write_input
 !!$  endif
 
 #ifdef WITH_MOLMECH
-  if(.not. operations_qm_mm_new) then   
-#endif  
+  if(.not. operations_qm_mm_new) then
+#endif
      if (output_write_input) call write_to_output_units("write input: pointcharge")
      call pointcharge_write(unit)
 #ifdef WITH_MOLMECH
   end if
-#endif  
+#endif
 
 #ifdef WITH_EFP
   if (output_write_input) call write_to_output_units("write input: efp_data")
@@ -192,7 +191,7 @@ subroutine write_input
   else
      write(unit,'(a/)')" # Namelist FERMI : not passed to the slaves"
   endif
-  
+
   if (comm_i_am_master()) then
      if (output_write_input) call write_to_output_units("write input: convergence")
      call convergence_write(unit)
@@ -207,9 +206,6 @@ subroutine write_input
   if (output_write_input) call write_to_output_units("write input: ERI4C")
   call eri4c_write_input(unit)
 #endif
-
-  if (output_write_input) call write_to_output_units("write input: PostSCF")
-  call post_scf_write_input(unit)
 
 #ifdef WITH_RESPONSE
   if (output_write_input) call write_to_output_units("write input: Response")

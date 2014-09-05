@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  hesse_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Contains Hesse-Matrix  (in internal coordinates)
   !           Routines for input and output of the Hesse-Matrix,
@@ -38,22 +38,22 @@ module  hesse_module
   !  Author: FN
   !  Date: 6/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: AG
   ! Date:   9/03
   ! Description: CG-method
-  !----------------------------------------------------------------
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !   Contents of the file 'HESSE.DAT':
   ! - 1 integer (kind=i4_kind) : this is interpreted as the actual
   !   cycle number belong to the data on the file in all places
@@ -104,9 +104,9 @@ module  hesse_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(kind=i4_kind), public :: step_counter=0
   integer(kind=i4_kind), public :: mep_point=0
 
@@ -116,14 +116,14 @@ module  hesse_module
   real(kind=r8_kind),allocatable,public    :: hesse_sphere(:,:)
 
   logical, public :: reinit_hess=.false.
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public hesse_main,hesse_update,hesse_write,hesse_eval,rewrite_hesse
   public hesse_shutdown, hess_and_grad_project,write_old_hess
   public cart_step
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
   real(kind=r8_kind),parameter    :: delta_q=0.01_r8_kind
 
   integer(kind=i4_kind),parameter          :: unit_matrix=1,&
@@ -136,8 +136,8 @@ module  hesse_module
   integer(kind=i4_kind)                    :: alloc_sta(9),last_loop
   logical                                  :: do_projection
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine hesse_shutdown()
@@ -365,7 +365,7 @@ contains
     integer(kind=i4_kind),intent(in)   :: geo_loop
     logical,              intent(out)  :: hesse_complete
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),allocatable  :: q0(:),g0(:),q1(:),g1(:),&
                                        g_actual(:),q_actual(:),&
                                        help_mat(:,:)
@@ -374,7 +374,7 @@ contains
     logical                         :: have_hesse_dat,err,back
     logical :: not_freq_only
     logical :: prepare_hesse
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! first find out how many cycles the calculation of the
     ! hessian takes
@@ -1282,10 +1282,10 @@ contains
     !------------ Declaration of formal parameters ---------------
     real(r8_kind)   , intent(out) :: pg(n_internal)
     real(r8_kind)   , intent(in)  :: g(n_internal)
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind),parameter :: big=1000000_r8_kind,small_hgp=1.0e-8_r8_kind
     integer(i4_kind) :: i,j,status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(allocated(q_last)) then
        deallocate(q_last,g_last,dq,dg,STAT=status)
@@ -1482,8 +1482,8 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
     if (.not.allocated(hesse)) then
        allocate(hesse(n_internal,n_internal),&
             hesse_inv(n_internal,n_internal),&
@@ -3706,5 +3706,5 @@ end subroutine hesse_internal_to_cart
 100 call error_handler('HESSE_MODULE: write_cart_hess: error - file "HESS.cart"')
   end subroutine write_cart_hess
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module hesse_module

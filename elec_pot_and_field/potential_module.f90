@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module potential_module
 !
 !  Calculate electrostatic potential (nuclear and electronic parts)
@@ -36,12 +36,12 @@ module potential_module
 !  Author: AS
 !  Date: 11/99
 !
-!================================================================
+  !===================================================================
 !== Interrupt of public interface of module =========
-!================================================================
-!----------------------------------------------------------------
+  !===================================================================
+!---------------------------------------------------------------------
 ! Modifications
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !
 ! Modification (Please copy before editing)
 ! Author: AS
@@ -53,7 +53,7 @@ module potential_module
 ! Date:   7/2000
 ! Description: adaptions to VPP
 !
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 !== Interrupt end of public interface of module =====
 
 # include "def.h"
@@ -72,10 +72,10 @@ module potential_module
 
   public :: send_recv_space_point  ! ()
 
-  public start_read_poten_e,read_poten_e_3,get_poten_n,get_poten_pc, &
+  public :: start_read_poten_e, get_poten_n, get_poten_pc, &
        dealloc_space_points, deallocate_pot, &
        bounds_calc_poten, get_bounds_poten, &
-       bounds_free_poten,send_receive_poten, fill_points, &
+       bounds_free_poten, fill_points, &
        destroy_poten_file , &
        poten_integral_open,poten_integral_close
 
@@ -116,9 +116,9 @@ module potential_module
 
   integer(kind=i4_kind) :: n_irrep
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 !To calculate electrostatic potential:
 !1. Define points where electrostatic potential has to be calculated P(3,N)
 !2. call fill_points(P,N)
@@ -348,37 +348,37 @@ contains
 
   !******************************************************
   subroutine dealloc_space_points
-    ! deallocate "point_in_space" (information about surface points
-    ! of cavity
+    !
+    ! Deallocate "point_in_space" (information about surface points of
+    ! cavity
+    !
     !** End of interface *****************************************
 
-    integer(kind=i4_kind)           :: i, status
+    integer (i4_kind) :: i, status
 
-    do i=1,N_points
-       deallocate(point_in_space(i)%position,stat=status)
-       if ( status .ne. 0) call error_handler( &
-            "potential_module: deallocated point_in_space%position failed" )
+    do i = 1, N_points
+       deallocate (point_in_space(i) % position, stat=status)
+       if (status .ne. 0) call error_handler &
+            ("potential_module: deallocated point_in_space%position failed")
     enddo
 
     ! With only allocatable components this should be enough:
     deallocate (point_in_space, stat=status)
-    if ( status .ne. 0) call error_handler( &
-         "potential_module: deallocated point_in_space failed" )
+    if (status .ne. 0) call error_handler &
+         ("potential_module: deallocated point_in_space failed" )
   end subroutine dealloc_space_points
   !******************************************************
 
   !*********************************************************
-  subroutine start_read_poten_e
-   !** End of interface *****************************************
+  subroutine start_read_poten_e()
+    !
+    ! Executed on all workers.
+    !
+    implicit none
+    !** End of interface *****************************************
 
-    if(comm_parallel()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_start_poten)
-       call comm_send()
-    endif
-
-    call read_poten_e_3
-    call send_receive_poten
-
+    call read_poten_e_3()
+    call send_receive_poten()
   end subroutine start_read_poten_e
   !*********************************************************
 
@@ -727,32 +727,34 @@ contains
 
   !*********************************************************
   subroutine deallocate_pot
+    !
+    ! Does no communication.
+    !
     !** End of interface *****************************************
 
-    integer(kind=i4_kind)       :: status
+    integer (i4_kind) :: status
 
-    if(allocated(V_pot_n)) then
-       deallocate(V_pot_n,stat=status)
+    if (allocated (V_pot_n)) then
+       deallocate (V_pot_n, stat=status)
        if ( status .ne. 0) call error_handler( &
             "potential:deallocation of V_pot_n failed" )
     endif
-    if(allocated(V_pot_e)) then
-       deallocate(V_pot_e,stat=status)
-       if ( status .ne. 0) call error_handler( &
-            "potential:deallocation of V_pot_e failed" )
+    if (allocated (V_pot_e)) then
+       deallocate (V_pot_e, stat=status)
+       if (status .ne. 0) call error_handler &
+            ("potential:deallocation of V_pot_e failed" )
     endif
-    if(allocated(V_pot_pc)) then
-       deallocate(V_pot_pc,stat=status)
-       if ( status .ne. 0) call error_handler( &
-            "potential:deallocation of V_pot_pc failed" )
+    if (allocated (V_pot_pc)) then
+       deallocate (V_pot_pc, stat=status)
+       if ( status .ne. 0) call error_handler &
+            ("potential:deallocation of V_pot_pc failed" )
     endif
 #ifdef WITH_EFP
-    if(allocated(V_pot_mp)) then
-       deallocate(V_pot_mp,stat=status)
+    if (allocated (V_pot_mp)) then
+       deallocate (V_pot_mp, stat=status)
        ASSERT(status==0)
     endif
 #endif
-
   end subroutine deallocate_pot
   !*********************************************************
 
@@ -801,18 +803,14 @@ contains
 
   !*************************************************************
   subroutine bounds_free_poten()
-    !  Purpose: Release the private bounds pointer
+    !
+    ! Release the private bounds pointer. Does no communication.
+    !
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    integer(kind=i4_kind) :: status
-    !------------ Executable code --------------------------------
 
-    if (comm_parallel() .and. comm_i_am_master()) then
-       call comm_init_send(comm_all_other_hosts,msgtag_free_bnds_ptn)
-       call comm_send()
-    endif
+    integer (i4_kind) :: status
 
-    deallocate (bounds%item_arr,STAT=status)
+    deallocate (bounds % item_arr, STAT=status)
     if (status /= 0) call error_handler&
          ("potential: deallocation of BOUNDS failed ")
   end subroutine bounds_free_poten
@@ -824,7 +822,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     type(poten_bounds),intent(out)          :: bounds1
     integer(kind=i4_kind)             :: alloc_stat,i_pr
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     bounds1%lower1 = bounds%lower1
     bounds1%upper1 = bounds%upper1
@@ -846,12 +844,12 @@ contains
     use readwriteblocked_module
     !------------ Declaration of formal parameters ---------------
     type(readwriteblocked_tapehandle),intent(out) :: th_poten2
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 !!$ integer(kind=i4_kind)        :: alloc_stat
 !!$ integer(kind=i4_kind)        :: mynumber
 !!$ type(poten_bounds)             :: bounds2
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
 !!$    mynumber = comm_myindex()
 !!$

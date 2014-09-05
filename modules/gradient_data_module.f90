@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  gradient_data_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module contains the data for the
   !           nuclear displacement gradients, and
@@ -48,19 +48,19 @@ module  gradient_data_module
   !              Split_Gradients concept introduced
   !              Gradients for Model_Density_Approach introduced
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-  !== Interrupt end of public interface of module =================
+  !-------------------------------------------------------------------
+  !== Interrupt end of public interface of module ====================
 #ifdef _LINUX
 # ifdef _UNDERSCORE
 #  define GETENV getenv_
@@ -103,12 +103,12 @@ module  gradient_data_module
 #endif
     USE_MEMLOG
 
-  !== Interrupt of public interface of module =====================
+  !== Interrupt of public interface of module ========================
   implicit none
   save ! save all variables defined in this module
   private
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of types ----------------------------
 
@@ -221,9 +221,9 @@ module  gradient_data_module
 
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
 
@@ -248,15 +248,13 @@ contains
     !  Purpose: allocation of necesarry arrays
     !
     !  Called by: main_gradient
-    !** End of interface ****************************************
     use pointcharge_module
-!   use calc3c_switches
     use integralpar_module, only: integralpar_2dervs,integralpar_cpksdervs
     use cpksdervs_matrices
     use occupied_levels_module
     use virtual_levels_module
-    use occupation_module, only: occ_num,alloc_occ_num
-    use eigen_data_module,only:eigvec,eigval
+    use occupation_module, only: occ_num
+    use eigen_data_module,only: eigvec, eigval
     use fit_coeff_module, only: get_fit,fit
 #ifdef WITH_EPE
     use epecom_module, only: epealloc_stat
@@ -264,9 +262,9 @@ contains
 #ifdef WITH_EFP
     use efp_solv_grad_module, only: init_X_solv_grads
 #endif
-!    use epe_module, only:epemalloc_stat
     implicit none
-    !------------ Declaration of local variables ----------------
+    !** End of interface ****************************************
+
     type(unique_atom_type), pointer :: ua
     integer(kind=i4_kind)           :: counter,alloc_stat,i_unique,ts
     integer(kind=i4_kind)           :: i_unique2
@@ -450,29 +448,29 @@ contains
      MEMLOG(size(cpks_grad_fit_totasym))
      cpks_grad_fit_totasym=0.0_r8_kind
 
-    !!! what are dimentions of up and down cpks equation systems
+     !
+     ! What are dimentions of up and down cpks equation systems?
+     !
+     ! - first dimension  = occ + holes
+     ! - second dimension = vir + holes
+     !
+     if (comm_parallel()) then
+        if (.not. comm_i_am_master())  then
+           call comm_save_recv (comm_master_host, msgtag_packed_message)
+           do i_ir = 1, symmetry_data_n_irreps()
+              call communpack (occ_num(i_ir) % m(1,1), size (occ_num(i_ir) % m), 1, info)
+              ASSERT(info.eq.0)
+           enddo
 
-    !!! first dimension  = occ + holes
-    !!! second dimension = vir + holes
-
-   if(comm_parallel()) then
-    if(.not.comm_i_am_master())  then
-    call alloc_occ_num()
-    call comm_save_recv(comm_master_host,msgtag_packed_message)
-    do i_ir=1,symmetry_data_n_irreps()
-       call communpack(occ_num(i_ir)%m(1,1),size(occ_num(i_ir)%m),1,info)
-     ASSERT(info.eq.0)
-    enddo
-
-    else
-    call comm_init_send(comm_all_other_hosts,msgtag_packed_message)
-    do i_ir=1,symmetry_data_n_irreps()
-      call commpack(occ_num(i_ir)%m(1,1),size(occ_num(i_ir)%m),1,info)
-     ASSERT(info.eq.0)
-    enddo
-    call comm_send
-    endif
-   endif
+        else
+           call comm_init_send (comm_all_other_hosts, msgtag_packed_message)
+           do i_ir = 1, symmetry_data_n_irreps()
+              call commpack (occ_num(i_ir) % m(1, 1), size (occ_num(i_ir) % m), 1, info)
+              ASSERT(info.eq.0)
+           enddo
+           call comm_send
+        endif
+     endif
 
 cpks_size=0
 irr_cpks: do i_ir=1,symmetry_data_n_irreps()

@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module induced_dipoles_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: induced point dipoles
   !           (accounting for polarization of eXternal centers)
@@ -42,18 +42,18 @@ module induced_dipoles_module
   !  Date: 24.08.2007
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 #include <def.h>
 
   use type_module ! type specification parameters
@@ -66,9 +66,9 @@ module induced_dipoles_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
   type, public :: ind_dipole_type
      character(len=12) :: name
      integer(i4_kind) :: N_equal_dipoles
@@ -79,7 +79,7 @@ module induced_dipoles_module
      integer(i4_kind), pointer :: group(:)
   end type ind_dipole_type
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   integer(i4_kind), public :: N_ipd=0_i4_kind
   type(ind_dipole_type), pointer, public :: ipd_array(:)
   real(r8_kind),public,allocatable :: totsym_ind_dip(:)
@@ -101,7 +101,7 @@ module induced_dipoles_module
 
   !------------ Interface statements -----------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: dealloc_id
   public :: dealloc_Pol_center_inform
   public :: symm_Pol_points
@@ -116,15 +116,15 @@ module induced_dipoles_module
   public :: free_field_arrays
   public :: send_receive_id1
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
   type(unique_atom_type), pointer :: unique_Pol_points(:)
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -159,7 +159,7 @@ contains
 
     real(r8_kind),parameter :: small = 1.e-10_r8_kind
     ! very small value
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer (i4_kind) :: i, j, k, n, l, alloc_stat, n_size
     ! counters
     integer(i4_kind) :: n_equal,n_equal_chck,N_eq
@@ -175,7 +175,7 @@ contains
     logical, allocatable :: help_dim(:)
     type(ind_dipole_type), allocatable :: buffer_id(:)
     logical :: do_alloc
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(help_dim(N_total),stat=alloc_stat)
     ASSERT(alloc_stat==0)
@@ -468,9 +468,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if(associated(ipd_array)) then
 
        do i=1,N_ipd
@@ -675,9 +675,9 @@ contains
     ! Purpose: allocate arrays to calculate gradients on pol. centers
     !** End of interface *****************************************
     !------------ modules used -----------------------------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i,n_eq
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(N_ipd > 0) then
        allocate(grad_idip_cartesian(N_ipd),stat=status)
@@ -723,9 +723,9 @@ contains
     !  Purpose: free arrays for calculating gradients on pol. centers
     !** End of interface *****************************************
     !------------ modules used -----------------------------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(N_ipd > 0) then
        do i=1,N_ipd
@@ -933,5 +933,5 @@ contains
     call deallocate_field()
   end subroutine free_field_arrays
   !*************************************************************
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module induced_dipoles_module

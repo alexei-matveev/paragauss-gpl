@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  ts_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Contains all routines necessary to locate
   !           transition states.
@@ -36,16 +36,16 @@ module  ts_module
   !
   !  Author: FN
   !  Date: 3/98
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use iounitadmin_module
@@ -54,9 +54,9 @@ module  ts_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   !VVP
   real(kind=r8_kind),allocatable       :: step(:)
   real(kind=r8_kind),allocatable       :: ahesse(:,:),scl(:,:),help(:,:)
@@ -72,13 +72,13 @@ module  ts_module
   integer(kind=i4_kind):: io_eigmod=40
 !  integer(kind=i4_kind)           :: step_counter=0                   ! SAVE by default
   logical                         :: accepted
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public ts_main, ts_module_persistent_state
   
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
-  !------------ Subroutines ---------------------------------------
+  !===================================================================
+  !------------ Subroutines ------------------------------------------
 contains
   
   
@@ -97,7 +97,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of formal parameters ---------------
     integer(kind=i4_kind),intent(in) :: geo_loop
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !VVP
 
     integer(kind=i4_kind)            :: n_negative,j
@@ -111,7 +111,7 @@ contains
     real(kind=r8_kind),save          :: e_save
     real(kind=r8_kind)               :: lambda_ahrs,a0_ahrs,mu
     real(kind=r8_kind)               :: step_internal(n_internal)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     e_cur=energy
     ! it is usefull alwais to find energy in flepo output 
     write(io_flepo,*) step_counter,e_cur,e_prev, 'step_counter, e_cur,e_prev 1' 
@@ -767,7 +767,7 @@ contains
     use opt_data_module, only: n_internal
     !------------ Declaration of formal parameters ---------------
     character(len=*),    intent(in)  :: meth
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)            :: alloc_stat
     !------------ Executable code --------------------------------  
 
@@ -921,7 +921,7 @@ contains
     logical,              intent(in)  :: less_t_r_curr
     real(kind=r8_kind),   intent(out) :: r_curr,e_cur
     logical,              intent(out) :: accepted
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)                :: r,de_obj,e_curr
     real(kind=r8_kind)                :: r1e,r1i,rue,rui
     real(kind=r8_kind),parameter      :: r_min=0.75_r8_kind,r_good=0.85_r8_kind
@@ -1227,12 +1227,12 @@ subroutine hebden(mu,lambda,r_curr)
     !------------ Declaration of formal parameters ---------------
     real(kind=r8_kind),intent(in)   :: lambda,r_curr
     real(kind=r8_kind),intent(out)  :: mu
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)           :: i
     integer(kind=i4_kind),parameter :: maxiter=1000
     real(kind=r8_kind)              :: ad,mu_prev
     real(kind=r8_kind)              :: delta = 0.005_r8_kind
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mu=-hesse_eigval(1)+delta 
     DPRINT "===================="
     DPRINT "Compute mu"

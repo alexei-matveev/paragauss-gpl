@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!================================================================
+  !===================================================================
 ! Public interface of module
-!================================================================
+  !===================================================================
 module xcmda_hamiltonian
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: This module creates the XC-part of the hamiltionian
   !           within the model density approach (MDA)
@@ -38,17 +38,17 @@ module xcmda_hamiltonian
   ! Author:      Uwe Birkenheuer
   ! Date:        8/98
   ! Description: Potential extended model density approach introduced
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
-  !----------------------------------------------------------------
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module  ! type specification parameters
   use time_module, only: init_timer, start_timer, stop_timer
@@ -67,13 +67,12 @@ module xcmda_hamiltonian
   private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: xcmda_setup
-  public :: build_xcmda_main
-  public :: build_xcmda
+  public :: xcmda_build
   public :: xcmda_close
   public :: mda_options_read
   public :: mda_options_write
@@ -86,9 +85,9 @@ module xcmda_hamiltonian
   public :: mda_rho_cutoff
   public :: erf
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 !..............................................................................
 ! model density approach (basic version)
@@ -210,44 +209,73 @@ module xcmda_hamiltonian
 
 contains
 
-  subroutine build_xcmda_main(lh)
-    ! purpose : wrapper for build_xcmda; it runs only on the master and sends
-    !           the message "execute build_xcmda" to the slaves. Subsequently
-    !           build_xcmda is called. build_xcmda_main is called in every scf-
-    !           cycle by main_scf
+  subroutine xcmda_build (lh)
+    !
+    ! Wrapper for build_xcmda is called in every scf- cycle by
+    ! main_scf().
+    !
+    implicit none
+    logical, intent(in) :: lh
     !** End of interface *****************************************
-    integer(kind=i4_kind) :: info
-    logical,intent(in) :: lh
-    DPRINT 'in build_xcmda_main'
-    print*,'build_xcmda_main'
+
+    integer (i4_kind) :: info
+
+    DPRINT 'in xcmda_build'
+    print*,'xcmda_build'
 
     is_first_loop=lh
 
     if (ext_mda) call prepare_build_xcmda
-    if ( comm_parallel() ) then
-       call comm_init_send(comm_all_other_hosts,msgtag_build_xcmda)
-       call commpack(matinv_required,info)
-       if(info/=0) call error_handler&
-               ('Error packing matinv_required in build_xcmda_main')
-       call commpack(matinv_exists,info)
-       if(info/=0) call error_handler&
-               ('Error packing matinv_exists in build_xcmda_main')
-       call commpack(eval_lincorr,info)
-       if(info/=0) call error_handler&
-               ('Error packing eval_lincorr in build_xcmda_main')
-       if (eval_lincorr) then
-          call commpack(coeff_deltarho(1,1),n_xc*ispin,1,info)
+
+    if (comm_parallel()) then
+       if (comm_i_am_master()) then
+          call comm_init_send (comm_all_other_hosts, msgtag_build_xcmda)
+          call commpack(matinv_required,info)
           if(info/=0) call error_handler&
-               ('Error packing coeff_deltarho in build_xcmda_main')
+               ('Error packing matinv_required in xcmda_build')
+          call commpack(matinv_exists,info)
+          if(info/=0) call error_handler&
+               ('Error packing matinv_exists in xcmda_build')
+          call commpack(eval_lincorr,info)
+          if(info/=0) call error_handler&
+               ('Error packing eval_lincorr in xcmda_build')
+          if (eval_lincorr) then
+             call commpack(coeff_deltarho(1,1),n_xc*ispin,1,info)
+             if(info/=0) call error_handler&
+                  ('Error packing coeff_deltarho in xcmda_build')
+          endif
+          call commpack(is_first_loop,info)
+          if(info/=0) call error_handler&
+               ('Error packing matinv_required in xcmda_build')
+          call comm_send()
+       else
+          call comm_save_recv (comm_master_host, msgtag_build_xcmda)
+          call communpack(matinv_required,info)
+          if(info/=0) call error_handler&
+               ('Error unpacking matinv_required in build_xcmda')
+          call communpack(matinv_exists,info)
+          if(info/=0) call error_handler&
+               ('Error unpacking matinv_exists in build_xcmda')
+          call communpack(eval_lincorr,info)
+          if(info/=0) call error_handler&
+               ('Error unpacking eval_lincorr in build_xcmda')
+          if (eval_lincorr) then
+             allocate( coeff_deltarho(n_xc,ispin), stat=info )
+             if (info /= 0) call error_handler&
+                  ('Error allocating coeff_deltarho in build_xcmda')
+             call communpack(coeff_deltarho(1,1),n_xc*ispin,1,info)
+             if(info/=0) call error_handler&
+                  ('Error unpacking coeff_deltarho in build_xcmda')
+          endif
+          call communpack(is_first_loop,info)
+          if(info/=0) call error_handler&
+               ('Error unpacking is_first_loop in build_xcmda')
        endif
-       call commpack(is_first_loop,info)
-       if(info/=0) call error_handler&
-               ('Error packing matinv_required in build_xcmda_main')
-       call comm_send()
-    endif
+    end if
+
     DPRINT 'call build_xcmda'
     call build_xcmda
-  end subroutine build_xcmda_main
+  end subroutine xcmda_build
 
   !***********************************************************
 
@@ -786,7 +814,7 @@ contains
      real(kind=r8_kind),parameter :: zero=0.0_r8_kind, half=0.5_r8_kind, &
                                      two =2.0_r8_kind
      real(kind=r8_kind),pointer :: ob(:,:), gr(:,:,:)
-     integer(kind=i4_kind) :: i,j,k,l,s,t,vec_length_act,info
+     integer (i4_kind) :: i, j, k, l, s, t, vec_length_act
      real(kind=r8_kind) :: a2, zero_target, rho_min
      integer :: status
      real(kind=r8_kind), allocatable :: r1(:), r2(:)
@@ -809,29 +837,6 @@ contains
         call init_timer(timer_grid_fit_coeffs)
      endif
      DPRINT 'timers initialized'
-     ! first get dynamic control parameters and required input vectors
-     if ( comm_parallel() .and. .not.comm_i_am_master() ) then
-        call communpack(matinv_required,info)
-        if(info/=0) call error_handler&
-                ('Error unpacking matinv_required in build_xcmda')
-        call communpack(matinv_exists,info)
-        if(info/=0) call error_handler&
-                ('Error unpacking matinv_exists in build_xcmda')
-        call communpack(eval_lincorr,info)
-        if(info/=0) call error_handler&
-                ('Error unpacking eval_lincorr in build_xcmda')
-        if (eval_lincorr) then
-           allocate( coeff_deltarho(n_xc,ispin), stat=status )
-           if (status /= 0) call error_handler&
-                ('Error allocating coeff_deltarho in build_xcmda')
-           call communpack(coeff_deltarho(1,1),n_xc*ispin,1,info)
-           if(info/=0) call error_handler&
-                ('Error unpacking coeff_deltarho in build_xcmda')
-        endif
-        call communpack(is_first_loop,info)
-        if(info/=0) call error_handler&
-                ('Error unpacking is_first_loop in build_xcmda')
-     endif
 
      a2 = rho_shape_eps*rho_shape_eps
      rho_min = 0.25_r8_kind * sqrt( epsilon(0.0_r8_kind) * a2 )
@@ -1722,7 +1727,7 @@ endif
     real(kind=r8_kind), intent(in) :: x
     real(kind=r8_kind)             :: erf
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind),parameter :: na=25,nc=22
     real(kind=r8_kind)              :: a(0:na),c(0:nc)
     real(kind=r8_kind)              :: d,dd,alpha,z,sv
@@ -1885,7 +1890,7 @@ endif
     !  Purpose: pack the structure mda_options into a comm buffer
     !** End of interface *****************************************
     use comm, only: comm_bcast
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     call comm_bcast(rho_shape_eps)
     call comm_bcast(rho_cutoff)
     call comm_bcast(constrain_rhospin)
@@ -1902,7 +1907,7 @@ endif
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mda_rho_shape_eps = rho_shape_eps
 
   end function mda_rho_shape_eps
@@ -1915,7 +1920,7 @@ endif
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mda_rho_cutoff = rho_cutoff
 
   end function mda_rho_cutoff
@@ -1928,7 +1933,7 @@ endif
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     mda_constrain_rhospin = constrain_rhospin
 
   end function mda_constrain_rhospin
@@ -1953,7 +1958,7 @@ endif
     !------------ Declaration of local variables   ---------------
     integer(kind=i4_kind) :: s, n_spin
     real(kind=r8_kind) :: yes(1) = (/1.0_r8_kind/), no(1) = (/0.0_r8_kind/)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin = options_n_spin()
 
     if (output_main_scf) call write_to_output_units &
@@ -2023,7 +2028,7 @@ endif
     logical               :: use_model_density
     integer               :: status
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin = options_n_spin()
     use_model_density = options_xcmode() == xcmode_model_density .or. &
                         options_xcmode() == xcmode_extended_mda
@@ -2062,7 +2067,8 @@ endif
           if (output_main_scf) call write_to_output_units &
                ("XCMDA_COEFF_RECOVER: XC(MDA) coefficients re-computed")
           call start_timer(timer_scf_xc)
-          call build_xcmda_main(.false.)
+          ABORT("SPMD?")
+          call xcmda_build(.false.)
           call stop_timer(timer_scf_xc)
        endif
        return

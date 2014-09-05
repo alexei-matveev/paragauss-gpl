@@ -1,59 +1,59 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module efp_solv_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
-  !  Purpose: 
+  !  Purpose:
   !
   !
   !  Module called by: ...
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: AS
   !  Date: 07.08
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-#include <def.h>
+  !-------------------------------------------------------------------
+# include "def.h"
 
   use type_module ! type specification parameters
   use common_data_module
@@ -62,30 +62,30 @@ module efp_solv_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   logical, public :: do_solv
 
-  !------------ Interface statements ------------------------------
-  !------------ public functions and subroutines ------------------
+  !------------ Interface statements ---------------------------------
+  !------------ public functions and subroutines ---------------------
   public calc_mp_potential, deallocate_V_mp, efp_mp_solv_energy
   public allocate_V_and_Q_id, allocate_E_cav, deallocate_E_cav, calc_E_cav1
   public efp_id_mp_solv_energy, deallocate_V_id, calc_V_and_Q_id, calc_E_cav11
   public calc_E_cav
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
-  !------------ Declaration of types ------------------------------
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of types ---------------------------------
+  !------------ Declaration of constants and variables ---------------
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
   !*************************************************************
   subroutine calc_mp_potential()
@@ -100,11 +100,11 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status, iu_sp,ie_sp,n_eq,iu_mp,ie_mp,i,j,k
     real(r8_kind) :: V,V1,r_sp(3),r_mp(3),rr(3),dr,dr2
     real(r8_kind) :: Z,D(3),Q(3,3),O(3,3,3),C,A
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(V_pot_mp(N_points),stat=status)
     ASSERT(status==0)
@@ -125,7 +125,7 @@ contains
              Z=pointcharge_array(iu_mp)%Z
              C=pointcharge_array(iu_mp)%C
              A=pointcharge_array(iu_mp)%A
-          
+
              do ie_mp=1,pointcharge_array(iu_mp)%N_equal_charges
 
                 r_mp=pointcharge_array(iu_mp)%position(:,ie_mp)
@@ -209,9 +209,9 @@ contains
     use potential_module, only: V_pot_mp
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     deallocate(V_pot_mp,stat=status)
     ASSERT(status==0)
@@ -231,12 +231,12 @@ contains
     !------------ Declaration of formal parameters ---------------
     real(r8_kind) :: efp_efp_en
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(r8_kind), allocatable :: V_buf(:)
     real(r8_kind) :: efp_mpl_solv_energy
     integer(i4_kind) :: status,n_eql
     integer(i4_kind) :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     allocate(V_buf(N_points),stat=status)
     ASSERT(status==0)
@@ -249,7 +249,7 @@ contains
     allocate(Q_mp(N_points),stat=status)
     ASSERT(status==0)
 
-    Q_mp= -((dielectric_constant-one)/(dielectric_constant))* & 
+    Q_mp= -((dielectric_constant-one)/(dielectric_constant))* &
          MATMUL(A_matrix_inv,V_buf)
 
     deallocate(V_buf,stat=status)
@@ -272,9 +272,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i,n_eq
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(.not.allocated(E_cav)) then
        allocate(E_cav(N_ipd), stat=status)
@@ -306,9 +306,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i=1,N_ipd
        deallocate(E_cav(i)%m, stat=status)
@@ -352,13 +352,13 @@ contains
        ASSERT(status==0)
        Q_id=zero
     end if
-    
+
     if(.not. allocated(Q_id1)) then
        allocate(Q_id1(N_points),stat=status)
        ASSERT(status==0)
        Q_id1=zero
     end if
-    
+
   end subroutine allocate_V_and_Q_id
   !*************************************************************
 
@@ -383,24 +383,27 @@ contains
 
   !*************************************************************
   subroutine calc_V_and_Q_id()
-    ! Purpose: Calculate electrostatic potential and point charges
-    !          at solute cavity surface points due to efp induced
-    !          dipoles
-    !------------ Modules used -----------------------------------
+    !
+    ! Calculate  electrostatic potential and  point charges  at solute
+    ! cavity  surface  points due  to  efp  induced  dipoles. NOOP  on
+    ! slaves.
+    !
     use potential_module, only: V_pot_id, V_pot_id1, N_points, point_in_space
     use solv_electrostat_module, only: A_matrix_inv
     use solv_cavity_module, only: dielectric_constant, Q_id, Q_id1
     use unique_atom_module, only: N_unique_atoms
-    !------------ Declaration of formal parameters ---------------
+    use comm, only: comm_rank
+    implicit none
     !** End of interface *****************************************
-    !----------- declaration of local variables -------------
+
     real(r8_kind) :: V,V1,r_sp(3),r_ip(3),D(3),D1(3),rr(3),dr
     integer(i4_kind) :: iu_sp,n_eq,ie_sp,iu_ip,ie_ip,n_eql,i
     real(r8_kind), allocatable :: V_buf(:)
     integer(i4_kind) :: status
-    !--- executable code-------------------------------------
 
-    V_pot_id=zero;  V_pot_id1=zero 
+    if (comm_rank() /= 0) return
+
+    V_pot_id=zero;  V_pot_id1=zero
 
     I_SP: do iu_sp=1,N_points
 
@@ -444,7 +447,7 @@ contains
        V_buf(i)=V_pot_id(i)/real(n_eql,kind=r8_kind)
     enddo
 
-    Q_id= -((dielectric_constant-one)/(dielectric_constant))* & 
+    Q_id= -((dielectric_constant-one)/(dielectric_constant))* &
          MATMUL(A_matrix_inv,V_buf)
 
     do i=1,N_points
@@ -452,7 +455,7 @@ contains
        V_buf(i)=V_pot_id1(i)/real(n_eql,kind=r8_kind)
     enddo
 
-    Q_id1= -((dielectric_constant-one)/(dielectric_constant))* & 
+    Q_id1= -((dielectric_constant-one)/(dielectric_constant))* &
          MATMUL(A_matrix_inv,V_buf)
 
     deallocate(V_buf,stat=status)
@@ -464,7 +467,7 @@ contains
   !*************************************************************
   subroutine calc_E_cav()
     ! Purpose: Calculate electrostatic field produced by the solute
-    !          cavity surface charges at positions of induced point 
+    !          cavity surface charges at positions of induced point
     !          dipoles
     !------------ Modules used -----------------------------------
     use potential_module, only: N_points, point_in_space
@@ -560,7 +563,7 @@ contains
   !*************************************************************
   subroutine calc_E_cav1(iu_id1,ie_id1)
     ! Purpose: Calculate electrostatic field produced by the solute
-    !          cavity surface charges at positions of induced point 
+    !          cavity surface charges at positions of induced point
     !          dipoles
     !------------ Modules used -----------------------------------
     use potential_module, only: N_points, point_in_space
@@ -598,7 +601,7 @@ contains
   !*************************************************************
   subroutine calc_E_cav11(iu_id1,ie_id1)
     ! Purpose: Calculate electrostatic field produced by the solute
-    !          cavity surface charges at positions of induced point 
+    !          cavity surface charges at positions of induced point
     !          dipoles
     !------------ Modules used -----------------------------------
     use potential_module, only: N_points, point_in_space
@@ -656,5 +659,5 @@ contains
   end subroutine efp_id_mp_solv_energy
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module efp_solv_module

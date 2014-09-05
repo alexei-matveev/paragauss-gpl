@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module gga_response_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Contains routines for evaluating PW91 and PBE
   !   exchange-correlation functionals:
@@ -48,11 +48,11 @@ module gga_response_module
   !
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: SB
@@ -62,9 +62,9 @@ module gga_response_module
   !  1. Based on J.P. Perdew et al. "GGA made simple" Phys. Rev. Lett.
   !                                 77(18) P.3865 1996
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: SB
@@ -79,9 +79,9 @@ module gga_response_module
   !! dfdndg     AAA  BBB  BAA  ABB  AAB  BAB
   !! dfdgdg    AAAA BBBB AABB AAAB BBAB ABAB
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification
   ! Author: TS
@@ -90,16 +90,16 @@ module gga_response_module
   !              in derivatives of phi for cases where:
   !                      rho = (rho_alpha,0)
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 
 
@@ -109,12 +109,12 @@ module gga_response_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public gga_correlation
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !! BLOCK FOR PBE FINISHED
 
   integer(i4_kind), parameter, public :: &
@@ -164,7 +164,7 @@ module gga_response_module
        Cc0   = 0.004235_r8_kind, &
        Cx    = - 0.001667_r8_kind
 
-  !------------ Subroutines ---------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine gga_correlation(C_KIND,ispin,id,rho,gmma,vlen,&
@@ -186,7 +186,7 @@ contains
     optional                             :: dfdn,dfdg,dEcdn
     optional                             :: dfdndn,dfdndg,dfdgdg,dEcdndn
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),dimension(vlen,2)     :: nn
     real(kind=r8_kind),dimension(vlen)       :: gm
 
@@ -296,7 +296,7 @@ contains
     optional                             :: dfcdn,dfcdg,dEcdn
     optional                             :: dfc_drhodrho,dfc_drhodgamma,dfc_dgammadgamma,dEcdndn
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),dimension(vlen)                   :: H,dHdgdg
     real(kind=r8_kind),dimension(vlen,2)                 :: dHdndg
     real(kind=r8_kind),dimension(vlen,3)                 :: dHdn, dHdndn
@@ -918,5 +918,5 @@ contains
   end subroutine A_drv
   !********************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module gga_response_module

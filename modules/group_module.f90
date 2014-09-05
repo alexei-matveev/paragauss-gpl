@@ -1,50 +1,50 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module group_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: performs operations between symmetry elements.
   !
   !  Author: MM
   !  Date: 07.07.1996
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author:
   ! Date:
   ! Description:
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module ! type specification parameters
@@ -54,7 +54,7 @@ module group_module
 !== Interrupt end of public interface of module =================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
   type, public ::  group_symm_el
      ! symmetry operation of the pointgroup, given in quaternion form
@@ -264,7 +264,7 @@ module group_module
   end type symm_transformation_int
 
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   integer (i4_kind), parameter, public :: nptgrp=75
   ! number of available pointgroups
@@ -364,7 +364,7 @@ module group_module
   ! This is a real representation of the E Irrep of the group T, which
   ! was introduced in order to obtain real representation matrices
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
   interface operator(*)
      module procedure group_symmel_mult
@@ -378,7 +378,7 @@ module group_module
      module procedure contains_inversion_el
   end interface
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public &
         group_symmel_alloc, &
         group_symmel_read, &
@@ -396,9 +396,9 @@ module group_module
         contains_inversion
 
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
 
 
@@ -471,8 +471,8 @@ module group_module
        & /  1, 0, 0,  2, 0, 0,  2, 1, 0 /
 
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function contains_inversion_el(el) result(yes)
@@ -495,12 +495,12 @@ contains
     !------------ Modules used ------------------- ---------------
     use type_module
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: k,error
     ! counter, error_code
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! identify redundant names
 
@@ -564,10 +564,10 @@ contains
     integer(kind=i4_kind),intent(out)  :: group_size
     ! size of the group (to be determined)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: k
     ! counter
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! determine group number igroup
     number = 0
@@ -600,14 +600,14 @@ contains
     implicit none
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),allocatable,dimension(:,:) :: elem
     ! work array for quaternions of elements of point group
     integer(kind=i4_kind)                :: k,l
     ! counter, error_code
     character(len=8), allocatable, dimension(:) :: namele
     ! work array for name of elements of point group
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! allocate work arrays
     allocate( elem(5,group_num_el),namele(group_num_el))
@@ -661,7 +661,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),allocatable,dimension(:,:) :: elem
     ! work array for quaternions of elements of point group
     integer(kind=i4_kind)                :: k,l
@@ -672,7 +672,7 @@ contains
     ! some symmetryelement
     character(len=8), allocatable, dimension(:) :: namele
     ! work array for name of elements of point group
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! determine id and size of the subgroup
     call group_number_size(subgroup_name,subgroup%id,subgroup%num_el)
@@ -746,11 +746,11 @@ contains
     use type_module
     use iounitadmin_module
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     !integer(kind=i4_kind)                :: k
 
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! select by group
     select case(group_name)
@@ -856,11 +856,11 @@ contains
     use iounitadmin_module
     implicit none
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: error
 
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     deallocate (symm_el,stat=error)
     if (error.ne.0) call error_handler( &
@@ -911,7 +911,7 @@ contains
     use iounitadmin_module
     !** End of interface *****************************************
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind) :: error, i, j, n
 
     ! deallocate 'proj_irrep_can' --------------------------
@@ -1030,10 +1030,10 @@ contains
     !------------ Declaration of formal parameters ---------------
     type(group_symm_el),intent(in)   :: s1,s2
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)           :: x1(5),x2(5),y(5)
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     x1=s1%quaternion
     x2=s2%quaternion
@@ -1067,11 +1067,11 @@ contains
     !------------ Declaration of local constants  ----------------
     real(kind=r8_kind),parameter :: small = 1.e-10
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)           :: x1(5),x2(5)
     real(kind=r8_kind)           :: diff1, diff2
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     x1=s1%quaternion
     x2=s2%quaternion
@@ -1111,11 +1111,11 @@ contains
     !------------ Declaration of local constants  ----------------
     real(kind=r8_kind),parameter :: small = 1.e-10
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)           :: x1(5),x2(5)
     real(kind=r8_kind)           :: diff1, diff2
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     x1=s1%quaternion
     x2=s2%quaternion
@@ -1153,13 +1153,13 @@ contains
     use type_module
     use iounitadmin_module
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: i,j,k,jmax
     ! counters
     type(group_symm_el)                  :: y
     ! temporary results of group multiplication
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i=1,group_num_el
        do j=1,group_num_el
@@ -1237,7 +1237,7 @@ contains
        type(class_list), pointer    :: next => NULL()
     end type class_list
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: remain(group_num_el)
     ! contains not referenced group elements
     integer(kind=i4_kind)                :: counter(group_num_el)
@@ -1426,7 +1426,7 @@ contains
        type(class_list), pointer    :: next => NULL()
     end type class_list
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: remain(group_num_el)
     ! contains not referenced group elements
     integer(kind=i4_kind)                :: counter(group_num_el)
@@ -1718,7 +1718,7 @@ contains
     ! how the cosets transform with respect to group operations
     ! coset_trafo(num_cs,num_cs,group_num_el)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                      :: num_el
     ! number of elements in the subgroup
     integer (i4_kind) :: i, j, k, l, count
@@ -1729,7 +1729,7 @@ contains
     !------------ Declaration of subroutines used ----------------
     external error_handler
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! |subgroup| is an integer divider of |group|
     num_cs = group_num_el/subgroup%num_el
@@ -1814,7 +1814,7 @@ contains
 
     !------------ Declaration of local parameters ----------------
     integer(kind=i4_kind),parameter     :: matz=1
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     ! matrix of CSCO:
     complex(c16_kind) :: csco_mat(group_num_cl, group_num_cl)
@@ -1939,7 +1939,7 @@ contains
 
     !------------ Declaration of local parameters ----------------
     integer(kind=i4_kind),parameter     :: matz=1
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     ! matrix of CSCO:
     complex(c16_kind) :: csco_mat(group_num_re, group_num_re)
@@ -2102,7 +2102,7 @@ contains
     !------------ Declaration of local constants -----------------
     real(kind=r8_kind),parameter  :: small = 1e-5
 
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                :: num_ir
     ! number of pseudo irreps in subgroup
     integer(kind=i4_kind)                :: i,j,k,l

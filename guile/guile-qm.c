@@ -1,21 +1,22 @@
+/* -*- mode: c; c-basic-offset: 2; -*- vim: set sw=2 tw=70 et sta ai: */
 /*
-  ParaGauss, a program package for high-performance computations
-  of molecular systems
-  Copyright (C) 2014
-  T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-  M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-  A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-  T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-  M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-  M. Roderus, N. Rösch
+  ParaGauss,  a program package  for high-performance  computations of
+  molecular systems
 
-  This program is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License version 2 as published
-  by the Free Software Foundation [1].
+  Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+  F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+  A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+  D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+  S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+  A. Nikodem, T. Soini, M. Roderus, N. Rösch
 
-  This program is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  This program is free software; you can redistribute it and/or modify
+  it under  the terms of the  GNU General Public License  version 2 as
+  published by the Free Software Foundation [1].
+
+  This program is distributed in the  hope that it will be useful, but
+  WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+  MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
   General Public License for more details.
 
   [1] http://www.gnu.org/licenses/gpl-2.0.html
@@ -71,19 +72,28 @@ guile_qm_finalize (const SCM world)
     return SCM_UNSPECIFIED;
 }
 
+
+#define EXPORT(name, req, opt, rst, func)               \
+  (scm_c_define_gsubr (name, req, opt, rst, func),      \
+   scm_c_export (name, NULL))
+
 void qm_init_scheme (void);
 
-static SCM
-guile_paragauss_module_init (void)
+/*
+  Calling this will define a few qm-* gsubrs.  This callback is run by
+  Guile   interpreter    at   the   latest   when    the   module   is
+  imported/compiled.  See the call to scm_c_define_module() below.
+*/
+static void
+paragauss_module_init (void *unused)
 {
-    scm_c_define_gsubr ("qm-init", 0, 0, 0, guile_qm_init);
-    scm_c_define_gsubr ("qm-run", 1, 0, 0, guile_qm_run);
-    scm_c_define_gsubr ("qm-finalize", 1, 0, 0, guile_qm_finalize);
+  (void) unused;
+  EXPORT ("qm-init", 0, 0, 0, guile_qm_init);
+  EXPORT ("qm-run", 1, 0, 0, guile_qm_run);
+  EXPORT ("qm-finalize", 1, 0, 0, guile_qm_finalize);
 
-    /* See ../modules/paragauss.f90: */
-    qm_init_scheme ();
-
-    return SCM_UNSPECIFIED;
+  /* See ../modules/paragauss.f90: */
+  qm_init_scheme ();
 }
 
 static void
@@ -99,26 +109,30 @@ guile_main (void *data, int argc, char **argv)
     Calling this  will define comm-*  gsubrs in (guile  comm internal)
     module:
    */
-    scm_c_define_module ("guile comm internal", guile_comm_module_init, NULL);
+  scm_c_define_module
+    ("guile comm internal", guile_comm_module_init, NULL);
 
   /*
-   * Calling this  will define  a few qm-*  gsubrs defined  in Fortran
-   * sources:
-   */
-    scm_c_define_gsubr ("guile-paragauss-module-init", 0, 0, 0, guile_paragauss_module_init);
+    Calling  this will  define a  few qm-*  gsubrs defined  in Fortran
+    sources:
+  */
+  scm_c_define_module
+    ("guile paragauss internal", paragauss_module_init, NULL);
 
 #ifdef WITH_BGY3D
-    /* The function bgy3d_guile_init() initialzes Petsc, defines a few
-       gsubrs with  bgy3d-prefix and returns. The tricky  part is that
-       it registers  an atexit() function  that calls PetscFinalize().
-       This function both, uses MPI and invokes MPI_Finalize(), if MPI
-       was initialized from  PetscInitialize(). If you call MPI_Init()
-       earlier than this  point, you seem to have  to register another
-       atexit() handler that does MPI_Finalize(). */
-    bgy3d_guile_init (argc, argv);
+  /*
+    The  function bgy3d_guile_init() initialzes  Petsc, defines  a few
+    gsubrs with bgy3d-prefix  and returns. The tricky part  is that it
+    registers an  atexit() function that  calls PetscFinalize().  This
+    function  both, uses MPI  and invokes  MPI_Finalize(), if  MPI was
+    initialized from PetscInitialize(). If you call MPI_Init() earlier
+    than this  point, you  seem to have  to register  another atexit()
+    handler that does MPI_Finalize().
+  */
+  bgy3d_guile_init (argc, argv);
 #endif
 
-    scm_shell (argc, argv); // never returns
+  scm_shell (argc, argv); // never returns
 }
 
 int

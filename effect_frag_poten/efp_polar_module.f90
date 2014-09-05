@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module efp_polar_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: ...
   !
@@ -41,18 +41,18 @@ module efp_polar_module
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include <def.h>
   use type_module ! type specification parameters
@@ -64,30 +64,30 @@ module efp_polar_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
   logical, public :: calc_polar=.false.
 
-  !------------ Interface statements ------------------------------
+  !------------ Interface statements ---------------------------------
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public calc_E_mp, calc_E_id, allocate_Efield, deallocate_Efield, calc_id
   public calc_id_FFenergy, calc_id_FFgrads, total_id, calc_id1
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
 
-  !------------ Declaration of types ------------------------------
+  !------------ Declaration of types ---------------------------------
 
-  !------------ Declaration of constants and variables ------------
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !------------ Declaration of constants and variables ---------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   !*************************************************************
@@ -97,9 +97,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i,n_eq
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     if(.not.allocated(E_mp)) then
        allocate(E_mp(N_ipd),E_id(N_ipd),E_id1(N_ipd), stat=status)
@@ -127,9 +127,9 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: status,i,n_eq
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do i=1,N_ipd
        n_eq=ipd_array(i)%N_equal_dipoles
@@ -154,14 +154,14 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: iu_id,ie_id,n_eq,iu_mp,ie_mp,i,j,k
     real(r8_kind) :: E(3),r_id(3),r_mp(3),rr(3),dr,E1(3)
     real(r8_kind) :: Z,D(3),Q(3,3)
 !!$    real(r8_kind) ::V,V1
     integer(i4_kind) :: e_dim,index,id_grp,mp_grp
     real(r8_kind), pointer :: rotmat(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(N_ipd==N_surface_points)
 
@@ -317,14 +317,14 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: iu_id1,ie_id1,n_eq1,iu_id2,ie_id2,n_eq2,i
     real(r8_kind) :: E(3),r_id1(3),r_id2(3),r12(3),dr
     real(r8_kind) :: D2(3)
 !    real(r8_kind) ::V
     integer(i4_kind) :: e_dim,index,id_grp1,id_grp2
     real(r8_kind), pointer :: rotmat(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(N_ipd==N_surface_points)
 
@@ -424,14 +424,14 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind) :: iu_id1,ie_id1
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: n_eq1,iu_id2,ie_id2,n_eq2
     real(r8_kind) :: E(3),r_id1(3),r_id2(3),r12(3),dr
     real(r8_kind) :: D2(3)
 !    real(r8_kind) ::V
     integer(i4_kind) :: e_dim,index,id_grp1,id_grp2
     real(r8_kind), pointer :: rotmat(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(N_ipd==N_surface_points)
 
@@ -477,14 +477,14 @@ contains
     !------------ Declaration of formal parameters ---------------
     integer(i4_kind) :: iu_id1,ie_id1
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: n_eq1,iu_id2,ie_id2,n_eq2
     real(r8_kind) :: E(3),r_id1(3),r_id2(3),r12(3),dr
     real(r8_kind) :: D2(3)
 !    real(r8_kind) ::V
     integer(i4_kind) :: e_dim,index,id_grp1,id_grp2
     real(r8_kind), pointer :: rotmat(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ASSERT(N_ipd==N_surface_points)
 
@@ -654,7 +654,7 @@ contains
     implicit none
     !------------ Declaration of formal parameters ---------------
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: iu_id,ie_id,ne_id,iu_mp,ie_mp,ne_mp,i,j,k,i1,j1
     integer(i4_kind) :: iu_id2,ie_id2,ne_id2,ind2
     integer(i4_kind) :: grad_dim1,grad_dim2,index1,index2,i_grp1,i_grp2
@@ -662,7 +662,7 @@ contains
     real(r8_kind) :: ID(3),ID1(3),ID2(3),Z2,D2(3),Q2(3,3),gradient1(3),gradient2(3)
     real(r8_kind), pointer :: rotmat1(:,:),rotmat2(:,:)
     real(r8_kind) :: torque1(3), torque2(3),E(3),E1(3),E2(3),Qr(3),EE(3)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     do iu_id=1,N_ipd
        ne_id=ipd_array(iu_id)%N_equal_dipoles
@@ -958,8 +958,8 @@ contains
     real(r8_kind) :: vector_product(3)
     real(r8_kind) :: v1(3),v2(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
-    !------------ Executable code --------------------------------
+    !------------ Declaration of local variables ---------------------
+    !------------ Executable code ------------------------------------
     
     vector_product(1)=v1(2)*v2(3)-v1(3)*v2(2)
     vector_product(2)=v1(3)*v2(1)-v1(1)*v2(3)
@@ -976,9 +976,9 @@ contains
     !------------ Declaration of formal parameters ---------------
     real(r8_kind) :: total_id(3)
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(i4_kind) :: i,j,ne
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     total_id=zero
 
@@ -993,5 +993,5 @@ contains
   !*************************************************************
 
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module efp_polar_module

@@ -1,34 +1,34 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  fit_coeff_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !-------------- Module specification ---------------------------
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains the following data and setup routines
   !           connected with them:
@@ -36,21 +36,21 @@ module  fit_coeff_module
   !           fit             -> contains fitbasis dimensions
   !                              for exchange and charge fit
   !                              basis. In case of numerical
-  !                              exch.corr. potential, the 
+  !                              exch.corr. potential, the
   !                              dimension for exch. is 0
   !  Variables:
   !           coeff_charge    -> fit coefficients for total and spin density
   !           coeff_spin         this should later be included in
-  !                              a chargefit_module 
+  !                              a chargefit_module
 !:UB[ added
-  ! 
+  !
   !           coeff_proj      -> charge density projection coefficients
   !                              as required for the potential extended MDA
 !:UB]
-  !           
+  !
   !        coeff_charge_old   -> stores old coeff_charge and coeff_spin
   !        coeff_spin_old        coefficients for mixing
-  ! 
+  !
   !             charge_norm   -> contains the normalization constants
   !                              of the charge fit functions.
   !
@@ -68,7 +68,7 @@ module  fit_coeff_module
   !
 !:UB[ modified
   !         coeff_deltarho   -> Charge density difference fit coefficients
-  !                             as required for the potential extended MDA 
+  !                             as required for the potential extended MDA
   !
 !:UB]
   !  Module called by: prescf, initialize_master, chargefit, main_integral, ...
@@ -76,12 +76,12 @@ module  fit_coeff_module
   !  Author: FN
   !  Date: 10/95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: TB
@@ -117,7 +117,7 @@ module  fit_coeff_module
   !              d) store and recovering of fit coefficients now done with
   !                 readwriteblocked file "saved_scfstate.dat"
   !
-  ! Modification (Please copy before editing) 
+  ! Modification (Please copy before editing)
   ! Author:      Uwe Birkenheuer
   ! Date:        8/98
   ! Description: treatment of exchange coefficients coeff_xc and coeff_en_xc
@@ -132,13 +132,13 @@ module  fit_coeff_module
   ! Description: ...
   !
   ! Modification (Please copy before editing)
-  ! Author: 
+  ! Author:
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use constants
@@ -154,7 +154,7 @@ module  fit_coeff_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   ! ----------- Declaration of Types ----------------------------
   type, public :: fit
@@ -207,7 +207,7 @@ module  fit_coeff_module
   ! coeff_xc_old(n_fit%n_xc,options_n_spin())
   real(kind=r8_kind),allocatable,public     :: coeff_en_xc(:)
   ! coeff_en_xc(n_fit%n_xc)
-!:UB[ modified 
+!:UB[ modified
   real(kind=r8_kind),allocatable,public     :: coeff_proj(:,:)
   ! coeff_proj(n_fit%n_xc,options_n_spin())
   real(kind=r8_kind),allocatable,public     :: coeff_deltarho(:,:)
@@ -251,7 +251,7 @@ module  fit_coeff_module
   ! starting index of the next UAxL block
   public :: fit_coeff_ff_map
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: get_fit
   public :: fit_coeff_n_ch
   public :: fit_coeff_n_s
@@ -284,14 +284,14 @@ module  fit_coeff_module
   public :: fit_coeff_bcast!(), do not confuse with fit_coeff_module_bcast
   public :: fit_coeff_setup!()
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
-  type(fit)                      :: n_fit 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  type(fit)                      :: n_fit
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   function ff_charge(L,alpha) result(charge)
@@ -362,7 +362,7 @@ contains
     !------------ Declaration of formal parameters ---------------
     type(fit),intent(out)      :: fit_dummy
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     fit_dummy = n_fit ! copy all fields, FIXME: if ever pointers
   end subroutine get_fit
@@ -655,7 +655,7 @@ contains
     integer(kind=i4_kind) :: alloc_stat, n_spin
     logical               :: exchange_fit, model_density, extended_mda
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin        = options_n_spin()
     exchange_fit  = options_xcmode() == xcmode_exchange_fit
     model_density = options_xcmode() == xcmode_model_density
@@ -742,7 +742,7 @@ contains
     use readwriteblocked_module
     use iounitadmin_module, only: write_to_output_units, output_unit
     use output_module     , only: output_main_scf, output_data_saved
-    use spin_orbit_module , only: whatis, op_BackTrafo 
+    use spin_orbit_module , only: whatis, op_BackTrafo
     !------------ Declaration of formal parameters ---------------
     type(readwriteblocked_tapehandle), optional, intent(inout) :: th
     integer(kind=i4_kind), optional, intent(in) :: mode
@@ -756,7 +756,7 @@ contains
     logical  :: reset, spin_required, exchange_fit
     integer  :: status
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_spin = options_n_spin()
     exchange_fit = options_xcmode() == xcmode_exchange_fit
@@ -962,7 +962,7 @@ contains
     ! must correspond to arrays "yes" and "no" from fit_coeff_store:
     real(r8_kind), parameter :: yes = 1.0_r8_kind, no = 0.0_r8_kind
     logical               :: valid_saved_scfstate
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_spin = options_n_spin()
     exchange_fit = options_xcmode() == xcmode_exchange_fit
@@ -1027,7 +1027,7 @@ contains
             ("FIT_COEFF_RECOVER: coeff_spin used as initialized")
        sp_initialized = .true.
     endif
-   
+
     call readwriteblocked_read(exch_fit,th)
 
     ! check sanity, maybe this is a different saved_scfstate?
@@ -1139,7 +1139,7 @@ contains
     elseif (exchange_fit) then
        ! used as initialized
     endif
-    
+
   end subroutine fit_coeff_recover
   !*************************************************************
 
@@ -1216,9 +1216,9 @@ contains
 #else /* legacy LCGTO-inspired version */
 
   subroutine fit_coeff_initialize()
-    ! Purpose: initializes the fit coefficients as it is done 
+    ! Purpose: initializes the fit coefficients as it is done
     !          in the old lcgto:
-    !          Only those fit coefficients where the 
+    !          Only those fit coefficients where the
     !          corresponding function
     !          is either of s- or of r2-type
     !          are set to one. Of course we have to look for
@@ -1238,12 +1238,12 @@ contains
          orbitalprojection_globcontr_ch, &
          orbitalprojection_globcontr_xc
     use options_module
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: na,i_l,l_help,start,alloc_stat,i,&
          n_spin,i_spin,counter,i_glob,n_contributing,i_cont
     logical                :: spin_coeff_required
     logical,allocatable    :: mask_ch(:),mask_xc(:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin = options_n_spin()
     spin_coeff_required = ( options_xcmode() == xcmode_model_density .or. &
                             options_xcmode() == xcmode_extended_mda  ) &
@@ -1272,7 +1272,7 @@ contains
        ! This is the r2-type.
        i_l=-1
        l_help=0
-       start = orbitalprojection_ch(l_help,na)       
+       start = orbitalprojection_ch(l_help,na)
        do i=start,start+unique_atoms(na)%r2_ch%N_uncontracted_fcts+&
             unique_atoms(na)%r2_ch%N_contracted_fcts-1
           mask_ch(i) = .true.
@@ -1280,7 +1280,7 @@ contains
        if (options_xcmode() == xcmode_exchange_fit) then
           start=orbitalprojection_xc(l_help,na)
           do i=start,start+unique_atoms(na)%r2_xc%N_uncontracted_fcts+&
-               unique_atoms(na)%r2_xc%N_contracted_fcts-1  
+               unique_atoms(na)%r2_xc%N_contracted_fcts-1
              mask_xc(i)=.true.
           enddo
        endif
@@ -1306,7 +1306,7 @@ contains
           counter = orbitalprojection_globcontr_ch(na)
           do i_glob=1,unique_atoms(na)%N_glob_cons_ch
              n_contributing = &
-                  unique_atoms(na)%glob_con_ch(i_glob)%N_contributing_fcts 
+                  unique_atoms(na)%glob_con_ch(i_glob)%N_contributing_fcts
              contributing_ch: do i_cont=1,n_contributing
                 i_l = unique_atoms(na)%glob_con_ch(i_glob)%l(i_cont)
                 if (i_l.eq.0.or.i_l.eq.-1) then
@@ -1319,10 +1319,10 @@ contains
        endif
        if (options_xcmode() == xcmode_exchange_fit .and. &
            unique_atoms(na)%N_glob_cons_xc.gt.0) then
-          counter = orbitalprojection_globcontr_xc(na) 
+          counter = orbitalprojection_globcontr_xc(na)
           do i_glob=1,unique_atoms(na)%N_glob_cons_xc
              n_contributing = &
-                  unique_atoms(na)%glob_con_xc(i_glob)%N_contributing_fcts 
+                  unique_atoms(na)%glob_con_xc(i_glob)%N_contributing_fcts
              contributing_xc: do i_cont=1,n_contributing
                 i_l = unique_atoms(na)%glob_con_xc(i_glob)%l(i_cont)
                 if (i_l.eq.0.or.i_l.eq.-1) then
@@ -1333,7 +1333,7 @@ contains
              counter=counter+1
           enddo
        endif
-                
+
     enddo uniques
 
     ! now use the mask to set the fitcoefficients.
@@ -1370,63 +1370,44 @@ contains
 #endif /* ifdef FPP_FIT_COEFF_INIT */
 
   !*************************************************************
-  subroutine fit_coeff_normalize(spin_coeff)
+  subroutine fit_coeff_normalize (spin_coeff)
     !
-    !  Purpose: normalize the chargefit coefficients to the
-    !           total number of electrons
+    ! Normalize  the chargefit  coefficients  to the  total number  of
+    ! electrons.
     !
-    ! NOTE: normalization of the density fitting coefficients is
-    !       disabled. In a situation when an initial charge density
-    !       is provided for C atom in CH4 but not for H-atoms
-    !       it is equally wrong to scale the density on H atom up
-    !       by ~66% to match the total number of electron as not
-    !       to scale at all.
+    ! NOTE:  normalization  of  the  density fitting  coefficients  is
+    ! disabled.  In a  situation  when an  initial  charge density  is
+    ! provided for  C atom in  CH4 but not  for H-atoms it  is equally
+    ! wrong to  scale the density  on H atom  up by ~66% to  match the
+    ! total number of electron as not to scale at all.
     !
-    !       In a regular case, charge fit procedure is supposed to output
-    !       normalized fitting coefficients.
+    ! In a  regular case, charge  fit procedure is supposed  to output
+    ! normalized fitting coefficients.
     !
-    !  Subroutine called by: prescf
+    ! Subroutine called by: main_scf(), prescf
     !
-    !------------ Modules used -----------------------------------
     use occupation_module, only: get_n_elec, get_spin_diff, get_min_spin_diff
     use options_module
     implicit none
-    logical,optional,intent(in)      :: spin_coeff
-    !  if present and true the spin density coefficients are normalized too
+    logical, optional, intent(in) :: spin_coeff
+    !  if present and true the spin density coefficients are normalized
     ! *** end of interface ***
 
-    real(r8_kind) :: summ, n_elec, factor, spin_diff
+    real (r8_kind) :: summ, factor, spin_diff
 
-    summ = dot_product(coeff_charge, charge_norm)
+    ! FIXME: this renormalization is probably also not necessary:
+    if (present (spin_coeff)) then
+       if (spin_coeff .and. options_n_spin() > 1 .and. &
+            (options_xcmode() == xcmode_model_density .or. &
+            options_xcmode() == xcmode_extended_mda)) then
 
-    call get_n_elec(n_elec)
-
-    if ( summ == 0.0 ) then
-       WARN('fitted charge is zero')
-    else
-       ! summ might be zero if Veff is used
-       factor = n_elec / summ
-
-! DONT WARN('skip renormalization of charge_coeff')
-! DONT coeff_charge = coeff_charge * factor
-    endif
-
-    DPRINT   'fit_coeff_normalize: number of electrons', n_elec
-    DPRINT   'fit_coeff_normalize:       fitted charge', summ
-    DPRINT   "fit_coeff_normalize:                diff", summ - n_elec
-
-    if (present(spin_coeff) )then
-       if ( spin_coeff .and. options_n_spin() > 1 .and. &
-            ( options_xcmode() == xcmode_model_density .or. &
-              options_xcmode() == xcmode_extended_mda ) ) then
-
-          call get_spin_diff(spin_diff)
+          call get_spin_diff (spin_diff)
 
           ! to avoid devision by zero in case spin_diff /= 0 but summ == 0
           if (spin_diff == zero) then
              coeff_spin = zero
           else
-             summ = dot_product(coeff_spin, charge_norm)
+             summ = dot_product (coeff_spin, charge_norm)
 
              if (summ >= get_min_spin_diff()) then
                 factor = spin_diff / summ
@@ -1440,7 +1421,7 @@ contains
 
 
   subroutine fit_coeff_charge_norm()
-    !  Purpose: check the charge-fit norm 
+    !  Purpose: check the charge-fit norm
     !  Subroutine called by: chargefit
     !** End of interface *****************************************
     use occupation_module, only: get_n_elec, get_spin_diff
@@ -1477,7 +1458,7 @@ contains
   subroutine dimensions_calc(n_fit,map)
     ! Purpose: calculate the dimension of the sym.adapted,
     !          contracted fitbases. This was formerly done in the
-    !          unique_atom_module. 
+    !          unique_atom_module.
     !
     ! Routine called by: initialize_master
     !** End of interface **************************************
@@ -1595,14 +1576,14 @@ contains
              end select
              ! uap%N_independent_fcts is always 1 here, thus
              ASSERT(uac%N_exponents>=0)
-             dim = dim + uac%N_exponents     
+             dim = dim + uac%N_exponents
           enddo
        enddo
        n_fit%n_cd = dim
        !...  duplicate code removed ...
     end if
 #endif
- 
+
     if ( options_xcmode() == xcmode_exchange_fit .or. &
          options_xcmode() == xcmode_extended_mda ) then
     ! exchange fitfunctions
@@ -1653,7 +1634,7 @@ contains
     ! Wraper for the above sub.
     ! Purpose: calculate the dimension of the sym.adapted,
     !          contracted fitbases. This was formerly done in the
-    !          unique_atom_module. 
+    !          unique_atom_module.
     !
     ! Routine called by: initialize_master
     implicit none
@@ -1731,7 +1712,7 @@ contains
   end subroutine calc_fitfct_map
 
     subroutine write_coeff_core(loop)
-    ! purpose: write the final core density charge fit functions 
+    ! purpose: write the final core density charge fit functions
     !          to file (excluding atomic re-normalization)
     ! only called if operations_core_density is true
     !** End of interface **************************************
@@ -1808,14 +1789,14 @@ contains
     !          after checking if coeff_charge_old is
     !          allocated. If not, coeff_charge_old will
     !          be allocated by this routine.
-    !** End of interface *************************************** 
+    !** End of interface ***************************************
     !------------ Modules used --------------------------------
     use options_module
     !------------ Declaration of local variables --------------
     integer(kind=i4_kind)    :: alloc_stat, n_spin
     external error_handler
     ! ----- executable code -----------------------------------
-!   the old charge coefficients are now deallocated directly 
+!   the old charge coefficients are now deallocated directly
 !   after the call of mixing_ch in chargefit, thus:
     n_spin = options_n_spin()
     allocate(coeff_charge_old(n_fit%n_ch),stat=alloc_stat)
@@ -1833,18 +1814,18 @@ contains
     endif
   end subroutine copy_coeff_charge_old
   !*************************************************************
-  
+
 
   !*************************************************************
   subroutine copy_coeff_xc_old()
     ! purpose: as in 'copy_coeff_charge_old', simply
     !          for the exchange fit coefficients
-    !** End of interface *************************************** 
+    !** End of interface ***************************************
     use options_module, only: options_n_spin
     integer(kind=i4_kind)     :: alloc_stat,n_spin
     external error_handler
     ! ----- executable code -----------------------------------
-!   the old exchange coefficients are now deallocated directly 
+!   the old exchange coefficients are now deallocated directly
 !   after the call of mixing_xc in build_xcfit, thus:
     n_spin = options_n_spin()
     allocate(coeff_xc_old(n_fit%n_xc,n_spin),stat=alloc_stat)
@@ -1858,8 +1839,8 @@ contains
 
   !*************************************************************
   subroutine free_coeff_charge_old()
-    ! purpose: deallocates coeff_charge_old 
-    !** End of interface *************************************** 
+    ! purpose: deallocates coeff_charge_old
+    !** End of interface ***************************************
     !------------ Modules used --------------------------------
     use options_module
     !------------ Declaration of local variables --------------
@@ -1881,7 +1862,7 @@ contains
   !*************************************************************
   subroutine free_coeff_xc_old()
     ! purpose: deallocates coeff_xc_old()
-    !** End of interface *************************************** 
+    !** End of interface ***************************************
     use options_module, only: options_n_spin
     integer(kind=i4_kind)     :: dealloc_stat
     external error_handler
@@ -1902,7 +1883,7 @@ contains
     use filename_module, only: outfile
     !------------ Declaration of formal parameters -------------
     integer(kind=i4_kind),intent(in),optional  :: loop
-    !** End of interface *************************************** 
+    !** End of interface ***************************************
     integer(kind=i4_kind)   :: io_u, count=0, i
 
     io_u=get_iounit()
@@ -1932,58 +1913,62 @@ contains
   end subroutine print_coeff_charge
   !*************************************************************
 
-  subroutine fit_coeff_sndrcv(IMOD)
-    ! to be used in parallel context
+  subroutine fit_coeff_sndrcv (IMOD)
+    !
+    ! To be used in parallel context. Handles serial case ok.
+    !
     use comm_module
     use msgtag_module, only: msgtag_fit_coeff_send
     implicit none
-    integer(i4_kind), intent(in) :: IMOD
+    integer (i4_kind), intent(in) :: IMOD
     ! *** end of interface ***
 
-    if(.not.comm_parallel()) RETURN
+    if (.not. comm_parallel ()) return
 
-    if( comm_i_am_master() )then
-       call fit_coeff_send(IMOD)
+    if (comm_i_am_master()) then
+       call fit_coeff_send (IMOD)
     else
-       call comm_save_recv(comm_master_host,msgtag_fit_coeff_send)
+       call comm_save_recv (comm_master_host, msgtag_fit_coeff_send)
        ! unpack, actualy:
        call fit_coeff_receive()
     endif
   end subroutine fit_coeff_sndrcv
 
   !*************************************************************
-  subroutine fit_coeff_send(IMOD)
-    ! purpose: Send fit_coeffs to the slaves; the fitcoeffs are needed
-    !          on the slaves during the gradient run and during the SCF
-    !          SCF procedure as well if the model density approach is used.
+  subroutine fit_coeff_send (IMOD)
+    !
+    ! Send fit_coeffs to  the slaves; the fitcoeffs are  needed on the
+    ! slaves during the gradient run  and during the SCF SCF procedure
+    ! as well if the model density approach is used.
+    !
     use comm_module
     use msgtag_module
     use xpack, only: pck
     use options_module
     implicit none
-    !------------ Declaration of formal parameters -------------
-    integer(i4_kind), intent(in), optional :: IMOD
+    integer (i4_kind), intent (in), optional :: IMOD
     !** End of interface ***************************************
+
     integer(kind=i4_kind) :: n_spin
     logical               :: send_rho_coeff, send_pot_coeff, extended_mda
     integer(i4_kind) :: IMODE
 
     IMODE = ICHFIT ! send density fit, by default
-    if(present(IMOD)) IMODE = IMOD
+    if (present (IMOD)) IMODE = IMOD
 
-    send_rho_coeff = IAND(IMODE,ICHFIT) /= 0
-    send_pot_coeff = IAND(IMODE,IXCFIT) /= 0
+    send_rho_coeff = IAND (IMODE, ICHFIT) /= 0
+    send_pot_coeff = IAND (IMODE, IXCFIT) /= 0
 
     extended_mda = options_xcmode() == xcmode_extended_mda
 
-    call comm_init_send(comm_all_other_hosts,msgtag_fit_coeff_send) 
+    call comm_init_send(comm_all_other_hosts,msgtag_fit_coeff_send)
     call pck(n_fit%n_ch)
     call pck(send_rho_coeff)
     if (send_rho_coeff) then
        call pck(coeff_charge)
     endif
     if (options_xcmode() == xcmode_model_density .or. extended_mda) then
-       n_spin = options_n_spin() 
+       n_spin = options_n_spin()
        if (n_spin > 1 .and. send_rho_coeff) then
           call pck(coeff_spin)
        endif
@@ -1997,34 +1982,42 @@ contains
           endif
        endif
     endif
-    call comm_send()     
-    
+    call comm_send()
+
   end subroutine fit_coeff_send
   !*************************************************************
 
   !*************************************************************
   subroutine fit_coeff_receive()
-    ! purpose: Receive fit_coeffs from  the master; the fitcoeffs are needed
-    !          on the slaves during the gradient run and during the SCF
-    !          SCF procedure as well if the model density approach is used.
+    !
+    ! Receive  (rather   unpack)  fit_coeffs  from   the  master.  The
+    ! fitcoeffs are needed  on the slaves during the  gradient run and
+    ! during the SCF  procedure as well if the  model density approach
+    ! is used.
+    !
     use comm_module
     use xpack, only: upck
     use options_module
-    !------------ Declaration of formal parameters -------------
+    implicit none
     !** End of interface ***************************************
-    integer(kind=i4_kind) :: alloc_stat, n_spin
-    logical               :: receive_rho_coeff, receive_pot_coeff, &
-                             extended_mda
+
+    integer (i4_kind) :: alloc_stat, n_spin
+    logical :: receive_rho_coeff, receive_pot_coeff, extended_mda
 
     extended_mda = options_xcmode() == xcmode_extended_mda
 
-    call upck(n_fit%n_ch)
-    call upck(receive_rho_coeff)
+    call upck (n_fit % n_ch)
+    call upck (receive_rho_coeff)
     if (receive_rho_coeff) then
-       allocate(coeff_charge(n_fit%n_ch),stat=alloc_stat)
-       if(alloc_stat/=0) call error_handler(&
-            'fit_coeff_receive: allocation of coeff_charge failed')
-       call upck(coeff_charge)
+       if (allocated (coeff_charge)) then
+          if (size (coeff_charge) /= n_fit % n_ch) then
+             ABORT("size (coeff_charge)?")
+          endif
+       else
+          allocate (coeff_charge (n_fit % n_ch), stat=alloc_stat)
+          ASSERT(alloc_stat==0)
+       endif
+       call upck (coeff_charge)
     endif
     if (options_xcmode() == xcmode_model_density .or. extended_mda) then
        n_spin = options_n_spin()
@@ -2068,7 +2061,7 @@ contains
     integer(kind=i4_kind) :: alloc_stat, n_spin
     logical               :: exchange_fit, model_density, extended_mda
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     n_spin        = options_n_spin()
     exchange_fit  = options_xcmode() == xcmode_exchange_fit
     model_density = options_xcmode() == xcmode_model_density
@@ -2173,6 +2166,6 @@ contains
     coeff_charge = coeff_charge_new
 
   end subroutine fit_coeff_set_ch
-    
-  !--------------- End of module ----------------------------------
+
+  !--------------- End of module -------------------------------------
 end module fit_coeff_module

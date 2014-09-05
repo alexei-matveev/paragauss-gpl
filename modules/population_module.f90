@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  population_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: contains various routines for the
   !           Mullikan population analysis.
@@ -39,11 +39,11 @@ module  population_module
   !  Author: FN
   !  Date: 5/97
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: MS
@@ -66,7 +66,7 @@ module  population_module
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype
@@ -82,11 +82,11 @@ module  population_module
   implicit none
   save            ! save all variables defined in this module
   private         ! by default, all names are private
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
 
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
 
   public :: population_read
   public :: population_write
@@ -94,11 +94,11 @@ module  population_module
   public :: population_spor_mulliken
   public :: population_close!(), clean up the module
 
-!================================================================
-! End of public interface of module
-!================================================================
+  !===================================================================
+  ! End of public interface of module
+  !===================================================================
 
-  !------------ Declaration of constants and variables ------------
+  !------------ Declaration of constants and variables ---------------
 
   integer(kind=i4_kind),parameter     :: max_len=100
   type(intmat2), allocatable          :: column(:)
@@ -138,7 +138,7 @@ module  population_module
   namelist /population/ population_level, n_columns, dos_plot, irrep, spin, &
                         occupation, eig_min, eig_max
   namelist /popcolumn/ n_contrib
-!----------------------------------------------------------------
+!---------------------------------------------------------------------
 
   real(r8_kind), parameter :: zero = 0.0_r8_kind
 !------------ Subroutines ---------------------------------------
@@ -153,7 +153,7 @@ contains
     !------------ Modules used ----------------------------------
     use input_module
     integer :: unit, status, i, ii, alloc_stat
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     population_level = df_population_level
     n_columns = df_n_columns
     dos_plot = df_dos_plot
@@ -279,7 +279,7 @@ contains
     use orbitalprojection_module, only: orbitalprojection_ob, &
          orbitalprojection_print
     use iounitadmin_module, only: output_unit
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
 
     integer(kind=i4_kind)                :: i,alloc_stat,il,is,&
          up,lo,ua,m_help,m,num,n,nu,nl,i_col,i_cont
@@ -687,7 +687,7 @@ contains
     use overlap_module,       only: overlap_real, overlap_imag
     use eigen_data_module,    only: eigvec_real, eigvec_imag
     !------------ Declaration of formal parameters ---------------
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)               ::&
          & irr,m,n,mu,nu,ibas,isub,ua,L,uaL,iuaL,uaL_dim
     integer(kind=i4_kind)               :: alloc_stat
@@ -1166,7 +1166,7 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
     ! --- declaration of local variables ----------------------
     integer(kind=i4_kind)   :: mu,n,nl
     integer(kind=i4_kind)   :: n_sum, n_tot
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     n_sum = size(title_sum)
     n_tot = size(title_l)
@@ -1302,7 +1302,7 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
     ! --- declaration of local variables ----------------------
     integer(kind=i4_kind) :: i_col, i, i_ind, i_eig, &
          i_cont, ua_cont, l_cont, index
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     do i_col=1,n_columns
        do i_cont=1,n_con(i_col)
           l_cont=column(i_col)%m(2,i_cont)
@@ -1346,7 +1346,7 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
     integer(kind=i4_kind) :: i_eig
     real(kind=r8_kind)    :: occo
 
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if(n_columns>0) then
        do i_eig=1,dim
           if(eigval(i_ir)%m(i_eig,is)>eig_min.and.&
@@ -1375,5 +1375,5 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
     end if
   end subroutine make_dos_plot
   !*************************************************************
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module population_module

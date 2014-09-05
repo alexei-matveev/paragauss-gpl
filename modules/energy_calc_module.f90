@@ -1,30 +1,30 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module energy_calc_module
   !-------------- Module specification ---------------------------
   !
@@ -62,10 +62,10 @@ module energy_calc_module
   !  Author: Folke Noertemann
   !  Date: 10/95
   !
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: TB
@@ -95,7 +95,7 @@ module energy_calc_module
   ! Date:   ...
   ! Description: ...
   !
-  !------------ Modules used --------------------------------------
+  !------------ Modules used -----------------------------------------
 # include "def.h"
   use type_module ! type specification parameters
   use datatype    ! user defined datatypes
@@ -105,9 +105,9 @@ module energy_calc_module
   implicit none
   private
   save
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public :: energ_coul_2z                                                      &
           , init_energy                                                        &
           , write_energies                                                     &
@@ -127,9 +127,9 @@ module energy_calc_module
 
   public :: sym,fit,arrmat3,arrmat2
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
 
@@ -161,8 +161,8 @@ module energy_calc_module
   ! array of names for the different post_scf functionals
   character(len=32), allocatable :: name_xc_arr(:)
   ! (pointers because they will be alocated by external xc_func_get_exc())
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
   subroutine energ_coul_2z(coeff_charge, e)
@@ -369,7 +369,7 @@ contains
 #endif
     use iounitadmin_module
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)          :: z1,z2,dist,dist2
 #ifdef WITH_EPE
     real(kind=r8_kind)          :: e_nuc_ewpc
@@ -379,7 +379,7 @@ contains
     integer(kind=i4_kind)       :: N_equal_atoms_a, N_equal_atoms_b
     real(kind=r8_kind),pointer  :: xa(:,:),xb(:,:)
     real(kind=r8_kind)          :: e_nuc_pc_efp,C,A
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     e_nuc_core = 0.0_r8_kind
     e_nuc_ewpc_add = 0.0_r8_kind !!!!!!!!!!!! AS
@@ -532,20 +532,17 @@ contains
   !*************************************************************
   subroutine addional_core_ewpc_interaction(m_charge)
 
-    use unique_atom_module, only : unique_atoms, N_unique_atoms, &
-                                   pseudopot_present
-    use pointcharge_module, only : pointcharge_array, pointcharge_N, &
-         n_timps, unique_timps
+    use unique_atom_module, only: unique_atoms, N_unique_atoms
     use ewaldpc_module
     implicit none
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind),intent(in) :: m_charge(N_unique_atoms)
 
     real(kind=r8_kind)          :: z1,z2,dist
     integer(kind=i4_kind)       :: na, nb, eq_a, eq_b
     integer(kind=i4_kind)       :: N_equal_atoms_a
     real(kind=r8_kind),pointer  :: xa(:,:),xb(:,:)
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
        e_nuc_ewpc_add = 0.0_r8_kind
     if(EWPC_n.gt.0) then
@@ -790,9 +787,9 @@ contains
   subroutine init_energy()
     !  Purpose: set the energies to zero
     !** End of interface *****************************************
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     real(kind=r8_kind)            :: zero = 0.0_r8_kind
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     e_kin               = zero
     e_nuc               = zero
     e_efield            = zero
@@ -905,11 +902,11 @@ contains
     real(kind=r8_kind), optional, intent(inout) :: h_mat_imag(:,:)
     !
     real(kind=r8_kind),           intent(inout) :: e_2c
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                       :: i_meta
     integer(kind=i4_kind)                       :: m
     integer(kind=i4_kind)                       :: n
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     !
     if ( .not. present(h_mat_imag)) then
       !
@@ -1008,9 +1005,9 @@ contains
     real(kind=r8_kind), optional, intent(inout) :: h_mat_imag(:,:)
     !
     real(kind=r8_kind),           intent(inout) :: e_tr
-    !------------ Declaration of local variables -----------------
+    !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)                       :: m
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     !
     if ( .not. present(h_mat_imag)) then
       !
@@ -1052,5 +1049,5 @@ contains
   end subroutine direct_mat_energy_calc_and_add
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module energy_calc_module

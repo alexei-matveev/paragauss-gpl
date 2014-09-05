@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 module  iounitadmin_module
-  !---------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: administers unit numbers for read and write to files.
   !           All unit numbers should be demanded with the
@@ -51,19 +51,19 @@ module  iounitadmin_module
   !  Author: TB
   !  Date: 16.06.95
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
 # include "def.h"
   use type_module
@@ -74,7 +74,7 @@ module  iounitadmin_module
   private         ! by default, all names are private
   save
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
   !------------ Declaration of public constants and variables -----
 
@@ -96,7 +96,7 @@ module  iounitadmin_module
 #else
   logical, parameter, public :: no_output_unit_output=.false.
 #endif
-  !------------ public functions and subroutines ------------------
+  !------------ public functions and subroutines ---------------------
   public get_iounit, return_iounit, get_nbr_free_iounits, &
        openget_iounit, returnclose_iounit
 #ifndef FPP_OPTIMIZER
@@ -105,9 +105,9 @@ module  iounitadmin_module
 #endif
 
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of private constants and variables ----
 
@@ -116,12 +116,6 @@ module  iounitadmin_module
   character(len=12), parameter :: trace_filename="trace_output"
   ! intended for tracing output that can be used to monitor
   ! state of calculation
-
-  !
-  ! This determines if subroutine write_to_output_units() writes to
-  ! STDOUT in addition to output_unit:
-  !
-  logical, parameter :: iounitadmin_use_stdout = .true.
 
   integer, parameter, private :: maxunits=199  ! maximal unit nbr
 !!!  integer, parameter, private :: maxunits=99  ! maximal unit nbr
@@ -145,8 +139,8 @@ module  iounitadmin_module
 #define FPP_HAVE_FLUSH
 #endif
 
-  !----------------------------------------------------------------
-  !------------ Subroutines ---------------------------------------
+  !-------------------------------------------------------------------
+  !------------ Subroutines ------------------------------------------
 contains
 
 
@@ -157,7 +151,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of variables -----------------------
     integer :: i
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     get_iounit = first_free_unit
     if ( first_free_unit .ne. 0 ) then
        unit_free(first_free_unit) = .false.
@@ -181,7 +175,7 @@ contains
     !** End of interface *****************************************
     !------------ Declaration of formal parameters ---------------
     integer, intent(in ) :: unit
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     if ( unit .ge. startunit .and. &
          .not. unit_free(unit)      ) then
        unit_free(unit) = .true.
@@ -199,7 +193,7 @@ contains
   integer function get_nbr_free_iounits()
     !  Purpose: returns number of free units
     !** End of interface *****************************************
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     get_nbr_free_iounits = nbr_free_units
     return
   end function get_nbr_free_iounits
@@ -230,7 +224,7 @@ contains
     integer irecl
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     DPRINT 'ioua::openget_iounit: entered, file=',file,'<<'
     if(present(status)) then
        istatus = trim(status)
@@ -332,7 +326,7 @@ contains
     character(len=20) :: istatus
     !------------ Declaration of subroutines used ----------------
     external error_handler
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
     DPRINT 'ioua::returnclose_iounit: close unit(',unit,')'
     istatus='keep'
     if(present(status)) istatus=status
@@ -360,7 +354,7 @@ contains
     integer      :: iostat
     character(len=120) :: message
     logical, parameter :: append_local = .false.
-    !------------ Executable code --------------------------------
+    !------------ Executable code ------------------------------------
 
     ! We  used  to have  slaves  do some  output  too.   At many,  but
     ! possibly not all  places IO to output_unit will  only be done if
@@ -457,34 +451,44 @@ contains
 
 
   !*************************************************************
-  subroutine write_to_output_units(message,inte,re)
-    !  Purpose: writes message to output, debug op and trace op
-    !------------ Declaration of formal parameters ---------------
-    character(len=*), intent(in) :: message
-    integer(kind=i4_kind),intent(in), optional :: inte
-    real(kind=r8_kind),intent(in), optional    :: re
+  subroutine write_to_output_units (message, inte, re)
+    !
+    ! Writes message to output, debug op and trace op.
+    !
+    use comm, only: comm_rank
+    implicit none
+    character (len=*), intent (in) :: message
+    integer (i4_kind), intent (in), optional :: inte
+    real (r8_kind), intent (in), optional :: re
     !** End of interface *****************************************
+
     if (no_output_unit_output) goto 100
-    if ( special_units_open ) then
-       if(present(inte).and..not.present(re)) then
-          write(output_unit,*) message,inte
-       elseif(present(re).and..not.present(inte)) then
-          write(output_unit,*) message,re
-       elseif(present(inte).and.present(re)) then
-          write(output_unit,*) message,inte,re
+
+    if (special_units_open) then
+       if (present (inte) .and. .not. present (re)) then
+          write (output_unit, *) message, inte
+       else if (present (re) .and. .not. present (inte)) then
+          write (output_unit, *) message, re
+       else if (present (inte) .and. present (re)) then
+          write (output_unit, *) message, inte, re
        else
-          write(output_unit,*) message
+          write (output_unit, *) message
        endif
     endif
 
 100 continue
-    if (iounitadmin_use_stdout) then
-       if (present(inte).and..not.present(re)) then
-          print *, message,inte
-       elseif(present(re).and..not.present(inte)) then
-          print *, message,re
-       elseif(present(re).and.present(inte)) then
-          print *, message,inte,re
+    ! When special  units are  not open the  above will do  nothing on
+    ! slave workers. Ideed  slaves not writing to disk  was one of the
+    ! reason of not opening these units, in the first place. STDOUT is
+    ! formally  not  disk,  but  still  some  IO.  It  would  be  only
+    ! consistent if we omit the output of slaves here too:
+    if (comm_rank() == 0 .or. special_units_open) then
+       if (present (inte) .and. .not. present (re)) then
+          print *, message, inte
+       else if (present (re) .and. .not. present (inte)) then
+          print *, message, re
+       else if (present (re) .and. present (inte)) then
+          print *, message, inte, re
        else
           print *, message
        endif
@@ -494,9 +498,13 @@ contains
 
 
   !*************************************************************
-  subroutine write_to_trace_unit(msg, inte, real)
-    !  Purpose: writes message to end of trace file, opening and
-    !  and closing the file
+  subroutine write_to_trace_unit (msg, inte, real)
+    !
+    ! Writes message to end of trace file, opening and and closing the
+    ! file.  Will silently  do nothing  on workers  that did  not call
+    ! open_special_units()   or  otherwise   ensured  that   the  that
+    ! trace_unit > 0.
+    !
     use comm, only: comm_rank
     use time_module, only: clktime
     implicit none
@@ -506,7 +514,10 @@ contains
     real(kind=r8_kind), intent(in), optional :: real
     !** End of interface *****************************************
 
-    logical, save :: warned = .false.
+    ! Set this to  false and you will get the  warning once. I've seen
+    ! that enough times already:
+    logical, save :: warned = .true.
+
     integer(i4_kind)           :: stat
     real(r8_kind)              :: time
     character(len=11)          :: prefix
@@ -522,8 +533,8 @@ contains
     ! Some platforms have problems  with many workers writing to files
     ! simultaneousely, so trace output may be only enabled for master:
     !
-    if ( trace_unit <= 0 ) then
-       if ( .not. warned ) then
+    if (trace_unit <= 0) then
+       if (.not. warned) then
           print *, "write_to_trace_unit(", msg, "... ) on rank", comm_rank()
           print *, "WARNING: writing to trace file is disabled for workers"
           print *, "         that did not call open_special_units()."
@@ -602,5 +613,5 @@ contains
 #endif
   !*************************************************************
 
-  !--------------- End of module ----------------------------------
+  !--------------- End of module -------------------------------------
 end module iounitadmin_module

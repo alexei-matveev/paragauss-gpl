@@ -1,29 +1,31 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-subroutine main_molmech(job,iwork,geo_steps)
-
+subroutine main_molmech (job, iwork, geo_steps)
+  !
+  ! Executed by main_master(). Runs on all workers.
+  !
   use type_module
   use comm, only: comm_rank
 !!$  use common_data_module, only: infinity,ten
@@ -44,7 +46,7 @@ subroutine main_molmech(job,iwork,geo_steps)
   use calc_energy_module
   use hess_and_opt_module
   use comm_module, only: comm_all_other_hosts, comm_init_send,comm_send
-  use molmech_msgtag_module, only: msgtag_start_molmech, msgtag_mm_shutdown
+  use molmech_msgtag_module, only: msgtag_mm_shutdown
   use pc_array_module
   use qmmm1_interface_module, only: mm_grads_to_qmmm1
   use molmech_slave_module, only: molmech_slave !!!!!!!!!!
@@ -53,19 +55,17 @@ subroutine main_molmech(job,iwork,geo_steps)
   implicit none
   save
   !=========================================================
-  integer(i4_kind) :: job
-  integer(i4_kind), optional :: iwork,geo_steps
+  integer (i4_kind) :: job
+  integer (i4_kind), optional :: iwork, geo_steps
 
   !*********************************************************
 
-!!$  print *, comm_rank(), "main_molmech: entered"
-  if (comm_rank() == 0) then
-     call comm_init_send(comm_all_other_hosts, msgtag_start_molmech)
-     call comm_send()
-  else
-!!$     print *, comm_rank(), "main_molmech: call main_molmech_slave"
+  ! Slaves  will  spin  in  molmech_slave() waiting  for  orders  from
+  ! master:
+  if (comm_rank() /= 0) then
+     ! Exit upon receival of  msgtag_mm_shutdown sent by master at the
+     ! end of this sub:
      call molmech_slave()
-!!$     print *, comm_rank(), "main_molmech: done main_molmech_slave"
      return
   endif
 
@@ -73,16 +73,16 @@ subroutine main_molmech(job,iwork,geo_steps)
   call start_mm_timer(full_time)
 
   qmmm=job
-  
+
   if(qmmm == 4) goto 4
-  
+
   call read_molmech_input()
 !!$print*,'READ INPUT DONE'
   if(qmmm == -1) return
 
   iwork=0
   geo_steps=1
-  if(with_optimizer) then 
+  if(with_optimizer) then
      iwork=int(-gx_work,i4_kind)
      geo_steps=n_iterations
   end if
@@ -91,7 +91,7 @@ subroutine main_molmech(job,iwork,geo_steps)
 !!$  call species_resorting()
 !!$  call resorting_Nb_lists()
 
-     if(coulomb) then 
+     if(coulomb) then
         if(trim(coulomb_type) == "DIPOLE-DIPOLE") then
            call dip_atom_pairs()
         end if
@@ -102,11 +102,11 @@ subroutine main_molmech(job,iwork,geo_steps)
      call stop_mm_timer(nbl_time)
 !!$print*,'N-BODY LISTS DONE'
 
-     call init_energy_and_forces() 
+     call init_energy_and_forces()
 !!$print*,'INIT ENERGY AND GRAD DONE'
 
      if(calc_optimization .or. calc_hessian) then
-        if(calc_optimization) then 
+        if(calc_optimization) then
            call init_hess()
            call minimize()
            if(to_pg_hess) then
@@ -152,8 +152,10 @@ subroutine main_molmech(job,iwork,geo_steps)
   end if
 
   call start_mm_timer(comm_time)
+
+  ! Tells slaves to exit molmech_slave():
   if (comm_rank() == 0) then
-    call comm_init_send(comm_all_other_hosts, msgtag_mm_shutdown)
+    call comm_init_send (comm_all_other_hosts, msgtag_mm_shutdown)
     call comm_send()
   endif
   call stop_mm_timer(comm_time)

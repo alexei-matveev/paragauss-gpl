@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine main_epe_block()
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: subroutine starts EPE calculations:
   !           - call epe_draver
@@ -37,55 +37,49 @@ subroutine main_epe_block()
   !
   !
   !  References: ...
-  ! 
+  !
   !
   !  Author: ...
   !  Date: ...
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
-  !------------ Modules used --------------------------------------
-#include <def.h>
+  !------------ Modules used -----------------------------------------
+#include "def.h"
   use type_module ! type specification parameters
   use filename_module, only: data_dir
   use time_module
   use timer_module
   use iounitadmin_module
-  use unique_atom_module 
+  use unique_atom_module
   use orbitalprojection_module
   use options_module,   only: options_xcmode, xcmode_model_density
-  use fit_coeff_module, only: coeff_charge, coeff_charge_eperef,&
-                              fit_coeff_send, ICHFIT, IXCFIT
-  use symmetry_data_module, only: get_totalsymmetric_irrep 
+  use fit_coeff_module, only: fit_coeff_send, ICHFIT, IXCFIT
+  use symmetry_data_module, only: get_totalsymmetric_irrep
   use comm_module
-  use epe_module 
-  use main_epe_module, only : main_epe,                & 
+  use epe_module
+  use main_epe_module, only : main_epe,                &
                               finish_epe,              &
                               n_epe_vacancies,         &
                               epe_send_init_to_slave,  &
-                              epe_send_finish_to_slave 
-         
-  use epecom_module, only:  reg_I_pg,reg_I_n_ions,output_epe,i_ir_eperef, &
-                            e_epe_atstart,e_epe_final,etot_epe,           &
-                            epe_rel_converged,use_epe_reference,          &
-                            n_pgepe_iterations, ex_pgdata,                &
-                            ecoul_epecluster,eshort_epecluster,           &
-                            ecoul_vaccluster,                             &
-                            epe, q_shell,q_nuclear,epg_cluster_reg_I,     &
-                            get_epe_energies,                             &
-                            qau_qepe,rel_converged_unit,diffpg_ec_ecref,  &
+                              epe_send_finish_to_slave
+
+  use epecom_module, only: reg_I_pg, reg_I_n_ions, etot_epe, &
+       epe_rel_converged, n_pgepe_iterations, epg_cluster_reg_I, &
+       get_epe_energies, &
+                            qau_qepe,rel_converged_unit, &
                             make_epe_reference,                           &
                             dealloc_epe_ref,                              &
                             eperef_unit,                                  &
@@ -104,15 +98,15 @@ subroutine main_epe_block()
                             use_lin_search,                               &
                             basic_action,                                 &
                             etot_epe_0
-  
+
   use energy_calc_module, only: get_energy
   implicit none
 
-  !== Interrupt end of public interface of module =================
+  !== Interrupt end of public interface of module ====================
 
-  !================================================================
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of subroutines ------------------------
   !------------ Declaration of local constants --------------------
@@ -122,7 +116,7 @@ subroutine main_epe_block()
   integer(kind=i4_kind) :: n_proc
   logical               :: model_density, conv_achived
   integer(kind=i4_kind) :: IFIT
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
 
   !------------ Executable code -----------------------------------
   call write_to_trace_unit("main_epe_block: start of epe relaxation")
@@ -143,7 +137,7 @@ subroutine main_epe_block()
        n_grads_total  = (reg_I_n_ions-n_epe_vacancies)
        end_treated_region = reg_I_n_ions
     end if
- 
+
     n_grads_master = n_grads_total - &
                      (n_grads_total/n_proc)*(n_proc-1)
 
@@ -155,8 +149,8 @@ subroutine main_epe_block()
 !!$    call write_to_output_units('n_proc', n_proc)
 !!$    call write_to_output_units('n_grads_total',  n_grads_total )
 !!$    call write_to_output_units('n_grads_slave',  n_grads_slave )
-!!$    call write_to_output_units('n_grads_master', n_grads_master) 
-  
+!!$    call write_to_output_units('n_grads_master', n_grads_master)
+
     if(comm_parallel()) then
        model_density=options_xcmode()==xcmode_model_density
        IFIT = ICHFIT
@@ -164,12 +158,12 @@ subroutine main_epe_block()
        call fit_coeff_send(IFIT)
        call epe_send_data()
     end if
-    
+
     dg_convergence_reached = .false.
     n_ls=0; reset=.false.;use_lin_search=.true.
     epeit: do  epe_iter=1,n_pgepe_iterations
        call start_timer(timer_epe_cycle)
-           
+
        dealloc_epe_ref=epe_iter.eq.n_pgepe_iterations.or.dg_convergence_reached
 !!$           call write_to_output_units("main_epe_block: epe_read_write_reference")
        call epe_read_write_reference()
@@ -184,21 +178,21 @@ subroutine main_epe_block()
        call start_timer(timer_epe_forces)
 !!$        call write_to_output_units("main_epe_block: epe_field_and_forces_par")
        call epe_field_and_forces_par()
-          
+
        call stop_timer(timer_epe_forces)
 
-       if(comm_parallel() ) then 
+       if(comm_parallel() ) then
           call start_timer(timer_collect_grads)
           call epe_collect_gradients()
           call stop_timer(timer_collect_grads)
        end if
 
        if(dealloc_epe_ref) then
-          call stop_timer(timer_epe_cycle) 
+          call stop_timer(timer_epe_cycle)
           exit
        endif
 
-       if(epe_iter.eq.1) epg_cluster_reg_I_at_start=epg_cluster_reg_I 
+       if(epe_iter.eq.1) epg_cluster_reg_I_at_start=epg_cluster_reg_I
 
        call start_timer(timer_main_epe)
        call main_epe()
@@ -215,8 +209,8 @@ subroutine main_epe_block()
           etot_epe_0=etot_epe
        end if
        call stop_timer(timer_main_epe)
-       
-       call stop_timer(timer_epe_cycle) 
+
+       call stop_timer(timer_epe_cycle)
     enddo epeit
 
         ! check  for convergence
@@ -248,17 +242,17 @@ subroutine main_epe_block()
 
         print*,'epeg_nuc (var,rs,rc)',epg_nuc
         write(output_unit,*) ' energy of interaction of the claster nuclei with region I epe centers '
-        write(output_unit,*) epg_nuc       
+        write(output_unit,*) epg_nuc
         write(output_unit,*)
         print*,dot_product(reg_I_pg(1+n_epe_vacancies)%rs,reg_I_pg(1+n_epe_vacancies)%rs)
         print*,dot_product(reg_I_pg(1+n_epe_vacancies)%rc,reg_I_pg(1+n_epe_vacancies)%rc)
         print*,'finish_epe done'
 
-    call finish_epe(.true.)     
+    call finish_epe(.true.)
     if(comm_parallel() ) call epe_send_finish_to_slave()
-    call returnclose_iounit(eperef_unit) 
+    call returnclose_iounit(eperef_unit)
 
-  
+
 
     if(.not.epe_rel_converged)  then
         call get_epe_energies(eshort_reg_Iau=e_sh_regIau)
@@ -289,7 +283,7 @@ subroutine main_epe_block()
         call returnclose_iounit(rel_converged_unit)
         call get_epe_energies(eshort_reg_Iau=e_sh_regIau)
         print*,'epe relaxation is claimed to be converded', etot_epe_corr,e_sh_regIau
-    endif 
+    endif
 
 
         call get_energy(tot=energy)
@@ -321,11 +315,11 @@ subroutine gxepe_allocate
          deallocate(gxepe_array(i_ua)%position,stat=ewa_allocstat(23))
          ASSERT(ewa_allocstat(23).eq.0)
       end do
-      
-      deallocate(gxepe_array,gxepe_impu,stat=ewa_allocstat(22)) 
+
+      deallocate(gxepe_array,gxepe_impu,stat=ewa_allocstat(22))
                  ASSERT(ewa_allocstat(22).eq.0)
    end if
-   
+
 
    allocate(gxepe_array(N_unique_atoms+n_timps), &
         gxepe_impu(N_unique_atoms+n_timps),stat=ewa_allocstat(22))
@@ -337,14 +331,14 @@ subroutine gxepe_allocate
       else
          n_equal_atoms=unique_atoms(i_ua)%n_equal_atoms
       end if
-   
+
       allocate(gxepe_array(i_ua)%position(3,n_equal_atoms),stat=ewa_allocstat(23))
       if(ewa_allocstat(23).ne.0) &
            call error_handler('allocation of gxepe_array(i_ua)%position failed')
          ewa_allocstat(23)=1
            gxepe_array(i_ua)%position(:,:)=0.0_r8_kind
    enddo ! i_ua=1,N_unique_atoms+
- 
+
  end subroutine gxepe_allocate
 
  subroutine read_gxtimps(io_u,io_gxepe)
@@ -383,7 +377,7 @@ subroutine gxepe_allocate
   do i_ua=1,n_timps
      counter_equal=1
      do
-        if(counter_equal>unique_timps(i_ua)%n_equal_atoms) exit  
+        if(counter_equal>unique_timps(i_ua)%n_equal_atoms) exit
         if(operations_gx_epeformat) then
           read(io_u,*) z_dummy,x_coord,y_coord,z_coord,ieq_dummy, &
                indexes,impu
@@ -396,10 +390,10 @@ subroutine gxepe_allocate
            !               read(io_u,'(F5.2,3(2x,F13.7),i3)', iostat=status) &
            !                        z_dummy,x_coord,y_coord,z_coord,ieq_dummy
            read(io_u,*)  z_dummy,x_coord,y_coord,z_coord,ieq_dummy,indexes,impu
-           if(ex_gxepe.and.impu.ne.0) read(io_gxepe,*) r_gxepe 
+           if(ex_gxepe.and.impu.ne.0) read(io_gxepe,*) r_gxepe
         endif
      end if
-     
+
 
         if (status .gt. 0) call error_handler &
              ("unique_atom_unique_read: "//trim(data_dir)//'/gxfile')
@@ -434,7 +428,7 @@ subroutine gxepe_allocate
      use operations_module, only: operations_gx_highprec
      ! ----------- declaration of local variables -------------
      integer(kind=i4_kind) :: i_ua,i_ea,io_u,counter, &
-        deck(7)=(/0,0,0,0,0,0,-1/) 
+        deck(7)=(/0,0,0,0,0,0,-1/)
      external error_handler
      !
      ! ----------- executable code -----------------------------
@@ -471,7 +465,7 @@ subroutine gxepe_allocate
            end if
         end do
      end do
-     
+
         if (operations_gx_highprec) then
 !       write(io_u,'(F5.1)') -7.0_r8_kind
         write(io_u,'(F5.2,3(2x,F13.7),2I4,2X,3I3,2X,3I3,I5)')  &

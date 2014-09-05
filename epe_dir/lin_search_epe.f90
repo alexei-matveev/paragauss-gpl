@@ -1,32 +1,32 @@
 !
-! ParaGauss, a program package for high-performance computations
-! of molecular systems
-! Copyright (C) 2014
-! T. Belling, T. Grauschopf, S. Krüger, F. Nörtemann, M. Staufer,
-! M. Mayer, V. A. Nasluzov, U. Birkenheuer, A. Hu, A. V. Matveev,
-! A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman, D. I. Ganyushin,
-! T. Kerdcharoen, A. Woiterski, A. B. Gordienko, S. Majumder,
-! M. H. i Rotllant, R. Ramakrishnan, G. Dixit, A. Nikodem, T. Soini,
-! M. Roderus, N. Rösch
+! ParaGauss,  a program package  for high-performance  computations of
+! molecular systems
 !
-! This program is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License version 2 as published
-! by the Free Software Foundation [1].
+! Copyright (C) 2014     T. Belling,     T. Grauschopf,     S. Krüger,
+! F. Nörtemann, M. Staufer,  M. Mayer, V. A. Nasluzov, U. Birkenheuer,
+! A. Hu, A. V. Matveev, A. V. Shor, M. S. K. Fuchs-Rohr, K. M. Neyman,
+! D. I. Ganyushin,   T. Kerdcharoen,   A. Woiterski,  A. B. Gordienko,
+! S. Majumder,     M. H. i Rotllant,     R. Ramakrishnan,    G. Dixit,
+! A. Nikodem, T. Soini, M. Roderus, N. Rösch
 !
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+! This program is free software; you can redistribute it and/or modify
+! it under  the terms of the  GNU General Public License  version 2 as
+! published by the Free Software Foundation [1].
+!
+! This program is distributed in the  hope that it will be useful, but
+! WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+! MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
 ! General Public License for more details.
 !
 ! [1] http://www.gnu.org/licenses/gpl-2.0.html
 !
 ! Please see the accompanying LICENSE file for further information.
 !
-!===============================================================
+!=====================================================================
 ! Public interface of module
-!===============================================================
+!=====================================================================
 subroutine lin_search_epe
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   !  Purpose: Perform primitive line search during epe relaxation
   !           around QM cluster 
@@ -41,32 +41,32 @@ subroutine lin_search_epe
   !  Date: 23.11.09
   !
   !
-  !----------------------------------------------------------------
-  !== Interrupt of public interface of module =====================
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
+  !== Interrupt of public interface of module ========================
+  !-------------------------------------------------------------------
   ! Modifications
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !
   ! Modification (Please copy before editing)
   ! Author: ...
   ! Date:   ...
   ! Description: ...
   !
-  !----------------------------------------------------------------
-#include <def.h>
-  !------------ Modules used --------------------------------------
+  !-------------------------------------------------------------------
+#include "def.h"
+  !------------ Modules used -----------------------------------------
   use type_module ! type specification parameters
-  use epecom_module, only: n_ls,output_epe,dg_convergence_reached,reg_I_n_ions
+  use epecom_module, only: n_ls, output_epe, reg_I_n_ions
   use epecom_module, only: n_vacancies,regI_previous,relax_shells_only
   use epecom_module, only: r_sh_ion,r_nuc_ion,pk,epe,point_0_core_grad,reset
 
   implicit none
 
-  !== Interrupt end of public interface of module =================
-  !------------ Declaration of formal parameters ------------------
-  !================================================================
+  !== Interrupt end of public interface of module ====================
+  !------------ Declaration of formal parameters ---------------------
+  !===================================================================
   ! End of public interface of module
-  !================================================================
+  !===================================================================
 
   !------------ Declaration of subroutines ------------------------
   external error_handler
@@ -77,7 +77,7 @@ subroutine lin_search_epe
   real(r8_kind), allocatable, dimension(:) :: rs_dim,rs0_dim,rn_dim,rn0_dim,dsn,step
   integer(i4_kind) :: status,i,j,k
 
-  !----------------------------------------------------------------
+  !-------------------------------------------------------------------
   !------------ Executable code -----------------------------------
 
   n_ls=n_ls+1

@@ -311,6 +311,7 @@ contains
 
     ! FIXME: overlap not availble?
     if (comm_rank() /= 0) return
+    WARN('O(N^3) serial step')
 
     symbol = (/'S','P','D','F','G','H','I','J','K','L','M','N'/)
 
@@ -527,7 +528,9 @@ contains
           ! functions excluding the occupation number
           ! 'contribute_l' contains the contributions sorted by angular
           ! momenta
-          WARN('O(N^3) serial step')
+          !
+          ! FIXME: O(N^3) serial step here:
+          !
           do mu=1,ssym%dim(i_ir)
              do nu=1,ssym%dim(i_ir)
                 do n=1,ssym%dim(i_ir)

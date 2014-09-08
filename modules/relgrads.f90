@@ -957,13 +957,14 @@ contains
     DPRINT MyID,'do_gra_trafo:   irr=',irr,' dim=',n,' cdim=',n_c
     DPRINT MyID,'do_gra_trafo:  mask=',mask
 
-    ! count gradients to be processed by me:
-    igr = count(mask)
-    if( igr == 0 )then
-      WARN('ZERO grads case!')
-      ! DO  NOT  RETURN  early,  get_2(), requires  communication  for
-      ! distributed matrix impl.  FIXME: all the rest is  done in vain
-      ! on this worker, of course.
+    ! Count gradients to be processed by me:
+    igr = count (mask)
+    if (igr == 0) then
+      ! do not WARN('ZERO grads case!')
+      ! Fortran  is supposed to  (and here  it does)  operate normally
+      ! with  zero-sized  arrays.    DO  NOT  RETURN  early,  get_2(),
+      ! requires  communication for  distributed matrix  impl.  FIXME:
+      ! all the rest is done in vain on this worker, of course.
     endif
 
     ! Prepare (contracted) density matrix (in orbital space).

@@ -47,7 +47,7 @@ def convertgxtoxyz():
    filexyz = None
    lout = LINX['A'] #LINA
    lun = LUNIT
-   if len(sys.argv) < 2: 
+   if len(sys.argv) < 2:
        print "ERROR: at least one argument (inputfile) is required\n"
        helpfun()
    else:
@@ -165,7 +165,7 @@ def gxreadcopy( file='gxfile' , lunit=LUNIT ):
     for num, value in enumerate(z) :
        z[num] = value / lunit
     return atnums, x, y, z
-    
+
 
 def _parse_geom(line):
     """Parse a line of gxfile in following format:
@@ -178,7 +178,7 @@ def _parse_geom(line):
     atnum = int( float( fields[0] ) )
 
     # gxfile convention for dummy atoms:
-    if atnum == 99.0: 
+    if atnum == 99.0:
          atnum = DUMMY
     # exit on negative charge:
     if atnum < 0:
@@ -210,8 +210,8 @@ def helpfun():
    print "    This programme converts gxfiles in .xyz files"
    print "    it could run with several arguemts: "
    print "      needed argument is always the gxfile as input file"
-   print "      gxfiles are supposed to be in bohr " 
-   print "      output in the .xyz file will be in Angstrom " 
+   print "      gxfiles are supposed to be in bohr "
+   print "      output in the .xyz file will be in Angstrom "
    print "      options have to be put before the input file"
    print "      it is possible to give several input files"
    print "      then the options are for all of them"
@@ -226,7 +226,7 @@ def helpfun():
    print "                  if not set output goes to standard output"
    print "        --help: show this help text"
    sys.exit()
-   
+
 # main:
 
 convertgxtoxyz()

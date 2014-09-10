@@ -40,9 +40,8 @@ SYMLIST = [ 'X', # for dummy atoms
 
 def convertgxtoxyz():
     """
-    reads in a gxfile type and converts it to a xyz file
-    assumes that gxfile is in bohr, if not change lunit
-    xyz file is in Angtroms
+    Reads in a gxfile type and converts it to a xyz file. Assumes that
+    gxfile is in Bohr, if not change lunit xyz file is in Angtroms
     """
     filexyz = None
     lout = LINX['A'] #LINA
@@ -54,12 +53,12 @@ def convertgxtoxyz():
 
     second = 0
     for num in range(1, len(sys.argv)):
-        if second == 0 :
+        if second == 0:
             if sys.argv[num].startswith('--'):
                 option = sys.argv[num][2:]
                 if option == 'help':
                     helpfun()
-                elif option == 'n' :
+                elif option == 'n':
                     lout = LUNIT
                 elif option. startswith('l'):
                     second = 1
@@ -89,7 +88,7 @@ def convertgxtoxyz():
             second = 3
             filegx = sys.argv[num]
             run(filegx, filexyz, lun, lout, second)
-        if second < 3 :
+        if second < 3:
             print "ERROR: gxfile as input requiered"
             helpfun()
 
@@ -114,11 +113,11 @@ def run(filein, fileout, lun1, lout1, second):
     write("%i \n" % (len(atnums) ) )
     write("cartesian geometry in Angstrom\n")
     # transforms positions in Angstroms
-    for num, value in enumerate(positionx) :
+    for num, value in enumerate(positionx):
         positionx[num] = value * lout1
-    for num, value in enumerate(positiony) :
+    for num, value in enumerate(positiony):
         positiony[num] = value * lout1
-    for num, value in enumerate(positionz) :
+    for num, value in enumerate(positionz):
         positionz[num] = value * lout1
 
     # now write data
@@ -159,11 +158,11 @@ def gxreadcopy( file='gxfile' , lunit=LUNIT ):
     z = list(za)
 
     # convert to 2D array and consider units:
-    for num, value in enumerate(x) :
+    for num, value in enumerate(x):
         x[num] = value / lunit
-    for num, value in enumerate(y) :
+    for num, value in enumerate(y):
         y[num] = value / lunit
-    for num, value in enumerate(z) :
+    for num, value in enumerate(z):
         z[num] = value / lunit
     return atnums, x, y, z
 

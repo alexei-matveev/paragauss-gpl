@@ -39,89 +39,89 @@ SYMLIST = [ 'X', # for dummy atoms
        'Md', 'No', 'Lr' ]
 
 def convertgxtoxyz():
-   """
-   reads in a gxfile type and converts it to a xyz file
-   assumes that gxfile is in bohr, if not change lunit
-   xyz file is in Angtroms
-   """
-   filexyz = None
-   lout = LINX['A'] #LINA
-   lun = LUNIT
-   if len(sys.argv) < 2:
-       print "ERROR: at least one argument (inputfile) is required\n"
-       helpfun()
-   else:
-     second = 0
-     for num in range(1, len(sys.argv)):
-       if second ==0 :
-         if sys.argv[num].startswith('--'):
-           option = sys.argv[num][2:]
-           if option == 'help':
-             helpfun()
-           elif option == 'n' :
-             lout = LUNIT
-           elif option. startswith('l'):
-             second = 1
-           elif option. startswith('o'):
-             second = 2
-           else :
-             print "ERROR: I don't know this option\n"
-             helpfun()
-         else :
-           filegx = sys.argv[num]
-           run(filegx, filexyz, lun, lout, second)
-           second = 3
-       elif second ==1:
-         second = 0
-         opt2 = sys.argv[num-1][3:]
-         if opt2 == 'i':
-            lun = LINX[sys.argv[num]]
-         elif opt2 == 'o':
-            lout = LINX[sys.argv[num]]
-         else :
-            print "ERROR: I don't know this option\n"
-            helpfun()
-       elif second==2:
-         second = 0
-         filexyz = sys.argv[num]
-       else :
-         second = 3
-         filegx = sys.argv[num]
-         run(filegx, filexyz, lun, lout, second)
-     if second < 3 :
-         print "ERROR: gxfile as input requiered"
-         helpfun()
+    """
+    reads in a gxfile type and converts it to a xyz file
+    assumes that gxfile is in bohr, if not change lunit
+    xyz file is in Angtroms
+    """
+    filexyz = None
+    lout = LINX['A'] #LINA
+    lun = LUNIT
+    if len(sys.argv) < 2:
+        print "ERROR: at least one argument (inputfile) is required\n"
+        helpfun()
+    else:
+        second = 0
+        for num in range(1, len(sys.argv)):
+            if second == 0 :
+                if sys.argv[num].startswith('--'):
+                    option = sys.argv[num][2:]
+                    if option == 'help':
+                        helpfun()
+                    elif option == 'n' :
+                        lout = LUNIT
+                    elif option. startswith('l'):
+                        second = 1
+                    elif option. startswith('o'):
+                        second = 2
+                    else:
+                        print "ERROR: I don't know this option\n"
+                        helpfun()
+                else:
+                    filegx = sys.argv[num]
+                    run(filegx, filexyz, lun, lout, second)
+                    second = 3
+            elif second == 1:
+                second = 0
+                opt2 = sys.argv[num-1][3:]
+                if opt2 == 'i':
+                    lun = LINX[sys.argv[num]]
+                elif opt2 == 'o':
+                    lout = LINX[sys.argv[num]]
+                else:
+                    print "ERROR: I don't know this option\n"
+                    helpfun()
+            elif second == 2:
+                second = 0
+                filexyz = sys.argv[num]
+            else:
+                second = 3
+                filegx = sys.argv[num]
+                run(filegx, filexyz, lun, lout, second)
+            if second < 3 :
+                print "ERROR: gxfile as input requiered"
+                helpfun()
 
 
 def run(filein, fileout, lun1, lout1, second):
-   # reads in data, only atnums and positions are needed
-   atnums, positionx, positiony, positionz = gxreadcopy( filein, lun1 )
+    # reads in data, only atnums and positions are needed
+    atnums, positionx, positiony, positionz = gxreadcopy( filein, lun1 )
 
-   if fileout == None:
-     write = stdout.write
-   else:
-     if fileout.endswith('.xyz'):
-       pass
-     else :
-       fileout = fileout + '.xyz'
-     if second==0:
-       write = open(fileout,"w").write
-     else:
-       write = open(fileout,"a").write
+    if fileout == None:
+        write = stdout.write
+    else:
+        if fileout.endswith('.xyz'):
+            pass
+        else:
+            fileout = fileout + '.xyz'
+        if second == 0:
+            write = open(fileout,"w").write
+        else:
+            write = open(fileout,"a").write
 
-   # firsts lines give number of atoms and comment
-   write("%i \n" % (len(atnums) ) )
-   write("cartesian geometry in Angstrom\n")
-   # transforms positions in Angstroms
-   for num, value in enumerate(positionx) :
-     positionx[num] = value * lout1
-   for num, value in enumerate(positiony) :
-     positiony[num] = value * lout1
-   for num, value in enumerate(positionz) :
-     positionz[num] = value * lout1
+    # firsts lines give number of atoms and comment
+    write("%i \n" % (len(atnums) ) )
+    write("cartesian geometry in Angstrom\n")
+    # transforms positions in Angstroms
+    for num, value in enumerate(positionx) :
+        positionx[num] = value * lout1
+    for num, value in enumerate(positiony) :
+        positiony[num] = value * lout1
+    for num, value in enumerate(positionz) :
+        positionz[num] = value * lout1
 
-   # now write data
-   for num, data in enumerate(atnums):
+    # now write data
+    for num, data in enumerate(atnums):
         write("%2s " % SYMLIST[data])
         write("%22.12f " % positionx[num] )
         write("%22.12f " % positiony[num] )
@@ -159,11 +159,11 @@ def gxreadcopy( file='gxfile' , lunit=LUNIT ):
 
     # convert to 2D array and consider units:
     for num, value in enumerate(x) :
-       x[num] = value / lunit
+        x[num] = value / lunit
     for num, value in enumerate(y) :
-       y[num] = value / lunit
+        y[num] = value / lunit
     for num, value in enumerate(z) :
-       z[num] = value / lunit
+        z[num] = value / lunit
     return atnums, x, y, z
 
 
@@ -179,7 +179,7 @@ def _parse_geom(line):
 
     # gxfile convention for dummy atoms:
     if atnum == 99.0:
-         atnum = DUMMY
+        atnum = DUMMY
     # exit on negative charge:
     if atnum < 0:
         # this is the only usefull field in this line,
@@ -207,25 +207,25 @@ def _parse_geom(line):
 
 
 def helpfun():
-   print "    This programme converts gxfiles in .xyz files"
-   print "    it could run with several arguemts: "
-   print "      needed argument is always the gxfile as input file"
-   print "      gxfiles are supposed to be in bohr "
-   print "      output in the .xyz file will be in Angstrom "
-   print "      options have to be put before the input file"
-   print "      it is possible to give several input files"
-   print "      then the options are for all of them"
-   print "      options are: "
-   print "        --n     : no conversion from bohr to angstrom"
-   print "        --li X  : when reading input file convert lengt with conversion factor for X"
-   print "                 conversion factors from dictionary"
-   print "                  untill now dictionary includes: "
-   print "                      A for Angstrom              "
-   print "        --lo X  : other conversion factor for output, conversion like for li"
-   print "        --o     : next argument is output file"
-   print "                  if not set output goes to standard output"
-   print "        --help: show this help text"
-   sys.exit()
+    print "    This programme converts gxfiles in .xyz files"
+    print "    it could run with several arguemts: "
+    print "      needed argument is always the gxfile as input file"
+    print "      gxfiles are supposed to be in bohr "
+    print "      output in the .xyz file will be in Angstrom "
+    print "      options have to be put before the input file"
+    print "      it is possible to give several input files"
+    print "      then the options are for all of them"
+    print "      options are: "
+    print "        --n     : no conversion from bohr to angstrom"
+    print "        --li X  : when reading input file convert lengt with conversion factor for X"
+    print "                 conversion factors from dictionary"
+    print "                  untill now dictionary includes: "
+    print "                      A for Angstrom              "
+    print "        --lo X  : other conversion factor for output, conversion like for li"
+    print "        --o     : next argument is output file"
+    print "                  if not set output goes to standard output"
+    print "        --help: show this help text"
+    sys.exit()
 
 # main:
 

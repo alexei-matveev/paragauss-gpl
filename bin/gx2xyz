@@ -47,50 +47,51 @@ def convertgxtoxyz():
     filexyz = None
     lout = LINX['A'] #LINA
     lun = LUNIT
-    if len(sys.argv) < 2:
+    if len (sys.argv) < 2:
         print "ERROR: at least one argument (inputfile) is required\n"
         helpfun()
-    else:
-        second = 0
-        for num in range(1, len(sys.argv)):
-            if second == 0 :
-                if sys.argv[num].startswith('--'):
-                    option = sys.argv[num][2:]
-                    if option == 'help':
-                        helpfun()
-                    elif option == 'n' :
-                        lout = LUNIT
-                    elif option. startswith('l'):
-                        second = 1
-                    elif option. startswith('o'):
-                        second = 2
-                    else:
-                        print "ERROR: I don't know this option\n"
-                        helpfun()
-                else:
-                    filegx = sys.argv[num]
-                    run(filegx, filexyz, lun, lout, second)
-                    second = 3
-            elif second == 1:
-                second = 0
-                opt2 = sys.argv[num-1][3:]
-                if opt2 == 'i':
-                    lun = LINX[sys.argv[num]]
-                elif opt2 == 'o':
-                    lout = LINX[sys.argv[num]]
+        # NOTREACHED
+
+    second = 0
+    for num in range(1, len(sys.argv)):
+        if second == 0 :
+            if sys.argv[num].startswith('--'):
+                option = sys.argv[num][2:]
+                if option == 'help':
+                    helpfun()
+                elif option == 'n' :
+                    lout = LUNIT
+                elif option. startswith('l'):
+                    second = 1
+                elif option. startswith('o'):
+                    second = 2
                 else:
                     print "ERROR: I don't know this option\n"
                     helpfun()
-            elif second == 2:
-                second = 0
-                filexyz = sys.argv[num]
             else:
-                second = 3
                 filegx = sys.argv[num]
                 run(filegx, filexyz, lun, lout, second)
-            if second < 3 :
-                print "ERROR: gxfile as input requiered"
+                second = 3
+        elif second == 1:
+            second = 0
+            opt2 = sys.argv[num-1][3:]
+            if opt2 == 'i':
+                lun = LINX[sys.argv[num]]
+            elif opt2 == 'o':
+                lout = LINX[sys.argv[num]]
+            else:
+                print "ERROR: I don't know this option\n"
                 helpfun()
+        elif second == 2:
+            second = 0
+            filexyz = sys.argv[num]
+        else:
+            second = 3
+            filegx = sys.argv[num]
+            run(filegx, filexyz, lun, lout, second)
+        if second < 3 :
+            print "ERROR: gxfile as input requiered"
+            helpfun()
 
 
 def run(filein, fileout, lun1, lout1, second):

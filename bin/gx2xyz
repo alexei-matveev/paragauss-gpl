@@ -52,6 +52,7 @@ def convertgxtoxyz (argv):
         helpfun()
         # NOTREACHED
 
+    # FIXME: convoluted ...
     second = 0
     for num in range(1, len (argv)):
         if second == 0:
@@ -59,18 +60,21 @@ def convertgxtoxyz (argv):
                 option = argv[num][2:]
                 if option == 'help':
                     helpfun()
+                    # NOTREACHED
+                if option == 'no-dummies':
+                    continue    # but see run()
                 elif option == 'n':
                     lout = LUNIT
-                elif option. startswith('l'):
+                elif option.startswith('l'): # li or lo?
                     second = 1
-                elif option. startswith('o'):
+                elif option == "output":
                     second = 2
                 else:
-                    print "ERROR: I don't know this option\n"
+                    print "ERROR: I don't know this option:", option
                     helpfun()
             else:
                 filegx = argv[num]
-                run(filegx, filexyz, lun, lout, second)
+                run (argv, filegx, filexyz, lun, lout, second)
                 second = 3
         elif second == 1:
             second = 0
@@ -88,13 +92,13 @@ def convertgxtoxyz (argv):
         else:
             second = 3
             filegx = argv[num]
-            run(filegx, filexyz, lun, lout, second)
+            run (argv, filegx, filexyz, lun, lout, second)
         if second < 3:
             print "ERROR: gxfile as input requiered"
             helpfun()
 
 
-def run(filein, fileout, lun1, lout1, second):
+def run (argv, filein, fileout, lun1, lout1, second):
     # reads in data, only atnums and positions are needed
     atnums, positionx, positiony, positionz = gxreadcopy( filein, lun1 )
 
@@ -110,9 +114,6 @@ def run(filein, fileout, lun1, lout1, second):
         else:
             write = open(fileout,"a").write
 
-    # firsts lines give number of atoms and comment
-    write("%i \n" % (len(atnums) ) )
-    write("cartesian geometry in Angstrom\n")
     # transforms positions in Angstroms
     for num, value in enumerate(positionx):
         positionx[num] = value * lout1
@@ -121,8 +122,18 @@ def run(filein, fileout, lun1, lout1, second):
     for num, value in enumerate(positionz):
         positionz[num] = value * lout1
 
-    # now write data
-    for num, data in enumerate(atnums):
+    # Remove dummy entries:
+    if "--no-dummies" in argv:
+        positionx = [positionx[i] for i in range (len (atnums)) if atnums[i] != DUMMY]
+        positiony = [positiony[i] for i in range (len (atnums)) if atnums[i] != DUMMY]
+        positionz = [positionz[i] for i in range (len (atnums)) if atnums[i] != DUMMY]
+        atnums1 = [atnums[i] for i in range (len (atnums)) if atnums[i] != DUMMY]
+        atnums = atnums1
+
+    # Now write data.  firsts lines give number of atoms and comment:
+    write("%i \n" % (len(atnums) ) )
+    write("cartesian geometry in Angstrom\n")
+    for num, data in enumerate (atnums):
         write("%2s " % SYMLIST[data])
         write("%22.12f " % positionx[num] )
         write("%22.12f " % positiony[num] )
@@ -209,7 +220,7 @@ def _parse_geom(line):
 
 
 def helpfun():
-    print "    This programme converts gxfiles in .xyz files"
+    print "    This programm converts gx files to .xyz files"
     print "    it could run with several arguemts: "
     print "      needed argument is always the gxfile as input file"
     print "      gxfiles are supposed to be in bohr "
@@ -224,7 +235,7 @@ def helpfun():
     print "                  untill now dictionary includes: "
     print "                      A for Angstrom              "
     print "        --lo X  : other conversion factor for output, conversion like for li"
-    print "        --o     : next argument is output file"
+    print "        --output: next argument is output file"
     print "                  if not set output goes to standard output"
     print "        --help: show this help text"
     sys.exit()

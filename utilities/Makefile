@@ -51,6 +51,7 @@ EXE_GET_WATER_FF = get_water_forcefield
 EXE_EPE2PC       = epe_env2ext_pc
 EXE_CHECK_EPE    = check_epe
 EXE_SOL_IN_WATER = solute_in_water
+EXE_CUBE2CUBE    = cube2cube
 
 
 ALL_EXE = $(EXE_GX2XYZ) $(EXE_EPE2XYZ) $(EXE_PCR2XYZ) \
@@ -58,10 +59,12 @@ ALL_EXE = $(EXE_GX2XYZ) $(EXE_EPE2XYZ) $(EXE_PCR2XYZ) \
 	  $(EXE_GENLAT) $(EXE_MKZEO) $(EXE_MKZEO_MM) $(EXE_EWALD_NEW) \
 	  $(EXE_GX2XYZ_A) $(EXE_TIP_FROM_XYZ) \
 	  $(EXE_TIP_WATERS) $(EXE_GET_WATER_FF) \
-	  $(EXE_EPE2PC) $(EXE_CHECK_EPE) $(EXE_SOL_IN_WATER)
+	  $(EXE_EPE2PC) $(EXE_CHECK_EPE) $(EXE_SOL_IN_WATER) \
+	  $(EXE_CUBE2CUBE)
 
 #### COMPILER ####
-FC = f90
+#FC = f90
+FC = gfortran
 
 #### COMPILER FLAGS ####
 # These are not critical:
@@ -70,7 +73,7 @@ LINKFLAGS =
 
 #### LDFLAGS, LIBRARY-PATH ####
 # Now only for Absoft
-LIBS = -lU77 -lV77
+#LIBS = -lU77 -lV77
 
 
 all:	$(ALL_EXE)

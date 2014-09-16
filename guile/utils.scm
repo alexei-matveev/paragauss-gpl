@@ -35,19 +35,26 @@
             list-derivatives
             dfridr
             fmap
+            fmap2
+            ldot
             ddd
             qtrap
             qsimp
             memoize
             bohr->angstrom
             angstrom->bohr
+            hartree->kcal
+            kcal->hartree
+            eA->debye
+            debye->eA
             isqrt
+            numbers->strings
             ;; Syntax/macros:
             begin0
-            let-env
-            ))
+            let-env))
 
-(use-modules (ice-9 pretty-print))
+(use-modules (ice-9 pretty-print)
+             (ice-9 format))
 
 
 ;;;
@@ -57,11 +64,27 @@
 (define (bohr->angstrom x) (* x 0.52917706))
 (define (angstrom->bohr x) (/ x 0.52917706))
 
+;;;
+;;; FIXME: is this the only place we define that?
+;;;
+(define (hartree->kcal x) (* x 627.49))
+(define (kcal->hartree x) (/ x 627.49))
+
+;;;
+;;; Custom units for dipole moment is Debye [1].
+;;;
+;;; [1] http://en.wikipedia.org/wiki/Debye
+;;;
+(define (au->debye d) (/ d 0.393430307))
+(define (debye->au d) (/ d 0.393430307))
+(define (eA->debye d) (au->debye (angstrom->bohr d)))
+(define (debye->eA d) (bohr->angstrom (debye->au d)))
 
 ;;;
 ;;; Let-over-lambda here.  Given  a function (f x ...)   The result of
 ;;; (memoize f) is a function (f' x ...)  == (f x ...) that will cache
-;;; all results.
+;;; all results. The lookup function "assoc" uses equal? predicate for
+;;; key comparisons.
 ;;;
 (define (memoize f)
   (let ((*cache* '()))                  ; empty cache
@@ -231,6 +254,19 @@ Translated from Numerical Recipes."
    ((pair? x) (cons (fmap f (car x)) (fmap f (cdr x))))
    (else (f x))))
 
+(define (fmap2 f x y)
+  (cond
+   ((null? x) x)
+   ((pair? x) (cons (fmap2 f (car x) (car y))
+                    (fmap2 f (cdr x) (cdr y))))
+   (else (f x y))))
+
+(define (ldot x y)
+  (cond
+   ((null? x) 0.0)
+   ((number? x) (* x y))
+   ((pair? x) (+ (ldot (car x) (car y))
+                 (ldot (cdr x) (cdr y))))))
 
 ;;;
 ;;; Given a procedure (d f x) to compute derivatives of a univariate f
@@ -385,3 +421,13 @@ components at point `x'."
       (environ old-env))))
 
 
+;;;
+;;; Convert all  real numbers into  strings with some fixed  number of
+;;; digits after comma:
+;;;
+(define (numbers->strings decimals nested)
+  (fmap (lambda (x)
+          (if (and (number? x) (inexact? x))
+              (format #f "~v$" decimals x)
+              x))
+        nested))

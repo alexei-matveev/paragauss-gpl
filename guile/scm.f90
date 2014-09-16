@@ -191,6 +191,17 @@ interface
      integer (c_int64_t) :: i
    end function scm_to_int64
 
+   function scm_from_pointer (ptr, finalizer) result (obj) bind(c)
+     !
+     ! SCM scm_from_pointer (void *ptr, void (*finalizer) (void*))
+     !
+     import
+     implicit none
+     type (c_ptr), intent (in), value :: ptr
+     type (c_funptr), intent (in), value :: finalizer
+     type (scm_t) :: obj
+   end function scm_from_pointer
+
    !
    ! FIXME: Guile API exports a macro for this, see guile-api.c:
    !

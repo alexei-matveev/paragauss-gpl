@@ -59,7 +59,7 @@ GCCDIR = /usr/bin
 ifeq ($(serial),1)
   FC = $(GCCDIR)/gfortran
 else
-  FC = /usr/lib/mpi/gcc/openmpi/bin/mpif90
+  FC = mpif90
 endif
 F77 = $(FC)
 
@@ -88,9 +88,9 @@ UPPERCASE.mod = 0
 # -x f95 tells to not apply preprocessor to *.F90 files
 F90BASEFLAGS = -x f95 -Wall #-fbounds-check #-pedantic-errors -Werror
 FBASEFLAGS   = -x f95 -Wall #-fbounds-check #-pedantic-errors -Werror
-optflags     = -O1 -g -std=gnu
-optaltflags  = -O1 -g -std=gnu
-dbgflags     = -O0 -g -std=gnu
+optflags     = -O1 -g -std=gnu -ffree-line-length-none
+optaltflags  = -O1 -g -std=gnu -ffree-line-length-none
+dbgflags     = -O0 -g -std=gnu -ffree-line-length-none
 F90FLAGS     = $(if $(NOOPT), $(dbgflags), $(optflags))
 F90ALTFLAGS  = $(if $(NOOPT), $(dbgflags), $(optaltflags))
 F77FLAGS     = $(optflags) $(FBASEFLAGS)
@@ -129,7 +129,7 @@ SETMTIME = touch -r
 ifeq ($(serial),1)
   CC = $(GCCDIR)/gcc
 else
-  CC = /usr/local/openmpi-1.4.2/bin/mpicc
+  CC = mpicc
 endif
 CCFLAGS = -Wall
 

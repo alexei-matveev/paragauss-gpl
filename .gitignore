@@ -12,3 +12,4 @@ machine.mk
 guile-qm
 baslib/bin/qm-find-basis
 runqm
+mainscf*

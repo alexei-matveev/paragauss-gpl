@@ -79,7 +79,6 @@ module orbital_plot_module
   public :: orbital_plot_bcast
   public :: orbital_plot_check
 
-
   !===================================================================
   ! End of public interface of module
   !===================================================================
@@ -157,6 +156,7 @@ module orbital_plot_module
        df_calc_xc_pot_mda     = .false., &
        df_nto                 = .false. ! MODIFICATION FOR NTO
 
+  character(len=6), parameter :: df_output_format = 'PUNCH'
   character(len=3), parameter :: df_irrep_name = '   '
   character(len=2), parameter :: df_trans = 'SS'
 
@@ -179,6 +179,11 @@ module orbital_plot_module
                               ! makes only sense if density_plot is
                               ! true
 
+  character(len=6) :: output_format !output density or orbitals in specific
+                                    !format
+                                    !"punch"  - default format for density and oprbitals
+                                    !"cube"   - standard gaussian cube format
+
   logical :: alternative_options,                    &
              calc_rho,        &  ! altern. option to draw density
              calc_rho_fit,    &  ! altern. option to draw fitted density
@@ -200,9 +205,10 @@ module orbital_plot_module
   real(r8_kind), allocatable, target :: rho_s(:,:), rho_fit(:,:), &
        xc_pot(:,:), xc_pot_mda(:,:), fxc(:)
   real(r8_kind), allocatable, target :: gamm(:,:), xcpotgr(:,:)
+  logical :: punch,cube
 
 contains
-
+  
   !*************************************************************
   subroutine orbital_plot_read()
     ! Purpose: read input connected with plotting
@@ -240,6 +246,7 @@ contains
          calc_rho_fit, &
          calc_xc_pot,  &
          calc_xc_pot_mda, &
+         output_format, &
          X0, X1, X2, X3, &
          RES
 
@@ -256,6 +263,7 @@ contains
     calc_rho_fit        = df_calc_rho_fit
     calc_xc_pot         = df_calc_xc_pot
     calc_xc_pot_mda     = df_calc_xc_pot_mda
+    output_format       = df_output_format
     nto                 = df_nto               !MODIFICATION FOR NTO
     trans               = df_trans
     x0=df_x0
@@ -263,6 +271,8 @@ contains
     x2=df_x2
     x3=df_x3
     RES = df_RES
+
+    punch=.false.; cube=.false.
 
     if ( input_line_is_namelist("orbital_plot") ) then
        call input_read_to_intermediate()
@@ -288,6 +298,9 @@ contains
           if(calc_xc_pot)     calc_rho     = alternative_options
        end if
     end if
+    if(trim(output_format)=='PUNCH'  .or. trim(output_format)=='punch' ) punch =.true.
+    if(trim(output_format)=='CUBE'   .or. trim(output_format)=='cube'  ) cube =.true.
+
     if(n_input_lines>0) then
        allocate(orb_list(n_input_lines), stat=alloc_stat)
        ASSERT(alloc_stat==0)
@@ -647,7 +660,8 @@ contains
 
     call map3 (ijk, N, i, j, k)
 
-    point = i * mesh(:, 1) + j * mesh(:, 2) + k * mesh(:, 3)
+    if (punch) point = i * mesh(:, 1) + j * mesh(:, 2) + k * mesh(:, 3)
+    if (cube)  point = k * mesh(:, 1) + j * mesh(:, 2) + i * mesh(:, 3)
   end function point
 
 
@@ -761,7 +775,7 @@ contains
 
     integer(i4_kind) :: i_input
 
-    word_format = '("    ",a," = ",a6:" # ",a)' ! including quotes
+    word_format = '("    ",a," = ",a8:" # ",a)' ! including quotes
 
     call start("ORBITAL_PLOT" ,"ORBITAL_PLOT_WRITE", &
          iounit,operations_echo_input_level)
@@ -773,6 +787,7 @@ contains
     call flag("CALC_RHO_FIT   ", calc_rho_fit,   df_calc_rho_fit    )
     call flag("CALC_XC_POT    ", calc_xc_pot,    df_calc_xc_pot     )
     call flag("CALC_XC_POT_MDA", calc_xc_pot_mda,df_calc_xc_pot_mda )
+    call word("OUTPUT_FORMAT  ", output_format  ,df_output_format   )
     if (echo()) then
        write(iounit,'(4X,A                 )') '# the origin:'
        write(iounit,'(4X,A,"=",3(F13.8,","))') 'X0', X0
@@ -893,7 +908,7 @@ contains
 
     ! This sets the global var  "grid_length" to the size of the local
     ! portion of the grid:
-    call local_grid (product (RES), grid_offset, grid_length)
+    if(punch .or. cube) call local_grid (product (RES), grid_offset, grid_length)
 
     ! allocate space for all plotted orbitals and all gridpoints
     call orbital_setup(vec_length)
@@ -1219,7 +1234,7 @@ contains
     ! NOTE: These sends and receives use the default MPI tag:
     if (comm_rank() == 0) then
        ! first we write master contribution
-       call oplot_write (rho, th)
+       if(punch .or. cube)  call oplot_write (rho, th)
 
        ! then get points from slaves, if any:
        do rank = 1, comm_size() - 1
@@ -1270,6 +1285,7 @@ contains
     character(len=*), intent(in)  :: filename
     integer(i4_kind), intent(out) :: io ! tapehandle for writing
     !** End of interface *****************************************
+    integer(i4_kind) :: at_tot, i, j
 
     if (comm_rank() /= 0) then
        io = -1
@@ -1280,10 +1296,30 @@ contains
     ! exist:
     io = openget_iounit (FILE=trim(outfile(filename)), FORM='formatted')
 
-    call pun_title (io, 'This file was generated by ParaGauss')
-    call pun_block_header (io, 'fragment', 0)
-    call pun_title (io, 'molecule')
-    call symm_nabor (io, unique_atoms, 1)
+    if(punch) then
+       call pun_title (io, 'This file was generated by ParaGauss')
+       call pun_block_header (io, 'fragment', 0)
+       call pun_title (io, 'molecule')
+       call symm_nabor (io, unique_atoms, 1)
+    elseif(cube) then
+       write(io,'(a19)') 'ParaGauss Cube File'
+       write(io,'(a19)') 'ParaGauss Cube File'
+       at_tot=0
+       do i=1,size(unique_atoms)
+          do j=1,unique_atoms(i)%N_equal_atoms
+             at_tot=at_tot+1
+          enddo
+       enddo
+       write(io,'(i4,3f12.6)') at_tot,X0
+       write(io,'(i4,3f12.6)') res(1),(X1-X0)/(res(1)-1)
+       write(io,'(i4,3f12.6)') res(2),(X2-X0)/(res(2)-1)
+       write(io,'(i4,3f12.6)') res(3),(X3-X0)/(res(3)-1)
+       do i=1,size(unique_atoms)
+          do j=1,unique_atoms(i)%N_equal_atoms
+             write(io,'(i4,4f12.6)') int(unique_atoms(i)%Z),unique_atoms(i)%Z,unique_atoms(i)%position(:,j)
+          end do
+       end do
+    end if
   end subroutine oplot_startwrite
 
   subroutine oplot_startblock (title, io)
@@ -1300,15 +1336,18 @@ contains
 
     if (io < 0) RETURN
 
-    call pun_block_header (io, 'data', 0)
-    call pun_grid_title (io, title)
-    D(1) = SQRT (SUM ((X1 - X0)**2)) ! length_x
-    D(2) = SQRT (SUM ((X2 - X0)**2)) ! length_y
-    D(3) = SQRT (SUM ((X3 - X0)**2)) ! length_z
-    call pun_grid_axes (io, RES, D)
-    call pun_grid_mapping (io, X0, X1, X2, X3)
-    NPT = PRODUCT (RES)
-    call pun_block_header (io, 'grid_data', NPT, 'elements', 1)
+    if(punch) then
+       call pun_block_header (io, 'data', 0)
+       call pun_grid_title (io, title)
+       D(1) = SQRT (SUM ((X1 - X0)**2)) ! length_x
+       D(2) = SQRT (SUM ((X2 - X0)**2)) ! length_y
+       D(3) = SQRT (SUM ((X3 - X0)**2)) ! length_z
+       call pun_grid_axes (io, RES, D)
+       call pun_grid_mapping (io, X0, X1, X2, X3)
+       NPT = PRODUCT (RES)
+       call pun_block_header (io, 'grid_data', NPT, 'elements', 1)
+    end if
+
   end subroutine oplot_startblock
 
   subroutine oplot_write (buf, io)
@@ -1319,10 +1358,24 @@ contains
     real(r8_kind), intent(in) :: buf(:)
     integer(i4_kind), intent(in) :: io ! tapehandle for writing
     ! *** end of interface ***
+    integer(i4_kind) :: i,j,k,l
 
     if (io < 0) RETURN
 
-    call pun_grid_data (io, buf)
+    if(punch) call pun_grid_data (io, buf)
+    if(cube) then
+!!$       k=-1
+!!$       do i=1,res(1)
+!!$          do j=1,res(2)
+!!$             k=k+1
+!!$             l=k*res(3)
+!!$             write(io,'(6e13.5)') buf(l+1:l+res(3))
+!!$          end do
+!!$       end do
+       do i=1,size(buf)
+          write(io,'(e13.5)') buf(i)
+       end do
+    end if
   end subroutine oplot_write
 
   subroutine oplot_stopwrite (io)
@@ -1414,6 +1467,7 @@ contains
     else
        mesh(:, 3) = 0.0
     endif
+
 
     ! print *, "grid size=", product (RES), "local len=", len, "off=", off
     grid_start = 1
@@ -1592,7 +1646,8 @@ contains
 
     ! now we can receive slave contributions and save the stuff to tape
     ! this does nothing on slave except returns th < 0 :
-    call oplot_startwrite ('plot.pun', th)
+    if(punch)  call oplot_startwrite ('plot.pun', th)
+    if(cube)   call oplot_startwrite ('cube.grd', th)
 
     if (density_plot) then
        if (.not. alternative_options) then

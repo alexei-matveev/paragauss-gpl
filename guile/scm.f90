@@ -1234,36 +1234,36 @@ contains
 
   function scm_from_c_funptr (b) result(a)
     !
-    ! SCM exact = c_funptr
+    ! Conver type (c_funptr) to SCM pointer object.
     !
-    use iso_c_binding, only: c_funptr, c_intptr_t
+    use iso_c_binding, only: c_funptr, c_sizeof, c_null_funptr
     implicit none
     type (c_funptr), intent (in) :: b
     type (scm_t) :: a
     ! *** end of interface ***
 
-    integer (c_intptr_t) :: c
+    type (c_ptr) :: c
 
-    ! Sizeof()  is available  as  an extension  in  both gfortran  and
-    ! ifort.   It is  used  here  for sanity  check  only.  Use  F2008
-    ! c_sizeof()  when  becomes  possible.   It  is  however  not  yet
-    ! availbale in Gfortran 4.3 on Debian Lenny:
-    if (sizeof (b) /= sizeof (c)) then
-       print *, "assign_from_funptr: size mismatch:", sizeof (b), "/=", sizeof (c)
+    ! Use F2008  c_sizeof().  It is however not  availbale in Gfortran
+    ! 4.3 on Debian Lenny.  On the other hand sizeof() is available as
+    ! an extension  in both gfortran and  ifort.  It is  used here for
+    ! sanity check only.
+    if (c_sizeof (b) /= c_sizeof (c)) then
+       print *, "scm_from_c_funptr: size mismatch:", c_sizeof (b), "/=", c_sizeof (c)
        stop 1
     endif
 
     ! FIXME: potentially non-portable  coversion of a function pointer
-    ! to an integer:
+    ! to a data pointer:
     c = transfer (b, c)
 
-    ! Defined assignment of intptr_t to SCM exact:
-    a = c
+    ! Guile 2.0 function here:
+    a = scm_from_pointer (c, c_null_funptr)
   end function scm_from_c_funptr
 
   subroutine assign_from_c_funptr (a, b)
     !
-    ! SCM exact = c_funptr
+    ! SCM pointer object = type (c_funptr)
     !
     use iso_c_binding, only: c_funptr
     implicit none

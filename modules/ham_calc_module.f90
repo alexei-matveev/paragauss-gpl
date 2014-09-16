@@ -139,7 +139,6 @@ contains
     ! parallel context by all workers. Called from main_scf().
     !
     use comm, only: comm_rank, comm_bcast
-    use symmetry_data_module, only: ssym
     use hamiltonian_module, only: reset_ham
     use energy_calc_module, only: init_energy
     use bounds_module, only: bounds_ch, bounds_xc
@@ -161,10 +160,11 @@ contains
 
     rank = comm_rank()
 
-    ! RESET_HAM allocates and initializes the necessary parts
-    ! of the hamiltonian:
-    !    ham_tot  (spin polarized if required)
-    call reset_ham(ssym)
+    ! reset_ham()  re-initializes the  hamiltonian  storage arrays  to
+    ! zero  ---  e.g.   ham_tot   (spin  polarized  if  required),  or
+    ! ham_tot_real/imag  in case  of  spin-orbit. Nothing  spectacular
+    ! here.
+    call reset_ham()
 
     call init_energy() ! initializes the energies
 

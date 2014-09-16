@@ -174,29 +174,29 @@ contains
     endif ! options_spin_orbit
   end subroutine hamiltonian_setup
 
-  subroutine reset_ham(ssym)
+  subroutine reset_ham ()
     !
-    !  Purpose: Reset  hamiltonian to  zeros.  Called from  a parallel
-    !  context in ham_calc_main every SCF cycle.
+    ! Purpose:  Reset hamiltonian  to zeros.   Called from  a parallel
+    ! context in ham_calc_main every SCF cycle.
     !
     implicit none
-    type(sym), intent(in) :: ssym
     ! *** end of interface ***
 
     if (options_spin_orbit) then
        !
        ! SPIN ORBIT
        !
-       call init(ham_tot_real)
-       call init(ham_tot_imag)
+       call init (ham_tot_real)
+       call init (ham_tot_imag)
     else
        !
        ! STANDARD SCF:
        !
-       call init(ham_tot)
+       call init (ham_tot)
 
-       if(lvshift_mixing.and. .not.allocated(ham_lsft)) then
-          call init(ham_lsft)
+       ! FIXME: why NOT allocated?
+       if (lvshift_mixing .and. .not. allocated (ham_lsft)) then
+          call init (ham_lsft)
        endif
     endif ! options_spin_orbit
   end subroutine reset_ham

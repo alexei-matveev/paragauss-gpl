@@ -205,7 +205,7 @@ module solv_cavity_module
   character(len=5) :: solvation_model
   character(len=4) :: spec_point_group
   character(len=5) :: atomic_radii
-  real(kind=r8_kind),public :: solvent_radius
+  real (r8_kind), public, protected :: solvent_radius
   real(kind=r8_kind) :: scaled_factor
   real(kind=r8_kind), public :: dielectric_constant
   real(kind=r8_kind),public :: abs_temperature
@@ -296,7 +296,7 @@ module solv_cavity_module
   character(len=5) :: df_atomic_radii = "BONDI" !"UFF"
   logical :: df_cavitation_energy = .true.
   logical :: df_disp_rep_energy = .true.
-  real(kind=r8_kind) :: df_solvent_radius = 1.400_r8_kind   !angstrom
+  real (r8_kind) :: df_solvent_radius = 1.400_r8_kind ! angstrom
   real(kind=r8_kind) :: df_scaled_factor = 1.2_r8_kind
   real(kind=r8_kind) :: df_dielectric_constant = 78.4_r8_kind
   real(kind=r8_kind) :: df_abs_temperature = 298.0_r8_kind    !K
@@ -410,7 +410,7 @@ contains ! of module
     disp_rep_energy=df_disp_rep_energy
     dielectric_constant=df_dielectric_constant
     abs_temperature=df_abs_temperature
-    solvent_radius=df_solvent_radius
+    solvent_radius = df_solvent_radius
     solvent_volume=df_solvent_volume
     scaled_factor=df_scaled_factor
     point_factor=df_point_factor
@@ -1240,7 +1240,7 @@ contains ! of module
       overlap_angle_rad= overlap_angle*pi/180.0_r8_kind
       sino=sin(overlap_angle_rad)
       coso=cos(overlap_angle_rad)
-      r_solv=solvent_radius/ang_au !!!!!!!
+      r_solv = solvent_radius / ang_au
       r_mini=rmin_gepol/ang_au     !!!!!!
       if(do_cavitation) then
          s_f=1.0_r8_kind
@@ -1760,7 +1760,7 @@ contains ! of module
 #endif
 
       !converting parameters to radian and atomic units
-      r_solv=solvent_radius/ang_au !!!!!!!
+      r_solv = solvent_radius / ang_au
       r_mini=rmin_gepol/ang_au  !!!!!!!!!
       if(do_cavitation) then
          s_f=1.0_r8_kind
@@ -2453,7 +2453,7 @@ contains ! of module
       if(with_pc) N_pc=pointcharge_N
 
       DPRINT 'calc_cavity_gradient(',cavity_flag,'): enetered'
-      r_solv=solvent_radius/ang_au
+      r_solv = solvent_radius / ang_au
       call alloc_geom_deriv_part1(cagr)
 
       ! gradients of atomic centers and radia

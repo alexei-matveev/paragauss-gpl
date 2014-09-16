@@ -307,7 +307,7 @@ contains
     use vdw_dft, only: vdw_dft_phi
     use grid_module, only: guile_pople_radius, guile_slater_radius, &
          guile_ionic_radius
-#ifdef WITH_BGY3D_NON_GPL
+#ifdef WITH_BGY3D
     use bgy3d, only: bgy3d_init_scheme
 #endif
     implicit none
@@ -322,7 +322,7 @@ contains
     call export ("slater-radius", 1, c_funloc (guile_slater_radius))
     call export ("ionic-radius", 1, c_funloc (guile_ionic_radius))
 
-#ifdef WITH_BGY3D_NON_GPL
+#ifdef WITH_BGY3D
     call bgy3d_init_scheme()
 #endif
     contains

@@ -1353,12 +1353,13 @@ contains
   subroutine oplot_write (buf, io)
     ! Purpose: so far just close the file after e.g. all orbitals have
     !          been written
-    use punchfile
+    use punchfile, only: pun_grid_data
     implicit none
     real(r8_kind), intent(in) :: buf(:)
     integer(i4_kind), intent(in) :: io ! tapehandle for writing
     ! *** end of interface ***
-    integer(i4_kind) :: i,j,k,l
+
+    integer (i4_kind) :: i !,j,k,l
 
     if (io < 0) RETURN
 

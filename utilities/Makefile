@@ -32,7 +32,7 @@ endif
 
 
 #### Directory where executables are installed #####
-INSTALLDIR = $(HOME)/bin
+INSTALLDIR = $(HOME)/bin/
 
 #### NAME OF EXECUTABLE ####
 EXE_GX2XYZ       = gx2xyz
@@ -52,6 +52,7 @@ EXE_EPE2PC       = epe_env2ext_pc
 EXE_CHECK_EPE    = check_epe
 EXE_SOL_IN_WATER = solute_in_water
 EXE_CUBE2CUBE    = cube2cube
+EXE_G_PARTICLE   = g_particle
 
 
 ALL_EXE = $(EXE_GX2XYZ) $(EXE_EPE2XYZ) $(EXE_PCR2XYZ) \
@@ -60,7 +61,7 @@ ALL_EXE = $(EXE_GX2XYZ) $(EXE_EPE2XYZ) $(EXE_PCR2XYZ) \
 	  $(EXE_GX2XYZ_A) $(EXE_TIP_FROM_XYZ) \
 	  $(EXE_TIP_WATERS) $(EXE_GET_WATER_FF) \
 	  $(EXE_EPE2PC) $(EXE_CHECK_EPE) $(EXE_SOL_IN_WATER) \
-	  $(EXE_CUBE2CUBE)
+	  $(EXE_CUBE2CUBE) $(EXE_G_PARTICLE)
 
 #### COMPILER ####
 #FC = f90
@@ -91,7 +92,7 @@ clean:
 install:
 	for f in $(ALL_EXE); do \
 		if [ -f $f ] ; then \
-			mv -i $f $(INSTALLDIR); \
+			mv -i $f $(INSTALLDIR) ; \
 		fi \
 	done
 

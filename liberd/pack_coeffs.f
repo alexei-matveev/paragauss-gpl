@@ -16,7 +16,8 @@ C  in the file COPYRIGHT.
      *                       ncfps, npfps, m, n, r, s,
      *                       alpha_pack, nalpha, pcoeff_pack, 
      *                       npcoeff, ccbeg, ccend, indx_cc,
-     *                       ccbeg_pack, ccend_pack)
+     *                       ccbeg_pack, ccend_pack, 
+     *                       ccbeg_pack64, ccend_pack64)
 c---------------------------------------------------------------------------
 c   Formats the integral exponents and contraction coefficients for use
 c   in the ERD integral package.
@@ -27,6 +28,7 @@ c---------------------------------------------------------------------------
       integer ncfps(*), npfps(*), ixalpha(*), ixpcoeff(*)
       integer ccbeg(*), ccend(*), indx_cc(*)
       integer ccbeg_pack(*), ccend_pack(*)
+      integer*8 ccbeg_pack64(*), ccend_pack64(*)
       integer m, n, r, s
       integer nalpha, npcoeff
       integer ialpha
@@ -78,6 +80,22 @@ c---------------------------------------------------------------------------
          npcoeff = npcoeff + num
       enddo
 
+      if (aces64) then
+         icc = 1
+         do j = 1, 4
+            ishell = quad(j)
+            if (icc + ncfps(ishell)-1 .gt. 5000) then
+               print *,'Error: ccbeg/ccend overflow in pack_coeffs'
+               call abort_job()
+            endif
+
+            do k = 1, ncfps(ishell)
+               ccbeg_pack64(icc) = ccbeg(indx_cc(ishell)+k-1)
+               ccend_pack64(icc) = ccend(indx_cc(ishell)+k-1)
+               icc = icc + 1
+            enddo
+         enddo
+      else
          icc = 1
          do j = 1, 4
             ishell = quad(j)
@@ -87,6 +105,7 @@ c---------------------------------------------------------------------------
                icc = icc + 1
             enddo
          enddo
+      endif
 
       return
       end  

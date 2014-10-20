@@ -127,8 +127,6 @@ C
          DOUBLE PRECISION   RHO    (1:NIJ+NKL)
          DOUBLE PRECISION   RHOAB  (1:NIJ)
          DOUBLE PRECISION   RHOCD  (1:NIJ)
-         double precision   rho_temp(1:nij+nkl)
-         double precision   rho_temp2(1:nij+nkl)
 
          PARAMETER   (ZERO = 0.D0)
          PARAMETER   (HALF = 0.5D0)
@@ -153,32 +151,13 @@ C                We are always safe, if we start copying from the
 C                last element of RHO downwards.
 C
 C
-c         DO N = NKL,1,-1
-c            RHOCD (N) = RHO (NIJ+N)
-c         END DO
+         DO N = NKL,1,-1
+            RHOCD (N) = RHO (NIJ+N)
+         END DO
 
-         do n = 1, nkl
-            rho_temp(n) = rho(nij+n)
-         enddo
-
- 
-c         DO N = NIJ,1,-1
-c            RHOAB (N) = RHO (N)
-c         END DO
-
-         do n = 1, nij
-            rho_temp2(n) = rho(n)
-         enddo
-
-#ifndef ERDFIX
-         do n = 1, nkl
-            rhocd(n) = rho_temp(n)
-         enddo
-
-         do n = 1, nij
-            rhoab(n) = rho_temp2(n)
-         enddo
-#endif
+         DO N = NIJ,1,-1
+            RHOAB (N) = RHO (N)
+         END DO
 C
 C
 C             ...calculate the A,B,C,D norms.
@@ -257,16 +236,5 @@ C
 C             ...ready!
 C
 C
-
-#ifdef ERDFIX
-         do n = 1, nkl
-            rhocd(n) = rho_temp(n)
-         enddo
-
-         do n = 1, nij
-            rhoab(n) = rho_temp2(n)
-         enddo
-#endif
-
          RETURN
          END

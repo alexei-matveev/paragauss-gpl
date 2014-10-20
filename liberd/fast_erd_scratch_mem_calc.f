@@ -51,6 +51,7 @@ c--------------------------------------------------------------------------
       double precision alpha_pack(max_dim_coeff), 
      *                 pcoeff_pack(max_dim_coeff)
       integer ccbeg_pack(max_dim_coeff), ccend_pack(max_dim_coeff)
+      integer*8 ccbeg_pack64(max_dim_coeff), ccend_pack64(max_dim_coeff)
 
       integer i,j
       integer m, n, r, s
@@ -64,6 +65,7 @@ c--------------------------------------------------------------------------
       integer der_flags(12), iflag
       integer lmax, ncmax, npmax
 
+      integer*8 arg64(50)
       logical*8 l8true
       logical*8 l8var
       logical spherical
@@ -98,12 +100,45 @@ c---------------------------------------------------------------------------
      *                        ncfps, npfps, m, n, r, s,
      *                       alpha_pack, nalpha, pcoeff_pack,
      *                       ncoeff, ccbeg, ccend, indx_cc,
-     *                       ccbeg_pack, ccend_pack)
+     *                       ccbeg_pack, ccend_pack,
+     *                       ccbeg_pack64, ccend_pack64)
 
 c-------------------------------------------------------------------------
 c   ERD version 2
 c-------------------------------------------------------------------------
 
+         if (aces64) then
+            arg64(9) = nalpha
+            arg64(10) = ncoeff
+            arg64(1) = ncmax
+            arg64(2) = ncmax
+            arg64(3) = ncmax
+            arg64(4) = ncmax
+            arg64(5) = npmax
+            arg64(6) = npmax
+            arg64(7) = npmax
+            arg64(8) = npmax
+            arg64(13) = shtype(m)
+            arg64(14) = shtype(n)
+            arg64(15) = shtype(r)
+            arg64(16) = shtype(s)
+            l8spherical = spherical
+            call ERD__MEMORY_ERI_BATCH(arg64(9), arg64(10),
+     *                   arg64(1), arg64(2), arg64(3), arg64(4), 
+     *                   arg64(5), arg64(6), arg64(7), arg64(8), 
+     *                   arg64(13), arg64(14), arg64(15), arg64(16), 
+     *                   coords(1,m),coords(2,m),coords(3,m),
+     *                   coords(1,n),coords(2,n),coords(3,n), 
+     *                   coords(1,r),coords(2,r),coords(3,r), 
+     *                   coords(1,s),coords(2,s),coords(3,s), 
+     *                   alpha_pack, pcoeff_pack,
+     *                   l8spherical,arg64(17), arg64(18), arg64(19), 
+     *                   arg64(20)) 
+            imin = arg64(17)
+            iblk = arg64(18)
+            zmin = arg64(19)
+            zblk = arg64(20)
+         else
             call ERD__MEMORY_ERI_BATCH(
      *                   nalpha, ncoeff,                 
      *                   ncmax, ncmax, ncmax, ncmax,
@@ -115,6 +150,7 @@ c-------------------------------------------------------------------------
      *                   coords(1,s),coords(2,s),coords(3,s), 
      *                   alpha_pack, pcoeff_pack, spherical,
      *                   imin, iblk, zmin, zblk)
+         endif
          imax = max0(imax, imin)
          zmax = max0(zmax, zmin)
 
@@ -188,6 +224,45 @@ c--------------------------------------------------------------------------
 c   Set the derivative flag arguments.
 c--------------------------------------------------------------------------
  
+            if (aces64) then
+               do i = 1, 12
+                  arg64(25+i) = der_flags(i)
+               enddo
+
+               arg64(9) = nalpha
+               arg64(10) = ncoeff
+               arg64(1) = ncmax
+               arg64(2) = ncmax
+               arg64(3) = ncmax
+               arg64(4) = ncmax
+               arg64(5) = npmax
+               arg64(6) = npmax
+               arg64(7) = npmax
+               arg64(8) = npmax
+               arg64(13) = shtype(m)
+               arg64(14) = shtype(n)
+               arg64(15) = shtype(r)
+               arg64(16) = shtype(s)
+               l8spherical = spherical
+               call ERD__MEMORY_ERI_DERV_BATCH(arg64(9), arg64(10),
+     *                   arg64(1), arg64(2), arg64(3), arg64(4), 
+     *                   arg64(5), arg64(6), arg64(7), arg64(8), 
+     *                   arg64(13), arg64(14), arg64(15), arg64(16), 
+     *                   coords(1,m),coords(2,m),coords(3,m),
+     *                   coords(1,n),coords(2,n),coords(3,n), 
+     *                   coords(1,r),coords(2,r),coords(3,r), 
+     *                   coords(1,s),coords(2,s),coords(3,s), 
+     *                   arg64(26),arg64(27),arg64(28),arg64(29),
+     *                   arg64(30),arg64(31),arg64(32),arg64(33),
+     *                   arg64(34),arg64(35),arg64(36),arg64(37),
+     *                   alpha_pack, pcoeff_pack,
+     *                   l8spherical,arg64(17), arg64(18), arg64(19), 
+     *                   arg64(20)) 
+               imin = arg64(17)
+               iblk = arg64(18)
+               zmin = arg64(19)
+               zblk = arg64(20)
+            else
                call erd__memory_eri_derv_batch(nalpha, ncoeff, 
      *                 ncmax, ncmax, ncmax, ncmax,
      *                 npmax, npmax, npmax, npmax,
@@ -202,6 +277,7 @@ c--------------------------------------------------------------------------
      *                 der_flags(10),der_flags(11), der_flags(12),    
      *                   alpha_pack, pcoeff_pack, spherical,
      *                   imin, iblk, zmin, zblk)   
+            endif
 
             imax = max0(imax, imin)
             zmax = max0(zmax, zmin)
@@ -218,7 +294,32 @@ c------------------------------------------------------------------------
      *                       alpha_pack, nalpha, pcoeff_pack,
      *                       ncoeff, ccbeg, ccend, indx_cc,
      *                       ccbeg_pack, ccend_pack,
+     *                       ccbeg_pack64, ccend_pack64,
      *                       max_dim_coeff)
+         if (aces64) then
+            arg64(1) = nalpha
+            arg64(2) = ncoeff
+            arg64(3) = ncfps(m)
+            arg64(4) = ncfps(n)
+            arg64(5) = npfps(m) 
+            arg64(6) = npfps(n) 
+            arg64(7) = shtype(m) 
+            arg64(8) = shtype(n) 
+            arg64(9) = nuclei
+            l8var = spherical 
+            call oed__memory_nai_batch(arg64(1), arg64(2),
+     *                      arg64(3), arg64(4), 
+     *                      arg64(5), arg64(6), 
+     *                      arg64(7), arg64(8), 
+     *                      coords(1,m),coords(2,m),coords(3,m),
+     *                      coords(1,n),coords(2,n),coords(3,n),
+     *                      arg64(9), alpha_pack, pcoeff_pack, l8var, 
+     *                      arg64(10),arg64(11),arg64(12),arg64(13))
+            imin = arg64(10)
+            iopt = arg64(11)
+            zmin = arg64(12)
+            zopt = arg64(13)
+         else
             call oed__memory_nai_batch(nalpha, ncoeff,
      *                   ncfps(m), ncfps(n), 
      *                   npfps(m), npfps(n), 
@@ -227,10 +328,35 @@ c------------------------------------------------------------------------
      *                   coords(1,n),coords(2,n),coords(3,n),
      *                   nuclei, alpha_pack, pcoeff_pack, spherical, 
      *                   imin, iopt, zmin, zopt)
+         endif
 
          imax = max0(iopt, imax)
          zmax = max0(zopt, zmax)
 
+         if (aces64) then
+            arg64(1) = nalpha
+            arg64(2) = ncoeff
+            arg64(3) = ncfps(m)
+            arg64(4) = ncfps(n)
+            arg64(5) = npfps(m)
+            arg64(6) = npfps(n)
+            arg64(7) = shtype(m)
+            arg64(8) = shtype(n)
+            arg64(9) = nuclei
+            l8var = spherical
+            call oed__memory_kin_batch(arg64(1), arg64(2),
+     *                     arg64(3), arg64(4),
+     *                     arg64(5), arg64(6),
+     *                     arg64(7), arg64(8),
+     *                     coords(1,m),coords(2,m),coords(3,m),
+     *                     coords(1,n),coords(2,n),coords(3,n),
+     *                     alpha_pack, pcoeff_pack, l8var,
+     *                     arg64(10),arg64(11),arg64(12),arg64(13))
+            imin = arg64(10)
+            iopt = arg64(11)
+            zmin = arg64(12)
+            zopt = arg64(13)
+         else
             call oed__memory_kin_batch(nalpha, ncoeff,
      *                    ncfps(m), ncfps(n), 
      *                    npfps(m), npfps(n), 
@@ -239,10 +365,35 @@ c------------------------------------------------------------------------
      *                    coords(1,n),coords(2,n),coords(3,n),
      *                    alpha_pack, pcoeff_pack, spherical, 
      *                    imin, iopt, zmin, zopt)
+         endif
 
          imax = max0(iopt, imax)
          zmax = max0(zopt, zmax)
 
+         if (aces64) then
+            arg64(1) = nalpha
+            arg64(2) = ncoeff
+            arg64(3) = ncfps(m)
+            arg64(4) = ncfps(n)
+            arg64(5) = npfps(m)
+            arg64(6) = npfps(n)
+            arg64(7) = shtype(m)
+            arg64(8) = shtype(n)
+            arg64(9) = nuclei
+            l8var = spherical
+            call oed__memory_ovl_batch(arg64(1), arg64(2),
+     *                   arg64(3), arg64(4),
+     *                   arg64(5), arg64(6),
+     *                   arg64(7), arg64(8),
+     *                   coords(1,m),coords(2,m),coords(3,m),
+     *                   coords(1,n),coords(2,n),coords(3,n),
+     *                   alpha_pack, pcoeff_pack, l8var,
+     *                   arg64(10),arg64(11),arg64(12),arg64(13))
+            imin = arg64(10)
+            iopt = arg64(11)
+            zmin = arg64(12)
+            zopt = arg64(13)
+         else
             call oed__memory_ovl_batch(nalpha, ncoeff,
      *                      ncfps(m), ncfps(n), 
      *                      npfps(m), npfps(n), 
@@ -251,12 +402,53 @@ c------------------------------------------------------------------------
      *                      coords(1,n),coords(2,n),coords(3,n),
      *                      alpha_pack, pcoeff_pack, spherical, 
      *                      imin, iopt, zmin, zopt)
+         endif
 
          imax = max0(iopt, imax)
          zmax = max0(zopt, zmax)
 
          go to 1000
  
+         if (aces64) then
+            arg64(1) = nalpha
+            arg64(2) = ncoeff
+            arg64(3) = ncfps(m)
+            arg64(4) = ncfps(n)
+            arg64(5) = npfps(m) 
+            arg64(6) = npfps(n) 
+            arg64(7) = shtype(m) 
+            arg64(8) = shtype(n) 
+            arg64(9) = nuclei
+
+            arg64(14) = ixderc
+            arg64(15) = der1x
+            arg64(16) = der1y
+            arg64(17) = der1z
+            arg64(18) = der2x
+            arg64(19) = der2y
+            arg64(20) = der2z
+            arg64(21) = dercx
+            arg64(22) = dercy
+            arg64(23) = dercz
+
+            l8var = spherical 
+            call oed__memory_nai_derv_batch(arg64(1), arg64(2),
+     *                      arg64(3), arg64(4), 
+     *                      arg64(5), arg64(6), 
+     *                      arg64(7), arg64(8), 
+     *                      coords(1,m),coords(2,m),coords(3,m),
+     *                      coords(1,n),coords(2,n),coords(3,n),
+     *                      arg64(9), arg64(14),
+     *                      arg64(15), arg64(16), arg64(17),
+     *                      arg64(18), arg64(19), arg64(20),
+     *                      arg64(21), arg64(22), arg64(23),
+     *                      alpha_pack, pcoeff_pack, l8var, 
+     *                      arg64(10),arg64(11),arg64(12),arg64(13))
+            imin = arg64(10)
+            iopt = arg64(11)
+            zmin = arg64(12)
+            zopt = arg64(13)
+         else
             call oed__memory_nai_derv_batch(nalpha, ncoeff,
      *                   ncfps(m), ncfps(n), 
      *                   npfps(m), npfps(n), 
@@ -269,10 +461,44 @@ c------------------------------------------------------------------------
      *                   dercx, dercy, dercz,
      *                   alpha_pack, pcoeff_pack, spherical, 
      *                   imin, iopt, zmin, zopt)
+         endif
 
          imax = max0(iopt, imax)
          zmax = max0(zopt, zmax)
 
+         if (aces64) then
+            arg64(1) = nalpha
+            arg64(2) = ncoeff
+            arg64(3) = ncfps(m)
+            arg64(4) = ncfps(n)
+            arg64(5) = npfps(m) 
+            arg64(6) = npfps(n) 
+            arg64(7) = shtype(m) 
+            arg64(8) = shtype(n) 
+
+            arg64(15) = der1x
+            arg64(16) = der1y
+            arg64(17) = der1z
+            arg64(18) = der2x
+            arg64(19) = der2y
+            arg64(20) = der2z
+
+            l8var = spherical 
+            call oed__memory_kin_derv_batch(arg64(1), arg64(2),
+     *                      arg64(3), arg64(4), 
+     *                      arg64(5), arg64(6), 
+     *                      arg64(7), arg64(8), 
+     *                      coords(1,m),coords(2,m),coords(3,m),
+     *                      coords(1,n),coords(2,n),coords(3,n),
+     *                      arg64(15), arg64(16), arg64(17),
+     *                      arg64(18), arg64(19), arg64(20),
+     *                      alpha_pack, pcoeff_pack, l8var, 
+     *                      arg64(10),arg64(11),arg64(12),arg64(13))
+            imin = arg64(10)
+            iopt = arg64(11)
+            zmin = arg64(12)
+            zopt = arg64(13)
+         else
             call oed__memory_kin_derv_batch(nalpha, ncoeff,
      *                   ncfps(m), ncfps(n), 
      *                   npfps(m), npfps(n), 
@@ -283,10 +509,44 @@ c------------------------------------------------------------------------
      *                   der2x, der2y, der2z,
      *                   alpha_pack, pcoeff_pack, spherical, 
      *                   imin, iopt, zmin, zopt)
+         endif
 
          imax = max0(iopt, imax)
          zmax = max0(zopt, zmax)
 
+         if (aces64) then
+            arg64(1) = nalpha
+            arg64(2) = ncoeff
+            arg64(3) = ncfps(m)
+            arg64(4) = ncfps(n)
+            arg64(5) = npfps(m) 
+            arg64(6) = npfps(n) 
+            arg64(7) = shtype(m) 
+            arg64(8) = shtype(n) 
+
+            arg64(15) = der1x
+            arg64(16) = der1y
+            arg64(17) = der1z
+            arg64(18) = der2x
+            arg64(19) = der2y
+            arg64(20) = der2z
+
+            l8var = spherical 
+            call oed__memory_ovl_derv_batch(arg64(1), arg64(2),
+     *                      arg64(3), arg64(4), 
+     *                      arg64(5), arg64(6), 
+     *                      arg64(7), arg64(8), 
+     *                      coords(1,m),coords(2,m),coords(3,m),
+     *                      coords(1,n),coords(2,n),coords(3,n),
+     *                      arg64(15), arg64(16), arg64(17),
+     *                      arg64(18), arg64(19), arg64(20),
+     *                      alpha_pack, pcoeff_pack, l8var, 
+     *                      arg64(10),arg64(11),arg64(12),arg64(13))
+            imin = arg64(10)
+            iopt = arg64(11)
+            zmin = arg64(12)
+            zopt = arg64(13)
+         else
             call oed__memory_ovl_derv_batch(nalpha, ncoeff,
      *                   ncfps(m), ncfps(n), 
      *                   npfps(m), npfps(n), 
@@ -297,6 +557,7 @@ c------------------------------------------------------------------------
      *                   der2x, der2y, der2z,
      *                   alpha_pack, pcoeff_pack, spherical, 
      *                   imin, iopt, zmin, zopt)
+         endif
 
          imax = max0(iopt, imax)
          zmax = max0(zopt, zmax)

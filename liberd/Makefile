@@ -83,7 +83,7 @@ liberd.a = \
 FC = gfortran
 # FC = ifort
 
-FLAGS = -O2 -fopenmp
+FLAGS = -O2 #-pg #-fopenmp
 # FLAGS = -O2
 
 AR = ar

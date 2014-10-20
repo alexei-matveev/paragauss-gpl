@@ -101,5 +101,5 @@ liberd.a : $(liberd.a)
 	$(FC) $(FLAGS) -c $(<F)
 
 clean :
-	rm -f $(liberd.a) liberd.a
+	rm -f $(liberd.a) liberd.a erd.o.dep erd.o erd.mod
 

@@ -87,7 +87,7 @@ module erd
 !       integer :: ccbeg_pack(size(acnts,2)+size(bcnts,2)+size(ccnts,2)+size(dcnts,2))
 !       integer :: ccend_pack(size(acnts,2)+size(bcnts,2)+size(ccnts,2)+size(dcnts,2))
 
-        integer :: lvals(4)
+        integer :: lvals(4), nlm(4)
         integer :: i
         integer :: imin, zmin
         integer :: iblk, zblk
@@ -179,14 +179,18 @@ module erd
           stop 'Error: integrals dont fit into output array!'
         endif
 
+        ! angular dimensions:
+        nlm(:) = 2 * lvals(:) + 1
+
         ! copy result from dwork(nfirst:nfirst+nints-1):
         if( nints > 0 )then
-!         call display( 2*lvals+1, ncfps, dwork(nfirst) )
-          call copy(    2*lvals+1, ncfps, dwork(nfirst), batch )
+!         call display( nlm, ncfps, dwork(nfirst) )
+          call copy(nlm, ncfps, dwork(nfirst), batch )
         endif
 
       contains
 
+#if 0
         subroutine display( nm, ne, ints)
           implicit none
           integer, intent(in)           :: nm(4), ne(4)
@@ -214,74 +218,79 @@ module erd
           endif
           1000 format (A2,2I3,A1,2I3,A4,F20.10)
         end subroutine display
+#endif
+      end subroutine erd_batch
 
-        subroutine copy(nm, ne, ints, batch)
-          !
-          ! Piece of code for eathier addressing into batch(*)
-          !
-          implicit none
-          integer, intent(in)   :: nm(4), ne(4)
-          double precision, intent(in)  :: &
-          ints(  nm(1)*ne(1), nm(2)*ne(2), nm(3)*ne(3), nm(4)*ne(4) )
-          double precision, intent(out) :: &
-          batch( nm(1)*ne(1), nm(2)*ne(2), nm(3)*ne(3), nm(4)*ne(4) )
-          ! *** end of interface ***
+      subroutine copy(nm, ne, ints, batch)
+        !
+        ! Piece of code for eathier addressing into batch(*)
+        !
+        implicit none
+        integer, intent(in)   :: nm(4), ne(4)
+        double precision, intent(in)  :: &
+        ints(  nm(1)*ne(1), nm(2)*ne(2), nm(3)*ne(3), nm(4)*ne(4) )
+        double precision, intent(out) :: &
+        batch( nm(1)*ne(1), nm(2)*ne(2), nm(3)*ne(3), nm(4)*ne(4) )
+        ! *** end of interface ***
 
-          ! permutation of m-indices:
-          integer :: ia(nm(1))
-          integer :: ib(nm(2))
-          integer :: ic(nm(3))
-          integer :: id(nm(4))
+        ! permutation of m-indices:
+        integer :: ia(nm(1))
+        integer :: ib(nm(2))
+        integer :: ic(nm(3))
+        integer :: id(nm(4))
 
-          integer :: ls(4)
-          integer :: ma,mb,mc,md
-          integer :: i, j, k, l
+        integer :: ls(4)
+        integer :: ma,mb,mc,md
+        integer :: i, j, k, l
 
-          ! L-values:
-          ls(:) = ( nm(:) - 1 ) / 2
+        ! L-values:
+        ls(:) = ( nm(:) - 1 ) / 2
 
-          ! compute the permutations for magnetic shell indices:
-          ia(:) = perm(ls(1))
-          ib(:) = perm(ls(2))
-          ic(:) = perm(ls(3))
-          id(:) = perm(ls(4))
+        ! compute the permutations for magnetic shell indices:
+        ia(:) = perm(ls(1))
+        ib(:) = perm(ls(2))
+        ic(:) = perm(ls(3))
+        id(:) = perm(ls(4))
 
-          ! unpack integrals in (1,2,3,4) (ang,exp) order:
-          do md=1,nm(4)
-          do mc=1,nm(3)
-          do mb=1,nm(2)
-          do ma=1,nm(1)
+        ! unpack integrals in (1,2,3,4) (ang,exp) order:
+        do md=1,nm(4)
+        do mc=1,nm(3)
+        do mb=1,nm(2)
+        do ma=1,nm(1)
 
-          do l=1,ne(4)
-          do k=1,ne(3)
-          do j=1,ne(2)
-          do i=1,ne(1)
+        do l=1,ne(4)
+        do k=1,ne(3)
+        do j=1,ne(2)
+        do i=1,ne(1)
 
-              batch( ia(ma) + (i - 1) * nm(1) &
-                   , ib(mb) + (j - 1) * nm(2) &
-                   , ic(mc) + (k - 1) * nm(3) &
-                   , id(md) + (l - 1) * nm(4) &
-                   ) =                        &
-              batch( ia(ma) + (i - 1) * nm(1) &
-                   , ib(mb) + (j - 1) * nm(2) &
-                   , ic(mc) + (k - 1) * nm(3) &
-                   , id(md) + (l - 1) * nm(4) &
-                   )                          &
-              + ints(   ma  + (i - 1) * nm(1) &
-                    ,   mb  + (j - 1) * nm(2) &
-                    ,   mc  + (k - 1) * nm(3) &
-                    ,   md  + (l - 1) * nm(4) &
-                    )
-          enddo
-          enddo
-          enddo
-          enddo
+!!            ! FIXME: subtract to compare two int packages, assign in
+!!            ! production runs:
+            batch( ia(ma) + (i - 1) * nm(1) &
+                 , ib(mb) + (j - 1) * nm(2) &
+                 , ic(mc) + (k - 1) * nm(3) &
+                 , id(md) + (l - 1) * nm(4) &
+                 ) =                        &
+!!            batch( ia(ma) + (i - 1) * nm(1) &
+!!                 , ib(mb) + (j - 1) * nm(2) &
+!!                 , ic(mc) + (k - 1) * nm(3) &
+!!                 , id(md) + (l - 1) * nm(4) &
+!!                 ) -                        &
+              ints(   ma  + (i - 1) * nm(1) &
+                  ,   mb  + (j - 1) * nm(2) &
+                  ,   mc  + (k - 1) * nm(3) &
+                  ,   md  + (l - 1) * nm(4) &
+                  )
+        enddo
+        enddo
+        enddo
+        enddo
 
-          enddo
-          enddo
-          enddo
-          enddo
-        end subroutine copy
+        enddo
+        enddo
+        enddo
+        enddo
+
+      contains
 
         function perm(L) result(p)
           implicit none
@@ -356,7 +365,7 @@ module erd
           end select
         end function perm
 
-      end subroutine erd_batch
+      end subroutine copy
 
       subroutine pack_coeffs( aexps, bexps, cexps, dexps    &
                             , acnts, bcnts, ccnts, dcnts    &

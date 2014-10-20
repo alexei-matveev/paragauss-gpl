@@ -9,9 +9,11 @@ module erd
 
   integer, save                 :: INTSIZE = -1
   integer, save                 :: DBLSIZE = -1
+  !$omp threadprivate(INTSIZE, DBLSIZE)
 
   integer,          allocatable :: iwork(:) ! (INTSIZE)
   double precision, allocatable :: dwork(:) ! (DBLSIZE)
+  !$omp threadprivate(iwork, dwork)
 
   contains
 
@@ -598,11 +600,15 @@ module erd
         integer, intent(in) :: imax, zmax
         ! *** end of interface ***
 
+        !$ integer, external :: omp_get_thread_num
+        integer :: rank = 0 ! for debug output
         integer :: memstat
+
+        !$ rank = omp_get_thread_num()
 
         if( imax > INTSIZE )then
 
-          print *,'erd: reallocate_scratch resizing iwork from',INTSIZE,'to', imax
+          print *,'erd: resizing iwork from', INTSIZE, 'to', imax, 'at', rank
 
           if( allocated(iwork) )then
             deallocate(iwork, stat=memstat)
@@ -617,7 +623,7 @@ module erd
 
         if( zmax > DBLSIZE )then
 
-          print *,'erd: reallocate_scratch resizing dwork from',DBLSIZE,'to', zmax
+          print *,'erd: resizing dwork from', DBLSIZE, 'to', zmax, 'at', rank
 
           if( allocated(dwork) )then
             deallocate(dwork, stat=memstat)

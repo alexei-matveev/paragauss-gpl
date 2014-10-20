@@ -79,14 +79,21 @@ liberd.a = \
 #        the main Makefile if WITH_LIBERD:
 #        erd.o \
 
-# defines $(FC) and other:
-include ../machine.inc
+# define compiler and compiler flags:
+FC = gfortran
+# FC = ifort
+
+FLAGS = -O2 -fopenmp
+# FLAGS = -O2
+
+AR = ar
+RANLIB = ranlib
+
 
 liberd.a : $(liberd.a)
 	$(AR) ruv $@  $(^)
 	$(RANLIB) $@
 
-FLAGS = $(FBASEFLAGS) $(F90FLAGS) # -fbounds-check
 %.o : %.f
 	$(FC) $(FLAGS) -c $(<F)
 

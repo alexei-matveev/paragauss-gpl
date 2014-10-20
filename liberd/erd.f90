@@ -10,8 +10,8 @@ module erd
   integer, save                 :: INTSIZE = -1
   integer, save                 :: DBLSIZE = -1
 
-  integer,          allocatable :: INT_SCRATCH(:) ! (INTSIZE)
-  double precision, allocatable :: DBL_SCRATCH(:) ! (DBLSIZE)
+  integer,          allocatable :: iwork(:) ! (INTSIZE)
+  double precision, allocatable :: dwork(:) ! (DBLSIZE)
 
   contains
 
@@ -139,7 +139,7 @@ module erd
 
 !       print *,'erd: ERD__MEMORY_ERI_BATCH returned imax=',imax,'zmax=',zmax
 
-        ! realocate INT_SCRATCH, and DBL_SCRATCH if necessary:
+        ! realocate iwork, and dwork if necessary:
         if( imax > INTSIZE .or. zmax > DBLSIZE )then
           call reallocate_scratch(imax, zmax)
         endif
@@ -160,10 +160,10 @@ module erd
                                  , ccbeg_pack, ccend_pack                 &
                                  , spherical                              &
                                  , .true.                                 &
-                                 , INT_SCRATCH                            &
+                                 , iwork                                  &
                                  , nints                                  &
                                  , nfirst                                 &
-                                 , DBL_SCRATCH                            &
+                                 , dwork                                  &
                                  )
 !       print *,'erd: ERD__GENER_ERI_BATCH returned nints=',nints,'at nfirst=',nfirst
 
@@ -177,10 +177,10 @@ module erd
           stop 'Error: integrals dont fit into output array!'
         endif
 
-        ! copy result from DBL_SCRATCH(nfirst:nfirst+nints-1):
+        ! copy result from dwork(nfirst:nfirst+nints-1):
         if( nints > 0 )then
-!         call display( 2*lvals+1, ncfps, DBL_SCRATCH(nfirst) )
-          call copy(    2*lvals+1, ncfps, DBL_SCRATCH(nfirst), batch )
+!         call display( 2*lvals+1, ncfps, dwork(nfirst) )
+          call copy(    2*lvals+1, ncfps, dwork(nfirst), batch )
         endif
 
       contains
@@ -592,7 +592,7 @@ module erd
 
       subroutine reallocate_scratch(imax, zmax)
         !
-        ! Reallocate INT_SCRATCH and DBL_SCRATCH if necessary.
+        ! Reallocate iwork and dwork if necessary.
         !
         implicit none
         integer, intent(in) :: imax, zmax
@@ -602,30 +602,30 @@ module erd
 
         if( imax > INTSIZE )then
 
-          print *,'erd: reallocate_scratch resizing INT_SCRATCH from',INTSIZE,'to', imax
+          print *,'erd: reallocate_scratch resizing iwork from',INTSIZE,'to', imax
 
-          if( allocated(INT_SCRATCH) )then
-            deallocate(INT_SCRATCH, stat=memstat)
-            if( memstat /= 0 ) stop "dealloc INT_SCRATCH failed"
+          if( allocated(iwork) )then
+            deallocate(iwork, stat=memstat)
+            if( memstat /= 0 ) stop "dealloc iwork failed"
           endif
 
-          allocate(INT_SCRATCH(imax), stat=memstat)
-          if( memstat /= 0 ) stop "alloc INT_SCRATCH failed"
+          allocate(iwork(imax), stat=memstat)
+          if( memstat /= 0 ) stop "alloc iwork failed"
 
           INTSIZE = imax
         endif
 
         if( zmax > DBLSIZE )then
 
-          print *,'erd: reallocate_scratch resizing DBL_SCRATCH from',DBLSIZE,'to', zmax
+          print *,'erd: reallocate_scratch resizing dwork from',DBLSIZE,'to', zmax
 
-          if( allocated(DBL_SCRATCH) )then
-            deallocate(DBL_SCRATCH, stat=memstat)
-            if( memstat /= 0 ) stop "dealloc DBL_SCRATCH failed"
+          if( allocated(dwork) )then
+            deallocate(dwork, stat=memstat)
+            if( memstat /= 0 ) stop "dealloc dwork failed"
           endif
 
-          allocate(DBL_SCRATCH(zmax), stat=memstat)
-          if( memstat /= 0 ) stop "alloc DBL_SCRATCH failed"
+          allocate(dwork(zmax), stat=memstat)
+          if( memstat /= 0 ) stop "alloc dwork failed"
 
           DBLSIZE = zmax
         endif

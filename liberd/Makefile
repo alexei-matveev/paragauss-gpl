@@ -2,7 +2,6 @@
 all: liberd.a
 
 liberd.a = \
-        erd.o \
         erd__1111_csgto.o \
         erd__1111_def_blocks.o \
         erd__2d_atom_coefficients.o \
@@ -75,6 +74,10 @@ liberd.a = \
 #       erd__derv_int2d_to_e0cd.o \
 #       erd__derv_pcgto_block.o \
 #       erd__print_batch.o \
+
+#        this is appended to libttfs_shgi.a in
+#        the main Makefile if WITH_LIBERD:
+#        erd.o \
 
 # defines $(FC) and other:
 include ../machine.inc

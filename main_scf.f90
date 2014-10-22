@@ -134,6 +134,8 @@ subroutine main_scf()
        start_after_cycle
 #ifdef WITH_SCFCONTROL
   use mixing_module, only: mixing_read_scfcontrol
+  use convergence_module, only: convergence_write, convergence_read_scfcontrol
+  use options_module, only : options_write_input, options_read_scfcontrol
 #endif
   use population_module, only: population_mulliken, population_spor_mulliken
   use comm, only: comm_parallel, comm_same, comm_bcast, comm_rank

@@ -1565,7 +1565,7 @@ subroutine opt_read_input(task, convert_internal)
      calc_epeff_hessian=.false.
      estimate_hessian=.false.
      ts_search=.false.
-     frequency_calculation=.false.
+!!!     frequency_calculation=.false.
      gx_test=.false.
 !!!     print_internals=.false.
   end if

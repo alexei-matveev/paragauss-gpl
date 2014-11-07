@@ -55,7 +55,7 @@ module frequency_module
   !------------ Interface statements ---------------------------------
 
   !------------ public functions and subroutines ---------------------
-  public :: frequency_main
+  public :: frequency_main, frequency_cart
   public :: freq ! (k,m,w,x), m -- diagonal
   public :: freq_print !(iou,m,w,x), w--frequency, x--mode
   public :: dipole_der !(n_mode,dipder)
@@ -360,9 +360,10 @@ contains
     ELSEWHERE
       freq_prep_vec = -sqrt(-eig_real)
     END WHERE
-
+print*,freq_prep_vec
     !*** Conversion to SI-units [Hz] *****************************************************
     freq_prep_vec = freq_prep_vec*freq_coeff*HUNDRED*c_speedoflight
+print*,freq_prep_vec
 
     !*** Calculate center of mass ********************************************************
     masscenter = centerofmass(atom(:)%x(1) &
@@ -416,6 +417,130 @@ contains
   end subroutine frequency_main
   !*************************************************************
 
+  subroutine frequency_cart()
+    use filename_module,       only: inpfile
+    use atom_data_module,      only: nuc_mass
+    use opt_data_module,       only: n_atoms,charge,OPT_STDOUT,n_dummy,dummy_list
+    use constants,             only: ZERO,          &
+                                     HUNDRED,       &
+                                     u_Atom_Mass,   &    !   atomic mass constant
+                                     a_Bohr,        &    !   bohr-radius -> meter
+                                     E_h2Jmol,      &    ! conversion Eh -> j/mol
+                                     c_speedoflight      !  vacuum speed of light
+    use matrix_eigenval,       only: eigs         ! Eigensolver (for moments of inertia)
+    use geo_operations_module, only: minerttensor, &   ! Calculation of tensor of moments
+                                     centerofmass        ! of inertia and center of mass
+    use gradient_module,       only: energy                    ! total electronic energy
+    use thermodyn_prop_module, only: thermodynamic_properties
+    use opt_data_module,       only: atom,                  &
+                                     io_flepo,              &
+                                     temperature,           &
+                                     Delta_temperature,     &
+                                     N_temperature_steps,   &
+                                     pressure,              &
+                                     symmetry_index
+    implicit none
+    ! *** end of interface ***
+
+    real(r8_kind)           :: hess_cart(3*n_atoms,3*n_atoms)
+    real(r8_kind), parameter:: mp = 1836.15267261_r8_kind ! Mp/Me
+    real(r8_kind)           :: mass(3*n_atoms)
+    real(r8_kind)           :: fre(3*n_atoms)
+    real(r8_kind)           :: mode(3*n_atoms,3*n_atoms)
+    integer(i4_kind)        :: ihess,i,j
+    real(r8_kind)           :: dipder(3,3*n_atoms)
+    real(r8_kind)           :: intensities(3*n_atoms)
+    logical                 :: error
+    real(r8_kind)           :: freq_prep_vec(3*n_atoms-6)
+    !*** For thermodynamic module ********************************************************
+    real(r8_kind)           :: masscenter(3) = ZERO, & ! center of mass
+                               Mom_Inert(3) = ZERO     ! mom of inertia vector
+
+    real(r8_kind)           :: Rot_Tensor(3,3)    = ZERO, & ! mom of inertia tensor
+                               EV_Rot_Tensor(3,3) = ZERO    ! rotational axis
+                                                            ! (not used)
+
+    ihess=get_iounit()
+    open(ihess, file=trim(inpfile('hesse_cartesian.dat')), err=100)
+
+    read(ihess,*) hess_cart
+
+    call returnclose_iounit(ihess)
+
+    ! build (diagonal) mass matrix:
+    j=0
+    do i=1,n_atoms+n_dummy
+       if(.not.dummy_list(i)) then
+          j=j+1
+          mass(3*j-2:3*j) = nuc_mass( NINT(charge(i)) ) * (mp/nuc_mass(1))
+       end if
+    enddo
+
+    ! compute dipole derivatives wrt cartesian coordinates
+    call dipole_der(3*n_atoms,dipder,error)
+    if (error) then ! dipole switch is off, so dipole.dat is not present for dipder
+       print*,'frequency_module: frequency_cart: dipole is not present'
+       ! compute frequencies:
+       call freq(hess_cart,mass,fre,mode)
+
+       ! for printing the frequencies in the flepo file and stdout
+       call freq_print(OPT_STDOUT,mass,fre,mode)
+    else
+       print*,'frequency_module: frequency_cart: intensity'
+       call freq(hess_cart,mass,fre,mode,dipder,intensities)
+       call freq_print(OPT_STDOUT,mass,fre,mode,intensities)
+    endif
+
+    freq_prep_vec=fre(7:3*n_atoms)
+
+    !*** Conversion to SI-units [Hz] *****************************************************
+    freq_prep_vec = freq_prep_vec*freq_coeff*HUNDRED*c_speedoflight*42.77167434621178677910_r8_kind !???
+
+    !*** Calculate center of mass ********************************************************
+    masscenter = centerofmass(atom(:)%x(1) &
+                             ,atom(:)%x(2) &
+                             ,atom(:)%x(3) &
+                             ,atom(:)%mass)
+
+    !*** Calculate tensor of moments of inertia ******************************************
+    Rot_Tensor =  minerttensor(atom(:)%x(1) &
+                              ,atom(:)%x(2) &
+                              ,atom(:)%x(3) &
+                              ,atom(:)%mass &
+                              ,masscenter)
+
+    !*** Calculate moments of inertia ****************************************************
+    call eigs(Rot_Tensor,Mom_Inert,EV_Rot_Tensor)
+
+    !*** Conversion to SI-units [kg*m^2] *************************************************
+    Mom_Inert = Mom_Inert * u_Atom_Mass * a_Bohr**2
+
+    !FIXME: include g
+
+    !*** calculate and print thermodynamic corrections ***********************************
+    !*** adapted for temperature intervals ***********************************************
+    if((Delta_temperature==0.0_r8_kind .and. N_temperature_steps/=1).or. &
+       (Delta_temperature/=0.0_r8_kind .and. N_temperature_steps==1).or. &
+       (Delta_temperature < 0.0_r8_kind .or. N_temperature_steps < 1 )) then
+       write(      06,*) "ERROR: no proper addressation of thermodynamic properties module in temperature-interval modus"
+       write(      06,*)
+       write(io_flepo,*) "ERROR: no proper addressation of thermodynamic properties module in temperature-interval modus"
+       write(io_flepo,*)
+    else
+       call thermodynamic_properties(      06      ,     freq_prep_vec     ,     Mom_inert &
+                                    ,sum(atom(:)%mass)*u_Atom_Mass    ,    energy*E_h2Jmol &
+                                    ,symmetry_index,temperature,pressure,Delta_temperature &
+                                    ,N_temperature_steps)
+       call thermodynamic_properties(io_flepo      ,     freq_prep_vec     ,     Mom_inert &
+                                    ,sum(atom(:)%mass)*u_Atom_Mass    ,    energy*E_h2Jmol &
+                                    ,symmetry_index,temperature,pressure,Delta_temperature &
+                                    ,N_temperature_steps)
+    endif
+
+    return
+100 call error_handler('frequency_module: frequency_cart: error - file "hesse_cartesian.dat"')
+  end subroutine frequency_cart
+  !*************************************************************
   subroutine freq(k,m,w,x,dipder,intensities)
     ! THIS IS ONLY A COPY FROM gradient_data_module
     ! IF EDIT DO IT AT TWO PLACES!

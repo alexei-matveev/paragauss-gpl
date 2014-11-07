@@ -99,7 +99,7 @@ contains
     use valence_coord_module, only: valence_setup
     use geo_operations_module, only: xmol_output
     use ts_module, only: ts_main
-    use frequency_module, only: frequency_main
+    use frequency_module, only: frequency_main, frequency_cart
     use slspar_module!, n_types_central_atoms_3b=>n_types_central_atoms_3body
     use iounitadmin_module
     use filename_module, only: inpfile
@@ -530,7 +530,7 @@ contains
   ! from file and update it ---------------------------------
 
   DPRINT 'main_opt: either initialize hesse or read the (updated) hesse matrix'
-  if(.not.calc_hessian.and.frequency_calculation)then
+  if(.not.calc_hessian.and.frequency_calculation.and..not.cart_coordinates)then
      DPRINT 'hesse_main for frequency_calculation'
      call hesse_main(geo_loop,hesse_complete)       !(1)
   endif
@@ -721,8 +721,14 @@ contains
     ! branch 2: analytical hessian/frequency calculation:
     !
     DPRINT 'main_opt: calculate the frequencies with available hessian'
-    call frequency_main(hesse) ! (2)
-    DPRINT 'main_opt: frequency_main passed, tell them we are finished'
+    if(cart_coordinates) then
+print*,'@@@@@@@@@@@@@@@@@@@@@@@'
+       call frequency_cart()
+       DPRINT 'main_opt: frequency_cart passed, tell them we are finished'
+    else
+       call frequency_main(hesse) ! (2)
+       DPRINT 'main_opt: frequency_main passed, tell them we are finished'
+    end if
 
     ! tell paragauss that there is no more action required,
     ! the task "freq_analyt" is finished:

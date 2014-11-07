@@ -360,10 +360,9 @@ contains
     ELSEWHERE
       freq_prep_vec = -sqrt(-eig_real)
     END WHERE
-print*,freq_prep_vec
+
     !*** Conversion to SI-units [Hz] *****************************************************
     freq_prep_vec = freq_prep_vec*freq_coeff*HUNDRED*c_speedoflight
-print*,freq_prep_vec
 
     !*** Calculate center of mass ********************************************************
     masscenter = centerofmass(atom(:)%x(1) &

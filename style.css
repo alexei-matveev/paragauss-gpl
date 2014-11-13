@@ -1,0 +1,13 @@
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    font-family: 'Lato';
+    font-size: 12pt;
+    background-color: #f2f2f2;
+    display: table-cell;
+    horizontal-align: middle;
+    max-width:8in;
+}

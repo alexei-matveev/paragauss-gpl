@@ -11,5 +11,9 @@ body {
     background-color: #f2f2f2;
     display: table-cell;
     horizontal-align: middle;
-    max-width:8in;
+    max-width: 8in;
+}
+
+a:link {
+    text-decoration: none;
 }

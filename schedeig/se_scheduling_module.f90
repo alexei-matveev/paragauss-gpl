@@ -559,7 +559,7 @@ contains
     ! stack of O(N) depth.
     !
     ! FIXME: "np" is both, the size of the "virtual" machine for which
-    ! the schedule is optimized AND the  size of the MPI wolrd used to
+    ! the schedule is optimized AND the  size of the MPI world used to
     ! share the work.
     !
     implicit none

@@ -1416,7 +1416,7 @@ FPP_TIMER_STOP(t_calc_3center)
 #endif
 
     ! This array is zero-sized when there are no point charges:
-    pc => pointcharge_array
+    if(pointcharge_N /= 0) pc => pointcharge_array
     ASSERT(associated(pc))
 
     ! jump to gradients:

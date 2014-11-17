@@ -311,7 +311,7 @@ contains
     !
 #ifdef WITH_EPE
     ! bcast ewald point charges
-    call ewpc_bcast()
+    !call ewpc_bcast()
 #endif
 
     ! bcast xc_control input

@@ -450,6 +450,7 @@ contains
          namelist_tasks_used, operations_task
     use iounitadmin_module, only: write_to_output_units,write_to_trace_unit
     use strings, only: tolower, takeword
+    use comm, only: comm_rank
     !------------ Declaration of local variables ---------------------
     integer(kind=i4_kind)  :: unit,status
     external error_handler
@@ -508,7 +509,7 @@ contains
         status = 0
         ! take the next token from the list of keywords:
         word = takeword(relativistic_keywords,pos)
-        print *,'options_read: word=>'//word//'<'
+        if(comm_rank() == 0) print *,'options_read: word=>'//word//'<'
 
         select case( word )
         case ('atomic1')
@@ -542,7 +543,7 @@ contains
       ABORT('no such case, see tty')
     endif
     if( adkh_zrel /= 0 )then
-        WARN('ADKH enabled!')
+        if(comm_rank() == 0) WARN('ADKH enabled!')
     endif
     if( adkh_fpfw /= 0 )then
         WARN('ADKH on interatomic ints only till fpFW!')

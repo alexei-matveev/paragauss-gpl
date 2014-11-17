@@ -304,13 +304,15 @@ subroutine gxepe_allocate
    use unique_atom_module
    use ewaldpc_module
    use iounitadmin_module
+   use comm, only: comm_rank
 
    integer(kind=i4_kind)::i_ua,n_equal_atoms
-   write(output_unit,*) &
-        'unique_atom_unique_read: N_unique_atoms,n_timps', &
-        N_unique_atoms,n_timps
+   
+   if(output_unit > 0) then
+      write(output_unit,*)  'unique_atom_unique_read: N_unique_atoms,n_timps', N_unique_atoms,n_timps
+   endif
 
-       if(associated(gxepe_array)) then
+   if(associated(gxepe_array)) then
       do i_ua=1,N_unique_atoms
          deallocate(gxepe_array(i_ua)%position,stat=ewa_allocstat(23))
          ASSERT(ewa_allocstat(23).eq.0)

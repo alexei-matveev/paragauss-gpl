@@ -40,6 +40,7 @@ subroutine symm_ewpc_gen ()
   use unique_atom_module
   use ewaldpc_module, ex_pcew_dumm=>ex_pcew
   use type_module, only: IK => i4_kind, RK => r8_kind
+  use comm, only: comm_rank
   implicit none
   ! *** end of interface ***
 
@@ -73,7 +74,7 @@ subroutine symm_ewpc_gen ()
   real(RK) :: r_screep, rc_screep(3), distance_to_screep
 #endif
 
-  print*, 'symm_ewpc_gen ______________________________________________'
+  if(comm_rank() == 0) print*, 'symm_ewpc_gen ______________________________________________'
 
   kl_pcr=0
 
@@ -97,7 +98,7 @@ subroutine symm_ewpc_gen ()
 print*, 'minimum distance_to_screep' ,distance_to_screep
 ASSERT(distance_to_screep.gt.2.0_rk)
 #else
-read(ewpc_unit,*)  EWPC_N
+   read(ewpc_unit,*)  EWPC_N
 #endif
 
    nullify(pc) !called after symm_epe and thus ponter was  on  pcc_array pcs_array
@@ -111,13 +112,15 @@ read(ewpc_unit,*)  EWPC_N
 
    !** loop over all centers in file and sort out PC which positions coincide
    !   with the positions of regular atoms of QM cluster
-   write(output_unit,*) &
+   if(output_unit > 0) then
+      write(output_unit,*) &
         ' Number of centers generated with program ewald,  EWPC_N ' ,EWPC_N
-   if(ex_gxepe) then
-    write(output_unit,*) 'as file epe.r with regular atomic positions is located'
-    write(output_unit,*) ' EWPC centers coinciding with atoms will be sorted out'
-!!$      write(output_unit,*)  gxepe_array(1)%position(:,1)
-   end if
+      if(ex_gxepe) then
+         write(output_unit,*) 'as file epe.r with regular atomic positions is located'
+         write(output_unit,*) ' EWPC centers coinciding with atoms will be sorted out'
+!!$         write(output_unit,*)  gxepe_array(1)%position(:,1)
+      end if
+   endif
 
    epe_r=0
    ii=1
@@ -174,10 +177,12 @@ read(ewpc_unit,*)  EWPC_N
 !** now pcew_temp contains only PC which do not related to centers of QM cluster
 
         EWPC_N=it_ewpc
-        write(output_unit,*) 'EWPC_N after sorting out PC in atomic positions' ,EWPC_N
-        do j=1,n_epe_r
-           if(epe_r(j)==0) print*,'WARNING : ',j,' EPE.R center has no EWALD center coincided !!!!!!!!!!!!'
-        end do
+        if(output_unit >  0) then
+           write(output_unit,*) 'EWPC_N after sorting out PC in atomic positions' ,EWPC_N
+           do j=1,n_epe_r
+              if(epe_r(j)==0) print*,'WARNING : ',j,' EPE.R center has no EWALD center coincided !!!!!!!!!!!!'
+           end do
+        endif
 
        gx_epe_ex: if(ex_gxepe) then
          do i_ua=1,N_unique_atoms
@@ -200,10 +205,10 @@ read(ewpc_unit,*)  EWPC_N
         gv_nuc_ewpc=gv_nuc_ewpc+ pcew_temp(4,nb)*&
                        (unique_atoms(na)%position(:,eq_a)-pcew_temp(1:3,nb))/dist**3
           enddo
-          print*,'gv_nuc_ewpc: ',gv_nuc_ewpc,sum(gv_nuc_ewpc**2)
+          if(comm_rank() == 0) print*,'gv_nuc_ewpc: ',gv_nuc_ewpc,sum(gv_nuc_ewpc**2)
          enddo
         enddo
-    print*,'e_nuc_ewpc with initial pcew_temp',e_nuc_ewpc
+        if(comm_rank() == 0) print*,'e_nuc_ewpc with initial pcew_temp',e_nuc_ewpc
 #endif
 
 !**   reorder atoms in  pcr_temp and pcew_temp
@@ -223,10 +228,14 @@ call read_pcr_temp(pcr_n)
               n_gxat=sum(unique_atoms(1:N_unique_atoms)%N_equal_atoms)
            end if
 
-           if(print_epe) print*,'n_gxat pcr_n n_gxat_pcr ',n_gxat, pcr_n, n_gxat_pcr
+           if(comm_rank() == 0) then
+              if(print_epe) print*,'n_gxat pcr_n n_gxat_pcr ',n_gxat, pcr_n, n_gxat_pcr
+           endif
            kl_pcr=n_gxat_pcr
-           write(output_unit,*) 'initial values  of kl_pcr and kl_ew',kl_pcr,kl_ew
-           print*, 'initial values  of kl_pcr and kl_ew',kl_pcr,kl_ew
+           if(output_unit >  0) then
+              write(output_unit,*) 'initial values  of kl_pcr and kl_ew',kl_pcr,kl_ew
+              print*, 'initial values  of kl_pcr and kl_ew',kl_pcr,kl_ew
+           endif
            do i=1,EWPC_N
               kl1=kl_pcr+1
               do k=kl1,pcr_n
@@ -263,20 +272,22 @@ call read_pcr_temp(pcr_n)
                  endif ! dot_product
               enddo ! kl1,pcr_n
            enddo ! i=1,EWPC_N
-           print*,'max_ewpc_pcr_dev for equivalent centers', max_ewpc_pcr_dev
+           if(comm_rank() == 0) print*,'max_ewpc_pcr_dev for equivalent centers', max_ewpc_pcr_dev
 
-           if(print_epe) &
-           print*, 'found coinciding in charge centers in pcr and ewpc (kl_pcr,kl_ew)', kl_pcr,kl_ew
+           if(output_unit >  0) then
+              if(print_epe) &
+                 print*, 'found coinciding in charge centers in pcr and ewpc (kl_pcr,kl_ew)', kl_pcr,kl_ew
 
-           write(output_unit,*) 'number of found coinciding in charge centers in pcr and ewpc',kl_pcr,kl_ew
-           write(output_unit,*) 'indexes  for  last coinciding elements ' ,kl_ew,kl_pcr
+              write(output_unit,*) 'number of found coinciding in charge centers in pcr and ewpc',kl_pcr,kl_ew
+              write(output_unit,*) 'indexes  for  last coinciding elements ' ,kl_ew,kl_pcr
+           endif
 !!** done equivalent atoms go first
 
            kl_ew_eq=kl_ew ! centers starting from this index will not be neglected
                           ! but treated with modified charge now this centers are sorted
                           ! and the charges are modified
 
-           print*, 'locate centers which coinside but have different charges'
+           if(comm_rank() == 0) print*, 'locate centers which coinside but have different charges'
            do i=kl_ew+1,EWPC_N
               kl1=kl_pcr+1
               do k=kl1,pcr_n
@@ -307,15 +318,17 @@ call read_pcr_temp(pcr_n)
                  endif! dot_product
               enddo! kl1,pcr_n
            enddo! i=1,EWPC_N
-           if(print_epe) then
-            print*,'max_ewpc_pcr_dev for other coinciding centers', max_ewpc_pcr_dev
-            print*, 'coinciding centers in ewpc and pcr arrays  kl_ew kl_pcr',kl_ew,kl_pcr
-            print*, 'charge of collected PCs, pcew_temp vs pcr_temp', &
+           if(comm_rank() == 0) then
+              if(print_epe) then
+                 print*,'max_ewpc_pcr_dev for other coinciding centers', max_ewpc_pcr_dev
+                 print*, 'coinciding centers in ewpc and pcr arrays  kl_ew kl_pcr',kl_ew,kl_pcr
+                 print*, 'charge of collected PCs, pcew_temp vs pcr_temp', &
                      sum(pcew_temp(4,1:kl_ew)),sum(pcr_temp(4,1+n_gxat_pcr:kl_pcr))
-            DPRINT  'if not changed from previous value then no such centers'
+                 DPRINT  'if not changed from previous value then no such centers'
+              endif
            endif
 
-           write(output_unit,*) &
+           if(output_unit >  0) write(output_unit,*) &
                 'number of coinciding centers in ewpc and pcr arrays & charges ',kl_ew &
                 ,sum(pcew_temp(4,1:kl_ew)),sum(pcr_temp(4,1+n_gxat_pcr:kl_pcr))
 !!** done second go centers with modified charges
@@ -336,11 +349,15 @@ call read_pcr_temp(pcr_n)
                      pcew_temp(4,nb)*(unique_atoms(na)%Z-unique_atoms(na)%ZC)/dist
           enddo
          enddo
-          DPRINT pcew_temp(1:3,nb),pcew_temp(4,nb),nb
+          if(comm_rank() == 0) then
+             DPRINT pcew_temp(1:3,nb),pcew_temp(4,nb),nb
+          endif
         enddo
-        print*,'min_pcrdist', min_pcrdist
-        if(print_epe) &
-        print*,'e_nuc_pcr to be compared with e_nuc_epe',e_nuc_pcr
+        if(comm_rank() == 0) then
+           print*,'min_pcrdist', min_pcrdist
+           if(print_epe) &
+           print*,'e_nuc_pcr to be compared with e_nuc_epe',e_nuc_pcr
+        endif
 
         ! **  check potential of PC
         e_nuc_ewpc = 0.0_rk
@@ -371,19 +388,21 @@ call read_pcr_temp(pcr_n)
         print*,'min_ewpcdist',min_ewpcdist
         ASSERT(min_ewpcdist.gt.1.0_rk)
 #endif
-        DPRINT 'now first kl centers in pcew_temp and pcr_temp coincide'
+      if(output_unit >  0) then
+         DPRINT 'now first kl centers in pcew_temp and pcr_temp coincide'
 
-        write(output_unit,*) 'e_nuc_ewpc with use of pcew_temp and Z', e_nuc_ewpc, &
+         write(output_unit,*) 'e_nuc_ewpc with use of pcew_temp and Z', e_nuc_ewpc, &
                                                     sum(pcew_temp(4,1+kl_ew:EWPC_N))
-        if(print_epe) print*,'e_nuc_ewpc with use of pcew_temp and Z', e_nuc_ewpc, &
+         if(print_epe) print*,'e_nuc_ewpc with use of pcew_temp and Z', e_nuc_ewpc, &
                                                     sum(pcew_temp(4,1+kl_ew:EWPC_N))
-        !** done
+         !** done
 
-      if(pcr_n.ne.0) then
-         if(print_epe) write(output_unit,*) '** take additional centers in pcew_temp',1+kl_ew
-      else
-         if(print_epe) write(output_unit,*) '** take PC from pcew_temp starting from ',1+kl_ew
-      end if
+         if(pcr_n.ne.0) then
+            if(print_epe) write(output_unit,*) '** take additional centers in pcew_temp',1+kl_ew
+         else
+            if(print_epe) write(output_unit,*) '** take PC from pcew_temp starting from ',1+kl_ew
+         end if
+      endif
 
 !!** now reorder all atoms in ewpc_temp  starting from first non equivalent one
    i=1+kl_ew_eq
@@ -482,24 +501,28 @@ call read_pcr_temp(pcr_n)
           enddo !  eq_a=1,unique_atoms(na)%N_equal_atoms
        enddo ! na=1,N_unique_atoms
     enddo ! 1,EWPC_N
-    write(output_unit,*) 'e_nuc_ewpc with use of pcew_temp & Z', e_nuc_ewpc, &
+    if(output_unit >  0) then
+       write(output_unit,*) 'e_nuc_ewpc with use of pcew_temp & Z', e_nuc_ewpc, &
                                               sum(pcew_temp(4,1+kl_ew:EWPC_N))
-    if(print_epe) then
-    print*,'e_nuc_ewpc and z', e_nuc_ewpc,sum(pcew_temp(4,1+kl_ew:EWPC_N))
-    print*,'epe coinciding centers are not taken into account'
+       if(print_epe) then
+          print*,'e_nuc_ewpc and z', e_nuc_ewpc,sum(pcew_temp(4,1+kl_ew:EWPC_N))
+          print*,'epe coinciding centers are not taken into account'
+       endif
     endif
     !** done
 
 !!** now reorder still left  atoms in  pcr_temp
     it_pcr=0   !types of pcr
     epe_ex:if(pcr_n.gt.kl_pcr) then
-       if(print_epe) print*, pcr_n-kl_pcr, &
+       if(output_unit >  0) then
+          if(print_epe) print*, pcr_n-kl_pcr, &
                              ' not coinciding with ewpc environment epe centers  are found of total  charge', &
                              sum(pcr_temp(4,1+kl_pcr:pcr_n))
-       write(output_unit,*) &
-            ' not coinciding with ewpc environment epe centers  exist in  No=', &
-            pcr_n-kl_pcr
-       write(output_unit,*) 'charge of these PC ', sum(pcr_temp(4,1+kl_pcr:pcr_n))
+          write(output_unit,*) &
+             ' not coinciding with ewpc environment epe centers  exist in  No=', &
+             pcr_n-kl_pcr
+          write(output_unit,*) 'charge of these PC ', sum(pcr_temp(4,1+kl_pcr:pcr_n))
+       endif
        !** take additional centers in pcr_temp
 
        i=1+kl_pcr
@@ -581,7 +604,9 @@ call read_pcr_temp(pcr_n)
     enddo pcr_wh! while
     !** done
     else epe_ex
-       DPRINT 'no not coinciding with ewpc environment epe centers  exist'
+       if(comm_rank() == 0) then
+          DPRINT 'no not coinciding with ewpc environment epe centers  exist'
+       endif
     endif epe_ex
 
         deallocate(pc,stat=ewa_allocstat(16))
@@ -606,8 +631,10 @@ print*,'read_pc_array done'
 
 !!$        write(output_unit,  *)  '** store not coinciding pcew centers'
        n_ewpc_arr=0
-        i=1+kl_ew_eq
-       if(print_epe) print*,' ewpc_array (ewald.pcr part) :'
+       i=1+kl_ew_eq
+       if(comm_rank() == 0) then
+          if(print_epe) print*,' ewpc_array (ewald.pcr part) :'
+       endif
 
 !      first go ewald_pcr unique centers
 !      second pcs and pcc centers
@@ -657,18 +684,22 @@ print*,'read_pc_array done'
         i=i+n_equal
         enddo ewpcarr_wh
 
-        write(output_unit,*) &
+        if(output_unit >  0) write(output_unit,*) &
              'number of groups of symmetry equavalent ewpc PC',it_ewpc
        ewpc_n=it_ewpc
-       DPRINT 'it_ewpc',it_ewpc
+       if(comm_rank() == 0) then
+          DPRINT 'it_ewpc',it_ewpc
+       endif
 
         !** done
 
      pcr_n_ex:   if(pcr_n.ne.0) then
-        write(output_unit,*) &
-             '** store not coinciding pcr centers'
-        if(print_epe) print*,'** store not coinciding pcr centers_____________', &
+        if(output_unit >  0) then
+           write(output_unit,*) &
+                '** store not coinciding pcr centers'
+           if(print_epe) print*,'** store not coinciding pcr centers_____________', &
                                size(pcc_array),size(pcs_array)
+        endif
         i=1+kl_pcr
        ewpcarr_pcr: do while(i.le.pcr_n) ! total number of atoms in epe.pcr
 ASSERT(pcr_no(i)+ewpc_n.le.size(ewpc_array))
@@ -710,9 +741,11 @@ ASSERT(pcr_no(i)+ewpc_n.le.size(ewpc_array))
            i=i+n_equal
 
         enddo  ewpcarr_pcr
-         write(output_unit,*) 'number of groups of symmetry equavalent pcr PC',it_pcr
+         if(output_unit >  0) write(output_unit,*) 'number of groups of symmetry equavalent pcr PC',it_pcr
          ewpc_n=ewpc_n+it_pcr
-         DPRINT 'it_ewpc + it_pcr', ewpc_n
+         if(comm_rank() == 0) then 
+            DPRINT 'it_ewpc + it_pcr', ewpc_n
+         endif
         !** done
      endif pcr_n_ex
 
@@ -723,7 +756,9 @@ ASSERT(pcr_no(i)+ewpc_n.le.size(ewpc_array))
 
     store_pcs: if(pcs_n.ne.0) then !** store pcs centers and calculate
                                    !   cluster_nuc_epe_en for epe shells
-       if(print_epe) print*,' ewpc_array (epe.pcs part) :'
+       if(comm_rank() == 0) then
+          if(print_epe) print*,' ewpc_array (epe.pcs part) :'
+       endif
        min_pcsdist=100.0
        do na=1,size(pcs_array)
           pc=>ewpc_array(na+ewpc_n)
@@ -770,12 +805,15 @@ ASSERT(pcr_no(i)+ewpc_n.le.size(ewpc_array))
 #endif
           enddo
 !           print '(4f15.8,i3,4i2,i5)',pc%position(:,1),pc%z,pc%n_equal_charges,0,0,1,0,na+ewpc_n
-
-        DPRINT na, cluster_nuc_epe_en,pc%N_equal_charges,pc%z,sum(pc%position(:,pc%N_equal_charges))
+          if(comm_rank() == 0) then
+             DPRINT na, cluster_nuc_epe_en,pc%N_equal_charges,pc%z,sum(pc%position(:,pc%N_equal_charges))
+          endif
 #endif
        enddo ! N_unique_pcr
-       DPRINT 'min_pcsdist', min_pcsdist
-       DPRINT 'cluster_nuc_epe_en pcs', cluster_nuc_epe_en
+       if(comm_rank() == 0) then
+          DPRINT 'min_pcsdist', min_pcsdist
+          DPRINT 'cluster_nuc_epe_en pcs', cluster_nuc_epe_en
+       endif
        ewpc_n=ewpc_n+size(pcs_array)
     endif store_pcs
 #if 0
@@ -804,7 +842,9 @@ return
 
     store_pcc: if(pcc_n.ne.0) then !** store pcc centers and calculate
                                    !   cluster_nuc_epe_en for epe cores
-       if(print_epe) print*,' ewpc_array (epe.pcc part) :'
+       if(comm_rank() == 0) then
+          if(print_epe) print*,' ewpc_array (epe.pcc part) :'
+       endif
        nullify(pc)
        min_pccdist=100.0
 
@@ -854,7 +894,9 @@ ASSERT(na+ewpc_n.le.size(ewpc_array))
 !       print '(4f15.8,i3,4i2,i5)',pc%position(:,1),pc%z,pc%n_equal_charges,0,0,1,0,na+ewpc_n
 #endif
        enddo ! N_unique_pcr
-       DPRINT 'min_pccdist',min_pccdist
+       if(comm_rank() == 0) then
+          DPRINT 'min_pccdist',min_pccdist
+       endif
        ewpc_n=ewpc_n+size(pcc_array)
     endif store_pcc
 
@@ -866,21 +908,24 @@ ASSERT(na+ewpc_n.le.size(ewpc_array))
     ewpc_array_charge = ewpc_array_charge+ewpc_array(na)%z*ewpc_array(na)%n_equal_charges
     enddo
 
-   if(print_epe) print*, 'ewpc_array_charge ', ewpc_array_charge
+    if(output_unit >  0) then
+       if(print_epe) print*, 'ewpc_array_charge ', ewpc_array_charge
 
-        write(output_unit,*) 'final  number of ewald and epe centers '
-        write(output_unit,*) 'to model external field actin on claster '
-        write(output_unit,*) ewpc_n
-        write(output_unit,*)
-        write(output_unit,*) 'energy of interaction of the claster nuclei'
-        write(output_unit,*) 'with epe only centers, cluster_nuc_epe_en'
-        write(output_unit,*)  cluster_nuc_epe_en
+       write(output_unit,*) 'final  number of ewald and epe centers '
+       write(output_unit,*) 'to model external field actin on claster '
+       write(output_unit,*) ewpc_n
+       write(output_unit,*)
+       write(output_unit,*) 'energy of interaction of the claster nuclei'
+       write(output_unit,*) 'with epe only centers, cluster_nuc_epe_en'
+       write(output_unit,*)  cluster_nuc_epe_en
 
-        if(print_epe) &
-        print*, 'cluster_nuc_epe_en calculated with ewpc_array coinciding and the same charges ', cluster_nuc_epe_en
+       if(comm_rank() == 0) then
+          if(print_epe) &
+             print*, 'cluster_nuc_epe_en calculated with ewpc_array coinciding and the same charges ', cluster_nuc_epe_en
+          if(print_epe) print*, 'PCR_N----', pcr_n
+       endif
+     endif
 
-
-       if(print_epe) print*, 'PCR_N----', pcr_n
        if(pcr_n.ne.0) then
 !           deallocate(pcr_temp,pcr_no,psb_ind, stat=ewa_allocstat(9))
            deallocate(pcr_temp,pcr_no, stat=ewa_allocstat(9))
@@ -896,7 +941,7 @@ ASSERT(na+ewpc_n.le.size(ewpc_array))
           enddo
           deallocate(pcr_array,stat=ewa_allocstat(17))
           ASSERT(ewa_allocstat(17).eq.0)
-          print*,'pcr_array deallocated'
+          if(comm_rank() == 0) print*,'pcr_array deallocated'
         endif
 
 !        if(pcc_n.ne.0)  then
@@ -929,7 +974,7 @@ ASSERT(na+ewpc_n.le.size(ewpc_array))
        nullify(pc)
        e_nuc_ewpc=0.0_rk
 !       print*, n_ewpc_arr, 'n_ewpc_arr xx'
-       print*
+!       print*
 
        min_ewpcdist=100.0_rk
        do na=1,ewpc_n
@@ -970,10 +1015,10 @@ ASSERT(na+ewpc_n.le.size(ewpc_array))
                "Angstrom for QM center ",ii
           call write_to_trace_unit(trim(trace_message))
        end if
-   print*,'e_nuc_ewpc with final ewpc_array',e_nuc_ewpc,size(ewpc_array),ewpc_n
+       if(comm_rank() == 0) print*,'e_nuc_ewpc with final ewpc_array',e_nuc_ewpc,size(ewpc_array),ewpc_n
 
 #if 1 /* check complite external field */
-   print*, 'complete potentials on atoms'
+       if(comm_rank() == 0) print*, 'complete potentials on atoms'
        ii=0
        do i=1,N_unique_atoms+n_timps
        do eq_a=1,unique_atoms(i)%N_equal_atoms
@@ -990,7 +1035,7 @@ ASSERT(na+ewpc_n.le.size(ewpc_array))
                        (unique_atoms(i)%position(:,eq_a)-pc%position(:,eq_pcc))/dist**3
                    enddo
              enddo
-        print *, ii,e_nuc_ewpc,gv_nuc_ewpc,sum(gv_nuc_ewpc(:)**2)
+        if(comm_rank() == 0) print *, ii,e_nuc_ewpc,gv_nuc_ewpc,sum(gv_nuc_ewpc(:)**2)
           enddo
        enddo ! N_unique_pcr
 #endif
@@ -1002,7 +1047,7 @@ ASSERT(na+ewpc_n.le.size(ewpc_array))
 contains
 
 subroutine print_e_nuc_ewpc()
-use  energy_calc_module, only: e_nuc_ewpc
+use energy_calc_module, only: e_nuc_ewpc
 print*, e_nuc_ewpc()
 end subroutine print_e_nuc_ewpc
 

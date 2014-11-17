@@ -566,6 +566,7 @@ contains
 #endif
 #ifdef WITH_EPE
      use ewaldpc_module, only: gxepe_array, EX_GXEPE, gxepe_impu, n_epe_r
+     use operations_module, only: operations_qm_epe
 #endif
      implicit none
      integer, intent (in) :: loop
@@ -588,7 +589,7 @@ contains
       nqm_mm_new: if (.not. operations_qm_mm_new) then
 #endif
 #ifdef WITH_EPE
-      inquire(file= trim(inpfile('epe.r')), exist=ex_gxepe)
+      if(operations_qm_epe) inquire(file= trim(inpfile('epe.r')), exist=ex_gxepe)
       if(ex_gxepe) then
          call gxepe_allocate
          io_gxepe = openget_iounit (file=trim (inpfile ('epe.r')), &
@@ -696,15 +697,16 @@ contains
       if (ex_gxepe) then
          call returnclose_iounit (io_gxepe)
 
-         ! This only writes  to output. FIXME: not the  right place to
-         ! do this.
-         write(output_unit,*) &
-              ' gxepe array to relate  QM and impurity cluster centers '
-         do i_ua = 1, N_unique_atoms
-            do counter_equal = 1, unique_atoms(i_ua) % n_equal_atoms
-               write(output_unit,*) gxepe_array(i_ua) % position(:, counter_equal)
-            enddo ! counter_equal=1,n_equal_atoms
-         enddo ! i_ua=1,N_unique_atoms
+         if(output_unit >  0) then
+            ! This only writes  to output. FIXME: not the  right place to
+            ! do this.
+            write(output_unit,*) ' gxepe array to relate  QM and impurity cluster centers '
+            do i_ua = 1, N_unique_atoms
+               do counter_equal = 1, unique_atoms(i_ua) % n_equal_atoms
+                  write(output_unit,*) gxepe_array(i_ua) % position(:, counter_equal)
+               enddo ! counter_equal=1,n_equal_atoms
+            enddo ! i_ua=1,N_unique_atoms
+         endif
       endif ! ex_gxepe
 #endif
 

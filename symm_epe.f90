@@ -35,7 +35,8 @@
   use unique_atom_module
   use pointcharge_module
   use symm_positions
-   use type_module, only:IK => i4_kind, RK => r8_kind
+  use type_module, only:IK => i4_kind, RK => r8_kind
+  use comm, only: comm_rank
 
 implicit none
 
@@ -74,7 +75,7 @@ implicit none
    pcr_unit=openget_iounit(file=trim(inpfile('epe.pcs')), &
                                form='FORMATTED',status='old')
    read(pcr_unit,*)  pcs_N      !module variable
-   write(output_unit,*)  ' Number of EPE shell pcs_N ',pcs_N
+   if(output_unit >  0) write(output_unit,*)  ' Number of EPE shell pcs_N ',pcs_N
    allocate(pcs_temp(4,pcs_N),stat=ewa_allocstat(10)) 
    ASSERT(ewa_allocstat(10).eq.0)
    ewa_allocstat(10)=1
@@ -89,7 +90,7 @@ implicit none
    pcr_unit=openget_iounit(trim(inpfile('epe.pcc')), &
                           form='FORMATTED',status='old')
    read(pcr_unit,*)  pcc_N      !module variable
-   write(output_unit,*) ' Number of EPE cores pcc_N ',pcc_N
+   if(output_unit >  0) write(output_unit,*) ' Number of EPE cores pcc_N ',pcc_N
    allocate(pcc_temp(4,pcc_N),stat=ewa_allocstat(11))
    ASSERT(ewa_allocstat(11).eq.0)
           ewa_allocstat(11)=1
@@ -117,7 +118,7 @@ implicit none
   
     ! loop over all centers in file and sort out PC which positions coincide
     ! with the positions of regular atoms
-     write(output_unit,*) 'Number of EPE reference points pcr_n ' ,pcr_n
+    if(output_unit >  0)  write(output_unit,*) 'Number of EPE reference points pcr_n ' ,pcr_n
 
     do i=1,pcr_n
 !        read(pcr_unit,*)  pcr_temp(:,i),psb_ind(i)
@@ -129,11 +130,11 @@ implicit none
      do i=1,N_unique_atoms
       if(gxepe_impu(i).ne.0) n_gxat=n_gxat+unique_atoms(i)%N_equal_atoms
      enddo
-        write(output_unit,*) 'number of atoms in gx-file', n_gxat
+     if(output_unit >  0)    write(output_unit,*) 'number of atoms in gx-file', n_gxat
         do i=1,n_timps
          if(gxepe_impu(i).ne.0) n_gxat=n_gxat+unique_timps(i)%n_equal_atoms
         enddo
-      write(output_unit,*)'number of atoms and n_timps in gx file ',n_gxat
+     if(output_unit >  0)  write(output_unit,*)'number of atoms and n_timps in gx file ',n_gxat
 
         if(.not.ex_gxepe) call error_handler(" file epe.r not found")
 
@@ -198,7 +199,7 @@ implicit none
 
         call returnclose_iounit(pcr_unit)
 
-        write(output_unit,*) &
+        if(output_unit >  0) write(output_unit,*) &
              'pcr_n after sorting out PC in atomic positions' ,pcr_n-kl
 
 #if 1 /*  check potential of PC */
@@ -216,12 +217,14 @@ implicit none
            enddo ! na=1,N_unique_atoms
         enddo ! 1,pcr_n
 
-        write(output_unit,*) ' Energy of interaction of the EPE centers and '
-        write(output_unit,*) ' atoms of cluster e_nuc_pcr calculsted  with use '
-        write(output_unit,*) ' use of pcr_temp coordinates and  total charge'
-        write(output_unit,*) ' of the EPE centers Z', e_nuc_pcr,pc%z
-        DPRINT 'e_nuc_pcr and sum Z', e_nuc_pcr, pc%z
-        DPRINT 'to be compared with corresp part of ewpc_array'
+        if(output_unit >  0) then
+           write(output_unit,*) ' Energy of interaction of the EPE centers and '
+           write(output_unit,*) ' atoms of cluster e_nuc_pcr calculsted  with use '
+           write(output_unit,*) ' use of pcr_temp coordinates and  total charge'
+           write(output_unit,*) ' of the EPE centers Z', e_nuc_pcr,pc%z
+           DPRINT 'e_nuc_pcr and sum Z', e_nuc_pcr, pc%z
+           DPRINT 'to be compared with corresp part of ewpc_array'
+        endif
 #endif
 
 #if 1 /*  now oder pcr_temp on groups of symm equivalent centers */
@@ -298,18 +301,22 @@ implicit none
                  dist=sqrt(sum((unique_atoms(na)%position(:,eq_a) -pcs_temp(1:3,nb))**2))
                  min_distepe=min(min_distepe,dist)
                  if(min_distepe.lt.1.7) then
-                  print*,'min_distepe too small unique_atom:equal_atom',min_distepe,na,eq_a
-                  print*,'pcs position',pcs_temp(1:3,nb)
-                  stop 'error in epe.pcs position'
+                    if(comm_rank() == 0) then
+                       print*,'min_distepe too small unique_atom:equal_atom',min_distepe,na,eq_a
+                       print*,'pcs position',pcs_temp(1:3,nb)
+                    endif
+                    stop 'error in epe.pcs position'
                  endif
                  e_nuc_pcr = e_nuc_pcr+ &
                              pcs_temp(4,nb)*(unique_atoms(na)%Z-unique_atoms(na)%ZC)/dist 
                  dist=sqrt(sum((unique_atoms(na)%position(:,eq_a)-pcc_temp(1:3,nb))**2))
                  min_distepe=min(min_distepe,dist)
                  if(min_distepe.lt.1.7) then
-                  print*,'min_distepe too small unique_atom:equal_atom',min_distepe,na,eq_a
-                  print*,'pcc position',pcc_temp(1:3,nb)
-                  stop 'error in epe.pcc position'
+                    if(comm_rank() == 0) then
+                       print*,'min_distepe too small unique_atom:equal_atom',min_distepe,na,eq_a
+                       print*,'pcc position',pcc_temp(1:3,nb)
+                    endif
+                    stop 'error in epe.pcc position'
                  endif
                  e_nuc_pcr = e_nuc_pcr+ &
                              pcc_temp(4,nb)*(unique_atoms(na)%Z-unique_atoms(na)%ZC)/dist
@@ -433,8 +440,10 @@ enddo ! j=1,n_equal
            enddo ! na=1,N_unique_atoms
       endif ! pcs_n.ne.0/else
      enddo ! 1,pcr_n
-     write(output_unit,*) 'e_nuc_pcr and Z after enforced symm',e_nuc_pcr,pc%z
-     DPRINT 'e_nuc_pcr and Z after enforced symm',e_nuc_pcr,pc%z
+     if(output_unit >  0) then 
+        write(output_unit,*) 'e_nuc_pcr and Z after enforced symm',e_nuc_pcr,pc%z
+        DPRINT 'e_nuc_pcr and Z after enforced symm',e_nuc_pcr,pc%z
+     endif
 
         ! use pc as a tem finished here
         deallocate(pc,stat=ewa_allocstat(16))
@@ -513,7 +522,7 @@ enddo ! j=1,n_equal
      else z_pcs_pcc! i.e. basic option
         
 #if 1 /* no pcr_array */
-        print*, '** treat regular positions'
+        if(comm_rank() == 0) print*, '** treat regular positions'
         i=1+kl
         nullify(pc)
         do while(i.le.pcr_n)
@@ -554,7 +563,9 @@ enddo ! j=1,n_equal
 
         i=1+kl
         nullify(pc)
-        if(print_epe) print*,'atoms of pcs_array'
+        if(comm_rank() == 0) then
+           if(print_epe) print*,'atoms of pcs_array'
+        endif
         fill_pcs:do while(i.le.pcr_n)
            pc=>pcs_array(pcr_no(i))
 #if 1 /* no pcr_array */
@@ -607,7 +618,9 @@ enddo ! j=1,n_equal
 
         nullify(pc)
         i=1+kl
-        if(print_epe) print*,' atoms of pcc_array'
+        if(comm_rank() == 0) then
+           if(print_epe) print*,'atoms of pcc_array'
+        endif
         fill_pcc: do while(i.le.pcr_n)
            pc=>pcc_array(pcr_no(i))
 #if 1
@@ -671,15 +684,19 @@ enddo ! j=1,n_equal
 !     DPRINT nb,e_nuc_pcr,pc%N_equal_charges,pcs_array(nb)%z,sum(pcs_array(nb)%position(:,pc%N_equal_charges))
      
     enddo
-    if(print_epe) print*, 'e_nuc_pcr after storing  ',e_nuc_pcr
+    if(comm_rank() == 0) then
+       if(print_epe) print*, 'e_nuc_pcr after storing  ',e_nuc_pcr
+    endif
 #endif
         
         
     endif z_pcs_pcc!    (pcs_n.eq.0.or.pcc_n.eq.0) then
 #endif
 
-    write(output_unit,*) 'number of groups of symmetry equavalent PC', it_pcr
-    print*,'number of groups of symmetry equavalent PC', it_pcr
+    if(output_unit >  0) then 
+       write(output_unit,*) 'number of groups of symmetry equavalent PC', it_pcr
+       print*,'number of groups of symmetry equavalent PC', it_pcr
+    endif
     if(pcs_n.ne.0) pcs_n=it_pcr
     if(pcc_n.ne.0) pcc_n=it_pcr
     n_unique_pcr=it_pcr

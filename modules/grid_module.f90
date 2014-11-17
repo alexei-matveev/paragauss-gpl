@@ -942,6 +942,7 @@ contains
     !
     ! Atomic radii from pople in a.u.
     !
+    use comm, only: comm_rank
     implicit none
     integer (i4_kind), intent (in) :: z
     real (r8_kind) :: rpople_f
@@ -971,10 +972,10 @@ contains
     if (1 <= z .and. z <= NA) then
        zz = z
     else if (z > NA) then
-       WARN("rpople_f: Z>92, use Z=92") ! FIXME: update msg with NA!
+       if(comm_rank() == 0) WARN("rpople_f: Z>92, use Z=92") ! FIXME: update msg with NA!
        zz = NA
     else
-       WARN("rpople_f: Z out of range, force to 1.0")
+       if(comm_rank() == 0) WARN("rpople_f: Z out of range, force to 1.0")
        zz = 0
     end if
 
@@ -985,6 +986,7 @@ contains
     !
     ! Slater radii in a. u.
     !
+    use comm, only: comm_rank
     use constants, only: angstrom
     implicit none
     integer (i4_kind), intent (in) :: z
@@ -1018,10 +1020,10 @@ contains
     if (1 <= z .and. z <= NA) then
        zz = z
     else if (z > NA) then
-       WARN("rslater_f: Z>95, use Z=95") ! FIXME: update msg with NA!
+       if(comm_rank() == 0) WARN("rslater_f: Z>95, use Z=95") ! FIXME: update msg with NA!
        zz = NA
     else
-       WARN("rslater_f: Z out of range, force to 1.0")
+       if(comm_rank() == 0) WARN("rslater_f: Z out of range, force to 1.0")
        zz = 0
     end if
 
@@ -1032,6 +1034,7 @@ contains
     !
     ! Ionic radii in a. u.
     !
+    use comm, only: comm_rank
     implicit none
     integer (i4_kind), intent (in) :: z
     real (r8_kind) :: rionic_f
@@ -1065,10 +1068,10 @@ contains
     if (1 <= z .and. z <= NA) then
        zz = z
     else if (z > NA) then
-       WARN("rionic_f: Z>92, use Z=92") ! FIXME: update msg with NA!
+       if(comm_rank() == 0) WARN("rionic_f: Z>92, use Z=92") ! FIXME: update msg with NA!
        zz = NA
     else
-       WARN("rionic_f: Z out of range, force to 1.0")
+       if(comm_rank() == 0) WARN("rionic_f: Z out of range, force to 1.0")
        zz = 0
     end if
 

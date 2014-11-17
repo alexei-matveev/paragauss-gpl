@@ -529,8 +529,8 @@ contains
        end if
     end do
 
-    if (n_timps.gt. 0) call output_geometry_timp()
-    if (pointcharge_N.gt. 0) call output_geometry_pc()
+    if (n_timps.gt. 0 .and. output_unit > 0) call output_geometry_timp()
+    if (pointcharge_N.gt. 0 .and. output_unit > 0) call output_geometry_pc()
 
     if(operations_qm_epe) then
 #ifdef WITH_EPE

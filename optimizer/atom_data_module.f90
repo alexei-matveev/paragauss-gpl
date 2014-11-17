@@ -166,18 +166,23 @@ contains
   end function get_row
 
   function nuc_mass(Z) result(M)
+    use comm, only: comm_rank
     implicit none
     integer(kind=i4_kind), intent(in) :: Z
     real(r8_kind)                     :: M ! result
     !---- Declaration of local variables ---------------------
 
     if(Z>0 .and. Z<=NELEM)then
-    M = mass(Z)
+       M = mass(Z)
     else
-    WARN('Z out of range')
-    M = 999.0_r8_kind
+       if(comm_rank() == 0) then
+          WARN('Z out of range')
+       endif
+       M = 999.0_r8_kind
     endif
-    DPRINT 'nuc_mass(',Z,')=',M
+    if(comm_rank() == 0) then
+       DPRINT 'nuc_mass(',Z,')=',M
+    endif
   end function nuc_mass
 
   function nuc_radius(Z) result(R)

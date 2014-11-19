@@ -162,7 +162,7 @@ module opt_data_module
   !*** input switches for thermodynamic properties module ********************************
   integer(kind=i4_kind),public             :: symmetry_index=1              &
                                             , N_temperature_steps=1
-  real(kind=r8_kind),public                :: temperature=273.15_r8_kind    &
+  real(kind=r8_kind),public                :: temperature=298.15_r8_kind    &
                                             , delta_temperature=0.0_r8_kind &
                                             , pressure=100000.0_r8_kind
 

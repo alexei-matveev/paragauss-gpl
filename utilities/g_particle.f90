@@ -35,7 +35,7 @@ program g_particle
   real*8, parameter :: h_Planck=6.62606896d-34
   real*8, parameter :: THREE=3.0d0
   real*8, parameter :: k_B=1.3806504d-23
-  real*8, parameter :: tmpT=273.15d0
+  real*8, parameter :: tmpT=298.15d0
   real*8, parameter :: FIVE_HALF=2.5d0
   real*8, parameter :: P=100000.0d0
   real*8, parameter :: THREE_HALF=1.5d0

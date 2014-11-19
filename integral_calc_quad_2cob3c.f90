@@ -1408,6 +1408,8 @@ FPP_TIMER_STOP(t_calc_3center)
 
     IMODE = 0
 
+    pc => pointcharge_array
+
 #ifdef WITH_EPE
     ! FIXME: workaround for ewpc_n==0 special case:
     if (ewpc_n /= 0 .and. pointcharge_N /= 0) &

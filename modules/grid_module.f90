@@ -972,10 +972,14 @@ contains
     if (1 <= z .and. z <= NA) then
        zz = z
     else if (z > NA) then
-       if(comm_rank() == 0) WARN("rpople_f: Z>92, use Z=92") ! FIXME: update msg with NA!
+       if (comm_rank() == 0) then
+          WARN("rpople_f: Z>92, use Z=92") ! FIXME: update msg with NA!
+       endif
        zz = NA
     else
-       if(comm_rank() == 0) WARN("rpople_f: Z out of range, force to 1.0")
+       if (comm_rank() == 0) then
+          WARN("rpople_f: Z out of range, force to 1.0")
+       endif
        zz = 0
     end if
 
@@ -1020,10 +1024,14 @@ contains
     if (1 <= z .and. z <= NA) then
        zz = z
     else if (z > NA) then
-       if(comm_rank() == 0) WARN("rslater_f: Z>95, use Z=95") ! FIXME: update msg with NA!
+       if (comm_rank() == 0) then
+          WARN("rslater_f: Z>95, use Z=95") ! FIXME: update msg with NA!
+       endif
        zz = NA
     else
-       if(comm_rank() == 0) WARN("rslater_f: Z out of range, force to 1.0")
+       if (comm_rank() == 0) then
+          WARN("rslater_f: Z out of range, force to 1.0")
+       endif
        zz = 0
     end if
 
@@ -1068,10 +1076,14 @@ contains
     if (1 <= z .and. z <= NA) then
        zz = z
     else if (z > NA) then
-       if(comm_rank() == 0) WARN("rionic_f: Z>92, use Z=92") ! FIXME: update msg with NA!
+       if (comm_rank() == 0) then
+          WARN("rionic_f: Z>92, use Z=92") ! FIXME: update msg with NA!
+       endif
        zz = NA
     else
-       if(comm_rank() == 0) WARN("rionic_f: Z out of range, force to 1.0")
+       if (comm_rank() == 0) then
+          WARN("rionic_f: Z out of range, force to 1.0")
+       endif
        zz = 0
     end if
 

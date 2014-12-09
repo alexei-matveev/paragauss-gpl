@@ -142,8 +142,10 @@ module atoms_data_module
                    0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00/)
                    ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
-  ! (A.K.Rappe,  C.C. Casewit,  K.S. Colwell,  W.A.Goddard, W.M.Skiff,
-  ! J.Am.Chem.Soc., V.114, P.10024, 1992)
+  ! "UFF, a  full periodic table  force field for  molecular mechanics
+  ! and molecular dynamics simulations" A.K.Rappe, C.C.  Casewit, K.S.
+  ! Colwell,  W.A.Goddard, W.M.Skiff, J.Am.Chem.Soc.,  V.114, P.10024,
+  ! 1992, DOI: 10.1021/ja00051a040
   real (r8_kind), parameter, public :: &
        R_def_rap(103)=(/2.886,2.362,2.451,2.745,4.083,3.851,3.660,3.500, &
                         !  H     He    Li    Be    B     C     N     O

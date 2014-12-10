@@ -329,10 +329,10 @@ Count namelists."
 ;;; FIXME: ugly as hell.  Improvements are welcome.  The second branch
 ;;; is to accept short specs like (~ "U_24.19.16.11_10.7.7.4") without
 ;;; the requirement to specify  "basis/legacy/" prefix. Here we choose
-;;; to crach early --- the alternative  would be to use path as is and
+;;; to crash early --- the alternative  would be to use path as is and
 ;;; let PG find out that the file is missing.
 ;;;
-(define (tilde path)
+(define (tilde-path path)
   (let ((dirs (cons "." %load-path))
         (path' (string-join (list "baslib/legacy" path) "/")))
     (or (search-path dirs path)
@@ -340,9 +340,71 @@ Count namelists."
         (error "file not found:" path path' dirs))))
 
 ;;;
-;;; Cache locations:
+;;; Cache locations of PG bases:
 ;;;
-(set! tilde (memoize tilde))
+(set! tilde-path (memoize tilde-path))
+
+;;;
+;;; With input as this
+;;;
+;;; ((C C.1 C.2 C.3)
+;;;  (N N.1 N.2 N.3))
+;;;
+;;; this will return  a function that return either C or  N for all of
+;;; the alternative names.
+;;;
+(define (make-translator rows)
+  (let ((alist (let lp1 ((alist '())
+                         (rows rows))
+                 (if (null? rows)
+                     alist
+                     (lp1 (let* ((row (car rows))
+                                 (canonical (first row))
+                                 (aliases (cdr row)))
+                            (let lp2 ((alist alist)
+                                      (aliases aliases))
+                              (if (null? aliases)
+                                  alist
+                                  (lp2 (acons (car aliases)
+                                              canonical alist)
+                                       (cdr aliases)))))
+                          (cdr rows))))))
+    (lambda (symbol)
+      (assoc-ref alist symbol))))
+
+;;;
+;;;
+;;; (~ ("U_24.19.16.11_10.7.7.4" "U")
+;;;    ("O_9.5.1_5.4.1" "O" "OW")
+;;;    ("H_6.1_4.1" "HW"))
+;;;
+(define (write-legacy-bases input args)
+  ;;
+  ;; Legacy includes for file have the format
+  ;;
+  ;;     ~/path/to/file
+  ;;
+  (define (write-legacy-include path)
+    (display '~)
+    (display path)
+    (newline))
+  ;;
+  ;; Two cases here, one (~ "path") form per atom/line or the mapping:
+  ;; (~ () () ()) here:
+  ;;
+  (if (string? (car args))
+      (write-legacy-include
+       (tilde-path (car args))) ; (~ "path/to/file") case
+      (let ((lookup (make-translator args))
+            (atom-names (let ((nml-bodies (map cdr (nml-get-all 'unique-atom input))))
+                          (map (lambda (x)
+                                 (second (assoc 'name x))) ; (name "O"), not a real pair
+                               nml-bodies))))
+        (for-each
+         (lambda (name)
+           (write-legacy-include
+            (tilde-path (lookup name))))
+         atom-names))))
 
 ;;;
 ;;; Kitchen sink of all artificial intelligence:
@@ -357,21 +419,18 @@ Count namelists."
 ;;; namelists, except (~ ...) forms and lists of numbers.
 ;;;
 (define (qm-write-input input)
-  (define (write-obj x)
-    (let ((fst (car x)))
-      (cond
-       ((equal? fst '~)                 ; (~ "file") -> ~file
-        (let ((file (second x)))
-          (display '~)
-          (display (tilde file))
-          (newline)))
-       ((symbol? fst)                   ; (nml (a 1)) -> &nml a=1/
-        (write-name-list x))
-       ((number? fst)                   ; (1.0 2.0 3.0) -> 1.0 2.0 3.0
-        (write-data x))
-       (else
-        (error "dont know such input object" x)))))
   (let ((input (do-what-i-mean input)))
+    (define (write-obj x)
+      (let ((fst (car x)))
+        (cond
+         ((equal? fst '~)               ; (~ "file") -> ~file
+          (write-legacy-bases input (cdr x)))
+         ((symbol? fst)                 ; (nml (a 1)) -> &nml a=1/
+          (write-name-list x))
+         ((number? fst)                 ; (1.0 2.0 3.0) -> 1.0 2.0 3.0
+          (write-data x))
+         (else
+          (error "dont know such input object" x)))))
     ;; (with-output-to-file "processed.scm"
     ;;   (lambda () (pretty-print input)))
     (fold-input (lambda (x acc) (write-obj x))

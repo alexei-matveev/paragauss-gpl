@@ -1341,19 +1341,19 @@ contains
     end subroutine pcall
   end subroutine trafo2
 
-  subroutine load(rw, uaL, t, UF, UB, A1, B1)
+  subroutine load (rw, uaL, t, UF, UB, A1, B1)
     !
     ! save atomic data for future use
     !
     use shgi_utils, only: shellNum!(ua,L)
     implicit none
-    character  , intent(in)    :: rw ! r or w
-    integer(IK), intent(in)    :: uaL
-    real(RK)   , intent(inout) :: t(:)
-    real(RK)   , intent(inout) :: UF(:,:) ! forward
-    real(RK)   , intent(inout) :: UB(:,:) ! backward
-    real(RK)   , intent(inout) :: A1(:,:) ! == A - 1
-    real(RK)   , intent(inout) :: B1(:,:) ! == B - 1
+    character  , intent (in) :: rw ! r or w
+    integer (IK), intent (in) :: uaL
+    real (RK), intent (inout) :: t(:)
+    real (RK), intent (inout) :: UF(:,:) ! forward
+    real (RK), intent (inout) :: UB(:,:) ! backward
+    real (RK), intent (inout) :: A1(:,:) ! == A - 1
+    real (RK), intent (inout) :: B1(:,:) ! == B - 1
     optional :: t,UF,UB,A1,B1
     ! *** end of interface ***
 
@@ -1365,8 +1365,8 @@ contains
     if(.not.allocated(shells))then
       ! on first entry...
 
-      ! count number of shells:
-      uaL_max = shellNum(999,999) ! counts all of them
+      ! Count number of shells. FIXME: literal here!
+      uaL_max = shellNum (999, 999) ! counts all of them
       allocate(shells(uaL_max))
     endif
 

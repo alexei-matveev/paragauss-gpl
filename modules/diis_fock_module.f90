@@ -290,13 +290,11 @@ contains
         actmatsize = min(diis_loop,mmax)
         c(:mmax) = 0.0_r8_kind
         c(:actmatsize) = diis_calc_c(B(:actmatsize, :actmatsize), diagdamp)
-        call write_to_output_units('coefficients for new matrix:')
-        write(output_unit,*) c
-        print*, c
-! call octave("c", c)
 
-        ! mixing of hamiltonian here:
-        call diis_update_ham( hamact, hamold, c )
+        call print_coeff (c)
+
+        ! Mixing of hamiltonian here:
+        call diis_update_ham (hamact, hamold, c)
 
         !
         ! This data is used outside of the module, set public global var ...
@@ -327,7 +325,21 @@ contains
     if(.not. stopchar) diis_step = .false.
   end subroutine diis_fock_matrix
 
-  !*************************************************************
+
+  subroutine print_coeff (c)
+    use iounitadmin_module, only: write_to_output_units, output_unit
+    implicit none
+    real (r8_kind), intent (in) :: c(:)
+    ! *** end of interface ***
+
+    call write_to_output_units ('Coefficients for new matrix:')
+    if (output_unit > 0) then
+       write (output_unit, '(1X, 8ES10.1)') c
+       print '(1X, 8ES10.1)', c
+    endif
+    ! call octave("c", c)
+  end subroutine print_coeff
+
 
   subroutine fixed_fock_matrix (hamact, loop_scf)
     !
@@ -521,8 +533,10 @@ contains
     else
       diis_step = .false.
     endif
-    write(output_unit,*) 'DIIS - loop ', diis_loop, 'has maximum value', ermax
-    print *, 'DIIS - loop ', diis_loop, 'has maximum value', ermax
+    if (output_unit > 0) then
+       write (output_unit,*) 'DIIS - loop ', diis_loop, 'has maximum value', ermax
+       print *, 'DIIS - loop ', diis_loop, 'has maximum value', ermax
+    endif
 
     ! tell output about control result
     if(diis_start) then
@@ -1096,8 +1110,8 @@ contains
       c(:diis_ndim) = 0.0_r8_kind
       ! get the new diis_coeff but only for the used matrix size
       c(:actsize) = diis_calc_c(b_diis(:actsize, :actsize), diagdamp2)
-      call write_to_output_units('coefficients for new matrix:')
-      write(output_unit,*) c
+
+      call print_coeff (c)
 
       ! the new coeff_charge were build, coeff_charge_diis holds the input values
       ! of the coeff_charge, meaning the coeff_charge_old
@@ -1161,8 +1175,10 @@ contains
     ! b(i,i) = 0 means, error(i) = 0, here the best is no update and no storage
     ! the next loop will overwrite the values of b and the storage which were performed
     ! before
-    if(b(loop_m, loop_m) .eq. 0) then
-      if(step) call write_to_output_units( 'in this loop no diis charge coeff mixing, because error = 0')
+    if (b(loop_m, loop_m) .eq. 0) then
+      if (step) then
+         call write_to_output_units ('In this loop no diis charge coeff mixing, because error = 0')
+      endif
       step = .false.
       loop = loop - 1
     endif

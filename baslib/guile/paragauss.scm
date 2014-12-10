@@ -219,17 +219,17 @@ Count namelists."
               ;;
               ((or (name x y z)         ; ("Xe" 1.0 2.0 3.0)
                    (name (x y z)))      ; ("Xe" (1.0 2.0 3.0))
-               `((unique_atom
+               `((unique-atom
                   (name ,name)
                   (z ,(atomic-number name))
-                  (n_equal_atoms 1))    ; FIXME: literal!
+                  (n-equal-atoms 1))    ; FIXME: literal!
                  ,(list (u x) (u y) (u z))))
               ;;
               ((or (name x y z . dict)  ; ("H1" 1.0 2.0 3.0 (z 1) ...)
                    (name (x y z) . dict)) ; ("H1" (1.0 2.0 3.0) (z 1) ...)
-               `((unique_atom
+               `((unique-atom
                   (name ,name)
-                  (n_equal_atoms 1)     ; FIXME: literal!
+                  (n-equal-atoms 1)     ; FIXME: literal!
                   ,@dict)               ; unquote-splicing
                  ,(list (u x) (u y) (u z)))))))
        ;;
@@ -268,16 +268,16 @@ Count namelists."
            (apply qm-find-basis rest))
           ;;
           (('symmetry-group (? string? name)) ; undocumented
-           `(symmetry_group
-             (point_group ,name)))
+           `(symmetry-group
+             (point-group ,name)))
           ;;
-          (('point-group name)          ; undocumented
-           `(symmetry_group
-             (point_group ,name)))
+          (('point-group (? string? name)) ; undocumented
+           `(symmetry-group
+             (point-group ,name)))
           ;;
           (('unique-atom-number (? number? n)) ; undocumented
-           `(unique_atom_number
-             (n_unique_atoms ,n)))
+           `(unique-atom-number
+             (n-unique-atoms ,n)))
           ;;
           (('geo . rest)                ; undocumented
            (expand-special-forms

@@ -1189,24 +1189,20 @@ contains
     call load('r', ubL, A1=A1b, B1=B1b)
     ! NOTE: A1 = A - 1 and B1 = B - 1
 
-!   ASSERT(nab==na*nb)
-    if(nab==na*nb)then
-      ! no unpack is necessary:
-      do i=1,n
-        ! direct call to kin() or nuc():
-        call dcall(sub,TV(:,i),SW(:,i))
+    if (nab == na * nb) then
+      ! No unpack is necessary:
+      do i = 1, n
+        ! Direct call to kin() or nuc():
+        call dcall (sub, TV(:, i), SW(:, i))
       enddo
     else
-      if( warncount <= 10 )then
-        WARN('nab/=na*nb in ADKH!')
-        if( warncount == 10 )then
-          WARN('will ignore further warnings')
-        endif
+      if (warncount < 1)then
+        WARN ('nab/=na*nb in ADKH!')
         warncount = warncount + 1
       endif
-      do i=1,n
-        ! call through pack/unpack:
-        call pcall(sub,TV(:,i),SW(:,i))
+      do i = 1, n
+        ! Call through pack/unpack:
+        call pcall (sub, TV(:, i), SW(:, i))
       enddo
     endif
   contains

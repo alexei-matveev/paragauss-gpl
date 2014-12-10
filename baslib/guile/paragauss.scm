@@ -39,15 +39,15 @@
 ;;;
 (define *h2o*
   '((tasks (task "gradients") (dipole #t))
-    (main_options (spin_restricted #t) (relativistic "false"))
-    (symmetry_group (point_group "C2V"))
-    (unique_atom_number (n_unique_atoms 2))
-    (unique_atom (name "O") (z 8.0) (n_equal_atoms 1))
+    (main-options (spin-restricted #t) (relativistic "false"))
+    (symmetry-group (point-group "C2V"))
+    (unique-atom-number (n-unique-atoms 2))
+    (unique-atom (name "O") (z 8.0) (n-equal-atoms 1))
     (0.0 0.0 0.0)  ; literal numeric entries, an s-exp for a 3D vector
-    (unique_atom (name "H") (z 1.0) (n_equal_atoms 2))
+    (unique-atom (name "H") (z 1.0) (n-equal-atoms 2))
     (1.429960 0.000000 -1.107190)
-    (xc_control (xc "bp"))
-    (grid (sym_reduce #t) (weight_grads #t))
+    (xc-control (xc "bp"))
+    (grid (sym-reduce #t) (weight-grads #t))
     (gridatom (nrad 80) (nang 291))
     (gridatom (nrad 80) (nang 291))
     ;; (ecp "nwchem" "Au" "lanl2dz_ecp")
@@ -185,7 +185,7 @@ Count namelists."
 
 ;;;
 ;;; If this functin  does not fail at the end but  just returns #f you
-;;; will find z = .false. in the namelist unique_atom:
+;;; will find z = .false. in the namelist unique-atom:
 ;;;
 (define (atomic-number symbol)
   (or (maybe-atomic-number symbol)
@@ -199,7 +199,7 @@ Count namelists."
 ;;;   (units angstrom)                      ; == (units 1), if omitted
 ;;;   ("Xe" 0.0 0.0 0.0)                    ; Z is derived from the name
 ;;;   ("H1" 1.0 2.0 3.0 (z 1))              ; Z is explicit
-;;;   ("He" 5.0 6.0 7.0 (z 2) (nuclear_radius 2.6)))
+;;;   ("He" 5.0 6.0 7.0 (z 2) (nuclear-radius 2.6)))
 ;;;
 (define (expand-geo geo)
   (match geo
@@ -465,7 +465,7 @@ Count namelists."
 
 ;;;
 ;;; Some of the  namelist fields are arrays in the  format "X0 = -3.0,
-;;; -3.0, -3.0,".  An ORBITAL_PLOT namelist  is an example.  Note that
+;;; -3.0, -3.0,".  An ORBITAL-PLOT namelist  is an example.  Note that
 ;;; the  trailing comma  might be  important for  some  compilers (not
 ;;; implemented).
 ;;;
@@ -501,11 +501,11 @@ Count namelists."
 ;;;
 (define (unique-atom-basis-set lmax-ob lmax-ch lmax-xc lmax-pseudo zc)
   (quasiquote
-   (unique_atom_basisset
-    (lmax_ob (unquote lmax-ob))
-    (lmax_ch (unquote lmax-ch))
-    (lmax_xc (unquote lmax-xc))       ; never used
-    (lmax_pseudo (unquote lmax-pseudo))
+   (unique-atom-basisset
+    (lmax-ob (unquote lmax-ob))
+    (lmax-ch (unquote lmax-ch))
+    (lmax-xc (unquote lmax-xc))       ; never used
+    (lmax-pseudo (unquote lmax-pseudo))
     (zc (unquote zc)))))
 
 ;;;
@@ -514,17 +514,17 @@ Count namelists."
 ;;;
 (define (unique-atom-basis exponents contractions)
   (quasiquote
-   ((unique_atom_basis
-     (n_exponents (unquote (length exponents)))
-     (n_contracted_fcts (unquote (length contractions)))
-     (n_uncontracted_fcts 0))         ; not yet
+   ((unique-atom-basis
+     (n-exponents (unquote (length exponents)))
+     (n-contracted-fcts (unquote (length contractions)))
+     (n-uncontracted-fcts 0))         ; not yet
     (unquote exponents)
     (unquote contractions))))
 
 (define (unique-atom-pseudopot powers exponents coefficients)
   (quasiquote
-   ((unique_atom_pseudopot
-     (n_exponents (unquote (length exponents))))
+   ((unique-atom-pseudopot
+     (n-exponents (unquote (length exponents))))
     (unquote powers)
     (unquote exponents)
     (unquote coefficients))))
@@ -540,7 +540,7 @@ Count namelists."
 ;;; Fake core density:
 ;;;
 (define *fake-core-density*
-  '((unique_atom_core_density (n_exponents 1)) (-1.0) (0.0)))
+  '((unique-atom-core-density (n-exponents 1)) (-1.0) (0.0)))
 
 ;;;
 ;;; Returns an sexp repr of the basis:
@@ -548,7 +548,7 @@ Count namelists."
 (define (qm-make-basis orbital auxilary . rest)
   "(qm-make-basis orbital auxilary [ecp]) => sexp
 
-Returns an sexp representation of the unique_atom_basis namelist."
+Returns an sexp representation of the unique-atom-basis namelist."
   (define (mk-shell shell)
     (let* ((momentum (car shell))
            (data (cdr shell))
@@ -556,7 +556,7 @@ Returns an sexp representation of the unique_atom_basis namelist."
            (contractions (cdr data)))
       (unique-atom-basis exponents contractions)))
   ;;
-  ;; Returns an sexp repr of the unique_atom_pseudopot namelist:
+  ;; Returns an sexp repr of the unique-atom-pseudopot namelist:
   ;;
   (define (mk-ecp-shell shell)
     ;;
@@ -595,7 +595,7 @@ Returns an sexp representation of the unique_atom_basis namelist."
                                  lmax-xc
                                  lmax-pseudo
                                  zc)))
-    (list header                        ; unique_atom_basisset header
+    (list header                        ; unique-atom-basisset header
           o-basis                       ; orbital basis
           ;; ECP (eventually), an empty list otherwise:
           (if ecp

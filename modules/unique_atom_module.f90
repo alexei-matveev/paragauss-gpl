@@ -208,6 +208,9 @@ type, public :: unique_atom_type
    ! description. Should remain zero if ECPs are not used.
    real (r8_kind) :: ZC = 0.0
 
+   integer :: atomic_number ! atomic number in periodic table - 
+                            ! to compensate Z=0.0                     
+
    integer :: nuclear_spin ! the spin of the nucleus is nuclear_spin *
                            ! 1/2
 

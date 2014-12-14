@@ -196,6 +196,7 @@ integer           , private, parameter :: df_N_unique_atoms      =  0
 character(len=12)      , private, parameter :: df_name                =  "            "
 real(kind=r8_kind), private, parameter :: df_Z                   =  0.0_r8_kind
 real(kind=r8_kind), private, parameter :: df_ZC                  =  0.0_r8_kind
+integer           , private, parameter :: df_atomic_number       =  0
 real(kind=r8_kind), private, parameter :: df_nuclear_magnetic_moment =  0.0_r8_kind
 real(kind=r8_kind), private, parameter :: df_nuclear_radius      =  0.0_r8_kind
 integer           , private, parameter :: df_nuclear_spin        =  0
@@ -434,12 +435,13 @@ contains
 
    character(len=12)                            :: name = ""
    real(kind=r8_kind)                      :: Z    = 0.0_r8_kind
+   integer                                 :: atomic_number = 0
    integer                                 :: N_equal_atoms = 0
    logical                                 :: fixed = .false.
    integer                                 :: nuclear_spin = 0
    real(kind=r8_kind)                      :: nuclear_magnetic_moment = 0.0_r8_kind
    real(kind=r8_kind)                      :: nuclear_radius = 0.0_r8_kind
-   namelist /unique_atom/ Z, N_equal_atoms, name, fixed, &
+   namelist /unique_atom/ Z, N_equal_atoms, name, fixed, atomic_number, &
                           nuclear_spin, nuclear_magnetic_moment, nuclear_radius
    !------------ Declaration of subroutines used ----------------
    external error_handler
@@ -493,6 +495,7 @@ contains
 
       name          = df_name
       Z             = df_Z
+      atomic_number = df_atomic_number
       N_equal_atoms = df_N_equal_atoms
       fixed         = df_fixed
       nuclear_spin  = df_nuclear_spin
@@ -508,6 +511,8 @@ contains
          "unique_atom_read: core densities creation only possible in single atom calculations")
       ua%name = name
       ua%Z = Z
+      ua%atomic_number = atomic_number
+      if(ua%atomic_number < 0) ua%atomic_number = 0
       ua%N_equal_atoms = N_equal_atoms
       ua%nuclear_spin = nuclear_spin
       ua%nuclear_magnetic_moment = nuclear_magnetic_moment

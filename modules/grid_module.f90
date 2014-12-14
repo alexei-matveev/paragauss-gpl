@@ -536,13 +536,23 @@ contains
        nang=grid_par_scf(i)%nang
        npart=grid_par_scf(i)%npart
        radius=grid_par_scf(i)%radius
-       rslater = radius == rslater_f(int(abs(unique_atoms(i)%z)))
-       if (rslater) radius = df_radius
-       rpople = radius == rpople_f(int(abs(unique_atoms(i)%z)))
-       if (rpople) radius = df_radius
-       rionic = radius == rionic_f(int(abs(unique_atoms(i)%z)))
-       if (rionic) radius = df_radius
-       if (rslater) rslater=df_rslater
+       if(unique_atoms(i)%atomic_number == 0) then
+          rslater = radius == rslater_f(int(abs(unique_atoms(i)%z)))
+          if (rslater) radius = df_radius
+          rpople = radius == rpople_f(int(abs(unique_atoms(i)%z)))
+          if (rpople) radius = df_radius
+          rionic = radius == rionic_f(int(abs(unique_atoms(i)%z)))
+          if (rionic) radius = df_radius
+          if (rslater) rslater=df_rslater
+       else
+          rslater = radius == rslater_f(unique_atoms(i)%atomic_number)
+          if (rslater) radius = df_radius
+          rpople = radius == rpople_f(unique_atoms(i)%atomic_number)
+          if (rpople) radius = df_radius
+          rionic = radius == rionic_f(unique_atoms(i)%atomic_number)
+          if (rionic) radius = df_radius
+          if (rslater) rslater=df_rslater
+       endif
 
        write(header,'("GRIDATOM # unique atom",i4)') i
        call start(header,"GRID_WRITE",unit,operations_echo_input_level)
@@ -618,13 +628,23 @@ contains
        nang=grid_par_ph(i)%nang
        npart=grid_par_ph(i)%npart
        radius=grid_par_ph(i)%radius
-       rslater = radius == rslater_f(int(abs(unique_atoms(i)%z)))
-       if (rslater) radius = df_radius_ph
-       rpople = radius == rpople_f(int(abs(unique_atoms(i)%z)))
-       if (rpople) radius = df_radius_ph
-       rionic = radius == rionic_f(int(abs(unique_atoms(i)%z)))
-       if (rionic) radius = df_radius_ph
-       if (rslater) rslater=df_rslater_ph
+       if(unique_atoms(i)%atomic_number == 0) then
+          rslater = radius == rslater_f(int(abs(unique_atoms(i)%z)))
+          if (rslater) radius = df_radius_ph
+          rpople = radius == rpople_f(int(abs(unique_atoms(i)%z)))
+          if (rpople) radius = df_radius_ph
+          rionic = radius == rionic_f(int(abs(unique_atoms(i)%z)))
+          if (rionic) radius = df_radius_ph
+          if (rslater) rslater=df_rslater_ph
+       else
+          rslater = radius == rslater_f(unique_atoms(i)%atomic_number)
+          if (rslater) radius = df_radius_ph
+          rpople = radius == rpople_f(unique_atoms(i)%atomic_number)
+          if (rpople) radius = df_radius_ph
+          rionic = radius == rionic_f(unique_atoms(i)%atomic_number)
+          if (rionic) radius = df_radius_ph
+          if (rslater) rslater=df_rslater_ph
+       endif
 
        if (equal_gridatoms) then
           ! the  entire set  of GRIDATOM_PH  namelists may  be skipped
@@ -737,17 +757,29 @@ contains
        if(rslater) then
           if(rpople.or.rionic) call input_error &
                ('Dont know what to do, multiple radius definition')
-          radius=rslater_f(int(unique_atoms(i)%z))
+          if(unique_atoms(i)%atomic_number == 0) then
+             radius=rslater_f(int(unique_atoms(i)%z))
+          else
+             radius=rslater_f(unique_atoms(i)%atomic_number)
+          endif
        endif
        if(rpople) then
           if(rionic.or.rslater) call input_error &
                ('Dont know what to do, multiple radius definition')
-          radius=rpople_f(int(unique_atoms(i)%z))
+          if(unique_atoms(i)%atomic_number == 0) then
+             radius=rpople_f(int(unique_atoms(i)%z))
+          else
+             radius=rpople_f(unique_atoms(i)%atomic_number)
+          endif
        endif
        if(rionic)then
           if(rpople.or.rslater) call input_error &
                ('Dont know what to do, multiple radius definition')
-          radius=rionic_f(int(unique_atoms(i)%z))
+          if(unique_atoms(i)%atomic_number == 0) then
+             radius=rionic_f(int(unique_atoms(i)%z))
+          else
+             radius=rionic_f(unique_atoms(i)%atomic_number)
+          endif
        endif
        if(.not.radius.gt.0.0_r8_kind)then
           WARN('force radius = 1.0')
@@ -841,16 +873,30 @@ contains
        if(rslater) then
           if(rpople.or.rionic) call input_error &
                ('Dont know what to do, multiple radius definition')
-          radius=rslater_f(int(unique_atoms(i)%z))
+          if(unique_atoms(i)%atomic_number == 0) then
+             radius=rslater_f(int(unique_atoms(i)%z))
+          else
+             radius=rslater_f(unique_atoms(i)%atomic_number)
+          endif
        endif
 
        if(rpople) then
           if(rionic) call input_error &
                ('Dont know what to do, multiple radius definition')
-          radius=rpople_f(int(unique_atoms(i)%z))
+          if(unique_atoms(i)%atomic_number == 0) then
+             radius=rpople_f(int(unique_atoms(i)%z))
+          else
+             radius=rpople_f(unique_atoms(i)%atomic_number)
+          endif
        endif
 
-       if(rionic) radius=rionic_f(int(unique_atoms(i)%z))
+       if(rionic) then
+          if(unique_atoms(i)%atomic_number == 0) then
+             radius=rionic_f(int(unique_atoms(i)%z))
+          else
+             radius=rionic_f(unique_atoms(i)%atomic_number)
+          endif
+       endif
 
        ASSERT(radius>0.0_r8_kind)
        grid_par_ph(i)%nrad=nrad

@@ -35,7 +35,7 @@ program g_particle
   real*8, parameter :: h_Planck=6.62606896d-34
   real*8, parameter :: THREE=3.0d0
   real*8, parameter :: k_B=1.3806504d-23
-  real*8, parameter :: tmpT=298.15d0
+!  real*8, parameter :: tmpT=298.15d0
   real*8, parameter :: FIVE_HALF=2.5d0
   real*8, parameter :: P=100000.0d0
   real*8, parameter :: THREE_HALF=1.5d0
@@ -43,11 +43,11 @@ program g_particle
   real*8, parameter :: E_h2Jmol=2.6254995d+06
   real*8, parameter :: u_Atom_Mass=1.660538782d-27
   real*8, parameter :: THOUSAND=1000.0d0
-  real*8 :: q_t, E_t, S_t, U, S, entH, Gfe, Gfe_tot, tot_energy
+  real*8 :: q_t, E_t, S_t, U, S, entH, Gfe, Gfe_tot, tot_energy,tmpT
   integer :: atom_number
 
-  write(6,*) 'Atomic number and electronic energy (au)'
-  read(5,*) atom_number, tot_energy
+  write(6,*) 'Atomic number, electronic energy (au) and temperature(K)'
+  read(5,*) atom_number, tot_energy, tmpT
 
   !*** Calculations of translational contributions !************************************
   total_mass=mass(atom_number)*u_Atom_Mass

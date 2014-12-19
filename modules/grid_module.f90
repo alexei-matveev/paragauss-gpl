@@ -523,7 +523,7 @@ contains
     integer(kind=i4_kind), intent(in) :: unit
     !** End of interface **************************************
 
-    integer(kind=i4_kind) :: status,i
+    integer (i4_kind) :: status, i, atomic_number
     character(len=26) :: header
 
     call start("GRID","GRID_WRITE",unit,operations_echo_input_level)
@@ -536,23 +536,22 @@ contains
        nang=grid_par_scf(i)%nang
        npart=grid_par_scf(i)%npart
        radius=grid_par_scf(i)%radius
-       if(unique_atoms(i)%atomic_number == 0) then
-          rslater = radius == rslater_f(int(abs(unique_atoms(i)%z)))
-          if (rslater) radius = df_radius
-          rpople = radius == rpople_f(int(abs(unique_atoms(i)%z)))
-          if (rpople) radius = df_radius
-          rionic = radius == rionic_f(int(abs(unique_atoms(i)%z)))
-          if (rionic) radius = df_radius
-          if (rslater) rslater=df_rslater
+
+       ! For fake atoms in BSSE one might specify z = 0.0 and a proper
+       ! atomic number:
+       if (unique_atoms(i) % atomic_number == 0) then
+          atomic_number = int (abs (unique_atoms(i) % z))
        else
-          rslater = radius == rslater_f(unique_atoms(i)%atomic_number)
-          if (rslater) radius = df_radius
-          rpople = radius == rpople_f(unique_atoms(i)%atomic_number)
-          if (rpople) radius = df_radius
-          rionic = radius == rionic_f(unique_atoms(i)%atomic_number)
-          if (rionic) radius = df_radius
-          if (rslater) rslater=df_rslater
+          atomic_number = unique_atoms(i) % atomic_number
        endif
+
+       rslater = radius == rslater_f(atomic_number)
+       if (rslater) radius = df_radius
+       rpople = radius == rpople_f(atomic_number)
+       if (rpople) radius = df_radius
+       rionic = radius == rionic_f(atomic_number)
+       if (rionic) radius = df_radius
+       if (rslater) rslater = df_rslater
 
        write(header,'("GRIDATOM # unique atom",i4)') i
        call start(header,"GRID_WRITE",unit,operations_echo_input_level)
@@ -602,7 +601,7 @@ contains
     integer(kind=i4_kind), intent(in) :: unit
     !** End of interface *****************************************
 
-    integer(i4_kind) :: i
+    integer (i4_kind) :: i, atomic_number
     character(len=29) :: header
     logical :: equal_gridatoms
 
@@ -628,23 +627,22 @@ contains
        nang=grid_par_ph(i)%nang
        npart=grid_par_ph(i)%npart
        radius=grid_par_ph(i)%radius
-       if(unique_atoms(i)%atomic_number == 0) then
-          rslater = radius == rslater_f(int(abs(unique_atoms(i)%z)))
-          if (rslater) radius = df_radius_ph
-          rpople = radius == rpople_f(int(abs(unique_atoms(i)%z)))
-          if (rpople) radius = df_radius_ph
-          rionic = radius == rionic_f(int(abs(unique_atoms(i)%z)))
-          if (rionic) radius = df_radius_ph
-          if (rslater) rslater=df_rslater_ph
+
+       ! For fake atoms in BSSE one might specify z = 0.0 and a proper
+       ! atomic number:
+       if (unique_atoms(i) % atomic_number == 0) then
+          atomic_number = int (abs (unique_atoms(i) % z))
        else
-          rslater = radius == rslater_f(unique_atoms(i)%atomic_number)
-          if (rslater) radius = df_radius_ph
-          rpople = radius == rpople_f(unique_atoms(i)%atomic_number)
-          if (rpople) radius = df_radius_ph
-          rionic = radius == rionic_f(unique_atoms(i)%atomic_number)
-          if (rionic) radius = df_radius_ph
-          if (rslater) rslater=df_rslater_ph
+          atomic_number = unique_atoms(i) % atomic_number
        endif
+
+       rslater = radius == rslater_f(atomic_number)
+       if (rslater) radius = df_radius_ph
+       rpople = radius == rpople_f(atomic_number)
+       if (rpople) radius = df_radius_ph
+       rionic = radius == rionic_f(atomic_number)
+       if (rionic) radius = df_radius_ph
+       if (rslater) rslater = df_rslater_ph
 
        if (equal_gridatoms) then
           ! the  entire set  of GRIDATOM_PH  namelists may  be skipped
@@ -695,7 +693,7 @@ contains
     implicit none
     !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: allocstat,unit,status,i
+    integer (i4_kind) :: allocstat, unit, status, i, atomic_number
 
     if(n_unique_atoms > 0)  then
        allocate(grid_par_scf(n_unique_atoms),STAT=allocstat)
@@ -754,32 +752,28 @@ contains
           if(rslater.or.rpople.or.rionic) call input_error &
                ('Dont know what to do, multiple radius definition')
        endif
-       if(rslater) then
+
+       ! FIXME: at other places one uses int(abs()) instead:
+       if (unique_atoms(i) % atomic_number == 0) then
+          atomic_number = int (unique_atoms(i) % z)
+       else
+          atomic_number = unique_atoms(i) % atomic_number
+       endif
+
+       if (rslater) then
           if(rpople.or.rionic) call input_error &
                ('Dont know what to do, multiple radius definition')
-          if(unique_atoms(i)%atomic_number == 0) then
-             radius=rslater_f(int(unique_atoms(i)%z))
-          else
-             radius=rslater_f(unique_atoms(i)%atomic_number)
-          endif
+          radius = rslater_f(atomic_number)
        endif
-       if(rpople) then
+       if (rpople) then
           if(rionic.or.rslater) call input_error &
                ('Dont know what to do, multiple radius definition')
-          if(unique_atoms(i)%atomic_number == 0) then
-             radius=rpople_f(int(unique_atoms(i)%z))
-          else
-             radius=rpople_f(unique_atoms(i)%atomic_number)
-          endif
+          radius = rpople_f(atomic_number)
        endif
-       if(rionic)then
+       if (rionic)then
           if(rpople.or.rslater) call input_error &
                ('Dont know what to do, multiple radius definition')
-          if(unique_atoms(i)%atomic_number == 0) then
-             radius=rionic_f(int(unique_atoms(i)%z))
-          else
-             radius=rionic_f(unique_atoms(i)%atomic_number)
-          endif
+          radius = rionic_f(atomic_number)
        endif
        if(.not.radius.gt.0.0_r8_kind)then
           WARN('force radius = 1.0')
@@ -810,7 +804,7 @@ contains
     logical, intent(out) :: grid_ph_only
     !** End of interface *****************************************
 
-    integer(kind=i4_kind) :: unit,status,i
+    integer (i4_kind) :: unit, status, i, atomic_number
 
     if(n_unique_atoms > 0) then
        allocate(grid_par_ph(n_unique_atoms),STAT=alloc_grid(2))
@@ -870,32 +864,27 @@ contains
                ('Dont know what to do, multiple radius definition')
        endif
 
-       if(rslater) then
+       ! FIXME: at other places one uses int(abs()) instead:
+       if (unique_atoms(i) % atomic_number == 0) then
+          atomic_number = int (unique_atoms(i) % z)
+       else
+          atomic_number = unique_atoms(i) % atomic_number
+       endif
+
+       if (rslater) then
           if(rpople.or.rionic) call input_error &
                ('Dont know what to do, multiple radius definition')
-          if(unique_atoms(i)%atomic_number == 0) then
-             radius=rslater_f(int(unique_atoms(i)%z))
-          else
-             radius=rslater_f(unique_atoms(i)%atomic_number)
-          endif
+          radius = rslater_f(atomic_number)
        endif
 
-       if(rpople) then
+       if (rpople) then
           if(rionic) call input_error &
                ('Dont know what to do, multiple radius definition')
-          if(unique_atoms(i)%atomic_number == 0) then
-             radius=rpople_f(int(unique_atoms(i)%z))
-          else
-             radius=rpople_f(unique_atoms(i)%atomic_number)
-          endif
+          radius = rpople_f(atomic_number)
        endif
 
-       if(rionic) then
-          if(unique_atoms(i)%atomic_number == 0) then
-             radius=rionic_f(int(unique_atoms(i)%z))
-          else
-             radius=rionic_f(unique_atoms(i)%atomic_number)
-          endif
+       if (rionic) then
+          radius = rionic_f(atomic_number)
        endif
 
        ASSERT(radius>0.0_r8_kind)

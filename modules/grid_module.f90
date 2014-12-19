@@ -505,6 +505,27 @@ contains
   !--------------------------------------------------------------------------
 
 
+  function guess_atomic_number (unique_atom) result (atomic_number)
+    use unique_atom_module, only: unique_atom_type
+    implicit none
+    type (unique_atom_type), intent (in) :: unique_atom
+    integer (i4_kind) :: atomic_number
+    ! *** end of interface ***
+
+    ! For fake atoms in BSSE one might specify z = 0.0 and a proper
+    ! atomic number:
+    if (unique_atom % atomic_number == 0) then
+       atomic_number = int (abs (unique_atom % z))
+       ! FIXME:  older code  used int  (z) and  int (abs  (z))  at two
+       ! different  places. This  will fire  if negative  z  is really
+       ! used:
+       ASSERT(unique_atom%z>=0)
+    else
+       atomic_number = unique_atom % atomic_number
+    endif
+  end function guess_atomic_number
+
+
   subroutine grid_write(unit)
     !
     ! Writes input read by  grid_read() concerning the construction of
@@ -539,11 +560,7 @@ contains
 
        ! For fake atoms in BSSE one might specify z = 0.0 and a proper
        ! atomic number:
-       if (unique_atoms(i) % atomic_number == 0) then
-          atomic_number = int (abs (unique_atoms(i) % z))
-       else
-          atomic_number = unique_atoms(i) % atomic_number
-       endif
+       atomic_number = guess_atomic_number (unique_atoms(i))
 
        rslater = radius == rslater_f(atomic_number)
        if (rslater) radius = df_radius
@@ -630,11 +647,7 @@ contains
 
        ! For fake atoms in BSSE one might specify z = 0.0 and a proper
        ! atomic number:
-       if (unique_atoms(i) % atomic_number == 0) then
-          atomic_number = int (abs (unique_atoms(i) % z))
-       else
-          atomic_number = unique_atoms(i) % atomic_number
-       endif
+       atomic_number = guess_atomic_number (unique_atoms(i))
 
        rslater = radius == rslater_f(atomic_number)
        if (rslater) radius = df_radius_ph
@@ -753,12 +766,8 @@ contains
                ('Dont know what to do, multiple radius definition')
        endif
 
-       ! FIXME: at other places one uses int(abs()) instead:
-       if (unique_atoms(i) % atomic_number == 0) then
-          atomic_number = int (unique_atoms(i) % z)
-       else
-          atomic_number = unique_atoms(i) % atomic_number
-       endif
+       ! FIXME: older code used int(z) here:
+       atomic_number = guess_atomic_number (unique_atoms(i))
 
        if (rslater) then
           if(rpople.or.rionic) call input_error &
@@ -864,12 +873,8 @@ contains
                ('Dont know what to do, multiple radius definition')
        endif
 
-       ! FIXME: at other places one uses int(abs()) instead:
-       if (unique_atoms(i) % atomic_number == 0) then
-          atomic_number = int (unique_atoms(i) % z)
-       else
-          atomic_number = unique_atoms(i) % atomic_number
-       endif
+       ! FIXME: older code used int(z) here:
+       atomic_number = guess_atomic_number (unique_atoms(i))
 
        if (rslater) then
           if(rpople.or.rionic) call input_error &

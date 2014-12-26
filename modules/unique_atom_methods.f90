@@ -412,6 +412,7 @@ contains
 #ifdef WITH_EFP
    use operations_module, only: operations_integral, operations_scf, &
         operations_post_scf
+   use qmmm_interface_module, only: efp
 #endif
    use options_module, only: options_relativistic
    use unique_atom_module, only: unique_atom_iwork, &

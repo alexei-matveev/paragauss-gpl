@@ -168,6 +168,7 @@ subroutine main_master()
        calc_X_points, calc_efield_points, print_id, qm_fixed
   use efp_efp_module, only: efp_efp_energy
   use efp_only_opt_module, only: geom_converged
+  use qmmm_interface_module, only: efp
 #endif
   use density_data_module, only: open_densmat
   use solv_cavity_module, only: stop_solv

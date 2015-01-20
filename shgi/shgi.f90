@@ -143,8 +143,8 @@ module shgi
   ! a copy from shgi_shr.f90:
   integer(IK)   :: L_,M_
   integer(IK), parameter :: MAXL = 6 ! s,p,d,f,g,h,i
-  integer(IK), parameter :: lof( (MAXL+1)**2 ) = (/((L_,M_=1,2*L_+1),L_=0,MAXL)/)
-  integer(IK), parameter :: mof( (MAXL+1)**2 ) = (/((M_,M_=1,2*L_+1),L_=0,MAXL)/)
+  integer(IK), parameter :: lof((MAXL + 1)**2) = [((L_, M_ = 1, 2 * L_ + 1), L_ = 0, MAXL)]
+  integer(IK), parameter :: mof((MAXL + 1)**2) = [((M_, M_ = 1, 2 * L_ + 1), L_ = 0, MAXL)]
   !------------ Subroutines ------------------------------------------
 contains
 

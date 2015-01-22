@@ -1,5 +1,21 @@
 #!/usr/bin/perl
 #
+# This script  outputs a gaussian  broadened line spectrum  as derived
+# from the population analysis section of the output.
+#
+# Copyright (C) 2002-2015 Alexei Matveev
+#
+# This program is free software; you can redistribute it and/or modify
+# it under  the terms of the  GNU General Public License  version 2 as
+# published by the Free Software Foundation [1].
+#
+# This program is distributed in the  hope that it will be useful, but
+# WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+# MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
 # dos.pl: utility to plot DOS using POAN
 # of ParaGauss.
 # $Id: dos.pl,v 1.6 2015/01/22 13:26:17 matveev Exp matveev $

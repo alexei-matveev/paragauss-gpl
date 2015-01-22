@@ -1,4 +1,20 @@
 #
+# This script parses  the spectrum section of the  output. It is meant
+# for inclusion in dos.pl.
+#
+# Copyright (C) 2002-2015 Alexei Matveev
+#
+# This program is free software; you can redistribute it and/or modify
+# it under  the terms of the  GNU General Public License  version 2 as
+# published by the Free Software Foundation [1].
+#
+# This program is distributed in the  hope that it will be useful, but
+# WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+# MERCHANTABILITY  or FITNESS FOR  A PARTICULAR  PURPOSE. See  the GNU
+# General Public License for more details.
+#
+# [1] http://www.gnu.org/licenses/gpl-2.0.html
+#
 # read_spectrum.pl: exctracted from
 # zust.pl to be used in dos.pl
 # $Id: read_spectrum.pl,v 1.2 2008/11/06 12:25:16 matveev Exp matveev $

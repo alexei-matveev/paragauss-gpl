@@ -106,7 +106,9 @@
 #usage:
 #usage:
 
-push(@INC,"/home/matveev/bin.pl");
+use File::Basename;             # dirname() only
+
+push (@INC, dirname (__FILE__));
 
 require("read_spectrum.pl");
 

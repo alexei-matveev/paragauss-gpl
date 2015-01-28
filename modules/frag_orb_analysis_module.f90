@@ -46,8 +46,6 @@ module  frag_orb_analysis_module
   !           input switches:
   !
   !           n_fragments: number of fragments
-  !           pop_limit  : only contributions greater then
-  !                        pop_limit will be shown in the output
   !           eig_min
   !           eig_max:     only orbitals with energies lieing between
   !                        will be listed in the output
@@ -65,6 +63,11 @@ module  frag_orb_analysis_module
   !-------------------------------------------------------------------
   ! Modifications
   !-------------------------------------------------------------------
+  !
+  ! Modification
+  ! Author: TS
+  ! Date:   1/15
+  ! Description: Reworking module to use it with current build
   !
   ! Modification (Please copy before editing)
   ! Author: ...

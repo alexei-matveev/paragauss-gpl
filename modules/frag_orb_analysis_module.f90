@@ -87,7 +87,12 @@ module  frag_orb_analysis_module
   private         ! by default, all names are private
   !== Interrupt end of public interface of module ====================
 
-
+  type fragment_type ! used to describe fragments
+     !in fragment orbital analysis
+     integer(kind=i4_kind)              :: n_atoms  ! number of atoms in this fragment
+     integer(kind=i4_kind), allocatable :: atoms(:) ! indices of fragment atoms
+     logical                            :: active   ! perform FMO on fragment
+  end type fragment_type
 
   !------------ public functions and subroutines ---------------------
   public frag_orb_analysis_read, frag_orb_analysis_write, frag_orb_analysis_main

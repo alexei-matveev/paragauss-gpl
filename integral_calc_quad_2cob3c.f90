@@ -1470,9 +1470,17 @@ FPP_TIMER_STOP(t_calc_3center)
     SELECT CASE( IAND(IMODE,IOVRL+IKNTC+INUCL+INUSR+INUSO+IPSEU) )
     CASE (0)
        ! do nothing here, but see below after END SELECT !
-    CASE (IOVRL)
-       ! I guess it is unnecessary
-       !WARN('calc_prim_shgi: do you really need OVRL?')
+    CASE (IOVRL+IKNTC)
+       ! overlap only for properties run
+       ! KNTC actually not needed but calculation of OVRL
+       ! done only in combination with it
+       ! NB: not needed for orbitalplot
+       call shgi_drv(U1,E1,L1,U2,E2,L2 &
+             , unique_atoms &
+             , OVRL=prim_int_2cob_ol       &
+             , KNTC=prim_int_2cob_kin      &
+             , IMOD=IMODE                  &
+             )
     CASE (IOVRL+IKNTC+INUCL, IOVRL+IKNTC+INUCL+IPSEU)
        ! in non-rel. NUCL and PSEU go together:
        call shgi_drv(U1,E1,L1,U2,E2,L2 &

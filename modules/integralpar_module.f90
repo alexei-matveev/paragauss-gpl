@@ -1068,7 +1068,7 @@ contains
     integralpar_2cob_X = .false.
     integralpar_efp_gradients = .false.
 #endif
-    integralpar_2cob_kin = .false.
+    integralpar_2cob_kin = .True. ! enable overlap calculation in shgi.f90
     ! 2-center orbital integral of kinetic energy
     integralpar_2cob_nuc = .false.
     ! 2-center orbital integral of nuclear attraction

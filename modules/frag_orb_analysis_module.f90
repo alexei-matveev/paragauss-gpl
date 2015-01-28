@@ -284,6 +284,12 @@ contains
     write(output_unit,'(A12,F8.4)') 'eig_min:',eig_min
     write(output_unit,'(A12,F8.4)') 'eig_max:',eig_max
 
+    write(output_unit,*)
+    write(output_unit,*)
+    write(output_unit,fmt='(46X,"*** POPULATION ANALYSIS***")')
+    write(output_unit,*)
+    write(output_unit,*)
+
     n_spin=ssym%n_spin
     allocate( dim_irrep(ssym%n_irrep,n_fragments), fmo_index(n_fragments), eigvec_frag(ssym%n_irrep,n_fragments), stat=alloc_stat )
     if(alloc_stat/=0) call error_handler( 'fragment_orbital_analysis: allocating dim_irrep' )

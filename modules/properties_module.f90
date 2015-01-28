@@ -183,7 +183,6 @@ contains
     external error_handler
 
     if (.not. operations_scf) then
-       ABORT('needs more work')
        ! Otherwise  the  eigenvectors  are  still available  from  the
        ! scf-part. If not, allocate:
        call eigen_data_alloc()
@@ -230,7 +229,7 @@ contains
     endif
 
     if (frag_orb_analysis) then
-       ABORT("needs more work")
+       WARN("FRAG_ORB_ANALYSIS tested for serial run only")
 
        call say ('frag_orb_analysis_main')
        call frag_orb_analysis_main()

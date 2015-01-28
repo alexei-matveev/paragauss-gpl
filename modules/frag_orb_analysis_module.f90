@@ -316,37 +316,39 @@ contains
           end if
        end do
        ! now read eigenvectors from file
-       write(chfrag,'(i4)') i_frag
-       chfrag=adjustl(chfrag)
-       call readwriteblocked_startread(trim(inpfile('saved_fragment.dat'//trim(chfrag))),  &
-            th,variable_length=.true.)
-       ! first we have to skip the parts we don`t need
-       skip_length=1+n_spin*n_ir*2
-       allocate(buffer(skip_length), stat=alloc_stat)
-       if(alloc_stat/=0) call error_handler(&
-            'fragment_orbital_analysis: allocating buffer 1')
-       call readwriteblocked_read(buffer,th)
-       deallocate(buffer, stat=alloc_stat)
-       if(alloc_stat/=0) call error_handler(&
-            'fragment_orbital_analysis: deallocating buffer 1')
-       do i_ir=1,ssym%n_irrep
-          if(dim_irrep(i_ir,i_frag)>0) then
-             skip_length=dim_irrep(i_ir,i_frag)*2
-             allocate(buffer(skip_length), stat=alloc_stat)
-             if(alloc_stat/=0) call error_handler(&
-                  'fragment_orbital_analysis: allocating buffer 2')
-             do i_spin=1,n_spin
-                call readwriteblocked_read(buffer,th)
-                do i_orb=1,dim_irrep(i_ir,i_frag)
-                   call readwriteblocked_read(eigvec_frag(i_ir,i_frag)%m(:,i_orb,i_spin),th)
+       if ( fragments(i_frag)%active ) then
+          write(chfrag,'(i4)') i_frag
+          chfrag=adjustl(chfrag)
+          call readwriteblocked_startread(trim(inpfile('saved_fragment.dat'//trim(chfrag))),  &
+               th,variable_length=.true.)
+          ! first we have to skip the parts we don`t need
+          skip_length=1+n_spin*n_ir*2
+          allocate(buffer(skip_length), stat=alloc_stat)
+          if(alloc_stat/=0) call error_handler(&
+               'fragment_orbital_analysis: allocating buffer 1')
+          call readwriteblocked_read(buffer,th)
+          deallocate(buffer, stat=alloc_stat)
+          if(alloc_stat/=0) call error_handler(&
+               'fragment_orbital_analysis: deallocating buffer 1')
+          do i_ir=1,ssym%n_irrep
+             if(dim_irrep(i_ir,i_frag)>0) then
+                skip_length=dim_irrep(i_ir,i_frag)*2
+                allocate(buffer(skip_length), stat=alloc_stat)
+                if(alloc_stat/=0) call error_handler(&
+                     'fragment_orbital_analysis: allocating buffer 2')
+                do i_spin=1,n_spin
+                   call readwriteblocked_read(buffer,th)
+                   do i_orb=1,dim_irrep(i_ir,i_frag)
+                      call readwriteblocked_read(eigvec_frag(i_ir,i_frag)%m(:,i_orb,i_spin),th)
+                   end do
                 end do
-             end do
-             deallocate(buffer, stat=alloc_stat)
-             if(alloc_stat/=0) call error_handler(&
-                  'fragment_orbital_analysis: deallocating buffer 2')
-          end if
-       end do
-       call readwriteblocked_stopread(th)
+                deallocate(buffer, stat=alloc_stat)
+                if(alloc_stat/=0) call error_handler(&
+                     'fragment_orbital_analysis: deallocating buffer 2')
+             end if
+          end do
+          call readwriteblocked_stopread(th)
+       end if
     end do! loop over fragments
     ! now we have everything read in and we start building the eigenvectors
     ! from the fragment orbitals

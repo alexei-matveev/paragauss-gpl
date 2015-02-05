@@ -90,7 +90,7 @@
 #usage:# Perl-style pattern of what contributions should be
 #usage:# counted, in this case S-,P-,D-contributions of 3rd unique
 #usage:# atom will be printed. Deafult is ".*" i.e. everything matches.
-#usage:# 
+#usage:#
 #usage:# In general, levels are indexed by complex structure:
 #usage:# Spin restricted case:
 #usage:#	N,IRR,L<A>
@@ -170,7 +170,7 @@ while(<>){
 	}
 	}
 	next if ! $process_rest && ! /POPULATION/ ;
-	
+
 	if(/\*\*\* POPULATION ANALYSIS\*\*\*/){
 #		print "-found($line_count): $_";
 		if( $skip_blocks > 0 ){
@@ -554,10 +554,12 @@ sub barplot{
       printf "# %10s: %10s %8.3f %8.3f\n", $patt, $lev, $eny{$lev}, $weight;
     }
 
-    # output bars by energy => weight hash:
+    # Output  bars  by  energy  =>  weight hash.   Note  that  due  to
+    # accidental degeneracies several,  possibly unrelated, levels may
+    # contribute to the bar at the same (rounded) energy:
     foreach $lev ( keys %bar_energy ){
       $e = $bar_energy{$lev};
-      $bars{$e} = $bar_height{$lev};
+      $bars{$e} += $bar_height{$lev};
     }
 }
 

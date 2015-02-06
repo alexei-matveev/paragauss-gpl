@@ -127,11 +127,11 @@ contains
   end subroutine properties_read
 
 
-  subroutine properties_write(iounit)
+  subroutine properties_write (iounit)
     !
     ! Write namelist population to iounit in input format.
     !
-    use echo_input_module
+    use echo_input_module, only: start, flag, stop
     use operations_module, only: operations_echo_input_level
     implicit none
     !------------ Declaration of formal parameters ---------------
@@ -139,13 +139,12 @@ contains
     !** End of interface *****************************************
 
     call start("PROPERTIES","PROPERTIES_WRITE", &
-         iounit,operations_echo_input_level)
-    call flag('MULLIKEN         ',mulliken         , df_mulliken         )
-    call flag('PLOT_ORBITALS    ',plot_orbitals    , df_plot_orbitals    )
-    call flag('FRAG_ORB_ANALYSIS',frag_orb_analysis, df_frag_orb_analysis)
-    call flag('DIPOLE           ',dipole           , df_dipole           )
+         iounit, operations_echo_input_level)
+    call flag('MULLIKEN         ', mulliken, df_mulliken)
+    call flag('PLOT_ORBITALS    ', plot_orbitals, df_plot_orbitals)
+    call flag('FRAG_ORB_ANALYSIS', frag_orb_analysis, df_frag_orb_analysis)
+    call flag('DIPOLE           ', dipole, df_dipole)
     call stop()
-
   end subroutine properties_write
 
 
@@ -184,7 +183,6 @@ contains
     external error_handler
 
     if (.not. operations_scf) then
-       ABORT('needs more work')
        ! Otherwise  the  eigenvectors  are  still available  from  the
        ! scf-part. If not, allocate:
        call eigen_data_alloc()
@@ -231,7 +229,7 @@ contains
     endif
 
     if (frag_orb_analysis) then
-       ABORT("needs more work")
+       WARN("FRAG_ORB_ANALYSIS tested for serial run only")
 
        call say ('frag_orb_analysis_main')
        call frag_orb_analysis_main()

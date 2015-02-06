@@ -143,8 +143,8 @@ module shgi
   ! a copy from shgi_shr.f90:
   integer(IK)   :: L_,M_
   integer(IK), parameter :: MAXL = 6 ! s,p,d,f,g,h,i
-  integer(IK), parameter :: lof( (MAXL+1)**2 ) = (/((L_,M_=1,2*L_+1),L_=0,MAXL)/)
-  integer(IK), parameter :: mof( (MAXL+1)**2 ) = (/((M_,M_=1,2*L_+1),L_=0,MAXL)/)
+  integer(IK), parameter :: lof((MAXL + 1)**2) = [((L_, M_ = 1, 2 * L_ + 1), L_ = 0, MAXL)]
+  integer(IK), parameter :: mof((MAXL + 1)**2) = [((M_, M_ = 1, 2 * L_ + 1), L_ = 0, MAXL)]
   !------------ Subroutines ------------------------------------------
 contains
 
@@ -591,14 +591,19 @@ contains
     ![[===============================================
 
 
-    ![[=== add field of external centers to nuclear attraction: ===
-    if( is_on(IPSEU) )then
-       call shgi_ext(PIPSEU)
-    else
-       ASSERT(is_on(INUCL))
-       call shgi_ext(PINUCL)
+    ! Add field  of external centers to nuclear  attraction. The logic
+    ! is  to  add  it  to  PP  to avoid  the  relativistic  trafo,  if
+    ! possible. Note that in an all-electron relativistic calculations
+    ! the field of external  centers will be transformed together with
+    ! nuclear attraction, though.  FIXME:  is there an is_on(IEXTC) or
+    ! the like? Should we #ifdef WITH_EFP the whole block?
+    if (is_on (IPSEU) .or. is_on (INUCL)) then
+       if (is_on (IPSEU)) then
+          call shgi_ext (PIPSEU)
+       else
+          call shgi_ext (PINUCL)
+       endif
     endif
-    ![[============================================================
 
     ! unpack (maybe relativistic) kinetic energy:
     if(is_on(IKNTC))then

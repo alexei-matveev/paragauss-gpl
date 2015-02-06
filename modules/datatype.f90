@@ -106,13 +106,6 @@ module datatype
      integer(kind=i4_kind), pointer :: m(:,:) => NULL()
   end type intmat2
 
-  type fragment_type ! used to describe fragments
-     !in fragment orbital analysis
-     integer(kind=i4_kind) :: n_atoms ! number of atoms in this fragment
-     integer(kind=i4_kind), pointer :: atoms(:) => NULL() ! indices of
-     ! atoms in the fragment
-  end type fragment_type
-
   type eig_cont_type
      ! this type is used to store results of fragment orbital analysis
      integer(kind=i4_kind) :: n_cont ! number of cont. orbitals

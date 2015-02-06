@@ -88,6 +88,7 @@ module  population_module
 
   !------------ public functions and subroutines ---------------------
 
+  public :: popout
   public :: population_read
   public :: population_write
   public :: population_mulliken
@@ -447,7 +448,7 @@ contains
     write(output_unit,*)
 
     if (population_level == 1) then
-       call popout(1, 1, .false., ssym, &
+       call popout(1, 1, 0, 0, .false., ssym, &
                 title_cont, title_l, title_sum,&
                 contribute, contribute_l, sum_l, sum_ocup_l, &
                 sum_cont, sum_ocup_cont, sum_total, sum_total_updn, atomic_charge)
@@ -590,7 +591,7 @@ contains
           enddo
 
 
-          call popout(is, i_ir, .true., ssym, &
+          call popout(is, i_ir, 1, ssym%dim(i_ir), .true., ssym, &
                 title_cont, title_l, title_sum,&
                 contribute, contribute_l, sum_l, sum_ocup_l, &
                 sum_cont, sum_ocup_cont, sum_total, sum_total_updn, atomic_charge)
@@ -607,7 +608,7 @@ contains
        enddo
     enddo
     ! ------------------------------------------------------------------------
-    call popout(is, 1, .false., ssym, &
+    call popout(is, 1, 0, 0, .false., ssym, &
                 title_cont, title_l, title_sum,&
                 contribute, contribute_l, sum_l, sum_ocup_l, &
                 sum_cont, sum_ocup_cont, sum_total, sum_total_updn, atomic_charge)
@@ -1116,6 +1117,7 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
   subroutine popout (&
        is, &
        i_ir, &
+       line_first, line_last, &
        flag, &
        ssym, &
        title_cont, &            ! ???
@@ -1147,7 +1149,7 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
     use iounitadmin_module, only: output_unit
     use operations_module, only: operations_core_density
     implicit none
-    integer(kind=i4_kind),intent(in)  :: is, i_ir
+    integer(kind=i4_kind),intent(in)  :: is, i_ir, line_first, line_last
     logical,intent(in)  :: flag  ! determines output
     type(sym), intent(in) :: ssym
 
@@ -1167,13 +1169,15 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
     !** End of interface *****************************************
 
     ! --- declaration of local variables ----------------------
-    integer(kind=i4_kind)   :: mu,n,nl
-    integer(kind=i4_kind)   :: n_sum, n_tot
+    integer(kind=i4_kind)   :: mu,m,n,nl
+    integer(kind=i4_kind)   :: n_sum, n_tot, n_unique
+
     !------------ Executable code ------------------------------------
 
     n_sum = size(title_sum)
     n_tot = size(title_l)
 
+    n_unique = size( atomic_charge ) ! N_unique atoms is not always available
     if (flag) then
        ! --- contractions ---
        if (population_level > 2 ) then
@@ -1190,9 +1194,11 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
           write(output_unit,47000)
           write(output_unit,*)
           write(output_unit,20000)(title_cont(n),n=1,ssym%dim(i_ir))
-          do mu=1,ssym%dim(i_ir)
+          m = 0
+          do mu=line_first, line_last
+             m = m + 1
              write(output_unit,25000)mu,eigval(i_ir)%m(mu,is)*27.211652_r8_kind,&
-                  (contribute(mu,n),n=1,ssym%dim(i_ir))
+                  (contribute(m,n),n=1,ssym%dim(i_ir))
           enddo
           write(output_unit,30000)(sum_cont(mu),mu=1,ssym%dim(i_ir))
           write(output_unit,32000)(sum_ocup_cont(mu),mu=1,ssym%dim(i_ir))
@@ -1213,9 +1219,11 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
        write(output_unit,48000)
        write(output_unit,*)
        write(output_unit,20000)(title_l(n),n=1,n_tot)
-       do mu=1,ssym%dim(i_ir)
+       m = 0
+       do mu=line_first, line_last
+          m = m + 1
           write(output_unit,25000)mu,eigval(i_ir)%m(mu,is)*27.211652_r8_kind,&
-               (contribute_l(mu,nl),nl=1,n_tot)
+               (contribute_l(m,nl),nl=1,n_tot)
        enddo
        write(output_unit,30000)(sum_l(nl),nl=1,n_tot)
        write(output_unit,32000)(sum_ocup_l(nl),nl=1,n_tot)
@@ -1234,23 +1242,23 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
        write(output_unit,*)
        write(output_unit,80000)
        write(output_unit,*)
-       write(output_unit,81000)(n,n=1,N_unique_atoms)
-       write(output_unit,82000)(atomic_charge(n),n=1,N_unique_atoms)
+       write(output_unit,81000)(n,n=1,n_unique)
+       write(output_unit,82000)(atomic_charge(n),n=1,n_unique)
        if (operations_core_density) then
-          write(output_unit,83000)(unique_atoms(n)%Z,n=1,N_unique_atoms)
+          write(output_unit,83000)(unique_atoms(n)%Z,n=1,n_unique)
           write(output_unit,84000)(unique_atoms(n)%Z-atomic_charge(n), &
-               n=1,N_unique_atoms)
+               n=1,n_unique)
        else
           write(output_unit,83000)(unique_atoms(n)%Z-unique_atoms(n)%ZC, &
-               n=1,N_unique_atoms)
+               n=1,n_unique)
           write(output_unit,84000)(unique_atoms(n)%Z-unique_atoms(n)%ZC- &
-               atomic_charge(n),n=1,N_unique_atoms)
+               atomic_charge(n),n=1,n_unique)
        endif
        write(output_unit,*)
        write(output_unit,*)
     endif
 
-    do n=1,N_unique_atoms
+    do n=1,n_unique
        if (operations_core_density) then
           m_charge(n)=unique_atoms(n)%Z-atomic_charge(n)
        else
@@ -1268,8 +1276,8 @@ WARN("complex charges, recompile with FPP_POPAN_CMPLX")
 20000  FORMAT('     EIGENVALUE',5X,14(2X,A5,1X),/:&
             (20X,14(2X,A5,1X)))
 25000  FORMAT(1X,I3,1X,F10.3,4X,14(1X,F7.3),/:(19X,14(1X,F7.3)))
-30000  FORMAT(' SUM           ',4X,11(1X,F7.3),/:(19X,14(1X,F7.3)))
-32000  FORMAT(' WITH OCCUP.   ',4X,11(1X,F7.3),/:(19X,14(1X,F7.3)))
+30000  FORMAT(' SUM           ',4X,14(1X,F7.3),/:(19X,14(1X,F7.3)))
+32000  FORMAT(' WITH OCCUP.   ',4X,14(1X,F7.3),/:(19X,14(1X,F7.3)))
 90000  FORMAT(40X,'     SUMMARY OVER SPINS AND IRREPS     ')
 92000  FORMAT(40X,' CONTRIBUTIONS OF THE ATOMIC ORBITALS  ')
 94000  FORMAT('             ',6X,14(2X,A7,1X),/:&

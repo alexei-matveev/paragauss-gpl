@@ -26,7 +26,7 @@ program xyz2gx
   
   implicit none
 
-  integer*4 :: Ngx,nat_gx(3000)
+  integer*4 :: Ngx,nat_gx(3000),nskip,n_sk(3000)
   integer*4 :: Nxyz
   real*8 :: coor_xyz(3000,3)
   character*300 :: xyz_name,gx_name
@@ -35,7 +35,7 @@ program xyz2gx
   logical :: high,stat
   
   character*80 :: comment
-  integer*4 :: i,j,k
+  integer*4 :: i,j,k,l,what_to_do
 
   character*2 :: name(98)= &
        (/"H ","He","Li","Be","B ","C ","N ","O ","F ","Ne", &
@@ -65,12 +65,6 @@ program xyz2gx
   write(6,*) 'Name of XYZ file'
   read(5,*) xyz_name
 
-  write(6,*) 'Number of atoms in GX file'
-  read(5,*) ngx
-
-  write(6,*) 'Specify atomic numbers in XYZ file'
-  read(5,*,err=1) (nat_gx(i),i=1,ngx)
-
   open(10,file=trim(xyz_name))
   read(10,*) Nxyz
   read(10,*) !comment
@@ -80,10 +74,41 @@ program xyz2gx
   end do
   close (10)
 
-  goto 2
-1 stat=.false. !ngx=Nxyz
+1 write(6,*) 'All atoms to GX(1), some atoms to GX(2), some atoms skip(3)'
+  read(5,*) what_to_do
 
-2 write(6,*) 'Name of GX file'
+  if(what_to_do==1) then
+     stat=.false.
+     ngx=Nxyz
+  elseif(what_to_do==2) then
+     write(6,*) 'Number of atoms in GX file'
+     read(5,*) ngx
+     write(6,*) 'Specify atomic numbers in XYZ file'
+     read(5,*) (nat_gx(i),i=1,ngx)
+  elseif(what_to_do==3) then
+     write(6,*) 'Number of skiped atoms'
+     read(5,*) nskip
+     write(6,*) 'Specify skiped atomic numbers in XYZ file'
+     read(5,*) (n_sk(i),i=1,nskip)
+     ngx=Nxyz-nskip
+     k=1;l=1
+     do 
+        mm:do i=l,Nxyz
+           do j=1,nskip
+              if(i==n_sk(j)) cycle mm
+           enddo
+           nat_gx(k)=i
+           l=i+1
+           exit mm
+        enddo mm
+        if(k==ngx) exit
+        k=k+1
+     enddo
+  else
+     goto 1
+  endif
+
+  write(6,*) 'Name of GX file'
   read(5,*) gx_name
 
   open(10,file=trim(gx_name))
@@ -97,7 +122,7 @@ program xyz2gx
      do k=1,98
         if(atm_name(j) == name(k).or.atm_name(j) == name1(k)) exit
      end do
-     write(10,'(f5.2,3f23.12,2i4,2x,3i4,2x,3i4,i5)') dble(k),coor_xyz(j,:)/0.529177d0,i,i,0,0,0,0,0,0,0
+     write(10,'(f5.2,3f23.12,2i4,2x,3i4,2x,3i4,i5)') dble(k),coor_xyz(j,:)/0.529177249d0,i,i,0,0,0,0,0,0,0
   end do
   write(10,'(f5.2,3f23.12,2i4,2x,3i4,2x,3i4,i5)') -1.0,0.0,0.0,0.0,0,0,0,0,0,0,0,0,0
 

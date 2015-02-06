@@ -23,13 +23,13 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 program gx2xyz
-!Usage: gx2xyz_a [-no99] [-efp] < gxfile > aaa.xyz
+!Usage: gx2xyz_a [-99] [-efp] < gxfile > aaa.xyz
   real*8 :: an,xx,yy,zz
   dimension :: an(10000),xx(10000),yy(10000),zz(10000)
   logical :: dummy,efp
-  integer*4 :: i,j,k,na
-  character*5 :: aaa(2)
-  character*2 :: name(99)= &
+  integer*4 :: i,j,k,na,n_args
+  character(len=4) :: args(2)
+  character(len=2) :: name(99)= &
        (/"H ","He","Li","Be","B ","C ","N ","O ","F ","Ne", &
          "Na","Mg","Al","Si","P ","S ","Cl","Ar","K ","Ca", &
          "Sc","Ti","V ","Cr","Mn","Fe","Co","Ni","Cu","Zn", &
@@ -41,22 +41,20 @@ program gx2xyz
          "Tl","Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th", &
          "Pa","U ","Np","Pu","Am","Cm","Bk","Cf","XX"/)
 
-  dummy=.true.; efp=.false.
-  call getarg(1,aaa(1))
-  call getarg(2,aaa(2))
-  if(index(aaa(1),"-no99") /= 0 .or. index(aaa(2),"-no99") /= 0) dummy=.false.
-  if(index(aaa(1),"-efp") /= 0 .or. index(aaa(2),"-efp") /= 0) efp=.true.
+  args='   '
+  dummy=.false.; efp=.false.
+  n_args=COMMAND_ARGUMENT_COUNT()
+  if(n_args == 1) call get_command_argument(n_args,args(1))
+  if(n_args == 2) call get_command_argument(n_args,args(2))
+  if(trim(args(1)) == '-99' .or. trim(args(2)) == '-99') dummy=.true.
+  if(trim(args(1)) == '-efp' .or. trim(args(2)) == '-efp') efp=.true.
+
   i=1
   do 
      read(5,*,err=2) an(i),xx(i),yy(i),zz(i)
-     if(efp .and. int(an(i)*100.0d0)==112) cycle
-     if(efp .and. int(an(i)*100.0d0)==113) cycle
-     if(efp .and. int(an(i)*101.0d0)-2==201) cycle
-     if(efp .and. int(an(i)*100.0d0)==202) cycle
-     if(efp .and. int(an(i)*100.0d0)==203) cycle
-     if(efp .and. int(an(i)*100.0d0)==204) cycle
-     if(efp .and. int(an(i)*100.0d0)==205) cycle
-     if(efp .and. int(an(i)*100.0d0)==301) cycle
+     if(.not.efp .and. int(an(i)*100.0d0)==801) cycle
+     if(.not.efp .and. int(an(i)*100.0d0)==102) cycle
+     if(.not.efp .and. int(an(i)*100.0d0)==103) cycle
      na=int(an(i))
      if(na == 99 .and. .not. dummy) cycle
      if(na <= 0) exit

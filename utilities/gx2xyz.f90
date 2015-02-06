@@ -66,7 +66,7 @@ program gx2xyz
   write(6,*) '!!!!!!!!!!!!!!!!'
   do j=1,k
      na=int(an(j))
-     write(6,'(a2,3f17.8)') name(na),xx(j)*0.529177249d0,yy(j)*0.529177249d0,zz(j)*0.529177249d0
+     write(6,'(a2,3f21.12)') name(na),xx(j)*0.529177249d0,yy(j)*0.529177249d0,zz(j)*0.529177249d0
   enddo
 
 end program gx2xyz

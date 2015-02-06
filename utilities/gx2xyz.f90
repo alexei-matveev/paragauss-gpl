@@ -23,9 +23,9 @@
 ! Please see the accompanying LICENSE file for further information.
 !
 program gx2xyz
-!Usage: gx2xyz < gxfile > aaa.xyz
+!Usage: gx2xyz [-99] < gxfile > aaa.xyz
         dimension :: an(10000),xx(10000),yy(10000),zz(10000)
-        character*2 :: name(98)= &
+        character(len=2) :: name(99)= &
         (/"H ","He","Li","Be","B ","C ","N ","O ","F ","Ne", &
           "Na","Mg","Al","Si","P ","S ","Cl","Ar","K ","Ca", &
           "Sc","Ti","V ","Cr","Mn","Fe","Co","Ni","Cu","Zn", &
@@ -35,13 +35,19 @@ program gx2xyz
           "Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tu","Yb", &
           "Lu","Hf","Ta","W ","Re","Os","Ir","Pt","Au","Hg", &
           "Tl","Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th", &
-          "Pa","U ","Np","Pu","Am","Cm","Bk","Cf"/)
+          "Pa","U ","Np","Pu","Am","Cm","Bk","Cf","XX"/)
+        character(len=255) :: cmd
+        character(len=3) :: key99
 
+        key99='  '
+        n_args=COMMAND_ARGUMENT_COUNT()
+        if(n_args > 0) call get_command_argument(n_args,key99)
+ 
         i=1
         do 
                 read(5,*) an(i),xx(i),yy(i),zz(i)
                 na=int(an(i))
-                if(na == 99) cycle
+                if(na == 99.and.key99 /= '-99') cycle
                 if(na <= 0) exit
                 i=i+1
         enddo

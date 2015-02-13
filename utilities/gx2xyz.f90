@@ -42,12 +42,12 @@ program gx2xyz
          "Pa","U ","Np","Pu","Am","Cm","Bk","Cf","XX"/)
 
   args='   '
-  dummy=.false.; efp=.false.
+  dummy=.false.; efp=.true.
   n_args=COMMAND_ARGUMENT_COUNT()
   if(n_args == 1) call get_command_argument(n_args,args(1))
   if(n_args == 2) call get_command_argument(n_args,args(2))
   if(trim(args(1)) == '-99' .or. trim(args(2)) == '-99') dummy=.true.
-  if(trim(args(1)) == '-efp' .or. trim(args(2)) == '-efp') efp=.true.
+  if(trim(args(1)) == '-no_efp' .or. trim(args(2)) == '-no_efp') efp=.false.
 
   i=1
   do 

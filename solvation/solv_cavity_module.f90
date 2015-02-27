@@ -238,6 +238,7 @@ module solv_cavity_module
                            !due to skiped contribution of intersected tesserae
   !Non tessera smoothing partition of cavity surface
   character(len=9) :: smoothing
+  logical :: use_charge_scaling
   integer(i4_kind) :: smooth
 
   integer(i4_kind) :: atom_rad
@@ -247,6 +248,7 @@ module solv_cavity_module
   namelist /solvation/ &
        solvation_model, &
        smoothing, &
+       use_charge_scaling, &
        atomic_radii, &
        VTN, &
        AreaScaling, &
@@ -328,9 +330,13 @@ module solv_cavity_module
   logical :: df_AreaScaling=.false.
   !smoothing
   character(len=9) :: df_smoothing="NO" ! "TesLess","TesLess_a","FIXPVA"
+  logical :: df_use_charge_scaling=.false. !.true.
   real(r8_kind),parameter :: d=0.15_r8_kind
   integer(i4_kind) :: Nd
   real(r8_kind) :: a(7)
+  real(r8_kind), parameter :: s_f_012=1.125_r8_kind
+  real(r8_kind), parameter :: s_f_3  =1.030_r8_kind
+  real(r8_kind), parameter :: s_f_4  =1.000_r8_kind
   ! Parameters defining behavior FIXPVA, in Angsrom:
   real(r8_kind), parameter :: mm11=0.02_r8_kind
   real(r8_kind), parameter :: mm12=0.55_r8_kind
@@ -440,6 +446,7 @@ contains ! of module
     VTN=df_VTN
     AreaScaling=df_AreaScaling
     smoothing=df_smoothing
+    use_charge_scaling=df_use_charge_scaling
     smooth=0
     atomic_radii=df_atomic_radii
     atom_rad=0
@@ -481,7 +488,7 @@ contains ! of module
     if(smooth == 3) then
        if(point_factor < 2) point_factor=2
        overlap_factor = 0.0_r8_kind
-       scaled_factor = 1.125_r8_kind
+       scaled_factor = s_f_012
        no_hydrogen_sphere = .false.
        hydrogen_no_scale = .true.
        atom_rad=0
@@ -644,6 +651,7 @@ contains ! of module
        VTN=df_VTN
        AreaScaling=df_AreaScaling
        smoothing=df_smoothing
+       use_charge_scaling=df_use_charge_scaling
        smooth=0
        atomic_radii=df_atomic_radii
        atom_rad=0
@@ -700,6 +708,7 @@ contains ! of module
     call real("ABS_TEMPERATURE    ",abs_temperature    ,df_abs_temperature    ,1)
     call word("ATOMIC_RADII       ",atomic_radii       ,df_atomic_radii       )
     call word("SMOOTHING          ",smoothing          ,df_smoothing          )
+    call flag("USE_CHARGE_SCALING ",use_charge_scaling ,df_use_charge_scaling )
     call intg("GEPOL              ",gepol              ,df_gepol              )
     call real("SOLVENT_VOLUME     ",solvent_volume     ,df_solvent_volume     ,1)
     call real("SOLVENT_RADIUS     ",solvent_radius     ,df_solvent_radius     ,1)
@@ -793,6 +802,7 @@ contains ! of module
     use symm_module, only : symm_adapt_centers
     use help_cavity_module
     use cavity_image_module
+    use occupation_module, only: get_charge
     implicit none
     !** End of interface *****************************************
 
@@ -1751,6 +1761,7 @@ contains ! of module
       real(r8_kind) :: xyz_surf(3),dist_sk
       real(r8_kind) :: xyz_symm(500,4)
       integer(i4_kind) :: max_i,min_i,n_sym
+      integer(i4_kind) :: charge
 
       logical :: ext,parents_file_exists,use_stored
       integer(i4_kind) :: i,j,k,l,m,kk,status !,n
@@ -1762,6 +1773,13 @@ contains ! of module
       !converting parameters to radian and atomic units
       r_solv = solvent_radius / ang_au
       r_mini=rmin_gepol/ang_au  !!!!!!!!!
+
+      charge=int(get_charge())
+      if(smooth==3 .and. use_charge_scaling) then
+         if(charge==1 .or. charge==0) scaled_factor=s_f_012
+         if(charge==3) scaled_factor=s_f_3
+         if(charge==4) scaled_factor=s_f_4
+      endif
       if(do_cavitation) then
          s_f=1.0_r8_kind
       else
@@ -1857,7 +1875,12 @@ contains ! of module
                else
                   v_d_w_r=R_def_rap(vdW_index)/2.0_r8_kind
                endif
-               if(smooth==3 .and. vdW_index==1) v_d_w_r=1.125_r8_kind
+               if(smooth==3 .and. vdW_index==1 .and. .not.use_charge_scaling) v_d_w_r=s_f_012
+               if(smooth==3 .and. use_charge_scaling .and. vdW_index==1) then
+                  if(charge==0 .or. charge==1) v_d_w_r=s_f_012
+                  if(charge==3) v_d_w_r=s_f_3
+                  if(charge==4) v_d_w_r=s_f_4
+               endif
             else if(atom_rad == 1) then
                v_d_w_r=R_def_rap(vdW_index)/2.0_r8_kind
             end if
@@ -1901,7 +1924,12 @@ contains ! of module
                else
                   v_d_w_r=R_def_rap(vdW_index)/2.0_r8_kind
                endif
-               if(smooth==3 .and. vdW_index==1) v_d_w_r=1.125_r8_kind
+               if(smooth==3 .and. vdW_index==1 .and. .not.use_charge_scaling) v_d_w_r=s_f_012
+               if(smooth==3 .and. vdW_index==1 .and. use_charge_scaling) then
+                  if(charge==0 .or. charge==1) v_d_w_r=s_f_012
+                  if(charge==3) v_d_w_r=s_f_3
+                  if(charge==4) v_d_w_r=s_f_4
+               endif
             else if(atom_rad == 1) then
                v_d_w_r=R_def_rap(vdW_index)/2.0_r8_kind
             end if
@@ -1937,6 +1965,12 @@ contains ! of module
                   efp_name="O"
                end if
                v_d_w_r=vdW_radius(vdW_index)
+               if(smooth==3 .and. vdW_index==1 .and. .not.use_charge_scaling) v_d_w_r=s_f_012
+               if(smooth==3 .and. vdW_index==1 .and. use_charge_scaling) then
+                  if(charge==0 .or. charge==1) v_d_w_r=s_f_012
+                  if(charge==3) v_d_w_r=s_f_3
+                  if(charge==4) v_d_w_r=s_f_4
+               endif
                do j=1,pointcharge_array(i)%N_equal_charges
                   k=k+1
                   if((.not.hydrogen_no_scale) .or. (efp_name /= "H") .or. (do_cavitation)) then

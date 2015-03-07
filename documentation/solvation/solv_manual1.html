@@ -89,6 +89,7 @@ of atomic coordinates):</font></div>
     SOLVENT_RADIUS      =   1.400         # (the default)
     SOLVENT_VOLUME      =  18.070         # (the default)
     SCALED_FACTOR       =   1.200         # (the default)
+    USE_CHARGE_SCALING  =   FALSE         # (the default)
     POINT_FACTOR        =       1         # (the default)
     MAX_TES_AREA        =     0.5         # (the default)
     GET_VDWR            =   FALSE         # (the default)
@@ -265,7 +266,7 @@ dispersion repulsion part different solvent accessible surfaces.</font><br>
 <dl style="margin-left: 40px; text-align: justify;">
   <font size="3">Instead of GEPOL algorithm switching function method are
 used that allows smooth appearing and disappearing of cavity surface
-elements. Provides more stable optimization process copmating to standard
+elements. Provides more stable optimization process in comparison to standard
 GEPOL approach. To activate : SMOOTHING='FIXPVA' (<a href="#8">8</a>)</font>
 </dl>
 
@@ -310,12 +311,26 @@ are created to exclude volume where solvent molecules can't get in.</font>
 <dl style="margin-left: 40px; text-align: justify;">
   <font size="3">is the scaling factor for to get the atomic sphere
 radii of the cavity from the van der Waals radii. It is an empirical
-factor and should not be changed when having no experience about this.
-(Enlarging will blow up the cavity and reduce the solvation effect)</font>
+factor and should not be changed when having no experience about this
+(Enlarging will blow up the cavity and reduce the solvation effect). 
+For GEPOL cavity the default value is 1.2, while for FIXPVA - 1.125 </font>
 </dl>
 
 <dl>
-  <font size="3">GET_VDWR </font>
+  <font size="3">USE_CHARGE_SCALING </font>
+</dl>
+
+<dl style="margin-left: 40px; text-align: justify;">
+  <font size="3"> For FIXPVA a cavity scaling factor depending on the
+total charge of system can be used. At the moment this options can be
+applied for 3+ (1.030) and 4+ (1.000) charged systems. For neutral and
+1+ and 2+ charged systems the standard 1.125 value is used. !! CAUTION -
+for 2+ systems the standard value hardly can be used and is needed to be
+parametrized.
+</dl>
+  
+<dl>
+   <font size="3">GET_VDWR </font>
 </dl>
 
 <dl style="margin-left: 40px; text-align: justify;">

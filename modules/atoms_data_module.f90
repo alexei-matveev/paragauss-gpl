@@ -87,7 +87,7 @@ module atoms_data_module
                         ! Lu   Hf   Ta   W    Re   Os   Ir   Pt   Au   Hg
                         1.96,2.02,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00, &
                         ! Tl   Pb   Bi   Po   At   Rn   Fr   Ra   Ac   Th
-                        0.00,1.86,0.00,0.00,0.00,0.00,0.00,0.00/)
+                        0.00,1.86,1.86,1.86,0.00,0.00,0.00,0.00/)
                         ! Pa   U    Np   Pu   Am   Cm   Bk   Cf
 
   ! Default   van  der   Waals  radii   and  K   parameters   used  in

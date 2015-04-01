@@ -3102,13 +3102,8 @@ DPRINT 'max cent',max_cent
             do k=1,local_point_factor
                N_new_xyz=N_points_of_triangles+N_centers_on_sphere*3/2
                N_new_cent=N_centers_on_sphere*4
-#ifdef _LINUX1
-               call more_triangles(N_new_cent,N_points_of_triangles,&
-                        N_centers_on_sphere)
-#else
                call more_triangles(surf_elem%xyz,surf_elem%index,&
                     N_new_cent,N_points_of_triangles,N_centers_on_sphere)
-#endif
                N_centers_on_sphere=N_new_cent
                N_points_of_triangles=N_new_xyz
             end do

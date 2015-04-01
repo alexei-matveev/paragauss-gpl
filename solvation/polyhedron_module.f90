@@ -811,17 +811,18 @@ DPRINT 'maximum allowd centers',N_dim_cent
   !*************************************************************
 
   !*************************************************************
-  subroutine more_triangles(xyz_t,ind_t,n_ind,n_xyz_st,n_ind_st)
-    !  Purpose: subdivision routine, each triangle is devided in four by
-    !           halving the edges
-    !------------ Modules used ------------------- ---------------
+  subroutine more_triangles (xyz_t, ind_t, n_ind, n_xyz_st, n_ind_st)
+    !
+    ! Subdivision routine, each triangle is devided in four by halving
+    ! the edges
+    !
     implicit none
-    !------------ Declaration of formal parameters ---------------
-    real(r8_kind), pointer          :: xyz_t(:,:)
-    integer(i4_kind), pointer       :: ind_t(:,:)
-    integer(i4_kind), intent(in)    :: n_ind
-    integer(i4_kind), intent(inout) :: n_xyz_st,n_ind_st
+    real (r8_kind), intent (inout) :: xyz_t(:,:)
+    integer (i4_kind),intent (inout)  :: ind_t(:,:)
+    integer (i4_kind), intent (in) :: n_ind
+    integer (i4_kind), intent (inout) :: n_xyz_st, n_ind_st
     !** End of interface *****************************************
+
     !------------ Declaration of local variables ---------------------
     real(r8_kind)                 :: xyz_t_buf(3),xyz_tt(3)
     integer(i4_kind), allocatable :: ind_buf(:,:)
@@ -832,8 +833,8 @@ DPRINT 'maximum allowd centers',N_dim_cent
     !------------ Executable code ------------------------------------
 
     !
-    ! The pointers used to be  associated with the fields of surf_elem
-    ! like that:
+    ! The array arguments used to be pointers and were associated with
+    ! the fields of surf_elem like that right here:
     !
     !   xyz_t => surf_elem%xyz
     !   ind_t => surf_elem%index

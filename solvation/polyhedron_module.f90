@@ -197,11 +197,7 @@ contains
     indexx(8,3)=6
 
     do j=1,local_point_factor-1
-#ifdef _LINUX1
-       call more_triangles(N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#else
        call more_triangles(xyz,indexx,N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#endif
        N_dim_xyz_st=N_dim_xyz_next
        N_dim_cent_st=N_dim_cent_next
        N_dim_xyz_next= N_dim_xyz_st+(N_dim_cent_st*3)/2
@@ -364,11 +360,7 @@ contains
     !dividing each triangles in four new triangles 
 !!!MF >>>>
     do j=1,local_point_factor
-#ifdef _LINUX1
-       call more_triangles(N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#else
        call more_triangles(xyz,indexx,N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#endif
        N_dim_xyz_st=N_dim_xyz_next
        N_dim_cent_st=N_dim_cent_next
        N_dim_xyz_next= N_dim_xyz_st+N_dim_cent_st*3/2
@@ -655,11 +647,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
 !!!MF >>>>
     do j=1,local_point_factor-1
 !!!MF allow mor than 1x subdivision
-#ifdef _LINUX1
-       call more_triangles(N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#else
        call more_triangles(xyz,indexx,N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#endif
        N_dim_xyz_st=N_dim_xyz_next
        N_dim_cent_st=N_dim_cent_next
        N_dim_xyz_next= N_dim_xyz_st+(N_dim_cent_st*3)/2
@@ -791,11 +779,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     !dividing each triangles in four new triangles 
     do j=1,local_point_factor
 !!!MF allow mor than 1x subdivision
-#ifdef _LINUX1
-       call more_triangles(N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#else
        call more_triangles(xyz,indexx,N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#endif
        N_dim_xyz_st=N_dim_xyz_next
        N_dim_cent_st=N_dim_cent_next
        N_dim_xyz_next= N_dim_xyz_st+N_dim_cent_st*3/2
@@ -827,11 +811,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
   !*************************************************************
 
   !*************************************************************
-#ifdef _LINUX1
-  subroutine more_triangles(n_ind,n_xyz_st,n_ind_st)
-#else
   subroutine more_triangles(xyz_t,ind_t,n_ind,n_xyz_st,n_ind_st)
-#endif
     !  Purpose: subdivision routine, each triangle is devided in four by
     !           halving the edges
     !------------ Modules used ------------------- ---------------
@@ -851,10 +831,12 @@ DPRINT 'maximum allowd centers',N_dim_cent
     real(r8_kind), parameter      :: small=1.0e-11_r8_kind
     !------------ Executable code ------------------------------------
 
-#ifdef _LINUX1
-    xyz_t=>surf_elem%xyz
-    ind_t=>surf_elem%index
-#endif
+    !
+    ! The pointers used to be  associated with the fields of surf_elem
+    ! like that:
+    !
+    !   xyz_t => surf_elem%xyz
+    !   ind_t => surf_elem%index
 
     allocate(ind_buf(n_ind,3),stat=status)
     ASSERT(status == 0)

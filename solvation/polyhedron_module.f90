@@ -71,7 +71,7 @@ module polyhedron_module
   end type triangles
 
   !------------ Declaration of constants and variables ---------------
-  type(triangles) ,public,target    :: surf_elem    
+  type(triangles) ,public,target    :: surf_elem
   integer(i4_kind),public           :: N_points_of_triangles
   integer(i4_kind),public           :: N_centers_on_sphere
   integer(i4_kind),parameter,public :: MAX_ATOMS_QMMM=40
@@ -118,11 +118,11 @@ contains
     integer(i4_kind)          :: N_dim_xyz_next,N_dim_cent_next
     integer(i4_kind)          :: i, j, l1, n1, i1, status1
     !------------ Executable code ------------------------------------
-    
+
     a=1.0_r8_kind
     radius=a
     d=sqrt(2.0_r8_kind)*a
-    
+
     N_dim_cent=8
     N_dim_cent_st=8
     N_dim_xyz=6
@@ -130,7 +130,7 @@ contains
 
     local_point_factor=2
     if(N_atom_spheres >= MAX_ATOMS_QMMM1) local_point_factor=1
-    
+
     i=1
     do
        if(i>local_point_factor-1) exit
@@ -142,10 +142,10 @@ contains
        endif
        i=i+1
     enddo
-    
+
     allocate(surf_elem%xyz(N_dim_xyz,3),stat=status1)
     ASSERT(status1==0)
-    
+
     !definition of initial set of points
     xyz=>surf_elem%xyz
     xyz=0.0_r8_kind
@@ -156,7 +156,7 @@ contains
     xyz(4,2)=-a
     xyz(5,3)=a
     xyz(6,3)=-a
-    
+
     !definition of triangles
 
     allocate(surf_elem%index(N_dim_cent,3),stat=status1)
@@ -167,7 +167,7 @@ contains
     indexx(1,1)=1
     indexx(1,2)=3
     indexx(1,3)=5
-    
+
     indexx(2,1)=1
     indexx(2,2)=4
     indexx(2,3)=5
@@ -191,17 +191,13 @@ contains
     indexx(7,1)=2
     indexx(7,2)=3
     indexx(7,3)=6
-    
+
     indexx(8,1)=2
     indexx(8,2)=4
     indexx(8,3)=6
 
     do j=1,local_point_factor-1
-#ifdef _LINUX1
-       call more_triangles(N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#else
        call more_triangles(xyz,indexx,N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#endif
        N_dim_xyz_st=N_dim_xyz_next
        N_dim_cent_st=N_dim_cent_next
        N_dim_xyz_next= N_dim_xyz_st+(N_dim_cent_st*3)/2
@@ -222,11 +218,11 @@ contains
     enddo
     N_points_of_triangles=N_dim_xyz_st
     N_centers_on_sphere=N_dim_cent_st
-    
+
     if (do_cavitation .and. output_cavity_data .and. .not.do_gradients) &
          write (output_unit,'(a42,i5)') &
          'the number of triangles on each sphere is ', N_centers_on_sphere
-    
+
   end subroutine generate_octahedron
   !*************************************************************
 
@@ -270,8 +266,8 @@ contains
 
 !!!MF >>>>
     i=1
-    do 
-       if(i>local_point_factor .and. & 
+    do
+       if(i>local_point_factor .and. &
             (N_dim_cent>=max_cent  .or. do_cavitation) ) exit
        N_dim_xyz=N_dim_xyz+N_dim_cent*3/2
        N_dim_cent=N_dim_cent*4
@@ -333,7 +329,7 @@ contains
        k=i+8
        m=4*(i-1)+1
        indexx(m:m+3,1)=k
-       
+
        n=1
        do j=1,8
           xyz_buf=xyz(k,:)-xyz(j,:)
@@ -361,14 +357,10 @@ contains
        enddo
     enddo
 
-    !dividing each triangles in four new triangles 
+    !dividing each triangles in four new triangles
 !!!MF >>>>
     do j=1,local_point_factor
-#ifdef _LINUX1
-       call more_triangles(N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#else
        call more_triangles(xyz,indexx,N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#endif
        N_dim_xyz_st=N_dim_xyz_next
        N_dim_cent_st=N_dim_cent_next
        N_dim_xyz_next= N_dim_xyz_st+N_dim_cent_st*3/2
@@ -432,9 +424,9 @@ DPRINT 'maximum allowd centers',N_dim_cent
     integer(i4_kind)          :: i,j,k,l,m,n,l1,n1,ind,i1,status2
     !------------ Executable code ------------------------------------
 
-    !definition a pentakis dodecahedron 
+    !definition a pentakis dodecahedron
     t=(sqrt(5.0_r8_kind)+1.0_r8_kind)/2.0_r8_kind
-    s=sqrt(3.0_r8_kind-t)/2.0_r8_kind      
+    s=sqrt(3.0_r8_kind-t)/2.0_r8_kind
     h=(2.0_r8_kind*s+(t+1.0_r8_kind)*sqrt(t+2.0_r8_kind))/4.0_r8_kind
     radius=sqrt(h**2+s**2)
     b=radius*sqrt(3.0_r8_kind)/3.0_r8_kind
@@ -458,10 +450,10 @@ DPRINT 'maximum allowd centers',N_dim_cent
        local_point_factor=point_factor
     endif
 
-    if(gp93==1) then 
+    if(gp93==1) then
        local_point_factor=NDIV
        i=1
-       do 
+       do
           if(i >local_point_factor-1) exit
           N_dim_xyz=N_dim_xyz+(N_dim_cent*3)/2
           N_dim_cent=N_dim_cent*4
@@ -473,8 +465,8 @@ DPRINT 'maximum allowd centers',N_dim_cent
        end do
     else
        i=1
-       do 
-          if(i>local_point_factor-1 .and. & 
+       do
+          if(i>local_point_factor-1 .and. &
                (N_dim_cent>=max_cent .or. do_cavitation) ) exit
           N_dim_xyz=N_dim_xyz+(N_dim_cent*3)/2
           N_dim_cent=N_dim_cent*4
@@ -504,10 +496,10 @@ DPRINT 'maximum allowd centers',N_dim_cent
     xyz(8,1)=-s
     xyz(9:10,1)=h
     xyz(11:12,1)=-h
-    xyz(13,1)=b 
-    xyz(15,1)=b 
-    xyz(17,1)=b 
-    xyz(19,1)=b 
+    xyz(13,1)=b
+    xyz(15,1)=b
+    xyz(17,1)=b
+    xyz(19,1)=b
     xyz(14,1)=-b
     xyz(16,1)=-b
     xyz(18,1)=-b
@@ -515,11 +507,11 @@ DPRINT 'maximum allowd centers',N_dim_cent
     xyz(21,1)=h1
     xyz(22,1)=-h1
     xyz(23,1)=h1
-    xyz(24,1)=-h1 
+    xyz(24,1)=-h1
     xyz(25:29,1)=0.0_r8_kind
-    xyz(29:30,1)=h2 
+    xyz(29:30,1)=h2
     xyz(31:32,1)=-h2
-    
+
     xyz(1,2)=-s
     xyz(3,2)=-s
     xyz(2,2)=s
@@ -528,18 +520,18 @@ DPRINT 'maximum allowd centers',N_dim_cent
     xyz(7:8,2)=-h
     xyz(9:12,2)=0.0_r8_kind
     xyz(13:14,2)=b
-    xyz(17:18,2)=b 
-    xyz(15:16,2)=-b 
+    xyz(17:18,2)=b
+    xyz(15:16,2)=-b
     xyz(19:20,2)=-b
     xyz(21:24,2)=0.0_r8_kind
-    xyz(25,2)=-h2 
-    xyz(26:27,2)=h2 
-    xyz(28,2)=-h2  
-    xyz(29,2)=-h1 
+    xyz(25,2)=-h2
+    xyz(26:27,2)=h2
+    xyz(28,2)=-h2
+    xyz(29,2)=-h1
     xyz(30,2)=h1
-    xyz(31,2)=-h1 
-    xyz(32,2)=h1 
-    
+    xyz(31,2)=-h1
+    xyz(32,2)=h1
+
     xyz(1:2,3)=h
     xyz(3:4,3)=-h
     xyz(5:8,3)=0.0_r8_kind
@@ -547,16 +539,16 @@ DPRINT 'maximum allowd centers',N_dim_cent
     xyz(11,3)=s
     xyz(10,3)=-s
     xyz(12,3)=-s
-    xyz(13:16,3)=b 
-    xyz(17:20,3)=-b 
-    xyz(21:22,3)=h2 
-    xyz(23:24,3)=-h2 
-    xyz(25:26,3)=h1  
-    xyz(27:28,3)=-h1  
+    xyz(13:16,3)=b
+    xyz(17:20,3)=-b
+    xyz(21:22,3)=h2
+    xyz(23:24,3)=-h2
+    xyz(25:26,3)=h1
+    xyz(27:28,3)=-h1
     xyz(29:32,3)=0.0_r8_kind
-    
+
     !definition of triangles
-    
+
     allocate(surf_elem%index(N_dim_cent,3),stat=status2)
     ASSERT(status2 == 0)
 
@@ -566,7 +558,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
        k=i+20
        m=5*(i-1)+1
        indexx(m:m+4,1)=k
-       
+
        n=1
        do j=1,20
           xyz_buf=xyz(k,:)-xyz(j,:)
@@ -616,7 +608,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
           x=xyz(i,1)*s/radius+xyz(i,3)*h/radius
           z=-xyz(i,1)*h/radius+xyz(i,3)*s/radius
           xyz(i,1)=x
-          xyz(i,3)=z 
+          xyz(i,3)=z
        enddo
        if ((name_point_group=='D3  ')  .or. &
             (name_point_group=='D3D ') ) then
@@ -624,7 +616,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
              x=cos12*xyz(i,1)-sin12*xyz(i,2)
              y=sin12*xyz(i,1)+cos12*xyz(i,2)
              xyz(i,1)=x
-             xyz(i,2)=y 
+             xyz(i,2)=y
           enddo
        end if
     endif
@@ -646,7 +638,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
              x=cos20*xyz(i,1)-sin20*xyz(i,2)
              y=sin20*xyz(i,1)+cos20*xyz(i,2)
              xyz(i,1)=x
-             xyz(i,2)=y 
+             xyz(i,2)=y
           enddo
        endif
 !!!MF <<<<
@@ -655,11 +647,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
 !!!MF >>>>
     do j=1,local_point_factor-1
 !!!MF allow mor than 1x subdivision
-#ifdef _LINUX1
-       call more_triangles(N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#else
        call more_triangles(xyz,indexx,N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#endif
        N_dim_xyz_st=N_dim_xyz_next
        N_dim_cent_st=N_dim_cent_next
        N_dim_xyz_next= N_dim_xyz_st+(N_dim_cent_st*3)/2
@@ -683,7 +671,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     N_centers_on_sphere=N_dim_cent_st  !!!!!!N_dim_cent
     if(do_cavitation .and. output_cavity_data .and. .not.do_gradients) &
          write (output_unit,'(a42,i5)') 'the number of triangles on each sphere is ', N_centers_on_sphere
-    
+
 !!$     nullify(xyz,xyz_cent,index)
   end subroutine generate_dodecahedron
   !*************************************************************
@@ -713,7 +701,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     real(r8_kind), parameter  :: sin12=0.5_r8_kind
     !------------ Executable code ------------------------------------
 
-    radius=1.0_r8_kind 
+    radius=1.0_r8_kind
 
     N_dim_cent=2*n_rotations
     N_dim_cent_st=2*n_rotations
@@ -722,10 +710,10 @@ DPRINT 'maximum allowd centers',N_dim_cent
 
     ! at least one subdivision
     local_point_factor=point_factor+1 !2 is too much !!!!!
-    
+
     i=1
-    do 
-       if(i>local_point_factor .and. & 
+    do
+       if(i>local_point_factor .and. &
             (N_dim_cent>=max_cent .or. do_cavitation) ) exit
        N_dim_xyz=N_dim_xyz+N_dim_cent*3/2
        N_dim_cent=N_dim_cent*4
@@ -764,7 +752,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     else
        r_n_rot=real(n_rotations,kind=r8_kind)
        do i=0,n_rotations-1
-          alph = (real(i,kind=r8_kind))/r_n_rot * 2.0_r8_kind * pi 
+          alph = (real(i,kind=r8_kind))/r_n_rot * 2.0_r8_kind * pi
           xyz(i+2,1)=cos(alph)
           xyz(i+2,2)=sin(alph)
        enddo
@@ -776,7 +764,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
     surf_elem%index=0
 
     indexx=>surf_elem%index
-      
+
     do i=1,n_rotations
        indexx(i,1)=i+1
        indexx(i,2)=i+2
@@ -787,15 +775,11 @@ DPRINT 'maximum allowd centers',N_dim_cent
     enddo
     indexx(n_rotations,2)=2
     indexx(N_dim_cent_st,2)=2
-    
-    !dividing each triangles in four new triangles 
+
+    !dividing each triangles in four new triangles
     do j=1,local_point_factor
 !!!MF allow mor than 1x subdivision
-#ifdef _LINUX1
-       call more_triangles(N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#else
        call more_triangles(xyz,indexx,N_dim_cent_next,N_dim_xyz_st,N_dim_cent_st)
-#endif
        N_dim_xyz_st=N_dim_xyz_next
        N_dim_cent_st=N_dim_cent_next
        N_dim_xyz_next= N_dim_xyz_st+N_dim_cent_st*3/2
@@ -820,28 +804,25 @@ DPRINT 'maximum allowd centers',N_dim_cent
 
     if(do_cavitation .and. output_cavity_data .and. .not.do_gradients) &
          write (output_unit,'(a42,i5)') 'the number of triangles on each sphere is ', N_centers_on_sphere
-    
+
 !     nullify(xyz,xyz_cent,index)
   end subroutine generate_doublepyramide
 !!!MF <<<<
   !*************************************************************
 
   !*************************************************************
-#ifdef _LINUX1
-  subroutine more_triangles(n_ind,n_xyz_st,n_ind_st)
-#else
-  subroutine more_triangles(xyz_t,ind_t,n_ind,n_xyz_st,n_ind_st)
-#endif
-    !  Purpose: subdivision routine, each triangle is devided in four by
-    !           halving the edges
-    !------------ Modules used ------------------- ---------------
+  subroutine more_triangles (xyz_t, ind_t, n_ind, n_xyz_st, n_ind_st)
+    !
+    ! Subdivision routine, each triangle is devided in four by halving
+    ! the edges
+    !
     implicit none
-    !------------ Declaration of formal parameters ---------------
-    real(r8_kind), pointer          :: xyz_t(:,:)
-    integer(i4_kind), pointer       :: ind_t(:,:)
-    integer(i4_kind), intent(in)    :: n_ind
-    integer(i4_kind), intent(inout) :: n_xyz_st,n_ind_st
+    real (r8_kind), intent (inout) :: xyz_t(:,:)
+    integer (i4_kind),intent (inout)  :: ind_t(:,:)
+    integer (i4_kind), intent (in) :: n_ind
+    integer (i4_kind), intent (inout) :: n_xyz_st, n_ind_st
     !** End of interface *****************************************
+
     !------------ Declaration of local variables ---------------------
     real(r8_kind)                 :: xyz_t_buf(3),xyz_tt(3)
     integer(i4_kind), allocatable :: ind_buf(:,:)
@@ -851,10 +832,12 @@ DPRINT 'maximum allowd centers',N_dim_cent
     real(r8_kind), parameter      :: small=1.0e-11_r8_kind
     !------------ Executable code ------------------------------------
 
-#ifdef _LINUX1
-    xyz_t=>surf_elem%xyz
-    ind_t=>surf_elem%index
-#endif
+    !
+    ! The array arguments used to be pointers and were associated with
+    ! the fields of surf_elem like that right here:
+    !
+    !   xyz_t => surf_elem%xyz
+    !   ind_t => surf_elem%index
 
     allocate(ind_buf(n_ind,3),stat=status)
     ASSERT(status == 0)
@@ -877,7 +860,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
              xyz_tt=(radius/sqrt(dot_product(xyz_t_buf,xyz_t_buf)))*xyz_t_buf
 
              label_l: do l=1,n_xyz_st
-                
+
 !!$                  if(xyz_tt(1)==xyz_t(l,1) .and. &
 !!$                       xyz_tt(2)==xyz_t(l,2) .and. &
 !!$                       xyz_tt(3)==xyz_t(l,3)) then
@@ -903,7 +886,7 @@ DPRINT 'maximum allowd centers',N_dim_cent
        m1=1
        ind_buf(next_i,m1)=new_numbers(1)
        label_n: do n=2,m
-          
+
           label_n1: do n1=1,n-1
              if(new_numbers(n) == new_numbers(n1)) cycle label_n
           enddo label_n1
@@ -912,10 +895,10 @@ DPRINT 'maximum allowd centers',N_dim_cent
           if (m1==3) cycle label_i
        enddo label_n
     enddo label_i
-    
+
     n_ind_st=next_i
     ind_t(1:n_ind,1:3)=ind_buf(1:n_ind,1:3)
-    
+
     deallocate(ind_buf,stat=status)
     ASSERT(status == 0)
 !     nullify(xyz_t,ind_t)

@@ -907,7 +907,11 @@ contains ! of module
 
 !!! MF >>>>
     m_t_a=max_tes_area/(ang_au**2)
-    call find_max_dim_surf_elem()
+
+    ! Here max_cent is a public variable from polyhedron_module.f90:
+    max_cent = find_max_dim_surf_elem ()
+    DPRINT 'max cent', max_cent
+
 !!! MF <<<<
 
     i_poly=0
@@ -3022,22 +3026,26 @@ contains ! of module
     !------------------------------------------------------------
 
     !------------------------------------------------------------
-    subroutine find_max_dim_surf_elem
-      !find maximal numbers of centers needed for a subdivision
-      !with average areas less than max_tes_area
+    function find_max_dim_surf_elem() result (max_cent)
+      !
+      ! Find maximal numbers of centers needed for a subdivision
+      ! with average areas less than max_tes_area
+      !
+      implicit none
+      integer (i4_kind) :: max_cent
       !** End of interface *****************************************
-      integer (kind=i4_kind) :: i,l
-      real (kind=r8_kind) :: area_comp
 
-      max_cent=0
-      do i=1,N_spheres
-         area_comp=4.0_r8_kind*pi*r_sphere(i)**2
+      integer (i4_kind) :: i, l
+      real (r8_kind) :: area_comp
+
+      max_cent = 0
+      do i = 1, N_spheres
+         area_comp = 4.0_r8_kind * pi * r_sphere(i)**2
 !        l=int(area_comp/m_t_a,kind=i4_kind)
-         l=ceiling(area_comp/m_t_a)
-         if(l > max_cent) max_cent=l
+         l = ceiling (area_comp / m_t_a)
+         if (l > max_cent) max_cent = l
       enddo
-DPRINT 'max cent',max_cent
-    end subroutine find_max_dim_surf_elem
+    end function find_max_dim_surf_elem
     !------------------------------------------------------------
 !!!MF <<<<
 
@@ -3120,13 +3128,8 @@ DPRINT 'max cent',max_cent
                deallocate(xyz_buf1,ind_buf1,stat=status)
                ASSERT(status==0)
 
-#ifdef _LINUX1
-               call more_triangles(N_new_cent,N_points_of_triangles,&
-                        N_centers_on_sphere)
-#else
                call more_triangles(surf_elem%xyz,surf_elem%index,&
                     N_new_cent,N_points_of_triangles,N_centers_on_sphere)
-#endif
 
                N_centers_on_sphere=N_new_cent
                N_points_of_triangles=N_new_xyz

@@ -3057,6 +3057,8 @@ DPRINT 'max cent',max_cent
       integer(kind=i4_kind) :: ihelp,N_new_cent,N_new_xyz,n_int_sec_spheres
       real(kind=r8_kind) :: area_comp,xyz_buf(3)
       logical :: not_cav_dis_rep
+      real(r8_kind), allocatable :: xyz_buf1(:,:)
+      integer(i4_kind), allocatable :: ind_buf1(:,:)
 
       not_cav_dis_rep=(.not. do_cavitation .and. .not. do_disp_rep)
 
@@ -3100,8 +3102,24 @@ DPRINT 'max cent',max_cent
             local_point_factor=ceiling(log(&
                  area_comp/(N_centers_on_sphere*m_t_a))/log(4.0_r8_kind))
             do k=1,local_point_factor
+
+               allocate(xyz_buf1(N_points_of_triangles,3),ind_buf1(N_centers_on_sphere,3),stat=status)
+               ASSERT(status==0)
+               xyz_buf1=surf_elem%xyz; ind_buf1=surf_elem%index
+               deallocate(surf_elem%xyz,surf_elem%index,stat=status)
+               ASSERT(status==0)
+               nullify(surf_elem%xyz,surf_elem%index)
+
                N_new_xyz=N_points_of_triangles+N_centers_on_sphere*3/2
                N_new_cent=N_centers_on_sphere*4
+
+               allocate(surf_elem%xyz(N_new_xyz,3),surf_elem%index(N_new_cent,3),stat=status)
+               ASSERT(status==0)
+               surf_elem%xyz(1:N_points_of_triangles,1:3)=xyz_buf1
+               surf_elem%index(1:N_centers_on_sphere,1:3)=ind_buf1
+               deallocate(xyz_buf1,ind_buf1,stat=status)
+               ASSERT(status==0)
+
 #ifdef _LINUX1
                call more_triangles(N_new_cent,N_points_of_triangles,&
                         N_centers_on_sphere)
@@ -3109,6 +3127,7 @@ DPRINT 'max cent',max_cent
                call more_triangles(surf_elem%xyz,surf_elem%index,&
                     N_new_cent,N_points_of_triangles,N_centers_on_sphere)
 #endif
+
                N_centers_on_sphere=N_new_cent
                N_points_of_triangles=N_new_xyz
             end do
@@ -3119,6 +3138,12 @@ DPRINT 'max cent',max_cent
          endif
 
          N_cent_loc(i)=N_centers_on_sphere
+ 
+         deallocate(surf_elem%xyz_centers,stat=status)
+         ASSERT(status==0)
+         allocate(surf_elem%xyz_centers(N_centers_on_sphere,3),stat=status)
+         ASSERT(status==0)
+
          do k=1,N_centers_on_sphere
             i1=surf_elem%index(k,1)
             l1=surf_elem%index(k,2)

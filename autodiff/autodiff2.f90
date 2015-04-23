@@ -668,8 +668,13 @@ SND end function snd
 
     DECL2
 
+    !        2             2
+    ! 1 / cos (x) = 1 + tan (x)
+    !
+    ! Older versions are wrong!
+    !
     CODE0( tan(D0(x)) )
-    CODE1( D1(x) / (1 + D0(z)**2 ) )
+    CODE1( D1(x) * (1 + D0(z)**2 ) )
     ABORT('fix')
     CODE2( 0 )
   end function tan_v
